@@ -1,4 +1,4 @@
-package com.preving.intranet.ssggapi.conf.database.devdocker;
+package com.preving.intranet.ssggapi.conf.database.dev;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;

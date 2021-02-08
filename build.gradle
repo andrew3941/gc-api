@@ -54,7 +54,7 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-jdbc")
 
 	// Driver oracle
-	runtime group: 'com.oracle', name: 'ojdbc6', version: '11.2.0'
+//	runtime group: 'com.oracle', name: 'ojdbc6', version: '11.2.0'
 
 	// Driver postgresql
 	compile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
@@ -94,5 +94,7 @@ dependencies {
 	compile 'net.sf.jodreports:jodreports:2.4.0'
 
 	compile 'com.artofsolving:jodconverter:2.2.1'
+
+	compile('org.hibernate:hibernate-core:5.4.2.Final')
 	
 }
