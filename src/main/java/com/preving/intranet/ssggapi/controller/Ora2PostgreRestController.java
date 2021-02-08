@@ -1,4 +1,4 @@
-package com.preving.intranet.ssggapi.web;
+package com.preving.intranet.ssggapi.controller;
 
 import com.preving.intranet.ssggapi.model.domain.SimpleJavaBean;
 import com.preving.intranet.ssggapi.model.service.ora2Postgre.Ora2PostgreService;

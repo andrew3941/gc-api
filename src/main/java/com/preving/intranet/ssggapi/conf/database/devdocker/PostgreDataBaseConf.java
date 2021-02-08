@@ -13,11 +13,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
-@Profile("devdocker")
+@Profile("dev")
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = {"com.preving.restapi.personasapi.dao.facturacion"})
+        basePackages = {"com.preving.intranet.ssggapi.model.dao"})
 public class PostgreDataBaseConf {
 
     @Bean(name = "postgresqlDataSource")

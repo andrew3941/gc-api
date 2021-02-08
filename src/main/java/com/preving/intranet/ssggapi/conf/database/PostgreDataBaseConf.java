@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
-@Profile("dev")
+@Profile("prod")
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
