@@ -6,7 +6,7 @@ server:
     key-password: preving
 
   servlet:
-    context-path: /ssgg-api
+    context-path: /gestion-centros-api
 
 # ===============================
 # = JWT
@@ -21,7 +21,7 @@ jwt:
       path: /login
 
 queue:
-  name: rrhhTiempo
+  name: gestionCentros
 
 spring:
 
@@ -40,8 +40,8 @@ spring:
   rabbitmq:
     host: 155.155.15.31
     port: 5672
-    username: appRrhhTiempo
-    password: rrhhTiempo
+    username: appGestionCentros
+    password: gestionCentros
 
   jmx:
     enabled: false # necesario para no obtener el siguiente error: Unable to register MBean [org.apache.tomcat.dbcp.dbcp2.BasicDataSource
@@ -88,7 +88,7 @@ spring:
 
 postgresql:
   datasource:
-    jdbcUrl: jdbc:postgresql://155.155.16.5:5432/postgres
+    jdbcUrl: jdbc:postgresql://155.155.16.5:5432/ssgg_dev
     username: ssgg
     password: 2021,S6g6
     driver-class-name: org.postgresql.Driver

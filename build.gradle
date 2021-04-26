@@ -11,7 +11,7 @@ buildscript {
 }
 
 project.ext {
-	warName = 'ssgg-api'
+	warName = 'gestion-centros-api'
 }
 
 apply plugin: 'java'
