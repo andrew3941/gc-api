@@ -12,14 +12,18 @@ public class WorkCenter implements Serializable {
     private int id;
     private int name;
     private List<Province> provinces;
+    // private Province province
     private List<Entity> mainEntities;
+    // private Entity entity
     private String locality;
+    // Private Locality locality
     private String navisionCode;
     private String address;
     private String postalCode;
     private int phoneNumber;
     private String email;
     private String headpersonSearch;
+    // Private User headPerson
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date startDate;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
