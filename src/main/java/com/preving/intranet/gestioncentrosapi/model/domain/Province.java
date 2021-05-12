@@ -1,4 +1,8 @@
 package com.preving.intranet.gestioncentrosapi.model.domain;
 
-public class Province {
+
+import java.io.Serializable;
+
+public class Province  implements Serializable {
+  private int id;
 }

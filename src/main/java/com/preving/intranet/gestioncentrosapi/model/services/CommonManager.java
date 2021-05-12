@@ -5,9 +5,11 @@ import com.preving.intranet.gestioncentrosapi.model.dao.WorkCenters.provinces.Pr
 import com.preving.intranet.gestioncentrosapi.model.domain.Entity;
 import com.preving.intranet.gestioncentrosapi.model.domain.Province;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class CommonManager implements CommonService {
 
     @Autowired
@@ -19,11 +21,12 @@ public class CommonManager implements CommonService {
     @Override
     public List<Province> findAllProvinces(){
         return provincesRepository.findAllByOrderByName();
+
     }
 
     @Override
-    public List<Entity> findAllEntities() {
-        return entitiesRepository.findAllByActiveTrue();
+    public List<Entity> findAll() {
+        return null;
     }
 
 
