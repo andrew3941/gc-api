@@ -1,4 +1,4 @@
-package com.preving.intranet.gestioncentrosapi.model.dao.WorkCenters.provinces;
+package com.preving.intranet.gestioncentrosapi.model.dao.provinces;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.Province;
 import org.springframework.data.jpa.repository.JpaRepository;

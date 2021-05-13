@@ -1,7 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
-import com.preving.intranet.gestioncentrosapi.model.dao.WorkCenters.mainentities.EntitiesRepository;
-import com.preving.intranet.gestioncentrosapi.model.dao.WorkCenters.provinces.ProvincesRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.Entity;
 import com.preving.intranet.gestioncentrosapi.model.domain.Province;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ public class CommonManager implements CommonService {
     private ProvincesRepository provincesRepository;
 
     @Autowired
-    EntitiesRepository entitiesRepository;
+    private EntitiesRepository entitiesRepository;
 
     @Override
     public List<Province> findAllProvinces(){
