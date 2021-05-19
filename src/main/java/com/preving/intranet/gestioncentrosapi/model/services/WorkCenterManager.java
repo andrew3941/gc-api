@@ -33,4 +33,9 @@ public class WorkCenterManager implements WorkCenterService{
     public List<City> findCitiesByProvince(int provinceCod, String criterion) {
         return null;
     }
+
+    @Override
+    public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
+        return null;
+    }
 }

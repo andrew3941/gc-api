@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.controller;
 import com.preving.intranet.gestioncentrosapi.model.domain.City;
 import com.preving.intranet.gestioncentrosapi.model.domain.Entity;
 import com.preving.intranet.gestioncentrosapi.model.domain.Province;
+import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
 import com.preving.intranet.gestioncentrosapi.model.services.WorkCenterService;
@@ -41,6 +42,17 @@ public class WorkCentersController {
         return new ResponseEntity<List<Province>>(provinces, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "filter", method = RequestMethod.POST)
+    public ResponseEntity<?> findWorkCenterByFilter(@RequestBody WorkCenterFilter workCenterFilter) {
+
+        try {
+            return new ResponseEntity<>(this.workCenterService.getWorkCenters(workCenterFilter), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+       }
 
     @RequestMapping(value = "entities", method = RequestMethod.GET)
     public ResponseEntity<?> findAll() {
