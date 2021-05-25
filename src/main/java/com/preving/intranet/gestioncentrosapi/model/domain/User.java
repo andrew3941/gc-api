@@ -1,8 +1,13 @@
 package com.preving.intranet.gestioncentrosapi.model.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
-
+@Entity
+@Table(name = "PC_USUARIOS", schema = "GC2006_RELEASE")
 public class User {
 
     public User(Long id, String username, String firstname, String lastname, String email, String password,
@@ -30,6 +35,8 @@ public class User {
     private Boolean enabled;
     private Date lastPasswordResetDate;
 
+    @Id
+    @Column(name = "ID")
     public Long getId() {
         return id;
     }

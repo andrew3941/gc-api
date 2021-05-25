@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface WorkCentersRepository extends JpaRepository <WorkCenter, Integer> {
+public interface WorkCentersRepository extends JpaRepository<WorkCenter, Integer> {
 
 }

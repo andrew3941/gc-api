@@ -1,6 +1,8 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
+import com.preving.intranet.gestioncentrosapi.model.domain.Province;
+import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 
 import javax.servlet.http.HttpServletRequest;

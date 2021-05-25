@@ -1,10 +1,13 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
+import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersCustomizeRepository;
 import com.preving.intranet.gestioncentrosapi.model.cities.CitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
+import com.preving.intranet.gestioncentrosapi.model.domain.Province;
+import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,9 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Autowired
     private WorkCentersRepository workCentersRepository;
+
+   @Autowired
+   private WorkCentersCustomizeRepository workCentersCustomizeRepository;
 
     @Autowired
     EntitiesRepository entitiesRepository;
@@ -44,10 +50,9 @@ public class WorkCenterManager implements WorkCenterService{
 
     }
 
-
     @Override
     public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
-        return null;
+        return this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter);
     }
 
     @Override
@@ -57,7 +62,8 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public List<Entities> findAll() {
-        return entitiesRepository.findAllByActiveTrue() ;
+    //    return entitiesRepository.findAllByActiveTrue() ;
+        return null;
     }
 
     @Override
@@ -67,6 +73,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public List<User> getUsers(String criterion) {
-        return null;
+
+      return  null;
     }
 }

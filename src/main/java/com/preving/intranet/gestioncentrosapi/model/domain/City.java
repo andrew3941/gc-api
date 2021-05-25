@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(schema = "GESTIONCENTORS", name ="CITY")
+@Table(schema = "GESTION_CENTROS", name ="CITYS")
 public class City implements Serializable {
 
     private int id;
@@ -15,7 +15,8 @@ public class City implements Serializable {
 
     @Id
     @Column(name = "ID", nullable = false, precision = 0)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "CITYS_SEQ", sequenceName = "CITYS_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CITYS_SEQ")
     public int getId() { return id; }
     public void setId(int id) { this.id = id;  }
 

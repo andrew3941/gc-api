@@ -10,6 +10,6 @@ import java.util.List;
 public interface EntitiesRepository extends JpaRepository<Entities, Integer> {
 
     List<Entities> findAll();
-    List<Entities> findAllByActiveTrue();
+   // List<Entities> findAllByActiveTrue();
 
 }

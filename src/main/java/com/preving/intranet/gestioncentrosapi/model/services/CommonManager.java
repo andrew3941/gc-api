@@ -15,8 +15,8 @@ public class CommonManager implements CommonService {
     @Autowired
     private ProvincesRepository provincesRepository;
 
-    @Autowired
-    private EntitiesRepository entitiesRepository;
+   // @Autowired
+   // private EntitiesRepository entitiesRepository;
 
     @Override
     public List<Province> findAllProvinces(){

@@ -1,5 +1,8 @@
 package com.preving.intranet.gestioncentrosapi.controller;
 
+import com.preving.intranet.gestioncentrosapi.model.domain.City;
+import com.preving.intranet.gestioncentrosapi.model.domain.Entities;
+import com.preving.intranet.gestioncentrosapi.model.domain.Province;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 @Controller
@@ -49,12 +53,14 @@ public class WorkCentersController {
 
     @RequestMapping(value = "entities", method = RequestMethod.GET)
     public ResponseEntity<?> findAll() {
-        try{
-            return new ResponseEntity<>(this.commonService.findAll(), HttpStatus.OK);
-        } catch (Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        List<Entities> entities = null;
+        entities = commonService.findAll();
+
+        if (entities == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
+        return new ResponseEntity<List<Entities>>(entities, HttpStatus.OK);
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)

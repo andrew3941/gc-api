@@ -5,14 +5,15 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(schema = "GESTIONCENTROS", name = "PROVINCE")
+@Table(schema = "GESTION_CENTROS", name = "PROVINCES")
 public class Province implements Serializable {
   private int id;
   private String name;
 
   @Id
   @Column(name = "PRV_COD", nullable = false, precision = 0)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @SequenceGenerator(name = "PROVINCES_SEQ", sequenceName = "PROVINCES_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROVINCES_SEQ")
   public int getId() {
     return id;
   }

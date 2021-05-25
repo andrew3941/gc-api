@@ -3,7 +3,7 @@ package com.preving.intranet.gestioncentrosapi.model.domain;
 import javax.persistence.*;
 
 @Entity
-@Table(schema = "GESTIONCENTROS", name = "REGION")
+@Table(schema = "GESTION_CENTROS", name = "REGIONS")
 public class Region {
 
     private int id;
@@ -11,7 +11,8 @@ public class Region {
 
     @Id
     @Column(name = "ID", nullable = false, precision = 0)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "REGIONS_SEQ", sequenceName = "REGIONS_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "REGIONS_SEQ")
     public int getId() { return id; }
     public void setId(int id) { this.id = id;  }
 
