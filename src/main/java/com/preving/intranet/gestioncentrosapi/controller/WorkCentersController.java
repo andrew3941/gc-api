@@ -29,7 +29,7 @@ public class WorkCentersController {
     private WorkCenterService workCenterService;
 
 
-       @RequestMapping(value = "provinces", method = RequestMethod.GET)
+    @RequestMapping(value = "provinces", method = RequestMethod.GET)
     public ResponseEntity<?> findAllProvinces() {
            try{
                return new ResponseEntity<>(this.commonService.findAllProvinces(), HttpStatus.OK);

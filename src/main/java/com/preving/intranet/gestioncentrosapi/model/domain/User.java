@@ -7,7 +7,7 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "PC_USUARIOS", schema = "GC2006_RELEASE")
+@Table(schema = "GC2006_RELEASE", name = "PC_USUARIOS")
 public class User {
 
     public User(Long id, String username, String firstname, String lastname, String email, String password,

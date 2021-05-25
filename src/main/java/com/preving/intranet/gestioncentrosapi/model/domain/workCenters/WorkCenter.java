@@ -16,7 +16,7 @@ import java.util.Date;
 
 
 @Entity
-@Table(schema = "GESTION_CENTROS", name = "WORKCENTERS")
+@Table(schema = "GC2006_RELEASE", name = "PC_DELEGACIONES")
 public class WorkCenter implements Serializable {
     private int id;
     private String name;
@@ -54,8 +54,8 @@ public class WorkCenter implements Serializable {
 
     @Id
     @Column(name = "ID", nullable = false)
-    @SequenceGenerator(name = "WORKCENTERS_SEQ", sequenceName = "WORKCENTERS_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "WORKCENTERS_SEQ")
+    @SequenceGenerator(name = "PC_DELEGACIONES_SQ", sequenceName = "PC_DELEGACIONES_SQ", schema = "GC2006_RELEASE", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PC_DELEGACIONES_SQ")
     public int getId() {
         return id;
     }
