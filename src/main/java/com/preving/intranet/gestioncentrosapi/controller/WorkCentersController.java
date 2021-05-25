@@ -1,21 +1,16 @@
 package com.preving.intranet.gestioncentrosapi.controller;
 
-import com.preving.intranet.gestioncentrosapi.model.domain.City;
-import com.preving.intranet.gestioncentrosapi.model.domain.Entity;
-import com.preving.intranet.gestioncentrosapi.model.domain.Province;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
 import com.preving.intranet.gestioncentrosapi.model.services.WorkCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 
 @Controller
@@ -32,14 +27,12 @@ public class WorkCentersController {
 
        @RequestMapping(value = "provinces", method = RequestMethod.GET)
     public ResponseEntity<?> findAllProvinces() {
-        List<Province> provinces = null;
-        provinces = commonService.findAllProvinces();
-
-        if (provinces == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<List<Province>>(provinces, HttpStatus.OK);
+           try{
+               return new ResponseEntity<>(this.commonService.findAllProvinces(), HttpStatus.OK);
+           } catch (Exception e){
+               e.printStackTrace();
+               return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+           }
     }
 
     @RequestMapping(value = "filter", method = RequestMethod.POST)
@@ -56,14 +49,12 @@ public class WorkCentersController {
 
     @RequestMapping(value = "entities", method = RequestMethod.GET)
     public ResponseEntity<?> findAll() {
-        List<Entity> entities = null;
-        entities = commonService.findAll();
-
-        if (entities == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try{
+            return new ResponseEntity<>(this.commonService.findAll(), HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<List<Entity>>(entities, HttpStatus.OK);
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
@@ -106,16 +97,27 @@ public class WorkCentersController {
     public ResponseEntity<?> findCitiesByProvince(@PathVariable(value = "provinceCod") int provinceCod,
                                                   @RequestParam(value = "criterion") String criterion) {
 
-
-        List<City> cities = null;
-        cities = workCenterService.findCitiesByProvince(provinceCod, criterion);
-
-        if(cities == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            return new ResponseEntity<>(this.workCenterService.findCitiesByProvince(provinceCod, criterion), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<List<City>>(cities, HttpStatus.OK);
-
     }
 
+    /**
+     * Obtain head person
+     * @param  criterion
+     * @return
+     */
+    @RequestMapping(value = "users", method = RequestMethod.GET)
+    public ResponseEntity<?> findUsers ( @RequestParam(value = "criterion") String criterion) {
+
+        try {
+            return new ResponseEntity<>(this.workCenterService.getUsers(criterion), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

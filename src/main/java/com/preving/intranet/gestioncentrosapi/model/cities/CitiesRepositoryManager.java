@@ -8,7 +8,6 @@ import java.util.List;
 @Service
 public class CitiesRepositoryManager implements CitiesRepository {
 
-
     @Override
     public List<City> findCitiesByProvince(int provinceCod, String criterion) {
         return null;

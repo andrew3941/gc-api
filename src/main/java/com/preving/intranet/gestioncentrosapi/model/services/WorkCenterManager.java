@@ -1,9 +1,12 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
+import com.preving.intranet.gestioncentrosapi.model.cities.CitiesRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
-import com.preving.intranet.gestioncentrosapi.model.domain.City;
+import com.preving.intranet.gestioncentrosapi.model.domain.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
+import com.preving.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +22,21 @@ public class WorkCenterManager implements WorkCenterService{
     @Autowired
     private WorkCentersRepository workCentersRepository;
 
+    @Autowired
+    EntitiesRepository entitiesRepository;
+
+    @Autowired
+    CitiesRepository citiesRepository;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
     @Override
     public void addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request) {
 
+        long userId =  this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        workCentersRepository.save(newWorkCenter);
     }
 
     @Override
@@ -29,13 +44,29 @@ public class WorkCenterManager implements WorkCenterService{
 
     }
 
+
     @Override
-    public List<City> findCitiesByProvince(int provinceCod, String criterion) {
+    public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
         return null;
     }
 
     @Override
-    public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
+    public List<Province> findAllProvinces() {
+        return provincesRepository.findAllByOrderByName();
+    }
+
+    @Override
+    public List<Entities> findAll() {
+        return entitiesRepository.findAllByActiveTrue() ;
+    }
+
+    @Override
+    public List<City> findCitiesByProvince(int provinceCod, String criterion) {
+        return citiesRepository.findCitiesByProvince(provinceCod, criterion);
+    }
+
+    @Override
+    public List<User> getUsers(String criterion) {
         return null;
     }
 }

@@ -2,19 +2,22 @@ package com.preving.intranet.gestioncentrosapi.model.domain.workCenters;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.preving.intranet.gestioncentrosapi.model.domain.City;
-import com.preving.intranet.gestioncentrosapi.model.domain.Entity;
+import com.preving.intranet.gestioncentrosapi.model.domain.Entities;
 import com.preving.intranet.gestioncentrosapi.model.domain.Province;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
+@Entity
+@Table(schema = "GESTIONCENTROS", name = "Entities")
 public class WorkCenter implements Serializable {
     private int id;
-    private int name;
+    private String name;
     private Province province;
-    private Entity entity;
+    private Entities entities;
     private City city;
     private String navisionCode;
     private String address;
@@ -30,11 +33,11 @@ public class WorkCenter implements Serializable {
     public WorkCenter() {
     }
 
-    public WorkCenter(int id, int name, Province province, Entity entity, City city, String navisionCode, String address, String postalCode, int phoneNumber, String email, User headPersonSearch, Date startDate, Date endDate) {
+    public WorkCenter(int id, String name, Province province, Entities entities, City city, String navisionCode, String address, String postalCode, int phoneNumber, String email, User headPersonSearch, Date startDate, Date endDate) {
         this.id = id;
         this.name = name;
         this.province = province;
-        this.entity = entity;
+        this.entities = entities;
         this.city = city;
         this.navisionCode = navisionCode;
         this.address = address;
@@ -54,11 +57,11 @@ public class WorkCenter implements Serializable {
         this.id = id;
     }
 
-    public int getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(int name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -70,12 +73,12 @@ public class WorkCenter implements Serializable {
         this.province = province;
     }
 
-    public Entity getEntity() {
-        return entity;
+    public Entities getEntities() {
+        return entities;
     }
 
-    public void setEntity(Entity entity) {
-        this.entity = entity;
+    public void setEntities(Entities entities) {
+        this.entities = entities;
     }
 
     public City getCity() {
