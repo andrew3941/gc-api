@@ -18,7 +18,7 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping(value = "/workCenters")
+@RequestMapping(value = "/gestion-centros-api/workCenters")
 @CrossOrigin(origins = "http://localhost:4200")
 public class WorkCentersController {
 
