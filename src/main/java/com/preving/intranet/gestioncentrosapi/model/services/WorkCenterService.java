@@ -16,6 +16,8 @@ public interface WorkCenterService {
 
     List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter);
 
+    WorkCenter getWorkCenterById(int workId);
+
     List<Province> findAllProvinces();
 
     List<Entities> findAll();

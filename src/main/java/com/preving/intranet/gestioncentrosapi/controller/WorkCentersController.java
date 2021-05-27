@@ -17,7 +17,7 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping(value = "/workCenters")
+@RequestMapping(path= "/workCenters")
 @CrossOrigin(origins = "http://localhost:4200")
 public class WorkCentersController {
 
@@ -125,4 +125,21 @@ public class WorkCentersController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    @RequestMapping(value = "{centerId}", method = RequestMethod.GET)
+    public ResponseEntity<?> findWorkCenterById(@PathVariable(value = "centerId") int centerId){
+
+        try {
+                return new ResponseEntity<>(workCenterService.getWorkCenterById(centerId), HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+
+
 }

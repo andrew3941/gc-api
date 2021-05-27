@@ -17,18 +17,39 @@ import java.util.Date;
 
 @Entity
 @Table(schema = "GC2006_RELEASE", name = "PC_DELEGACIONES")
+@SqlResultSetMapping(
+        name = "WorkCenterMapping",
+        classes = {
+                @ConstructorResult(
+                        targetClass = WorkCenter.class,
+                        columns = {
+                                @ColumnResult(name = "ID", type = Integer.class),
+                                @ColumnResult(name = "LOCALIDAD_ID", type = Integer.class),
+                                @ColumnResult(name = "NOMBRE", type = String.class),
+                                @ColumnResult(name = "COD_IN_NAV", type = String.class),
+                                @ColumnResult(name = "DIRECCION", type = String.class),
+                                @ColumnResult(name = "C_POSTAL", type = String.class),
+                                @ColumnResult(name = "TFNO", type = String.class),
+                                @ColumnResult(name = "MAIL", type = String.class),
+                                @ColumnResult(name = "FECHA_ALTA", type = Date.class),
+                                @ColumnResult(name = "FECHA_BAJA", type = Date.class)
+                        }
+                )
+        }
+
+)
 public class WorkCenter implements Serializable {
     private int id;
     private String name;
     private Province province = new Province();
-    private Entities entity = new Entities();
+  //  private Entities entity = new Entities();
     private City city = new City();
     private String navisionCode;
     private String address;
     private String postalCode;
-    private int phoneNumber;
+    private String phoneNumber;
     private String email;
-    private User headPersonSearch = new User();
+    //private User headPersonSearch = new User();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date startDate;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
@@ -36,18 +57,29 @@ public class WorkCenter implements Serializable {
 
     public WorkCenter() {}
 
-    public WorkCenter(int id, String name, Province province, Entities entity, City city, String navisionCode, String address, String postalCode, int phoneNumber, String email, User headPersonSearch, Date startDate, Date endDate) {
+    public WorkCenter(int id, Integer localiti_id, String name, String navisionCode, String address, String postalCode, String phoneNumber, String email, Date startDate, Date endDate) {
+        this.id = id;
+        this.city.setId(localiti_id) ;
+        this.name = name;
+        this.navisionCode = navisionCode;
+        this.address = address;
+        this.postalCode = postalCode;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public WorkCenter(int id, String name, Province province, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, Date startDate, Date endDate) {
         this.id = id;
         this.name = name;
         this.province = province;
-        this.entity = entity;
         this.city = city;
         this.navisionCode = navisionCode;
         this.address = address;
         this.postalCode = postalCode;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.headPersonSearch = headPersonSearch;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -64,7 +96,7 @@ public class WorkCenter implements Serializable {
     }
 
     @Basic
-    @Column(name = "NAME")
+    @Column(name = "NOMBRE")
     public String getName() {
         return name;
     }
@@ -83,18 +115,18 @@ public class WorkCenter implements Serializable {
         this.province = province;
     }
 
-    @Required
-    @JoinColumn(name = "ENTITIES_ID", referencedColumnName = "ID")
-    @NotNull
-    public Entities getEntity() {
-        return entity;
-    }
-    public void setEntity(Entities entity) {
-        this.entity = entity;
-    }
+//    @Required
+//    @JoinColumn(name = "ENTITIES_ID", referencedColumnName = "ID")
+//    @NotNull
+//    public Entities getEntity() {
+//        return entity;
+//    }
+//    public void setEntity(Entities entity) {
+//        this.entity = entity;
+//    }
 
     @Required
-    @JoinColumn(name = "CITY_ID", referencedColumnName = "ID")
+    @JoinColumn(name = "LOCALIDAD_ID", referencedColumnName = "LOC_ID")
     @NotNull
     public City getCity() {
         return city;
@@ -104,7 +136,7 @@ public class WorkCenter implements Serializable {
     }
 
     @Basic
-    @Column(name = "NAVISION")
+    @Column(name = "COD_IN_NAV")
     public String getNavisionCode() {
         return navisionCode;
     }
@@ -113,7 +145,7 @@ public class WorkCenter implements Serializable {
     }
 
     @Basic
-    @Column(name = "ADDRESS")
+    @Column(name = "DIRECCION")
     public String getAddress() {
         return address;
     }
@@ -122,7 +154,7 @@ public class WorkCenter implements Serializable {
     }
 
     @Basic
-    @Column(name = "POSTAL_CODE")
+    @Column(name = "C_POSTAL")
     public String getPostalCode() {
         return postalCode;
     }
@@ -131,16 +163,16 @@ public class WorkCenter implements Serializable {
     }
 
     @Basic
-    @Column(name = "PHONE")
-    public int getPhoneNumber() {
+    @Column(name = "TFNO")
+    public String getPhoneNumber() {
         return phoneNumber;
     }
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
     @Basic
-    @Column(name = "EMAIL")
+    @Column(name = "MAIL")
     public String getEmail() {
         return email;
     }
@@ -148,17 +180,17 @@ public class WorkCenter implements Serializable {
         this.email = email;
     }
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
-    public User getHeadPersonSearch() {
-        return headPersonSearch;
-    }
-    public void setHeadPersonSearch(User headPersonSearch) {
-        this.headPersonSearch = headPersonSearch;
-    }
+   // @OneToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
+//    public User getHeadPersonSearch() {
+//        return headPersonSearch;
+//    }
+//    public void setHeadPersonSearch(User headPersonSearch) {
+//        this.headPersonSearch = headPersonSearch;
+//    }
 
     @Basic
-    @Column(name = "START_DATE")
+    @Column(name = "FECHA_ALTA")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     public Date getStartDate() {
         return startDate;
@@ -168,7 +200,7 @@ public class WorkCenter implements Serializable {
     }
 
     @Basic
-    @Column(name = "END_DATE")
+    @Column(name = "FECHA_BAJA")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     public Date getEndDate() {
         return endDate;

@@ -11,4 +11,6 @@ public interface WorkCentersCustomizeRepository {
 
     List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter);
 
+    WorkCenter findById(int id);
+
 }

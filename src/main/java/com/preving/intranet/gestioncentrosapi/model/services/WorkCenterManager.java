@@ -55,7 +55,14 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
+
         return this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter);
+
+    }
+
+    @Override
+    public WorkCenter getWorkCenterById(int workId) {
+        return this.workCentersCustomizeRepository.findById(workId);
     }
 
     @Override
