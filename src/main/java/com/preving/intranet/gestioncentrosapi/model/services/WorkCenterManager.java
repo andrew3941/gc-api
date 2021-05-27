@@ -1,5 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
+import com.preving.intranet.gestioncentrosapi.model.dao.users.UserCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersCustomizeRepository;
 import com.preving.intranet.gestioncentrosapi.model.cities.CitiesRepository;
@@ -41,6 +42,9 @@ public class WorkCenterManager implements WorkCenterService{
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserCustomRepository userCustomRepository;
+
     @Override
     public void addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request) {
 //        long userId =  this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();#
@@ -81,7 +85,9 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
-    public List<User> getUsers(String criterion) {
-      return  null;
+    public List<User> findUsersByCriterion(String criterion) {
+        return userCustomRepository.findUserByCriterion(criterion);
     }
+
+
 }

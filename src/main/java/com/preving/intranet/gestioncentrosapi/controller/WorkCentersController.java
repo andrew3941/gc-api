@@ -1,7 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.controller;
 
 
-import com.preving.intranet.gestioncentrosapi.model.domain.Entities;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+
 
 
 @Controller
@@ -52,14 +51,12 @@ public class WorkCentersController {
 
     @RequestMapping(value = "entities", method = RequestMethod.GET)
     public ResponseEntity<?> findAll() {
-        List<Entities> entities = null;
-        entities = commonService.findAll();
-
-        if (entities == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try{
+            return new ResponseEntity<>(this.commonService.findAllEntities(), HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<List<Entities>>(entities, HttpStatus.OK);
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
@@ -119,7 +116,7 @@ public class WorkCentersController {
     public ResponseEntity<?> findUsers ( @RequestParam(value = "criterion") String criterion) {
 
         try {
-            return new ResponseEntity<>(this.workCenterService.getUsers(criterion), HttpStatus.OK);
+            return new ResponseEntity<>(this.workCenterService.findUsersByCriterion(criterion), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

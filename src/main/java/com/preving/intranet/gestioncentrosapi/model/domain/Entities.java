@@ -11,14 +11,6 @@ public class Entities implements Serializable {
     private String name;
 
 
-    public Entities() {
-    }
-
-    public Entities(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
     @Id
     @Column(name = "ID", nullable = false, precision = 0)
     public int getId() {
@@ -29,7 +21,7 @@ public class Entities implements Serializable {
     }
 
     @Basic
-    @Column(name = "ENTITY_NAME", length = 150)
+    @Column(name = "ACRONIMO", length = 150)
     public String getName() {
         return name;
     }
@@ -37,4 +29,12 @@ public class Entities implements Serializable {
         this.name = name;
     }
 
+    //create a class constructor for dependency injection
+    public Entities() {
+    }
+
+    public Entities(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

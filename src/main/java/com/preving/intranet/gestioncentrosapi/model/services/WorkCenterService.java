@@ -24,6 +24,6 @@ public interface WorkCenterService {
 
     List<City> findCitiesByProvince(int provinceCod, String criterion);
 
-    List<User> getUsers (String criterion);
+    List<User> findUsersByCriterion (String criterion);
 
 }

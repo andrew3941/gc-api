@@ -25,7 +25,7 @@ public class CommonManager implements CommonService {
     }
 
     @Override
-    public List<Entities> findAll() {
+    public List<Entities> findAllEntities() {
         return entitiesRepository.findAll();
     }
 
