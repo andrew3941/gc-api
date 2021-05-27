@@ -13,7 +13,6 @@ public class Province implements Serializable {
     //create the get and set methods with the definition gonna have in the data base
     @Id
     @Column(name = "PRV_COD", nullable = false, precision = 0)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
         return id;
     }

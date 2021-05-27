@@ -1,8 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.controller;
 
-import com.preving.intranet.gestioncentrosapi.model.domain.City;
+
 import com.preving.intranet.gestioncentrosapi.model.domain.Entities;
-import com.preving.intranet.gestioncentrosapi.model.domain.Province;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
@@ -18,7 +17,7 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping(value = "/gestion-centros-api/workCenters")
+@RequestMapping(value = "/workCenters")
 @CrossOrigin(origins = "http://localhost:4200")
 public class WorkCentersController {
 
