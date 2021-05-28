@@ -42,7 +42,7 @@ public class WorkCenter implements Serializable {
     private String postalCode;
     private String phoneNumber;
     private String email;
-//    private User headPersonSearch = new User();
+    private User headPersonSearch = new User();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date startDate;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
@@ -63,7 +63,7 @@ public class WorkCenter implements Serializable {
         this.endDate = endDate;
     }
 
-    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, Date startDate, Date endDate) {
+    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, User headPersonSearch, Date startDate, Date endDate) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -72,6 +72,7 @@ public class WorkCenter implements Serializable {
         this.postalCode = postalCode;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        this.headPersonSearch = headPersonSearch;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -150,16 +151,14 @@ public class WorkCenter implements Serializable {
         this.email = email;
     }
 
-
-    // TODO the column name is "Responsable"
-   // @OneToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
-//    public User getHeadPersonSearch() {
-//        return headPersonSearch;
-//    }
-//    public void setHeadPersonSearch(User headPersonSearch) {
-//        this.headPersonSearch = headPersonSearch;
-//    }
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "RESPONSABLE", referencedColumnName = "ID")
+    public User getHeadPersonSearch() {
+        return headPersonSearch;
+    }
+    public void setHeadPersonSearch(User headPersonSearch) {
+        this.headPersonSearch = headPersonSearch;
+    }
 
     @Basic
     @Column(name = "FECHA_ALTA")
