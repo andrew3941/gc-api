@@ -1,4 +1,4 @@
-package com.preving.intranet.gestioncentrosapi.model.cities;
+package com.preving.intranet.gestioncentrosapi.model.dao.cities;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.City;
 import org.springframework.stereotype.Repository;

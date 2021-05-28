@@ -3,7 +3,7 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersCustomizeRepository;
-import com.preving.intranet.gestioncentrosapi.model.cities.CitiesRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.cities.CitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
@@ -26,8 +26,8 @@ public class WorkCenterManager implements WorkCenterService{
     @Autowired
     private WorkCentersRepository workCentersRepository;
 
-   @Autowired
-   private WorkCentersCustomizeRepository workCentersCustomizeRepository;
+    @Autowired
+    private WorkCentersCustomizeRepository workCentersCustomizeRepository;
 
     @Autowired
     EntitiesRepository entitiesRepository;

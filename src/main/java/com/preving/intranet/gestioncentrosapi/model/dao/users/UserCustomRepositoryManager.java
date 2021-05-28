@@ -19,14 +19,14 @@ public class UserCustomRepositoryManager implements UserCustomRepository {
         String sql = "" +
                 "SELECT ID, FIRSTNAME, LASTNAME, EMAIL, USERNAME " +
                 "   FROM gc2006_release.pc_usuarios " +
-                "   WHERE LOWER(TRANSLATE(USERNAME, 'О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫', 'aeiounAEIOUN')) " +
-                "       LIKE LOWER(TRANSLATE(:criterion, 'О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫', 'aeiounAEIOUN'))  " +
-                "       OR LOWER(TRANSLATE(FIRSTNAME, 'О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫', 'aeiounAEIOUN')) " +
-                "       LIKE LOWER(TRANSLATE(:criterion, 'О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫', 'aeiounAEIOUN')) " +
-                "       OR LOWER(TRANSLATE(LASTNAME, 'О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫', 'aeiounAEIOUN')) " +
-                "       LIKE LOWER(TRANSLATE(:criterion, 'О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫', 'aeiounAEIOUN'))  " +
-                "       OR LOWER(TRANSLATE(EMAIL, 'О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫', 'aeiounAEIOUN')) " +
-                "       LIKE LOWER(TRANSLATE(:criterion, 'О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫', 'aeiounAEIOUN')) ";
+                "   WHERE LOWER(TRANSLATE(USERNAME, 'АИМСЗЯаимсзя', 'aeiounAEIOUN')) " +
+                "       LIKE LOWER(TRANSLATE(:criterion, 'АИМСЗЯаимсзя', 'aeiounAEIOUN'))  " +
+                "       OR LOWER(TRANSLATE(FIRSTNAME, 'АИМСЗЯаимсзя', 'aeiounAEIOUN')) " +
+                "       LIKE LOWER(TRANSLATE(:criterion, 'АИМСЗЯаимсзя', 'aeiounAEIOUN')) " +
+                "       OR LOWER(TRANSLATE(LASTNAME, 'АИМСЗЯаимсзя', 'aeiounAEIOUN')) " +
+                "       LIKE LOWER(TRANSLATE(:criterion, 'АИМСЗЯаимсзя', 'aeiounAEIOUN'))  " +
+                "       OR LOWER(TRANSLATE(EMAIL, 'АИМСЗЯаимсзя', 'aeiounAEIOUN')) " +
+                "       LIKE LOWER(TRANSLATE(:criterion, 'АИМСЗЯаимсзя', 'aeiounAEIOUN')) ";
 
                 Query query = manager.createNativeQuery(sql).setParameter("criterion", "%" + criterion + "%");
 
