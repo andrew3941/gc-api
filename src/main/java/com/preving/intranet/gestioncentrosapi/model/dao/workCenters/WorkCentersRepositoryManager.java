@@ -33,9 +33,10 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
             sql += " AND LOWER(TRANSLATE(WC.NOMBRE, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN'))";
         }
 
-//        if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getId() != 0){
-//            sql += " AND WC.LOCALIDAD_ID = :workCenterProvince";
-//        }
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getId() != 0){
+
+            sql += " AND WC.LOCALIDAD_ID IN (SELECT C.LOC_ID FROM VIG_SALUD.LOCALIDADES C WHERE C.LOC_PRV_COD =:workCenterProvince)";
+        }
 
         Query query = manager.createNativeQuery(sql, "WorkCenterMapping");
 
@@ -43,9 +44,9 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
             query.setParameter("workCenterName", "%" + workCenterFilter.getWorkCenterName() + "%");
         }
 
-//        if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getId() != 0){
-//            query.setParameter("workCenterProvince", workCenterFilter.getWorkCenterProvince());
-//        }
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getId() != 0){
+            query.setParameter("workCenterProvince", workCenterFilter.getWorkCenterProvince());
+        }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterStatus() != 0){
             query.setParameter("workCenterStatus", workCenterFilter.getWorkCenterStatus());

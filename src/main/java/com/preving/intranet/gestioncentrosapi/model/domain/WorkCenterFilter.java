@@ -11,7 +11,7 @@ public class WorkCenterFilter {
 
     public WorkCenterFilter(String workCenterName, Province workCenterProvince, int workCenterStatus) {
         this.workCenterName = workCenterName;
-        this.workCenterProvince = workCenterProvince;
+        this.workCenterProvince=workCenterProvince;
         this.workCenterStatus = workCenterStatus;
     }
 
@@ -19,7 +19,6 @@ public class WorkCenterFilter {
     public String getWorkCenterName() {
         return workCenterName;
     }
-
     public void setWorkCenterName(String workCenterName) {
         this.workCenterName = workCenterName;
     }
@@ -28,7 +27,6 @@ public class WorkCenterFilter {
     public Province getWorkCenterProvince() {
         return workCenterProvince;
     }
-
     public void setWorkCenterProvince(Province workCenterProvince) {
         this.workCenterProvince = workCenterProvince;
     }
