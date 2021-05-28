@@ -1,7 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
-import com.preving.intranet.gestioncentrosapi.model.domain.Province;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 
@@ -18,11 +17,7 @@ public interface WorkCenterService {
 
     WorkCenter getWorkCenterById(int workId);
 
-    List<Province> findAllProvinces();
-
-    List<Entities> findAll();
-
-    List<City> findCitiesByProvince(int provinceCod, String criterion);
+    List<City> findCitiesByProvince(String provinceCod, String criterion);
 
     List<User> findUsersByCriterion (String criterion);
 

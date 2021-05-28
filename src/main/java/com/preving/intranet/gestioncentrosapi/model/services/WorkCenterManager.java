@@ -8,7 +8,6 @@ import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesReposit
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
-import com.preving.intranet.gestioncentrosapi.model.domain.Province;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.security.JwtTokenUtil;
@@ -59,9 +58,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
-
         return this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter);
-
     }
 
     @Override
@@ -70,17 +67,7 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
-    public List<Province> findAllProvinces() {
-        return provincesRepository.findAllByOrderByName();
-    }
-
-    @Override
-    public List<Entities> findAll() {
-        return entitiesRepository.findAll() ;
-    }
-
-    @Override
-    public List<City> findCitiesByProvince(int provinceCod, String criterion) {
+    public List<City> findCitiesByProvince(String provinceCod, String criterion) {
         return citiesRepository.findCitiesByProvince(provinceCod, criterion);
     }
 

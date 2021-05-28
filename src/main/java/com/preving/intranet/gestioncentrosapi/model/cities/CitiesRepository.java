@@ -8,6 +8,6 @@ import java.util.List;
 @Repository
 public interface CitiesRepository  {
 
-    List<City> findCitiesByProvince(int provinceCod, String criterion);
+    List<City> findCitiesByProvince(String provinceCod, String criterion);
 
 }

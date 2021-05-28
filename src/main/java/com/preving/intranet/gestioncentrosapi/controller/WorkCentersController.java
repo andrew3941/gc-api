@@ -26,7 +26,10 @@ public class WorkCentersController {
     @Autowired
     private WorkCenterService workCenterService;
 
-
+    /**
+     * Obtiene la lista de provincias
+     * @return
+     */
     @RequestMapping(value = "provinces", method = RequestMethod.GET)
     public ResponseEntity<?> findAllProvinces() {
            try{
@@ -37,6 +40,11 @@ public class WorkCentersController {
            }
     }
 
+    /**
+     * Obtiene las delegaciones mediante filtro
+     * @RequestBody WorkCenterFilter
+     * @return
+     */
     @RequestMapping(value = "filter", method = RequestMethod.POST)
     public ResponseEntity<?> findWorkCenterByFilter(@RequestBody WorkCenterFilter workCenterFilter) {
 
@@ -49,6 +57,10 @@ public class WorkCentersController {
 
        }
 
+    /**
+     * Obtiene la lista de entidades
+     * @return
+     */
     @RequestMapping(value = "entities", method = RequestMethod.GET)
     public ResponseEntity<?> findAll() {
         try{
@@ -59,6 +71,11 @@ public class WorkCentersController {
         }
     }
 
+    /**
+     * Añadimos una delegación
+     * @RequestBody WorkCenter
+     * @return
+     */
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public ResponseEntity<?> saveWorkCenter(HttpServletRequest request, @RequestBody WorkCenter newWorkCenter) {
 
@@ -74,6 +91,12 @@ public class WorkCentersController {
 
     }
 
+    /**
+     * Editamos una delegación
+     * @param workCenterId
+     * @RequestBody WorkCenter
+     * @return
+     */
     @RequestMapping(value = "{workCenterId}/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editWorkCenter(HttpServletRequest request,
                                             @PathVariable(value="workCenterId") int workCenterId,
@@ -91,12 +114,12 @@ public class WorkCentersController {
     }
 
     /**
-     * Obtain list of localities via province code
+     * Obtención listado de localidades por cod_provincia
      * @param provinceCod, criterion
      * @return
      */
     @RequestMapping(value = "provinces/{provinceCod}/localities", method = RequestMethod.GET)
-    public ResponseEntity<?> findCitiesByProvince(@PathVariable(value = "provinceCod") int provinceCod,
+    public ResponseEntity<?> findCitiesByProvince(@PathVariable(value = "provinceCod") String provinceCod,
                                                   @RequestParam(value = "criterion") String criterion) {
 
         try {
@@ -108,7 +131,7 @@ public class WorkCentersController {
     }
 
     /**
-     * Obtain head person
+     * Obtiene usuarios por criterio
      * @param  criterion
      * @return
      */
@@ -124,6 +147,11 @@ public class WorkCentersController {
     }
 
 
+    /**
+     * Obtención de delegación por Id
+     * @param centerId
+     * @return
+     */
     @RequestMapping(value = "{centerId}", method = RequestMethod.GET)
     public ResponseEntity<?> findWorkCenterById(@PathVariable(value = "centerId") int centerId){
 
