@@ -2,12 +2,7 @@ package com.preving.intranet.gestioncentrosapi.model.domain.workCenters;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.preving.intranet.gestioncentrosapi.model.domain.City;
-
-import com.preving.intranet.gestioncentrosapi.model.domain.Entities;
-import com.preving.intranet.gestioncentrosapi.model.domain.Province;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
-import com.sun.istack.NotNull;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -41,15 +36,13 @@ import java.util.Date;
 public class WorkCenter implements Serializable {
     private int id;
     private String name;
-    private Province province = new Province();
-  //  private Entities entity = new Entities();
     private City city = new City();
     private String navisionCode;
     private String address;
     private String postalCode;
     private String phoneNumber;
     private String email;
-    //private User headPersonSearch = new User();
+//    private User headPersonSearch = new User();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date startDate;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
@@ -57,9 +50,9 @@ public class WorkCenter implements Serializable {
 
     public WorkCenter() {}
 
-    public WorkCenter(int id, Integer localiti_id, String name, String navisionCode, String address, String postalCode, String phoneNumber, String email, Date startDate, Date endDate) {
+    public WorkCenter(int id, Integer localityId, String name, String navisionCode, String address, String postalCode, String phoneNumber, String email, Date startDate, Date endDate) {
         this.id = id;
-        this.city.setId(localiti_id) ;
+        this.city.setId(localityId) ;
         this.name = name;
         this.navisionCode = navisionCode;
         this.address = address;
@@ -70,10 +63,9 @@ public class WorkCenter implements Serializable {
         this.endDate = endDate;
     }
 
-    public WorkCenter(int id, String name, Province province, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, Date startDate, Date endDate) {
+    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, Date startDate, Date endDate) {
         this.id = id;
         this.name = name;
-        this.province = province;
         this.city = city;
         this.navisionCode = navisionCode;
         this.address = address;
@@ -104,30 +96,8 @@ public class WorkCenter implements Serializable {
         this.name = name;
     }
 
-
-    @Required
-    @JoinColumn(name = "PROVINCE_ID", referencedColumnName = "ID")
-    @NotNull
-    public Province getProvince() {
-        return province;
-    }
-    public void setProvince(Province province) {
-        this.province = province;
-    }
-
-//    @Required
-//    @JoinColumn(name = "ENTITIES_ID", referencedColumnName = "ID")
-//    @NotNull
-//    public Entities getEntity() {
-//        return entity;
-//    }
-//    public void setEntity(Entities entity) {
-//        this.entity = entity;
-//    }
-
-    @Required
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "LOCALIDAD_ID", referencedColumnName = "LOC_ID")
-    @NotNull
     public City getCity() {
         return city;
     }
@@ -180,6 +150,8 @@ public class WorkCenter implements Serializable {
         this.email = email;
     }
 
+
+    // TODO the column name is "Responsable"
    // @OneToOne(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "USER_ID", referencedColumnName = "ID")
 //    public User getHeadPersonSearch() {

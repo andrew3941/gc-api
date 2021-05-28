@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WorkCenterManager implements WorkCenterService{
@@ -62,8 +63,9 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
-    public WorkCenter getWorkCenterById(int workId) {
-        return this.workCentersCustomizeRepository.findById(workId);
+    public Optional<WorkCenter> getWorkCenterById(int workId) {
+        return this.workCentersRepository.findById(workId);
+//        return this.workCentersCustomizeRepository.findById(workId);
     }
 
     @Override

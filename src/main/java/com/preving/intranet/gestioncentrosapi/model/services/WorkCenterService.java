@@ -6,6 +6,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCente
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 public interface WorkCenterService {
 
@@ -15,7 +16,7 @@ public interface WorkCenterService {
 
     List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter);
 
-    WorkCenter getWorkCenterById(int workId);
+    Optional<WorkCenter> getWorkCenterById(int workId);
 
     List<City> findCitiesByProvince(String provinceCod, String criterion);
 

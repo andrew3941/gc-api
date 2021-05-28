@@ -32,12 +32,12 @@ public class WorkCentersController {
      */
     @RequestMapping(value = "provinces", method = RequestMethod.GET)
     public ResponseEntity<?> findAllProvinces() {
-           try{
-               return new ResponseEntity<>(this.commonService.findAllProvinces(), HttpStatus.OK);
-           } catch (Exception e){
-               e.printStackTrace();
-               return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-           }
+        try{
+            return new ResponseEntity<>(this.commonService.findAllProvinces(), HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -55,7 +55,7 @@ public class WorkCentersController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-       }
+    }
 
     /**
      * Obtiene la lista de entidades
@@ -81,12 +81,9 @@ public class WorkCentersController {
 
         try {
             workCenterService.addWorkCenter(newWorkCenter, request);
-
         } catch (Exception e) {
-
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
@@ -103,9 +100,7 @@ public class WorkCentersController {
                                             @RequestBody WorkCenter newWorkCenter) {
         try {
             workCenterService.editWorkCenter(workCenterId, newWorkCenter,request);
-
         } catch (Exception e) {
-
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -156,15 +151,13 @@ public class WorkCentersController {
     public ResponseEntity<?> findWorkCenterById(@PathVariable(value = "centerId") int centerId){
 
         try {
-                return new ResponseEntity<>(workCenterService.getWorkCenterById(centerId), HttpStatus.OK);
-
+            return new ResponseEntity<>(workCenterService.getWorkCenterById(centerId), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
-
 
 
 }
