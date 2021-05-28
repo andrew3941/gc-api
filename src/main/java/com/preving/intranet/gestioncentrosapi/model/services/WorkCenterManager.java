@@ -47,15 +47,16 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public void addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request) {
-//        long userId =  this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();#
-
+        long userId =  this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
         workCentersRepository.save(newWorkCenter);
     }
 
+
     @Override
     public void editWorkCenter(int workCenterId, WorkCenter newWorkCenter, HttpServletRequest request) {
-
+        workCentersRepository.editWorkCenter(workCenterId, newWorkCenter, this.jwtTokenUtil.getUserWithRolesFromToken(request).getId());
     }
+
 
     @Override
     public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
@@ -80,3 +81,4 @@ public class WorkCenterManager implements WorkCenterService{
 
 
 }
+

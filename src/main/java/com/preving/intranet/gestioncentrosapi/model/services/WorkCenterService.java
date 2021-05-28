@@ -1,5 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
+import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
@@ -11,6 +12,7 @@ import java.util.Optional;
 public interface WorkCenterService {
 
     void addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request);
+
 
     void editWorkCenter(int workCenterId, WorkCenter newWorkCenter, HttpServletRequest request);
 
