@@ -54,7 +54,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public void editWorkCenter(int workCenterId, WorkCenter newWorkCenter, HttpServletRequest request) {
-        workCentersRepository.editWorkCenter(workCenterId, newWorkCenter, this.jwtTokenUtil.getUserWithRolesFromToken(request).getId());
+//        workCentersRepository.editWorkCenter(workCenterId, newWorkCenter, this.jwtTokenUtil.getUserWithRolesFromToken(request).getId());
     }
 
 
@@ -64,9 +64,8 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
-    public Optional<WorkCenter> getWorkCenterById(int workId) {
-        return this.workCentersRepository.findById(workId);
-//        return this.workCentersCustomizeRepository.findById(workId);
+    public WorkCenter getWorkCenterById(int workId) {
+        return this.workCentersRepository.findWorkCenterById(workId);
     }
 
     @Override

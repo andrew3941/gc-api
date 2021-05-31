@@ -30,7 +30,7 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterName() != null && workCenterFilter.getWorkCenterName() != ""){
 
-            sql += " AND LOWER(TRANSLATE(WC.NOMBRE, '√°√©√≠√≥√∫√±√Å√â√ç√ì√ö√ë', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, '√°√©√≠√≥√∫√±√Å√â√ç√ì√ö√ë', 'aeiounAEIOUN'))";
+            sql += " AND LOWER(TRANSLATE(WC.NOMBRE, '·ÈÌÛ˙Ò¡…Õ”⁄—', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, '·ÈÌÛ˙Ò¡…Õ”⁄—', 'aeiounAEIOUN'))";
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getId() != 0){

@@ -11,7 +11,7 @@ public class City implements Serializable {
 
     private int id;
     private String name;
-    private Province prvCod = new Province();
+    private Province province = new Province();
 
 
     @Id
@@ -28,23 +28,23 @@ public class City implements Serializable {
     //create the relationship between PROVINCIAS and LOCALIDADES tables join the columns of each tables
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "LOC_PRV_COD", referencedColumnName = "PRV_COD", nullable = false)
-    public Province getprvCod() {  return prvCod; }
-    public void setprvCod(Province prvCod) { this.prvCod = prvCod;  }
+    public Province getProvince() {  return province; }
+    public void setProvince(Province province) { this.province = province;  }
 
     //create a class constructor for dependency injection
     public City() {
     }
 
 
-    public City(int id, String name, Province prvCod) {
+    public City(int id, String name, Province province) {
         this.id = id;
         this.name = name;
-        this.prvCod = prvCod;
+        this.province = province;
     }
 
-    public City(int id, int prvCod, String name) {
+    public City(int id, int province, String name) {
         this.id = id;
-        this.prvCod.setId(prvCod);
+        this.province.setId(province);
         this.name = name;
     }
   

@@ -13,12 +13,11 @@ public interface WorkCenterService {
 
     void addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request);
 
-
     void editWorkCenter(int workCenterId, WorkCenter newWorkCenter, HttpServletRequest request);
 
     List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter);
 
-    Optional<WorkCenter> getWorkCenterById(int workId);
+    WorkCenter getWorkCenterById(int workId);
 
     List<City> findCitiesByProvince(String provinceCod, String criterion);
 
