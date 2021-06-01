@@ -22,3 +22,22 @@ ALTER TABLE  GC2006_RELEASE.PC_DELEGACIONES ADD MODIFICADO DATE;
 
 --MODIFICADO_POR
 ALTER TABLE  GC2006_RELEASE.PC_DELEGACIONES ADD MODIFICADO_POR NUMBER(10);
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+-- SECUENCIAS
+--------------------------------------------------------------------------------------------------------------------------------
+
+-- Creamos secuencia para la tabla GC2006_RELEASE.PC_DELEGACIONES
+create sequence PC_DELEGACIONES_SQ
+  minvalue 200000
+  maxvalue 999999
+  increment by 1;
+
+
+-- Creamos secuencia para la tabla MP2.ZONA
+create sequence ZONA_SQ
+  minvalue 200000
+  maxvalue 999999
+  increment by 1;

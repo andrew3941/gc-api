@@ -48,6 +48,14 @@ public class WorkCenter implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date endDate = null;
 
+    private int active;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
+    private Date created = new Date();
+    private User createdBy = new User();
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
+    private Date modified;
+    private User modifiedBy;
+
     public WorkCenter() {}
 
     public WorkCenter(int id, Integer localityId, String name, String navisionCode, String address, String postalCode, String phoneNumber, String email, Date startDate, Date endDate) {
@@ -63,7 +71,7 @@ public class WorkCenter implements Serializable {
         this.endDate = endDate;
     }
 
-    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, User headPerson, Date startDate, Date endDate) {
+    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, User headPerson, Date startDate, Date endDate, int active, Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -75,6 +83,11 @@ public class WorkCenter implements Serializable {
         this.headPerson = headPerson;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.active = active;
+        this.created = created;
+        this.createdBy = createdBy;
+        this.modified = modified;
+        this.modifiedBy = modifiedBy;
     }
 
     @Id
@@ -178,6 +191,51 @@ public class WorkCenter implements Serializable {
     }
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    @Basic
+    @Column(name = "ACTIVO", nullable = false)
+    public int getActive() {
+        return active;
+    }
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    @Basic
+    @Column(name = "CREADO")
+    public Date getCreated() {
+        return created;
+    }
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "CREADO_POR", referencedColumnName = "ID")
+    public User getCreatedBy() {
+        return createdBy;
+    }
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    @Basic
+    @Column(name = "MODIFICADO")
+    public Date getModified() {
+        return modified;
+    }
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "MODIFICADO_POR", referencedColumnName = "ID")
+    public User getModifiedBy() {
+        return modifiedBy;
+    }
+    public void setModifiedBy(User modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 }
 

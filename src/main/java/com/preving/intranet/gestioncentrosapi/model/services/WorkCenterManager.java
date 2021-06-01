@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +49,14 @@ public class WorkCenterManager implements WorkCenterService{
     @Override
     public void addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request) {
         long userId =  this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        // Seteamos los valores necesarios para hacer el insert
+        // TODO verificar si el alta viene con fecha de baja
+        newWorkCenter.setActive(1);
+        newWorkCenter.setCreated(new Date());
+        newWorkCenter.getCreatedBy().setId(userId);
+
+        // Insertamos delegación
         workCentersRepository.save(newWorkCenter);
     }
 
