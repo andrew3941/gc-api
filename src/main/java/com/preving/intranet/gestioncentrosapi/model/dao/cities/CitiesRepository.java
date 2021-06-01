@@ -1,6 +1,5 @@
 package com.preving.intranet.gestioncentrosapi.model.dao.cities;
 
-import com.preving.intranet.gestioncentrosapi.model.domain.City;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -8,6 +7,6 @@ import java.util.List;
 @Repository
 public interface CitiesRepository  {
 
-    List<City> findCitiesByProvince(String provinceCod, String criterion);
+    List findCitiesByProvince(String provinceCod, String criterion);
 
 }

@@ -11,6 +11,27 @@ import java.util.Date;
 @Table(schema = "GC2006_RELEASE", name = "PC_USUARIOS")
 public class User {
 
+    private Long id;
+    private String username;
+    private String salto;
+    private String password;
+    private String firstname;
+    private String lastname;
+    private String completeName;
+    private String email;
+    private Boolean enabled;
+    private Date lastPasswordResetDate;
+
+    public User() {
+    }
+
+    public User(Long id, String firstname, String lastname, String completeName) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.completeName = completeName;
+    }
+
     public User(Long id, String username, String firstname, String lastname, String email, String password,
                 Boolean enabled, Date lastPasswordResetDate) {
         this.id = id;
@@ -22,19 +43,6 @@ public class User {
         this.enabled = enabled;
         this.lastPasswordResetDate = lastPasswordResetDate;
     }
-
-    public User() {
-    }
-
-    private Long id;
-    private String username;
-    private String salto;
-    private String password;
-    private String firstname;
-    private String lastname;
-    private String email;
-    private Boolean enabled;
-    private Date lastPasswordResetDate;
 
     @Id
     @Column(name = "ID")
@@ -125,5 +133,8 @@ public class User {
         return lastPasswordResetDate;
     }
     public void setLastPasswordResetDate(Date lastPasswordResetDate) { this.lastPasswordResetDate = lastPasswordResetDate; }
+
+    public String getCompleteName() { return completeName; }
+    public void setCompleteName(String completeName) { this.completeName = completeName; }
 
 }

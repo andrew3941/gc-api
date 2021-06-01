@@ -23,24 +23,34 @@ public class CitiesRepositoryManager implements CitiesRepository {
                 "SELECT * " +
                 "FROM ( " +
                 "   SELECT LOC_ID, CAST(LOC_PRV_COD AS INTEGER), LOC_NOMBRE FROM VIG_SALUD.LOCALIDADES " +
-                "   WHERE LOC_PRV_COD=:provinceCod " +
-                "   AND LOWER(TRANSLATE(LOC_NOMBRE, '·ÈÌÛ˙Ò¡…Õ”⁄—', 'aeiounAEIOUN')) " +
-                "   LIKE LOWER(TRANSLATE(:criterion, '·ÈÌÛ˙Ò¡…Õ”⁄—', 'aeiounAEIOUN')) " +
-                "   ORDER BY LOC_NOMBRE ASC) " +
-                "AS rs " +
-                "LIMIT 10";
+                "   WHERE LOC_PRV_COD LIKE :provinceCod ";
 
-        Query query = manager.createNativeQuery(sql).setParameter("provinceCod", provinceCod)
-                .setParameter("criterion", "%" + criterion + "%");
+        if(criterion != null && !criterion.equals("")) {
+            sql += "AND LOWER(TRANSLATE(LOC_NOMBRE, '·ÈÌÛ˙Ò¡…Õ”⁄—', 'aeiounAEIOUN')) " +
+                    "LIKE LOWER(TRANSLATE(:criterion, '·ÈÌÛ˙Ò¡…Õ”⁄—', 'aeiounAEIOUN')) ";
+        }
+
+        sql += "ORDER BY LOC_NOMBRE ASC) " +
+                "AS rs";
+
+        if(Integer.parseInt(provinceCod) < 10) {
+            provinceCod = "0" + provinceCod;
+        }
+
+        Query query = manager.createNativeQuery(sql).setParameter("provinceCod", provinceCod);
+
+        if(criterion != null && !criterion.equals("")) {
+            query.setParameter("criterion", "%" + criterion + "%");
+        }
 
         return mappingCities(query.getResultList());
     }
 
-    private List<City> mappingCities(List<Object[]> services) {
+    private List<City> mappingCities(List<Object[]> localities) {
 
         List<City> mappedCities = new ArrayList<>();
 
-        services.stream().forEach((record) -> {
+        localities.stream().forEach((record) -> {
             City city = new City(((BigDecimal) record[0]).intValue(),
                     ((int) record[1]),
                     (String) record[2]);
