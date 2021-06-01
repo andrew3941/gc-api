@@ -1,6 +1,5 @@
 package com.preving.intranet.gestioncentrosapi.controller;
 
-
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
@@ -72,7 +71,7 @@ public class WorkCentersController {
     }
 
     /**
-     * Añadimos una delegación
+     * Aï¿½adimos una delegaciï¿½n
      * @RequestBody WorkCenter
      * @return
      */
@@ -89,7 +88,7 @@ public class WorkCentersController {
     }
 
     /**
-     * Editamos una delegación
+     * Editamos una delegaciï¿½n
      * @param workCenterId
      * @RequestBody WorkCenter
      * @return
@@ -109,7 +108,7 @@ public class WorkCentersController {
     }
 
     /**
-     * Obtención listado de localidades por cod_provincia
+     * Obtenciï¿½n listado de localidades por cod_provincia
      * @param provinceCod, criterion
      * @return
      */
@@ -143,7 +142,7 @@ public class WorkCentersController {
 
 
     /**
-     * Obtención de delegación por Id
+     * Obtenciï¿½n de delegaciï¿½n por Id
      * @param centerId
      * @return
      */

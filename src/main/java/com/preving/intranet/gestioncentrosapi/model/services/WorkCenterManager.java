@@ -63,7 +63,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public void editWorkCenter(int workCenterId, WorkCenter newWorkCenter, HttpServletRequest request) {
-//        workCentersRepository.editWorkCenter(workCenterId, newWorkCenter, this.jwtTokenUtil.getUserWithRolesFromToken(request).getId());
+        workCentersRepository.editWorkCenter(workCenterId, newWorkCenter, this.jwtTokenUtil.getUserWithRolesFromToken(request).getId());
     }
 
 

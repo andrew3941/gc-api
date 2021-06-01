@@ -14,20 +14,20 @@ public interface WorkCentersRepository extends JpaRepository<WorkCenter, Integer
 
     WorkCenter findWorkCenterById(int workCenterId);
 
-//    @Modifying
-//    @Transactional
-//    @Query("update WorkCenter w set w.name=:#{#newWorkCenter.name}, " +
-//            "w.city=:#{#newWorkCenter.city}, " +
-//            "w.navisionCode=:#{#newWorkCenter.navisionCode}, " +
-//            "w.address=:#{#newWorkCenter.address}, " +
-//            "w.postalCode=:#{#newWorkCenter.postalCode}, " +
-//            "w.phoneNumber=:#{#newWorkCenter.phoneNumber}, "+
-//            "w.email=:#{#newWorkCenter.email}, "+
-//            "w.headPerson=:#{#newWorkCenter.headPerson}, "+
-//            "w.startDate=:#{#newWorkCenter.startDate}, "+
-//            "w.endDate=:#{#newWorkCenter.endDate}, " +
-//            "w.modified= CURRENT_TIMESTAMP, modificado_por=:editBy " +
-//            "where p.id=:projectId")
-//    void editWorkCenter(@Param("workCenterId") int workCenterId, @Param("newWorkCenter") WorkCenter newWorkCenter, @Param("editBy") int editBy);
+    @Modifying
+    @Transactional
+    @Query(value= "update WorkCenter w set w.name=:#{#newWorkCenter.name}, " +
+            "w.city=:#{#newWorkCenter.city}, " +
+            "w.navisionCode=:#{#newWorkCenter.navisionCode}, " +
+            "w.address=:#{#newWorkCenter.address}, " +
+            "w.postalCode=:#{#newWorkCenter.postalCode}, " +
+            "w.phoneNumber=:#{#newWorkCenter.phoneNumber}, "+
+            "w.email=:#{#newWorkCenter.email}, "+
+            "w.headPerson=:#{#newWorkCenter.headPerson}, "+
+            "w.startDate=:#{#newWorkCenter.startDate}, "+
+            "w.endDate=:#{#newWorkCenter.endDate}, " +
+            "w.modified= CURRENT_TIMESTAMP, modificado_por=:editBy " +
+            "where w.id=:workCenterId " , nativeQuery = true)
+    void  editWorkCenter(@Param("workCenterId") int workCenterId, @Param("newWorkCenter") WorkCenter newWorkCenter, @Param("editBy") int editBy);
 
 }
