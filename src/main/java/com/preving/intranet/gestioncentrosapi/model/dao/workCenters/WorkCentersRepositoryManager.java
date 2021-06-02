@@ -19,22 +19,29 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
     public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
 
         String sql = "" +
-                "SELECT WC.ID, WC.LOCALIDAD_ID, WC.NOMBRE, WC.COD_IN_NAV, WC.DIRECCION, WC.C_POSTAL, WC.TFNO, WC.MAIL, WC.FECHA_ALTA, WC.FECHA_BAJA " +
-                "FROM GC2006_RELEASE.PC_DELEGACIONES WC WHERE 1=1 ";
+                "SELECT WC.ID, WC.LOCALIDAD_ID, WC.NOMBRE, WC.COD_IN_NAV, WC.DIRECCION, WC.C_POSTAL, WC.TFNO, WC.MAIL, " +
+                "   WC.FECHA_ALTA, WC.FECHA_BAJA, LOC.LOC_NOMBRE LOCALIDAD_NOMBRE, " +
+                "   LOC.LOC_PRV_COD PROVINCIA_COD, PRV.PRV_NOMBRE PROVINCIA_NOMBRE " +
+                "FROM GC2006_RELEASE.PC_DELEGACIONES WC, " +
+                "   VIG_SALUD.LOCALIDADES LOC, " +
+                "   VIG_SALUD.PROVINCIAS PRV " +
+                "WHERE WC.LOCALIDAD_ID = LOC.LOC_ID " +
+                "   AND LOC.LOC_PRV_COD LIKE PRV.PRV_COD ";
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getId() != 0){
-
-            sql += " AND WC.LOCALIDAD_ID IN (SELECT LOC_ID FROM VIG_SALUD.LOCALIDADES LOCALITY WHERE LOCALITY.LOC_PRV_COD = :workCenterProvince)";
+            sql += "AND LOC.LOC_PRV_COD = :workCenterProvince ";
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterStatus() != 0){
-            sql += " AND WC.ACTIVO = :workCenterStatus";
+            sql += " AND WC.ACTIVO = :workCenterStatus ";
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterName() != null && workCenterFilter.getWorkCenterName() != ""){
-
-            sql += " AND LOWER(TRANSLATE(WC.NOMBRE, '????????????', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, '????????????', 'aeiounAEIOUN'))";
+            // TODO: 02/06/2021 - Check TRANSLATE characters
+            sql += " AND LOWER(TRANSLATE(WC.NOMBRE, '????????????', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, '????????????', 'aeiounAEIOUN')) ";
         }
+
+        sql += "ORDER BY WC.NOMBRE";
 
         Query query = manager.createNativeQuery(sql, "WorkCenterMapping");
 
@@ -43,7 +50,14 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getId() != 0){
-            query.setParameter("workCenterProvince",workCenterFilter.getWorkCenterProvince().getId());
+
+            String prvCod = String.valueOf(workCenterFilter.getWorkCenterProvince().getId());
+            if(workCenterFilter.getWorkCenterProvince().getId() < 10) {
+                prvCod = "0" + prvCod;
+            }
+
+            query.setParameter("workCenterProvince", prvCod);
+
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterStatus() != 0){
