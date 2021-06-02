@@ -16,7 +16,7 @@ public interface WorkCentersRepository extends JpaRepository<WorkCenter, Integer
 
     @Modifying
     @Transactional
-    @Query(value= "update WorkCenter w set w.name=:#{#newWorkCenter.name}, " +
+    @Query("update WorkCenter w set w.name=:#{#newWorkCenter.name}, " +
             "w.city=:#{#newWorkCenter.city}, " +
             "w.navisionCode=:#{#newWorkCenter.navisionCode}, " +
             "w.address=:#{#newWorkCenter.address}, " +
@@ -27,7 +27,7 @@ public interface WorkCentersRepository extends JpaRepository<WorkCenter, Integer
             "w.startDate=:#{#newWorkCenter.startDate}, "+
             "w.endDate=:#{#newWorkCenter.endDate}, " +
             "w.modified= CURRENT_TIMESTAMP, modificado_por=:editBy " +
-            "where w.id=:workCenterId " , nativeQuery = true)
+            "where w.id=:workCenterId ")
     void  editWorkCenter(@Param("workCenterId") int workCenterId, @Param("newWorkCenter") WorkCenter newWorkCenter, @Param("editBy") int editBy);
 
 }
