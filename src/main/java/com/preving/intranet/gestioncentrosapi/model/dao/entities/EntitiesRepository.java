@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface EntitiesRepository extends JpaRepository<Entities, Integer> {
 
-    List<Entities> findAll();
+    List<Entities> findAllByOrderByName();
 
    // List<Entities> findAllByActiveTrue();
 

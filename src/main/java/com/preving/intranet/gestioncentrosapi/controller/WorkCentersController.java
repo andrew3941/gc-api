@@ -78,12 +78,14 @@ public class WorkCentersController {
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public ResponseEntity<?> saveWorkCenter(HttpServletRequest request, @RequestBody WorkCenter newWorkCenter) {
 
+        ResponseEntity<?> response;
+
         try {
-            workCenterService.addWorkCenter(newWorkCenter, request);
+            response = workCenterService.addWorkCenter(newWorkCenter, request);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return response;
 
     }
 
@@ -97,13 +99,16 @@ public class WorkCentersController {
     public ResponseEntity<?> editWorkCenter(HttpServletRequest request,
                                             @PathVariable(value="workCenterId") int workCenterId,
                                             @RequestBody WorkCenter newWorkCenter) {
+
+        ResponseEntity<?> response;
+
         try {
-            workCenterService.editWorkCenter(workCenterId, newWorkCenter,request);
+            response =  workCenterService.editWorkCenter(workCenterId, newWorkCenter,request);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            response=  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return response;
 
     }
 

@@ -134,6 +134,7 @@ public class User {
     }
     public void setLastPasswordResetDate(Date lastPasswordResetDate) { this.lastPasswordResetDate = lastPasswordResetDate; }
 
+    @Transient
     public String getCompleteName() { return completeName; }
     public void setCompleteName(String completeName) { this.completeName = completeName; }
 
