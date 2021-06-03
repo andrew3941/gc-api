@@ -50,8 +50,10 @@ public class WorkCenter implements Serializable {
     private Date startDate;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date endDate = null;
-
+    private int idInMp2;
+    private int lineId;
     private int active;
+    private int visible;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
     private User createdBy = new User();
@@ -79,7 +81,7 @@ public class WorkCenter implements Serializable {
         this.getCity().getProvince().setName(prvName);
     }
 
-    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, User headPerson, Date startDate, Date endDate, int active, Date created, User createdBy, Date modified, User modifiedBy) {
+    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, User headPerson, Date startDate, Date endDate, int idInMp2, int lineId, int active, Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -91,6 +93,8 @@ public class WorkCenter implements Serializable {
         this.headPerson = headPerson;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.idInMp2 = idInMp2;
+        this.lineId = lineId;
         this.active = active;
         this.created = created;
         this.createdBy = createdBy;
@@ -202,12 +206,39 @@ public class WorkCenter implements Serializable {
     }
 
     @Basic
+    @Column(name = "ID_IN_MP2")
+    public int getIdInMp2() {
+        return idInMp2;
+    }
+    public void setIdInMp2(int idInMp2) {
+        this.idInMp2 = idInMp2;
+    }
+
+    @Basic
+    @Column(name = "LINEA_ID")
+    public int getLineId() {
+        return lineId;
+    }
+    public void setLineId(int lineId) {
+        this.lineId = lineId;
+    }
+
+    @Basic
     @Column(name = "ACTIVO", nullable = false)
     public int getActive() {
         return active;
     }
     public void setActive(int active) {
         this.active = active;
+    }
+
+    @Basic
+    @Column(name = "VISIBLE", nullable = false)
+    public int getVisible() {
+        return visible;
+    }
+    public void setVisible(int visible) {
+        this.visible = visible;
     }
 
     @Basic

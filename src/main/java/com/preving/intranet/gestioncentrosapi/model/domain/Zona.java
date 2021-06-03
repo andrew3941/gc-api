@@ -19,7 +19,9 @@ public class Zona implements Serializable {
 
 
     @Id
-    @Column(name = "COD_ZONA", nullable = false, precision = 0)
+    @Column(name = "COD_ZONA", nullable = false)
+    @SequenceGenerator(name = "ZONA_SQ", sequenceName = "ZONA_SQ", schema = "MP2", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ZONA_SQ")
     public int getCodZona() {
         return codZona;
     }

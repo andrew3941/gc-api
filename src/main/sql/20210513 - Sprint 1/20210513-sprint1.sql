@@ -30,14 +30,21 @@ ALTER TABLE  GC2006_RELEASE.PC_DELEGACIONES ADD MODIFICADO_POR NUMBER(10);
 --------------------------------------------------------------------------------------------------------------------------------
 
 -- Creamos secuencia para la tabla GC2006_RELEASE.PC_DELEGACIONES
-create sequence PC_DELEGACIONES_SQ
-  minvalue 200000
+create sequence GC2006_RELEASE.PC_DELEGACIONES_SQ
+  minvalue 100100
   maxvalue 999999
   increment by 1;
 
 
 -- Creamos secuencia para la tabla MP2.ZONA
-create sequence ZONA_SQ
-  minvalue 200000
+create sequence MP2.ZONA_SQ
+  minvalue 100100
+  maxvalue 999999
+  increment by 1;
+
+
+-- Creamos secuencia para la tabla RRHH.TM_DIM_NAVISION
+create sequence RRHH.TM_DIM_NAVISION_SQ
+  minvalue 800
   maxvalue 999999
   increment by 1;
