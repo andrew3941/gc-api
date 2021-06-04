@@ -45,13 +45,14 @@ public class WorkCenter implements Serializable {
     private String postalCode;
     private String phoneNumber;
     private String email;
-    private User headPerson = new User();
+    private User headPerson;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date startDate;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date endDate = null;
     private int idInMp2;
     private int lineId;
+    private int entityId;
     private int active;
     private int visible;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
@@ -81,7 +82,7 @@ public class WorkCenter implements Serializable {
         this.getCity().getProvince().setName(prvName);
     }
 
-    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, User headPerson, Date startDate, Date endDate, int idInMp2, int lineId, int active, Date created, User createdBy, Date modified, User modifiedBy) {
+    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, User headPerson, Date startDate, Date endDate, int idInMp2, int lineId, int entityId, int active, int visible, Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -95,7 +96,9 @@ public class WorkCenter implements Serializable {
         this.endDate = endDate;
         this.idInMp2 = idInMp2;
         this.lineId = lineId;
+        this.entityId = entityId;
         this.active = active;
+        this.visible = visible;
         this.created = created;
         this.createdBy = createdBy;
         this.modified = modified;
@@ -221,6 +224,15 @@ public class WorkCenter implements Serializable {
     }
     public void setLineId(int lineId) {
         this.lineId = lineId;
+    }
+
+    @Basic
+    @Column(name = "ENTIDAD_ID")
+    public int getEntityId() {
+        return entityId;
+    }
+    public void setEntityId(int entityId) {
+        this.entityId = entityId;
     }
 
     @Basic

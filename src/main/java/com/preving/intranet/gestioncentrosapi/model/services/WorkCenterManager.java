@@ -75,7 +75,7 @@ public class WorkCenterManager implements WorkCenterService{
         dimNavisionRepository.save(dimNavision);
 
         // Seteamos los valores necesarios para hacer el insert
-        // TODO verificar si el alta viene con fecha de baja
+        // TODO verificar con fecha de baja
         newWorkCenter.setActive(1);
         newWorkCenter.setVisible(1);
         // Seteamos valores de creación

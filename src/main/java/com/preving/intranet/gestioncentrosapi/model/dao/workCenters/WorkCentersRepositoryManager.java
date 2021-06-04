@@ -32,13 +32,12 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
             sql += "AND LOC.LOC_PRV_COD = :workCenterProvince ";
         }
 
-        if(workCenterFilter != null && workCenterFilter.getWorkCenterStatus() != 0){
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterStatus() != 2){
             sql += " AND WC.ACTIVO = :workCenterStatus ";
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterName() != null && workCenterFilter.getWorkCenterName() != ""){
-            // TODO: 02/06/2021 - Check TRANSLATE characters
-            sql += " AND LOWER(TRANSLATE(WC.NOMBRE, '????????????', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, '????????????', 'aeiounAEIOUN')) ";
+            sql += " AND LOWER(TRANSLATE(WC.NOMBRE, '·ÈÌÛ˙Ò¡…Õ”⁄—', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, '·ÈÌÛ˙Ò¡…Õ”⁄—', 'aeiounAEIOUN')) ";
         }
 
         sql += "ORDER BY WC.NOMBRE";
@@ -60,7 +59,7 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
 
         }
 
-        if(workCenterFilter != null && workCenterFilter.getWorkCenterStatus() != 0){
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterStatus() != 2){
             query.setParameter("workCenterStatus", workCenterFilter.getWorkCenterStatus());
         }
 
