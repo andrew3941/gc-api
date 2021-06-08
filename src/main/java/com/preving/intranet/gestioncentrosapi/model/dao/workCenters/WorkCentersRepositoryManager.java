@@ -20,7 +20,7 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
 
         String sql = "" +
                 "SELECT WC.ID, WC.LOCALIDAD_ID, WC.NOMBRE, WC.COD_IN_NAV, WC.DIRECCION, WC.C_POSTAL, WC.TFNO, WC.MAIL, " +
-                "   WC.FECHA_ALTA, WC.FECHA_BAJA, LOC.LOC_NOMBRE LOCALIDAD_NOMBRE, " +
+                "   WC.FECHA_ALTA, WC.FECHA_BAJA, WC.ACTIVO, LOC.LOC_NOMBRE LOCALIDAD_NOMBRE, " +
                 "   LOC.LOC_PRV_COD PROVINCIA_COD, PRV.PRV_NOMBRE PROVINCIA_NOMBRE " +
                 "FROM GC2006_RELEASE.PC_DELEGACIONES WC, " +
                 "   VIG_SALUD.LOCALIDADES LOC, " +

@@ -28,6 +28,7 @@ import java.util.Date;
                                 @ColumnResult(name = "MAIL", type = String.class),
                                 @ColumnResult(name = "FECHA_ALTA", type = Date.class),
                                 @ColumnResult(name = "FECHA_BAJA", type = Date.class),
+                                @ColumnResult(name = "ACTIVO", type = Integer.class),
                                 @ColumnResult(name = "LOCALIDAD_NOMBRE", type = String.class),
                                 @ColumnResult(name = "PROVINCIA_COD", type = String.class),
                                 @ColumnResult(name = "PROVINCIA_NOMBRE", type = String.class)
@@ -65,7 +66,7 @@ public class WorkCenter implements Serializable {
     public WorkCenter() {}
 
     public WorkCenter(int id, Integer localityId, String name, String navisionCode, String address, String postalCode,
-                      String phoneNumber, String email, Date startDate, Date endDate, String localityName,
+                      String phoneNumber, String email, Date startDate, Date endDate, int active, String localityName,
                       String prvCod, String prvName) {
         this.id = id;
         this.city.setId(localityId) ;
@@ -77,6 +78,7 @@ public class WorkCenter implements Serializable {
         this.email = email;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.active = active;
         this.getCity().setName(localityName);
         this.getCity().getProvince().setId(Integer.parseInt(prvCod));
         this.getCity().getProvince().setName(prvName);
