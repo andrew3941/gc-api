@@ -53,7 +53,7 @@ public class WorkCenter implements Serializable {
     private Date endDate = null;
     private int idInMp2;
     private int lineId;
-    private int entityId;
+    private com.preving.intranet.gestioncentrosapi.model.domain.Entity entity;
     private int active;
     private int visible;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
@@ -84,7 +84,7 @@ public class WorkCenter implements Serializable {
         this.getCity().getProvince().setName(prvName);
     }
 
-    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, User headPerson, Date startDate, Date endDate, int idInMp2, int lineId, int entityId, int active, int visible, Date created, User createdBy, Date modified, User modifiedBy) {
+    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, User headPerson, Date startDate, Date endDate, int idInMp2, int lineId, com.preving.intranet.gestioncentrosapi.model.domain.Entity entity, int active, int visible, Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -98,7 +98,7 @@ public class WorkCenter implements Serializable {
         this.endDate = endDate;
         this.idInMp2 = idInMp2;
         this.lineId = lineId;
-        this.entityId = entityId;
+        this.entity = entity;
         this.active = active;
         this.visible = visible;
         this.created = created;
@@ -228,13 +228,13 @@ public class WorkCenter implements Serializable {
         this.lineId = lineId;
     }
 
-    @Basic
-    @Column(name = "ENTIDAD_ID")
-    public int getEntityId() {
-        return entityId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ENTIDAD_ID", referencedColumnName = "ID")
+    public com.preving.intranet.gestioncentrosapi.model.domain.Entity getEntity() {
+        return entity;
     }
-    public void setEntityId(int entityId) {
-        this.entityId = entityId;
+    public void setEntity(com.preving.intranet.gestioncentrosapi.model.domain.Entity entity) {
+        this.entity = entity;
     }
 
     @Basic

@@ -3,9 +3,9 @@ package com.preving.intranet.gestioncentrosapi.model.domain;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
+@javax.persistence.Entity
 @Table(schema = "GC2006_RELEASE", name = "TM_ENTIDADES")
-public class Entities implements Serializable {
+public class Entity implements Serializable {
 
     private int id;
     private String name;
@@ -30,10 +30,10 @@ public class Entities implements Serializable {
     }
 
     //create a class constructor for dependency injection
-    public Entities() {
+    public Entity() {
     }
 
-    public Entities(int id, String name) {
+    public Entity(int id, String name) {
         this.id = id;
         this.name = name;
     }
