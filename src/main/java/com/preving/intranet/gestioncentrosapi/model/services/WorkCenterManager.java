@@ -156,7 +156,11 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public WorkCenter getWorkCenterById(int workId) {
-        return this.workCentersRepository.findWorkCenterById(workId);
+        WorkCenter workCenter = this.workCentersRepository.findWorkCenterById(workId);
+
+        workCenter.getHeadPerson().setCompleteName(workCenter.getHeadPerson().getLastname() + ", " + workCenter.getHeadPerson().getFirstname());
+
+        return workCenter;
     }
 
     @Override
