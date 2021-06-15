@@ -48,7 +48,7 @@ public class WorkCenter implements Serializable {
     private String email;
     private User headPerson;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
-    private Date startDate;
+    private Date startDate = new Date();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date endDate = null;
     private int idInMp2;

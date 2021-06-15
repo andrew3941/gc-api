@@ -158,7 +158,9 @@ public class WorkCenterManager implements WorkCenterService{
     public WorkCenter getWorkCenterById(int workId) {
         WorkCenter workCenter = this.workCentersRepository.findWorkCenterById(workId);
 
-        workCenter.getHeadPerson().setCompleteName(workCenter.getHeadPerson().getLastname() + ", " + workCenter.getHeadPerson().getFirstname());
+        if (workCenter.getHeadPerson() != null) {
+            workCenter.getHeadPerson().setCompleteName(workCenter.getHeadPerson().getLastname() + ", " + workCenter.getHeadPerson().getFirstname());
+        }
 
         return workCenter;
     }
