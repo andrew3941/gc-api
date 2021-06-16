@@ -26,6 +26,7 @@ jar {
 }
 
 war {
+	enabled = true
     baseName = "${this.warName}"
 }
 
