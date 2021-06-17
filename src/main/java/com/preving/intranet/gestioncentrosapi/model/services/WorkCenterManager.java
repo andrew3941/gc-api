@@ -162,6 +162,8 @@ public class WorkCenterManager implements WorkCenterService{
             workCenter.getHeadPerson().setCompleteName(workCenter.getHeadPerson().getLastname() + ", " + workCenter.getHeadPerson().getFirstname());
         }
 
+        // TODO add employees to workCenter object
+
         return workCenter;
     }
 
