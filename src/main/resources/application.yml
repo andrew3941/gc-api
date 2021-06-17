@@ -35,7 +35,7 @@ spring:
       default-media-type: application/json
 
   profiles:
-    active: dev
+    active: demo
 
   rabbitmq:
     host: 155.155.15.31
