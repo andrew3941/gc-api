@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = {"com.preving.restapi.personasapi.dao"})
+        basePackages = {"com.preving.intranet.gestioncentrosapi.model.dao"})
 public class PostgreDataBaseDemoConf {
 
     @Value("${datasource.db-postgre.jndi-name}")
