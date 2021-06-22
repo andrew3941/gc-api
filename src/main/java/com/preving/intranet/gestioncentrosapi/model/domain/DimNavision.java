@@ -2,6 +2,7 @@ package com.preving.intranet.gestioncentrosapi.model.domain;
 
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.io.Serializable;
 
 @Entity
