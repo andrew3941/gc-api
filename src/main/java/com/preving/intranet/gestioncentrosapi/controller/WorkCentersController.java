@@ -80,6 +80,7 @@ public class WorkCentersController {
         try {
             response = workCenterService.addWorkCenter(newWorkCenter, request);
         } catch (Exception e) {
+            e.printStackTrace();
             response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
@@ -102,6 +103,7 @@ public class WorkCentersController {
         try {
             response =  workCenterService.editWorkCenter(workCenterId, newWorkCenter,request);
         } catch (Exception e) {
+            e.printStackTrace();
             response=  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
