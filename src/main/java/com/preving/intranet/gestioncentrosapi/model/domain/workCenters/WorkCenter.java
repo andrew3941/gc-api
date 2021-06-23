@@ -52,7 +52,7 @@ public class WorkCenter implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date endDate = null;
     private int idInMp2;
-    private Integer lineId;
+    private int lineId;
     private com.preving.intranet.gestioncentrosapi.model.domain.Entity entity;
     private int active;
     private int visible;
@@ -84,7 +84,10 @@ public class WorkCenter implements Serializable {
         this.getCity().getProvince().setName(prvName);
     }
 
-    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, User headPerson, Date startDate, Date endDate, int idInMp2, Integer lineId, com.preving.intranet.gestioncentrosapi.model.domain.Entity entity, int active, int visible, Date created, User createdBy, Date modified, User modifiedBy) {
+    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode,
+                      String phoneNumber, String email, User headPerson, Date startDate, Date endDate, int idInMp2,
+                      int lineId, com.preving.intranet.gestioncentrosapi.model.domain.Entity entity, int active,
+                      int visible, Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -221,10 +224,10 @@ public class WorkCenter implements Serializable {
 
     @Basic
     @Column(name = "LINEA_ID")
-    public Integer getLineId() {
+    public int getLineId() {
         return lineId;
     }
-    public void setLineId(Integer lineId) {
+    public void setLineId(int lineId) {
         this.lineId = lineId;
     }
 
