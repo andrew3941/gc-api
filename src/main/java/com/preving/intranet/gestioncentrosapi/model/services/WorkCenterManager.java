@@ -136,11 +136,13 @@ public class WorkCenterManager implements WorkCenterService{
         // Editamos la delegación en la tabla MP2.ZONA
         zonaRepository.editWorkCenter(zona);
 
-        // Construimos el objeto dimNavision
-        DimNavision dimNavision = seteamosDimNavision(newWorkCenter);
+        if (newWorkCenter.getLineId() != null) {
+            // Construimos el objeto dimNavision
+            DimNavision dimNavision = seteamosDimNavision(newWorkCenter);
 
-        // Insertamos delegación en RRHH.TM_DIM_NAVISION
-        dimNavisionRepository.editWorkCenter(dimNavision);
+            // Insertamos delegación en RRHH.TM_DIM_NAVISION
+            dimNavisionRepository.editWorkCenter(dimNavision);
+        }
 
         // Editamos la delegación en la tabla GC2006_RELEASE.PC_DELEGACIONES
         workCentersRepository.editWorkCenter(workCenterId, newWorkCenter, this.jwtTokenUtil.getUserWithRolesFromToken(request).getId());
