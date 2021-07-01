@@ -113,12 +113,14 @@ public class WorkCenterManager implements WorkCenterService{
 
         DimNavision dimNavision = new DimNavision();
 
-        dimNavision.setId(newWorkCenter.getLineId());
+        if (newWorkCenter.getLineId() != null) {
+            dimNavision.setId(newWorkCenter.getLineId());
+        }
         dimNavision.setType("GEO");
         dimNavision.setCod("pru");
         dimNavision.setName(newWorkCenter.getName());
         dimNavision.setActive(1);
-        dimNavision.setOrder(444);
+        dimNavision.setOrder(null);
         dimNavision.setMcc_ln_mf("PT");
         String provinceCod = String.valueOf(newWorkCenter.getCity().getProvince().getId());
         dimNavision.setProvinceCod(provinceCod);

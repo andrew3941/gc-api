@@ -14,7 +14,7 @@ public class DimNavision implements Serializable {
     private String cod;
     private String name;
     private int active;
-    private int order;
+    private Integer order;
     private String mcc_ln_mf;
     private String provinceCod;
 
@@ -69,10 +69,10 @@ public class DimNavision implements Serializable {
 
     @Basic
     @Column(name = "ORDEN")
-    public int getOrder() {
+    public Integer getOrder() {
         return order;
     }
-    public void setOrder(int order) {
+    public void setOrder(Integer order) {
         this.order = order;
     }
 
@@ -99,7 +99,7 @@ public class DimNavision implements Serializable {
     public DimNavision() {
     }
 
-    public DimNavision(int id, String type, String cod, String name, int active, int order, String mcc_ln_mf, String provinceCod) {
+    public DimNavision(int id, String type, String cod, String name, int active, Integer order, String mcc_ln_mf, String provinceCod) {
         this.id = id;
         this.type = type;
         this.cod = cod;
