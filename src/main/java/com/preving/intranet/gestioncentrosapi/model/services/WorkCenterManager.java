@@ -1,5 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
+import com.preving.intranet.gestioncentrosapi.model.dao.department.DepartmentRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.dimNavision.DimNavisionRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserRepository;
@@ -55,6 +56,9 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Autowired
     private DimNavisionRepository dimNavisionRepository;
+
+    @Autowired
+    private DepartmentRepository departmentRepository;
 
     @Transactional
     public ResponseEntity<?> addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request) {
@@ -152,6 +156,11 @@ public class WorkCenterManager implements WorkCenterService{
     @Override
     public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
         return this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter);
+    }
+
+    @Override
+    public List<Department> getDepartments() {
+        return this.departmentRepository.findAllByOrderByName();
     }
 
     @Override

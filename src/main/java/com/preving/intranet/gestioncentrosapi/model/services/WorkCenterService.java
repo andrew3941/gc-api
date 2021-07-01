@@ -16,6 +16,8 @@ public interface WorkCenterService {
 
     List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter);
 
+    List<Department> getDepartments();
+
     WorkCenter getWorkCenterById(int workId);
 
     List<City> findCitiesByProvince(String provinceCod, String criterion);
