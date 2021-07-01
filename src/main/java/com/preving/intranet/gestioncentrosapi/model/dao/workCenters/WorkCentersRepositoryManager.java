@@ -15,6 +15,7 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
     @PersistenceContext
     private EntityManager manager;
 
+
     @Override
     public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
 
@@ -37,7 +38,7 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterName() != null && workCenterFilter.getWorkCenterName() != ""){
-            sql += " AND LOWER(TRANSLATE(WC.NOMBRE, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) ";
+            sql += " AND LOWER(TRANSLATE(WC.NOMBRE, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN')) ";
         }
 
         sql += "ORDER BY WC.NOMBRE";
@@ -63,8 +64,25 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
             query.setParameter("workCenterStatus", workCenterFilter.getWorkCenterStatus());
         }
 
+
         List<WorkCenter>  allWorkCenters = query.getResultList();
 
         return allWorkCenters;
     }
+
+    @Override
+    public int getTotalEmployee(int workCenterId) {
+
+        String sql = "" +
+                "SELECT COUNT(*) FROM GC2006_RELEASE.PC_USUARIOS_DELEGACION UD " +
+                "WHERE DELEGACION_ID=:workCenterId";
+
+        Query query = manager.createNativeQuery(sql).setParameter("workCenterId", workCenterId);
+        int totalEmployee = Integer.parseInt(query.getSingleResult().toString());
+
+        return totalEmployee;
+
+    }
 }
+
+

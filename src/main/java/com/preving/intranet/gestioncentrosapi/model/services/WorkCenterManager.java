@@ -20,6 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
@@ -60,6 +63,10 @@ public class WorkCenterManager implements WorkCenterService{
     @Autowired
     private DepartmentRepository departmentRepository;
 
+
+    @PersistenceContext
+    private EntityManager manager;
+
     @Transactional
     public ResponseEntity<?> addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request) {
 
@@ -69,27 +76,27 @@ public class WorkCenterManager implements WorkCenterService{
         // Construimos el objeto zona
         Zona zona = seteamosZona(newWorkCenter);
 
-        // Insertamos delegación en MP2.ZONA
+        // Insertamos delegaciï¿½n en MP2.ZONA
         zonaRepository.save(zona);
 
         // Construimos el objeto dimNavision
         DimNavision dimNavision = seteamosDimNavision(newWorkCenter);
 
-        // Insertamos delegación en RRHH.TM_DIM_NAVISION
+        // Insertamos delegaciï¿½n en RRHH.TM_DIM_NAVISION
         dimNavisionRepository.save(dimNavision);
 
         // Seteamos los valores necesarios para hacer el insert
         // TODO verificar con fecha de baja
         newWorkCenter.setActive(1);
         newWorkCenter.setVisible(1);
-        // Seteamos valores de creación
+        // Seteamos valores de creaciï¿½n
         newWorkCenter.setCreated(new Date());
         newWorkCenter.getCreatedBy().setId(userId);
         // Seteamos las ids de las tablas secundarias
         newWorkCenter.setIdInMp2(zona.getCodZona());
         newWorkCenter.setLineId(dimNavision.getId());
 
-        // Insertamos delegación en GC2006_RELEASE.PC_DELEGACIONES
+        // Insertamos delegaciï¿½n en GC2006_RELEASE.PC_DELEGACIONES
         workCentersRepository.save(newWorkCenter);
 
 
@@ -137,16 +144,16 @@ public class WorkCenterManager implements WorkCenterService{
         // Construimos el objeto zona
         Zona zona = seteamosZona(newWorkCenter);
 
-        // Editamos la delegación en la tabla MP2.ZONA
+        // Editamos la delegaciï¿½n en la tabla MP2.ZONA
         zonaRepository.editWorkCenter(zona);
 
         // Construimos el objeto dimNavision
         DimNavision dimNavision = seteamosDimNavision(newWorkCenter);
 
-        // Insertamos delegación en RRHH.TM_DIM_NAVISION
+        // Insertamos delegaciï¿½n en RRHH.TM_DIM_NAVISION
         dimNavisionRepository.editWorkCenter(dimNavision);
 
-        // Editamos la delegación en la tabla GC2006_RELEASE.PC_DELEGACIONES
+        // Editamos la delegaciï¿½n en la tabla GC2006_RELEASE.PC_DELEGACIONES
         workCentersRepository.editWorkCenter(workCenterId, newWorkCenter, this.jwtTokenUtil.getUserWithRolesFromToken(request).getId());
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -164,14 +171,15 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
-    public WorkCenter getWorkCenterById(int workId) {
-        WorkCenter workCenter = this.workCentersRepository.findWorkCenterById(workId);
+    public WorkCenter getWorkCenterById(int workCenterId) {
+        WorkCenter workCenter = this.workCentersRepository.findWorkCenterById(workCenterId);
 
         if (workCenter.getHeadPerson() != null) {
             workCenter.getHeadPerson().setCompleteName(workCenter.getHeadPerson().getLastname() + ", " + workCenter.getHeadPerson().getFirstname());
         }
 
-        // TODO add employees to workCenter object
+        int totalEmployee = this.workCentersCustomizeRepository.getTotalEmployee(workCenterId);
+        workCenter.setEmployee(totalEmployee);
 
         return workCenter;
     }
