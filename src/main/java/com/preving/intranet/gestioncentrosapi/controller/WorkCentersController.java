@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.controller;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
+import com.preving.intranet.gestioncentrosapi.model.services.WorkCenterDetailsService;
 import com.preving.intranet.gestioncentrosapi.model.services.WorkCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,9 @@ public class WorkCentersController {
 
     @Autowired
     private WorkCenterService workCenterService;
+
+    @Autowired
+    private WorkCenterDetailsService workCenterDetailsService;
 
     /**
      * Obtiene la lista de provincias
@@ -69,6 +73,19 @@ public class WorkCentersController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @RequestMapping(value = "departments", method = RequestMethod.GET)
+    public ResponseEntity<?> getDepartments() {
+
+        try {
+            return new ResponseEntity<>(this.workCenterService.getDepartments(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 
     /**
      * A�adimos una delegaci�n
@@ -168,4 +185,22 @@ public class WorkCentersController {
      * @param workCenterId
      * @regreso
      */
+
+    /**
+     * Obtención de detalles del centro de trabajo por workCenterId
+     * @param workCenterId
+     * @regreso
+     */
+
+    @RequestMapping(value = "getDetails/{workCenterId}", method = RequestMethod.GET)
+    public ResponseEntity<?> findWorkCenterDetails(@PathVariable(value = "workCenterId") int workCenterId){
+
+        try {
+            return new ResponseEntity<>(workCenterDetailsService.getWorkCenterDetails(workCenterId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 }

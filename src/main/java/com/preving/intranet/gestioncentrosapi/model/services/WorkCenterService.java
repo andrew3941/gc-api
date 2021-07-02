@@ -19,6 +19,8 @@ public interface WorkCenterService {
 
     WorkCenter getWorkCenterById(int workId);
 
+    List<Department> getDepartments();
+
     List<City> findCitiesByProvince(String provinceCod, String criterion);
 
     List<User> findUsersByCriterion (String criterion);
