@@ -56,18 +56,6 @@ public class WorkCentersController {
 
     }
 
-    @RequestMapping(value = "departments", method = RequestMethod.GET)
-    public ResponseEntity<?> getDepartments() {
-
-        try {
-            return new ResponseEntity<>(this.workCenterService.getDepartments(), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
     /**
      * Obtiene la lista de entidades
      * @return
@@ -175,5 +163,9 @@ public class WorkCentersController {
 
     }
 
-
+    /**
+     * Obtención de detalles del centro de trabajo por workCenterId
+     * @param workCenterId
+     * @regreso
+     */
 }

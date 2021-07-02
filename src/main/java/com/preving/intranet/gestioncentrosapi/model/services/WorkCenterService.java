@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,8 +16,6 @@ public interface WorkCenterService {
     ResponseEntity<?> editWorkCenter(int workCenterId, WorkCenter newWorkCenter, HttpServletRequest request);
 
     List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter);
-
-    List<Department> getDepartments();
 
     WorkCenter getWorkCenterById(int workId);
 
