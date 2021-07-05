@@ -7,19 +7,19 @@ import java.io.Serializable;
 
 public class WorkCenterDetails implements Serializable {
 
-    private int workCenterId;
+    private int Id;
     private int totalArea;
     private int jobAvailable;
-    private int accesibility =1;
-    private int parking = 1;
+    private int accesibility;
+    private int parking;
     private String description;
     private int parkingPlace;
     private Department department = new Department();
 
     public WorkCenterDetails() {}
 
-    public WorkCenterDetails(int workCenterId, int totalArea, int jobAvailable, int accesibility, int parking, String description, int parkingPlace, Department department) {
-        this.workCenterId = workCenterId;
+    public WorkCenterDetails(int Id, int totalArea, int jobAvailable, int accesibility, int parking, String description, int parkingPlace, Department department) {
+        this.Id = Id;
         this.totalArea = totalArea;
         this.jobAvailable = jobAvailable;
         this.accesibility = accesibility;
@@ -29,19 +29,19 @@ public class WorkCenterDetails implements Serializable {
         this.department = department;
     }
     @Id
-    @Column(name = "WORKCENTERID", nullable = false)
+    @Column(name = "ID", nullable = false)
     @SequenceGenerator(name = "PC_DELEGACIONES_SQ", sequenceName = "PC_DELEGACIONES_SQ", schema = "GC2006_RELEASE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PC_DELEGACIONES_SQ")
     public int getWorkCenterId() {
-        return workCenterId;
+        return Id;
     }
 
-    public void setWorkCenterId(int workCenterId) {
-        this.workCenterId = workCenterId;
+    public void setWorkCenterId(int Id) {
+        this.Id = Id;
     }
 
     @Basic
-    @Column(name = "TOTALAREA")
+    @Column(name = "TOTAL_AREA")
     public int getTotalArea() {
         return totalArea;
     }
@@ -51,7 +51,7 @@ public class WorkCenterDetails implements Serializable {
     }
 
     @Basic
-    @Column(name = "JOBAVAILABLE")
+    @Column(name = "JOB_AVAILABLE")
     public int getJobAvailable() {
         return jobAvailable;
     }
@@ -91,7 +91,7 @@ public class WorkCenterDetails implements Serializable {
     }
 
     @Basic
-    @Column(name = "PARKINGPLACE")
+    @Column(name = "PARKING_PLACE")
     public int getParkingPlace() {
         return parkingPlace;
     }
