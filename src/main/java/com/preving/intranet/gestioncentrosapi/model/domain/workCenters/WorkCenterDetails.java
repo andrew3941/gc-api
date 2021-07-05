@@ -5,6 +5,8 @@ import com.preving.intranet.gestioncentrosapi.model.domain.Department;
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Entity
+@Table(schema= "", name = "")
 public class WorkCenterDetails implements Serializable {
 
     private int Id;
