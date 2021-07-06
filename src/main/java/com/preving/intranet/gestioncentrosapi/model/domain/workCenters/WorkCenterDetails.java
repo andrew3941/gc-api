@@ -1,15 +1,19 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.workCenters;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.preving.intranet.gestioncentrosapi.model.domain.Department;
+import com.preving.intranet.gestioncentrosapi.model.domain.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
-@Table(schema= "", name = "")
+@Table(schema= "gestion_centros", name = "pc_delegaciones_detalles")
 public class WorkCenterDetails implements Serializable {
 
     private int Id;
+    private WorkCenter workCenter;
     private int totalArea;
     private int jobAvailable;
     private int accesibility;
@@ -17,11 +21,18 @@ public class WorkCenterDetails implements Serializable {
     private String description;
     private int parkingPlace;
     private Department department = new Department();
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
+    private Date created = new Date();
+    private User createdBy = new User();
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
+    private Date modified;
+    private User modifiedBy;
 
     public WorkCenterDetails() {}
 
-    public WorkCenterDetails(int Id, int totalArea, int jobAvailable, int accesibility, int parking, String description, int parkingPlace, Department department) {
-        this.Id = Id;
+    public WorkCenterDetails(int id, WorkCenter workCenter, int totalArea, int jobAvailable, int accesibility, int parking, String description, int parkingPlace, Department department, Date created, User createdBy, Date modified, User modifiedBy) {
+        Id = id;
+        this.workCenter = workCenter;
         this.totalArea = totalArea;
         this.jobAvailable = jobAvailable;
         this.accesibility = accesibility;
@@ -29,21 +40,36 @@ public class WorkCenterDetails implements Serializable {
         this.description = description;
         this.parkingPlace = parkingPlace;
         this.department = department;
+        this.created = created;
+        this.createdBy = createdBy;
+        this.modified = modified;
+        this.modifiedBy = modifiedBy;
     }
+
     @Id
     @Column(name = "ID", nullable = false)
-    @SequenceGenerator(name = "PC_DELEGACIONES_SQ", sequenceName = "PC_DELEGACIONES_SQ", schema = "GC2006_RELEASE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PC_DELEGACIONES_SQ")
-    public int getWorkCenterId() {
+    @SequenceGenerator(name = "PC_DELEGACIONES_DETALLES_SEQ", sequenceName = "PC_DELEGACIONES_DETALLES_SEQ", schema = "gestion_centros", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PC_DELEGACIONES_DETALLES_SEQ")
+    public int getId() {
         return Id;
     }
 
-    public void setWorkCenterId(int Id) {
+    public void setId(int Id) {
         this.Id = Id;
     }
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
+    public WorkCenter getWorkCenter() {
+        return workCenter;
+    }
+
+    public void setWorkCenter(WorkCenter workCenter) {
+        this.workCenter = workCenter;
+    }
+
     @Basic
-    @Column(name = "TOTAL_AREA")
+    @Column(name = "SUPERFICIE")
     public int getTotalArea() {
         return totalArea;
     }
@@ -53,7 +79,7 @@ public class WorkCenterDetails implements Serializable {
     }
 
     @Basic
-    @Column(name = "JOB_AVAILABLE")
+    @Column(name = "PUESTOS_DISPONIBLES")
     public int getJobAvailable() {
         return jobAvailable;
     }
@@ -63,7 +89,7 @@ public class WorkCenterDetails implements Serializable {
     }
 
     @Basic
-    @Column(name = "ACCESIBILITY")
+    @Column(name = "ACCESIBILIDAD")
     public int getAccesibility() {
         return accesibility;
     }
@@ -73,7 +99,7 @@ public class WorkCenterDetails implements Serializable {
     }
 
     @Basic
-    @Column(name = "PARKING")
+    @Column(name = "PLAZAS_GARAJE")
     public int getParking() {
         return parking;
     }
@@ -83,7 +109,7 @@ public class WorkCenterDetails implements Serializable {
     }
 
     @Basic
-    @Column(name = "DESCRIPTION")
+    @Column(name = "DESCRIPCION")
     public String getDescription() {
         return description;
     }
@@ -93,7 +119,7 @@ public class WorkCenterDetails implements Serializable {
     }
 
     @Basic
-    @Column(name = "PARKING_PLACE")
+    @Column(name = "NUM_PLAZAS_GARAJE")
     public int getParkingPlace() {
         return parkingPlace;
     }
@@ -102,13 +128,53 @@ public class WorkCenterDetails implements Serializable {
         this.parkingPlace = parkingPlace;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "DEPARTMENT", referencedColumnName = "ID")
+    @Basic
+    @Column(name = "TODOS_DPTOS")
     public Department getDepartment() {
         return department;
     }
 
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    @Basic
+    @Column(name = "CREADO")
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    @Basic
+    @Column(name = "CREADO_POR")
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    @Basic
+    @Column(name="MODIFICADO")
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
+
+    @Basic
+    @Column(name="MODIFICADO_POR")
+    public User getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(User modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 }
