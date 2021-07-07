@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(schema= "gestion_centros", name = "pc_delegaciones_detalles")
+@Table(schema = "GESTION_CENTROS" , name = "PC_DELEGACIONES_DETALLES")
 public class WorkCenterDetails implements Serializable {
 
     private int Id;
@@ -26,7 +26,7 @@ public class WorkCenterDetails implements Serializable {
     private User createdBy = new User();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date modified;
-    private User modifiedBy;
+    private User modifiedBy = new User();
 
     public WorkCenterDetails() {}
 
@@ -53,7 +53,6 @@ public class WorkCenterDetails implements Serializable {
     public int getId() {
         return Id;
     }
-
     public void setId(int Id) {
         this.Id = Id;
     }
@@ -73,7 +72,6 @@ public class WorkCenterDetails implements Serializable {
     public int getTotalArea() {
         return totalArea;
     }
-
     public void setTotalArea(int totalArea) {
         this.totalArea = totalArea;
     }
@@ -83,7 +81,6 @@ public class WorkCenterDetails implements Serializable {
     public int getJobAvailable() {
         return jobAvailable;
     }
-
     public void setJobAvailable(int jobAvailable) {
         this.jobAvailable = jobAvailable;
     }
@@ -93,7 +90,6 @@ public class WorkCenterDetails implements Serializable {
     public int getAccesibility() {
         return accesibility;
     }
-
     public void setAccesibility(int accesibility) {
         this.accesibility = accesibility;
     }
@@ -103,7 +99,6 @@ public class WorkCenterDetails implements Serializable {
     public int getParking() {
         return parking;
     }
-
     public void setParking(int parking) {
         this.parking = parking;
     }
@@ -113,7 +108,6 @@ public class WorkCenterDetails implements Serializable {
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -123,17 +117,15 @@ public class WorkCenterDetails implements Serializable {
     public int getParkingPlace() {
         return parkingPlace;
     }
-
     public void setParkingPlace(int parkingPlace) {
         this.parkingPlace = parkingPlace;
     }
 
-    @Basic
-    @Column(name = "TODOS_DPTOS")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "TODOS_DPTOS", referencedColumnName = "ID")
     public Department getDepartment() {
         return department;
     }
-
     public void setDepartment(Department department) {
         this.department = department;
     }
@@ -148,8 +140,8 @@ public class WorkCenterDetails implements Serializable {
         this.created = created;
     }
 
-    @Basic
-    @Column(name = "CREADO_POR")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "CREADO_POR", referencedColumnName = "ID")
     public User getCreatedBy() {
         return createdBy;
     }
@@ -163,17 +155,15 @@ public class WorkCenterDetails implements Serializable {
     public Date getModified() {
         return modified;
     }
-
     public void setModified(Date modified) {
         this.modified = modified;
     }
 
-    @Basic
-    @Column(name="MODIFICADO_POR")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "MODIFICADO_POR", referencedColumnName = "ID")
     public User getModifiedBy() {
         return modifiedBy;
     }
-
     public void setModifiedBy(User modifiedBy) {
         this.modifiedBy = modifiedBy;
     }

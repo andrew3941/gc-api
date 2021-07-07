@@ -25,4 +25,8 @@ public interface WorkCenterService {
 
     List<User> findUsersByCriterion (String criterion);
 
+    ResponseEntity<?> editWorkCenterDetails(WorkCenterDetails workCenterDetails);
+
+
+    WorkCenterDetails getWorkCenterDetails(int workCenterId);
 }

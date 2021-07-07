@@ -4,6 +4,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.department.DepartmentRep
 import com.preving.intranet.gestioncentrosapi.model.dao.dimNavision.DimNavisionRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCenterDetailsRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersCustomizeRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.cities.CitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
@@ -13,6 +14,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.zona.ZonaRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,6 +64,9 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Autowired
     private DepartmentRepository departmentRepository;
+
+    @Autowired
+    private WorkCenterDetailsRepository workCenterDetailsRepository;
 
 
     @PersistenceContext
@@ -192,6 +197,23 @@ public class WorkCenterManager implements WorkCenterService{
     @Override
     public List<User> findUsersByCriterion(String criterion) {
         return userCustomRepository.findUserByCriterion(criterion);
+    }
+
+    public ResponseEntity<?> editWorkCenterDetails(WorkCenterDetails workCenterDetails) {
+
+
+
+
+        //TODO check the if all department ==
+
+        workCenterDetailsRepository.save(workCenterDetails);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public WorkCenterDetails getWorkCenterDetails(int workCenterId) {
+        return null;
     }
 
 

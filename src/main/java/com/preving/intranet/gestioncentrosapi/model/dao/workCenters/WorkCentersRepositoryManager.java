@@ -1,5 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.dao.workCenters;
 
+import com.preving.intranet.gestioncentrosapi.model.domain.Department;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import org.springframework.stereotype.Service;

@@ -2,8 +2,8 @@ package com.preving.intranet.gestioncentrosapi.controller;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
-import com.preving.intranet.gestioncentrosapi.model.services.WorkCenterDetailsService;
 import com.preving.intranet.gestioncentrosapi.model.services.WorkCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,9 +25,6 @@ public class WorkCentersController {
 
     @Autowired
     private WorkCenterService workCenterService;
-
-    @Autowired
-    private WorkCenterDetailsService workCenterDetailsService;
 
     /**
      * Obtiene la lista de provincias
@@ -196,11 +193,24 @@ public class WorkCentersController {
     public ResponseEntity<?> findWorkCenterDetails(@PathVariable(value = "workCenterId") int workCenterId){
 
         try {
-            return new ResponseEntity<>(workCenterDetailsService.getWorkCenterDetails(workCenterId), HttpStatus.OK);
+            return new ResponseEntity<>(workCenterService.getWorkCenterDetails(workCenterId), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
+
+    @RequestMapping(value = "details/edit", method = RequestMethod.POST)
+    public ResponseEntity<?> editWorkCenterDetails(@RequestBody WorkCenterDetails workCenterDetails){
+
+        try {
+            return new ResponseEntity<>(workCenterService.editWorkCenterDetails(workCenterDetails), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 }
