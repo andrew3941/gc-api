@@ -7,6 +7,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCente
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.Response;
 import java.util.List;
 
 public interface WorkCenterService {

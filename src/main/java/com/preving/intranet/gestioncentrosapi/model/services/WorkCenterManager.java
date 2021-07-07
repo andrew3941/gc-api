@@ -5,6 +5,8 @@ import com.preving.intranet.gestioncentrosapi.model.dao.dimNavision.DimNavisionR
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCenterDetailsRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCenterDetailsRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersByEntityRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersCustomizeRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.cities.CitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
@@ -15,6 +17,8 @@ import com.preving.intranet.gestioncentrosapi.model.domain.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCentersByEntity;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
@@ -68,9 +71,13 @@ public class WorkCenterManager implements WorkCenterService{
     @Autowired
     private WorkCenterDetailsRepository workCenterDetailsRepository;
 
+    @Autowired
+    private WorkCentersByEntityRepository workCentersByEntitiesRepository;
+
 
     @PersistenceContext
     private EntityManager manager;
+
 
     @Transactional
     public ResponseEntity<?> addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request) {
@@ -104,6 +111,8 @@ public class WorkCenterManager implements WorkCenterService{
         // Insertamos delegaci�n en GC2006_RELEASE.PC_DELEGACIONES
         workCentersRepository.save(newWorkCenter);
 
+        // save entity in the WorkCenterByEntity table
+        saveWorkCenterForEntity(newWorkCenter.getEntities(), newWorkCenter);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -143,6 +152,22 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
 
+    private void saveWorkCenterForEntity(List<Entity> entities,  WorkCenter newWorkCenter) {
+
+        if (entities != null) {
+        WorkCentersByEntity workCenter_x_entity = new WorkCentersByEntity();
+        workCenter_x_entity.getWorkCenter().setId(newWorkCenter.getId());
+        for(Entity entity: entities)
+        {
+            workCenter_x_entity.getEntity().setId(entity.getId());
+            workCentersByEntitiesRepository.save(workCenter_x_entity);
+        }
+    }
+}
+
+
+
+
     @Transactional
     public ResponseEntity<?> editWorkCenter(int workCenterId, WorkCenter newWorkCenter, HttpServletRequest request) {
 
@@ -158,12 +183,13 @@ public class WorkCenterManager implements WorkCenterService{
         // Insertamos delegaci�n en RRHH.TM_DIM_NAVISION
         dimNavisionRepository.editWorkCenter(dimNavision);
 
+//        List<WorkCentersByEntity> workCentersByEntities = this.workCentersByEntitiesRepository.findAllByWorkCenter(newWorkCenter);
+
         // Editamos la delegaci�n en la tabla GC2006_RELEASE.PC_DELEGACIONES
         workCentersRepository.editWorkCenter(workCenterId, newWorkCenter, this.jwtTokenUtil.getUserWithRolesFromToken(request).getId());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
     @Override
     public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
@@ -183,6 +209,7 @@ public class WorkCenterManager implements WorkCenterService{
             workCenter.getHeadPerson().setCompleteName(workCenter.getHeadPerson().getLastname() + ", " + workCenter.getHeadPerson().getFirstname());
         }
 
+
         int totalEmployee = this.workCentersCustomizeRepository.getTotalEmployee(workCenterId);
         workCenter.setEmployee(totalEmployee);
 
@@ -200,9 +227,6 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     public ResponseEntity<?> editWorkCenterDetails(WorkCenterDetails workCenterDetails) {
-
-
-
 
         //TODO check the if all department ==
 

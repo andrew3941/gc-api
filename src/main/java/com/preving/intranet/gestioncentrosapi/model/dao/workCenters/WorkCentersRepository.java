@@ -26,7 +26,6 @@ public interface WorkCentersRepository extends JpaRepository<WorkCenter, Integer
             "w.headPerson=:#{#newWorkCenter.headPerson}, "+
             "w.startDate=:#{#newWorkCenter.startDate}, "+
             "w.endDate=:#{#newWorkCenter.endDate}, " +
-            "w.entity=:#{#newWorkCenter.entity}, " +
             "w.modified= CURRENT_TIMESTAMP, modificado_por=:editBy " +
             "where w.id=:workCenterId ")
     void  editWorkCenter(@Param("workCenterId") int workCenterId, @Param("newWorkCenter") WorkCenter newWorkCenter, @Param("editBy") int editBy);

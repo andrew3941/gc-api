@@ -50,12 +50,8 @@ public class WorkCenterDetails implements Serializable {
     @Column(name = "ID", nullable = false)
     @SequenceGenerator(name = "PC_DELEGACIONES_DETALLES_SEQ", sequenceName = "PC_DELEGACIONES_DETALLES_SEQ", schema = "gestion_centros", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PC_DELEGACIONES_DETALLES_SEQ")
-    public int getId() {
-        return Id;
-    }
-    public void setId(int Id) {
-        this.Id = Id;
-    }
+    public int getId() { return Id; }
+    public void setId(int Id) { this.Id = Id;  }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
@@ -69,102 +65,58 @@ public class WorkCenterDetails implements Serializable {
 
     @Basic
     @Column(name = "SUPERFICIE")
-    public int getTotalArea() {
-        return totalArea;
-    }
-    public void setTotalArea(int totalArea) {
-        this.totalArea = totalArea;
-    }
+    public int getTotalArea() { return totalArea; }
+    public void setTotalArea(int totalArea) { this.totalArea = totalArea; }
 
     @Basic
     @Column(name = "PUESTOS_DISPONIBLES")
-    public int getJobAvailable() {
-        return jobAvailable;
-    }
-    public void setJobAvailable(int jobAvailable) {
-        this.jobAvailable = jobAvailable;
-    }
+    public int getJobAvailable() { return jobAvailable; }
+    public void setJobAvailable(int jobAvailable) { this.jobAvailable = jobAvailable; }
 
     @Basic
     @Column(name = "ACCESIBILIDAD")
-    public int getAccesibility() {
-        return accesibility;
-    }
-    public void setAccesibility(int accesibility) {
-        this.accesibility = accesibility;
-    }
+    public int getAccesibility() { return accesibility; }
+    public void setAccesibility(int accesibility) { this.accesibility = accesibility; }
 
     @Basic
     @Column(name = "PLAZAS_GARAJE")
-    public int getParking() {
-        return parking;
-    }
-    public void setParking(int parking) {
-        this.parking = parking;
-    }
+    public int getParking() { return parking; }
+    public void setParking(int parking) { this.parking = parking; }
 
     @Basic
     @Column(name = "DESCRIPCION")
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
     @Basic
     @Column(name = "NUM_PLAZAS_GARAJE")
-    public int getParkingPlace() {
-        return parkingPlace;
-    }
-    public void setParkingPlace(int parkingPlace) {
-        this.parkingPlace = parkingPlace;
+    public int getParkingPlace() { return parkingPlace; }
+    public void setParkingPlace(int parkingPlace) { this.parkingPlace = parkingPlace;
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TODOS_DPTOS", referencedColumnName = "ID")
-    public Department getDepartment() {
-        return department;
-    }
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
+    public Department getDepartment() { return department; }
+    public void setDepartment(Department department) { this.department = department; }
 
     @Basic
     @Column(name = "CREADO")
-    public Date getCreated() {
-        return created;
-    }
+    public Date getCreated() { return created; }
 
-    public void setCreated(Date created) {
-        this.created = created;
-    }
+    public void setCreated(Date created) { this.created = created; }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CREADO_POR", referencedColumnName = "ID")
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
-    }
+    public User getCreatedBy() { return createdBy; }
+    public void setCreatedBy(User createdBy) { this.createdBy = createdBy; }
 
     @Basic
     @Column(name="MODIFICADO")
-    public Date getModified() {
-        return modified;
-    }
-    public void setModified(Date modified) {
-        this.modified = modified;
-    }
+    public Date getModified() { return modified; }
+    public void setModified(Date modified) { this.modified = modified; }
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "MODIFICADO_POR", referencedColumnName = "ID")
-    public User getModifiedBy() {
-        return modifiedBy;
-    }
-    public void setModifiedBy(User modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
+    public User getModifiedBy() { return modifiedBy; }
+    public void setModifiedBy(User modifiedBy) { this.modifiedBy = modifiedBy; }
 }

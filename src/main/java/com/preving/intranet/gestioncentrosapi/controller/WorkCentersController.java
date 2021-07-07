@@ -26,6 +26,7 @@ public class WorkCentersController {
     @Autowired
     private WorkCenterService workCenterService;
 
+
     /**
      * Obtiene la lista de provincias
      * @return
