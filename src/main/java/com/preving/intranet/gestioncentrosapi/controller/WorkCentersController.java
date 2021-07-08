@@ -202,11 +202,13 @@ public class WorkCentersController {
 
     }
 
-    @RequestMapping(value = "details/edit", method = RequestMethod.POST)
-    public ResponseEntity<?> editWorkCenterDetails(@RequestBody WorkCenterDetails workCenterDetails){
+    @RequestMapping(value = "{workCenterId}/details/edit", method = RequestMethod.POST)
+    public ResponseEntity<?> editWorkCenterDetails(HttpServletRequest request,
+                                                   @PathVariable(value="workCenterId") int workCenterId,
+                                                   @RequestBody WorkCenterDetails workCenterDetails){
 
         try {
-            return new ResponseEntity<>(workCenterService.editWorkCenterDetails(workCenterDetails), HttpStatus.OK);
+            return new ResponseEntity<>(workCenterService.editWorkCenterDetails(workCenterId, workCenterDetails, request), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

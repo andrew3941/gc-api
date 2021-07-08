@@ -4,20 +4,15 @@ import com.preving.intranet.gestioncentrosapi.model.dao.department.DepartmentRep
 import com.preving.intranet.gestioncentrosapi.model.dao.dimNavision.DimNavisionRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.*;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCenterDetailsRepository;
-import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCenterDetailsRepository;
-import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersByEntityRepository;
-import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersCustomizeRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.cities.CitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
-import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.zona.ZonaRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
-import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
-import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
-import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCentersByEntity;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +68,8 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Autowired
     private WorkCentersByEntityRepository workCentersByEntitiesRepository;
-
+    @Autowired
+    private CenterDetailsDepartRepository centerDetailsDepartRepository;
 
     @PersistenceContext
     private EntityManager manager;
@@ -226,14 +222,46 @@ public class WorkCenterManager implements WorkCenterService{
         return userCustomRepository.findUserByCriterion(criterion);
     }
 
-    public ResponseEntity<?> editWorkCenterDetails(WorkCenterDetails workCenterDetails) {
+    @Override
+    public ResponseEntity<?> editWorkCenterDetails(int workCenterId, WorkCenterDetails workCenterDetails, HttpServletRequest request) {
+
+        long userId =  this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        List<Department> myDepartments =  workCenterDetails.getDepartment();
+
+        workCenterDetails.getWorkCenter().setId(workCenterId);
+        workCenterDetails.setAllDepartment(true);
+        workCenterDetails.setCreated(new Date());
+        workCenterDetails.getCreatedBy().setId(userId);
+        workCenterDetails.setModified(new Date());
+        workCenterDetails.getModifiedBy().setId(userId);
 
         //TODO check the if all department ==
-
-        workCenterDetailsRepository.save(workCenterDetails);
-
+        if (workCenterDetails.isAllDepartment()){
+            workCenterDetailsRepository.save(workCenterDetails);
+        }else {
+               saveDelegationDepartment(myDepartments,workCenterId);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    private void saveDelegationDepartment(List<Department> allDepartments, int workCenterId) {
+
+        if (allDepartments != null) {
+
+            CenterDetailsDepart centerDetailsDepart = new CenterDetailsDepart();
+
+            for(Department department: allDepartments)
+            {
+                centerDetailsDepart.getDelegation_id().setId(workCenterId);
+                centerDetailsDepart.getDepartment_id().setId(department.getId());
+
+             centerDetailsDepartRepository.save(centerDetailsDepart);
+
+            }
+        }
+    }
+
 
     @Override
     public WorkCenterDetails getWorkCenterDetails(int workCenterId) {

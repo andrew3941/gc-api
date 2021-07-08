@@ -6,7 +6,9 @@ import com.preving.intranet.gestioncentrosapi.model.domain.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(schema = "GESTION_CENTROS" , name = "PC_DELEGACIONES_DETALLES")
@@ -20,17 +22,18 @@ public class WorkCenterDetails implements Serializable {
     private int parking;
     private String description;
     private int parkingPlace;
-    private Department department = new Department();
+    private boolean allDepartment;
+    private List<Department> departments = new ArrayList<>();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
     private User createdBy = new User();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date modified;
-    private User modifiedBy = new User();
+    private User modifiedBy;
 
     public WorkCenterDetails() {}
 
-    public WorkCenterDetails(int id, WorkCenter workCenter, int totalArea, int jobAvailable, int accesibility, int parking, String description, int parkingPlace, Department department, Date created, User createdBy, Date modified, User modifiedBy) {
+    public WorkCenterDetails(int id, WorkCenter workCenter, int totalArea, int jobAvailable, int accesibility, int parking, String description, int parkingPlace, boolean allDepartment, List<Department> departments, Date created, User createdBy, Date modified, User modifiedBy) {
         Id = id;
         this.workCenter = workCenter;
         this.totalArea = totalArea;
@@ -39,7 +42,8 @@ public class WorkCenterDetails implements Serializable {
         this.parking = parking;
         this.description = description;
         this.parkingPlace = parkingPlace;
-        this.department = department;
+        this.allDepartment = allDepartment;
+        this.departments = departments;
         this.created = created;
         this.createdBy = createdBy;
         this.modified = modified;
@@ -58,7 +62,6 @@ public class WorkCenterDetails implements Serializable {
     public WorkCenter getWorkCenter() {
         return workCenter;
     }
-
     public void setWorkCenter(WorkCenter workCenter) {
         this.workCenter = workCenter;
     }
@@ -94,10 +97,22 @@ public class WorkCenterDetails implements Serializable {
     public void setParkingPlace(int parkingPlace) { this.parkingPlace = parkingPlace;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "TODOS_DPTOS", referencedColumnName = "ID")
-    public Department getDepartment() { return department; }
-    public void setDepartment(Department department) { this.department = department; }
+    @Basic
+    @Column(name = "TODOS_DPTOS")
+    public boolean isAllDepartment() {
+        return allDepartment;
+    }
+    public void setAllDepartment(boolean allDepartment) {
+        this.allDepartment = allDepartment;
+    }
+
+    @Transient
+    public List<Department> getDepartment() {
+        return departments;
+    }
+    public void setDepartment(List<Department> department) {
+        this.departments = department;
+    }
 
     @Basic
     @Column(name = "CREADO")

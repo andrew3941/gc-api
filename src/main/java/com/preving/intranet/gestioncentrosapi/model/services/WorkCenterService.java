@@ -26,7 +26,7 @@ public interface WorkCenterService {
 
     List<User> findUsersByCriterion (String criterion);
 
-    ResponseEntity<?> editWorkCenterDetails(WorkCenterDetails workCenterDetails);
+    ResponseEntity<?> editWorkCenterDetails(int workCenterId, WorkCenterDetails workCenterDetails, HttpServletRequest request);
 
 
     WorkCenterDetails getWorkCenterDetails(int workCenterId);
