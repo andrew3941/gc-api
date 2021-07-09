@@ -15,6 +15,10 @@ import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.security.JwtTokenUtil;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -74,6 +81,13 @@ public class WorkCenterManager implements WorkCenterService{
     @PersistenceContext
     private EntityManager manager;
 
+    private static final String EXPORT_TITLE_1 = "Centro";
+    private static final String EXPORT_TITLE_2 = "Provincia";
+    private static final String EXPORT_TITLE_3 = "Localidad";
+    private static final String EXPORT_TITLE_4 = "Direccion";
+    private static final String EXPORT_TITLE_5 = "Telefono";
+    private static final String EXPORT_TITLE_6 = "Estado";
+    private static final String EXPORT_TITLE_7 = "Entidades";
 
     @Transactional
     public ResponseEntity<?> addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request) {
@@ -268,6 +282,115 @@ public class WorkCenterManager implements WorkCenterService{
         return null;
     }
 
+
+    public ResponseEntity<?> exportWorkCenters(WorkCenterFilter workCenterFilter, HttpServletResponse response){
+
+        byte[] content=null;
+
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet hoja = workbook.createSheet();
+        workbook.setSheetName(0, "Actuaciones");
+
+        // Creamos estilo para el encabezado
+        CellStyle cellStyleHeaders = workbook.createCellStyle();
+        CellStyle dateCell = workbook.createCellStyle();
+        Font font = workbook.createFont();
+//        HSSFPalette palette = workbook.getCustomPalette();
+//        HSSFColor myColor = palette.findSimilarColor(87, 35, 100);
+//        short palIndex = myColor.getIndex();
+        // TODO colorear el fondo de las cabeceras
+//        cellStyleHeaders.setFillForegroundColor(IndexedColors.GREY_50_PERCENT.getIndex());
+//        cellStyleHeaders.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+//        font.setColor(HSSFColor.WHITE.index);
+        font.setBold(true);
+        cellStyleHeaders.setFont(font);
+
+        // *Formatos de fecha en caso de necesitarlo
+//        dateCell.setAlignment(CellStyle.ALIGN_RIGHT);
+//        dateCell.setFont(font);
+//        dateCell.setFillForegroundColor(palIndex);
+//        dateCell.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+
+        // Creamos estilo para formato fecha
+        CellStyle cellStyleData = workbook.createCellStyle();
+        CreationHelper createHelper = workbook.getCreationHelper();
+        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy hh:mm:ss"));
+
+        // Obtenemos los datos
+        List<WorkCenter> workCenters = this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter);
+        String[] titulos = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4,
+                EXPORT_TITLE_5, EXPORT_TITLE_6, EXPORT_TITLE_7};
+
+        // Creamos una fila en la hoja en la posicion 0 para los headers
+        HSSFRow headerRow = hoja.createRow(0);
+
+        // Creamos los headers
+        for (int i = 0; i < titulos.length; i++) {
+            HSSFCell celda = headerRow.createCell(i);
+            celda.setCellValue(titulos[i]);
+            celda.setCellStyle(cellStyleHeaders);
+        }
+
+        // Creamos las filas
+        for (int i = 0; i < workCenters.size(); i++) {
+            HSSFRow dataRow = hoja.createRow(1 + i);
+
+            // Centro
+            HSSFCell center = dataRow.createCell(0);
+            center.setCellValue(workCenters.get(i).getName());
+
+            // Provincia
+            HSSFCell province = dataRow.createCell(1);
+            province.setCellValue(workCenters.get(i).getCity().getProvince().getName());
+
+            // Localidad
+            HSSFCell locality = dataRow.createCell(2);
+            locality.setCellValue(workCenters.get(i).getCity().getName());
+
+            // Dirección
+            HSSFCell address = dataRow.createCell(3);
+            address.setCellValue(workCenters.get(i).getAddress());
+
+            // Teléfono
+            HSSFCell phoneNumber = dataRow.createCell(4);
+            phoneNumber.setCellValue(workCenters.get(i).getPhoneNumber());
+
+            // Estado
+            HSSFCell status = dataRow.createCell(5);
+            if (workCenters.get(i).getActive() == 1) {
+                status.setCellValue("Activo");
+            } else {
+                status.setCellValue("Inactivo");
+            }
+
+//            // Entidades
+//            TODO completar con la lista de entidades
+
+        }
+
+        // Ajustamos columnas
+        for (int i = 0; i < titulos.length; i++) {
+            hoja.autoSizeColumn(i);
+        }
+
+        try {
+            String nombreFichero = "reporte-actuaciones";
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader ("Content-Disposition", "inline; filename=\"" +
+                    java.net.URLEncoder.encode(nombreFichero, "UTF-8")
+                    + "\"");
+
+            ServletOutputStream out = response.getOutputStream();
+            workbook.write(out);
+            out.flush();
+
+
+        } catch (IOException ex) {
+            return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<byte[]>(content, HttpStatus.OK);
+    }
 
 }
 

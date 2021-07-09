@@ -7,7 +7,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCente
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.Response;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface WorkCenterService {
@@ -28,6 +28,7 @@ public interface WorkCenterService {
 
     ResponseEntity<?> editWorkCenterDetails(int workCenterId, WorkCenterDetails workCenterDetails, HttpServletRequest request);
 
+    ResponseEntity<?> exportWorkCenters(WorkCenterFilter workCenterFilter, HttpServletResponse response);
 
     WorkCenterDetails getWorkCenterDetails(int workCenterId);
 }

@@ -1,19 +1,21 @@
 package com.preving.intranet.gestioncentrosapi.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
 import com.preving.intranet.gestioncentrosapi.model.services.WorkCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-
-
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(path= "/workCenters")
@@ -25,7 +27,6 @@ public class WorkCentersController {
 
     @Autowired
     private WorkCenterService workCenterService;
-
 
     /**
      * Obtiene la lista de provincias
@@ -211,6 +212,27 @@ public class WorkCentersController {
             return new ResponseEntity<>(workCenterService.editWorkCenterDetails(workCenterId, workCenterDetails, request), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    /**
+     * Exportación de actuaciones por filtro de fechas
+     * @param
+     * @return
+     */
+    @RequestMapping(value="exportWorkCenters", method = RequestMethod.POST)
+    public ResponseEntity<?> exportActions(HttpServletResponse response,
+                                           @RequestParam ("workCentersList") String workCentersList) {
+
+        ResponseEntity<?> resp = null;
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        WorkCenterFilter workCenterFilter = gson.fromJson(workCentersList, WorkCenterFilter.class);
+
+        try {
+            return new ResponseEntity<>(workCenterService.exportWorkCenters(workCenterFilter, response), HttpStatus.OK);
+        } catch (DataAccessException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
