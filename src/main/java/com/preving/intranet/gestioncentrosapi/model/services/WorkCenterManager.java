@@ -75,6 +75,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Autowired
     private WorkCentersByEntityRepository workCentersByEntitiesRepository;
+
     @Autowired
     private CenterDetailsDepartRepository centerDetailsDepartRepository;
 
@@ -279,7 +280,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public WorkCenterDetails getWorkCenterDetails(int workCenterId) {
-        return null;
+        return workCenterDetailsRepository.findWorkCenterDetailsByWorkCenterId(workCenterId);
     }
 
 

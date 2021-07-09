@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WorkCenterDetailsRepository extends JpaRepository<WorkCenterDetails, Integer> {
 
-  //  WorkCenterDetails findWorkCenterDetails(int workCenterId);
+    WorkCenterDetails findWorkCenterDetailsByWorkCenterId(int workCenterId);
 
 }

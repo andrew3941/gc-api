@@ -18,10 +18,10 @@ public class WorkCenterDetails implements Serializable {
     private WorkCenter workCenter;
     private int totalArea;
     private int jobAvailable;
-    private int accesibility;
-    private int parking;
+    private boolean accesibility;
+    private boolean parking;
+    private Integer parkingPlace;
     private String description;
-    private int parkingPlace;
     private boolean allDepartment;
     private List<Department> departments = new ArrayList<>();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
@@ -33,15 +33,15 @@ public class WorkCenterDetails implements Serializable {
 
     public WorkCenterDetails() {}
 
-    public WorkCenterDetails(int id, WorkCenter workCenter, int totalArea, int jobAvailable, int accesibility, int parking, String description, int parkingPlace, boolean allDepartment, List<Department> departments, Date created, User createdBy, Date modified, User modifiedBy) {
+    public WorkCenterDetails(int id, WorkCenter workCenter, int totalArea, int jobAvailable, boolean accesibility, boolean parking, int parkingPlace, String description, boolean allDepartment, List<Department> departments, Date created, User createdBy, Date modified, User modifiedBy) {
         Id = id;
         this.workCenter = workCenter;
         this.totalArea = totalArea;
         this.jobAvailable = jobAvailable;
         this.accesibility = accesibility;
         this.parking = parking;
-        this.description = description;
         this.parkingPlace = parkingPlace;
+        this.description = description;
         this.allDepartment = allDepartment;
         this.departments = departments;
         this.created = created;
@@ -78,24 +78,32 @@ public class WorkCenterDetails implements Serializable {
 
     @Basic
     @Column(name = "ACCESIBILIDAD")
-    public int getAccesibility() { return accesibility; }
-    public void setAccesibility(int accesibility) { this.accesibility = accesibility; }
+    public boolean isAccesibility() {
+        return accesibility;
+    }
+    public void setAccesibility(boolean accesibility) {
+        this.accesibility = accesibility;
+    }
 
     @Basic
     @Column(name = "PLAZAS_GARAJE")
-    public int getParking() { return parking; }
-    public void setParking(int parking) { this.parking = parking; }
+    public boolean isParking() {
+        return parking;
+    }
+    public void setParking(boolean parking) {
+        this.parking = parking;
+    }
+
+    @Basic
+    @Column(name = "NUM_PLAZAS_GARAJE")
+    public Integer getParkingPlace() { return parkingPlace; }
+    public void setParkingPlace(Integer parkingPlace) { this.parkingPlace = parkingPlace;
+    }
 
     @Basic
     @Column(name = "DESCRIPCION")
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-
-    @Basic
-    @Column(name = "NUM_PLAZAS_GARAJE")
-    public int getParkingPlace() { return parkingPlace; }
-    public void setParkingPlace(int parkingPlace) { this.parkingPlace = parkingPlace;
-    }
 
     @Basic
     @Column(name = "TODOS_DPTOS")
@@ -117,7 +125,6 @@ public class WorkCenterDetails implements Serializable {
     @Basic
     @Column(name = "CREADO")
     public Date getCreated() { return created; }
-
     public void setCreated(Date created) { this.created = created; }
 
     @ManyToOne(fetch = FetchType.EAGER)
