@@ -191,7 +191,7 @@ public class WorkCentersController {
      * @regreso
      */
 
-    @RequestMapping(value = "getDetails/{workCenterId}", method = RequestMethod.GET)
+    @RequestMapping(value = "{workCenterId}/details", method = RequestMethod.GET)
     public ResponseEntity<?> findWorkCenterDetails(@PathVariable(value = "workCenterId") int workCenterId){
 
         try {

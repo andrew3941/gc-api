@@ -1,6 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.workCenters;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.preving.intranet.gestioncentrosapi.model.domain.Department;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 
@@ -16,7 +17,7 @@ public class WorkCenterDetails implements Serializable {
 
     private int Id;
     private WorkCenter workCenter;
-    private int totalArea;
+    private double totalArea;
     private int jobAvailable;
     private boolean accesibility;
     private boolean parking;
@@ -33,7 +34,7 @@ public class WorkCenterDetails implements Serializable {
 
     public WorkCenterDetails() {}
 
-    public WorkCenterDetails(int id, WorkCenter workCenter, int totalArea, int jobAvailable, boolean accesibility, boolean parking, int parkingPlace, String description, boolean allDepartment, List<Department> departments, Date created, User createdBy, Date modified, User modifiedBy) {
+    public WorkCenterDetails(int id, WorkCenter workCenter, double totalArea, int jobAvailable, boolean accesibility, boolean parking, int parkingPlace, String description, boolean allDepartment, List<Department> departments, Date created, User createdBy, Date modified, User modifiedBy) {
         Id = id;
         this.workCenter = workCenter;
         this.totalArea = totalArea;
@@ -57,8 +58,9 @@ public class WorkCenterDetails implements Serializable {
     public int getId() { return Id; }
     public void setId(int Id) { this.Id = Id;  }
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     public WorkCenter getWorkCenter() {
         return workCenter;
     }
@@ -68,8 +70,8 @@ public class WorkCenterDetails implements Serializable {
 
     @Basic
     @Column(name = "SUPERFICIE")
-    public int getTotalArea() { return totalArea; }
-    public void setTotalArea(int totalArea) { this.totalArea = totalArea; }
+    public double getTotalArea() { return totalArea; }
+    public void setTotalArea(double totalArea) { this.totalArea = totalArea; }
 
     @Basic
     @Column(name = "PUESTOS_DISPONIBLES")

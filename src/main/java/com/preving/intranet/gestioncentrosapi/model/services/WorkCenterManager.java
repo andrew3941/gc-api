@@ -280,7 +280,8 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public WorkCenterDetails getWorkCenterDetails(int workCenterId) {
-        return workCenterDetailsRepository.findWorkCenterDetailsByWorkCenterId(workCenterId);
+        WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
+        return workCenterDetailsRepository.findByWorkCenter(workCenter);
     }
 
 
