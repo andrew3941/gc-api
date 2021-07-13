@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @javax.persistence.Entity
-@Table(schema = "GESTION_CENTROS" , name = "DELEGACIONES_X_ENTIDADES")
+@Table(schema = "GESTION_CENTROS" , name = "PC_DELEGACIONES_X_ENTIDADES")
 public class WorkCentersByEntity implements Serializable {
 
     private int id;

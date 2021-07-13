@@ -162,22 +162,16 @@ public class WorkCenterManager implements WorkCenterService{
         return dimNavision;
     }
 
+    private void saveWorkCenterForEntity(List<Entity> entities, WorkCenter newWorkCenter) {
 
-    private void saveWorkCenterForEntity(List<Entity> entities,  WorkCenter newWorkCenter) {
-
-        if (entities != null) {
-        WorkCentersByEntity workCenter_x_entity = new WorkCentersByEntity();
-        workCenter_x_entity.getWorkCenter().setId(newWorkCenter.getId());
-        for(Entity entity: entities)
-        {
-            workCenter_x_entity.getEntity().setId(entity.getId());
-            workCentersByEntitiesRepository.save(workCenter_x_entity);
+        for(Entity entity : entities) {
+            WorkCentersByEntity workCentersByEntity = new WorkCentersByEntity();
+            workCentersByEntity.setEntity(entity);
+            workCentersByEntity.setWorkCenter(newWorkCenter);
+            workCentersByEntitiesRepository.save(workCentersByEntity);
         }
+
     }
-}
-
-
-
 
     @Transactional
     public ResponseEntity<?> editWorkCenter(int workCenterId, WorkCenter newWorkCenter, HttpServletRequest request) {

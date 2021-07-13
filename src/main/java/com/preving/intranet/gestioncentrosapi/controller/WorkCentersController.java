@@ -94,14 +94,12 @@ public class WorkCentersController {
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public ResponseEntity<?> saveWorkCenter(HttpServletRequest request, @RequestBody WorkCenter newWorkCenter) {
 
-        ResponseEntity<?> response;
-
         try {
-            response = workCenterService.addWorkCenter(newWorkCenter, request);
+            workCenterService.addWorkCenter(newWorkCenter, request);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return response;
 
     }
 
