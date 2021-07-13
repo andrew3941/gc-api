@@ -239,24 +239,24 @@ public class WorkCenterManager implements WorkCenterService{
         List<Department> myDepartments =  workCenterDetails.getDepartment();
 
         workCenterDetails.getWorkCenter().setId(workCenterId);
-        workCenterDetails.setAllDepartment(true);
+        workCenterDetails.setAllDepartment(false);
         workCenterDetails.setCreated(new Date());
         workCenterDetails.getCreatedBy().setId(userId);
         workCenterDetails.setModified(new Date());
-        workCenterDetails.getModifiedBy().setId(userId);
+       // workCenterDetails.getModifiedBy().setId(userId);
 
-        //TODO check the if all department ==
-        if (workCenterDetails.isAllDepartment()){
-            workCenterDetailsRepository.save(workCenterDetails);
-        }else {
-               saveDelegationDepartment(myDepartments,workCenterId);
-        }
+        workCenterDetailsRepository.save(workCenterDetails);
+
+        this.saveDelegationDepartment(myDepartments,workCenterId);
+
+        //TODO check if all department selected
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private void saveDelegationDepartment(List<Department> allDepartments, int workCenterId) {
 
-        if (allDepartments != null) {
+        if (allDepartments.size()> 0) {
 
             CenterDetailsDepart centerDetailsDepart = new CenterDetailsDepart();
 
