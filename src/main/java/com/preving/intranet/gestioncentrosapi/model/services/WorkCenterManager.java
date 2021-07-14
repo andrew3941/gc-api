@@ -287,8 +287,17 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public WorkCenterDetails getWorkCenterDetails(int workCenterId) {
+
         WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
-        return workCenterDetailsRepository.findByWorkCenter(workCenter);
+        WorkCenterDetails workCenterDetails = workCenterDetailsRepository.findByWorkCenter(workCenter);
+
+        if(workCenterDetails == null) {
+            workCenterDetails = new WorkCenterDetails();
+            workCenterDetails.setWorkCenter(workCenter);
+        }
+
+        return workCenterDetails;
+
     }
 
 

@@ -17,14 +17,14 @@ public class WorkCenterDetails implements Serializable {
 
     private int Id;
     private WorkCenter workCenter;
-    private double totalArea;
-    private int jobAvailable;
+    private Double totalArea;
+    private Integer jobAvailable;
     private boolean accesibility;
     private boolean parking;
     private Integer parkingPlace;
     private String description;
     private boolean allDepartment;
-    private List<Department> departments = new ArrayList<>();
+    private List<Department> departments;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
     private User createdBy = new User();
@@ -34,7 +34,9 @@ public class WorkCenterDetails implements Serializable {
 
     public WorkCenterDetails() {}
 
-    public WorkCenterDetails(int id, WorkCenter workCenter, double totalArea, int jobAvailable, boolean accesibility, boolean parking, int parkingPlace, String description, boolean allDepartment, List<Department> departments, Date created, User createdBy, Date modified, User modifiedBy) {
+    public WorkCenterDetails(int id, WorkCenter workCenter, Double totalArea, Integer jobAvailable, boolean accesibility,
+                             boolean parking, int parkingPlace, String description, boolean allDepartment,
+                             List<Department> departments, Date created, User createdBy, Date modified, User modifiedBy) {
         Id = id;
         this.workCenter = workCenter;
         this.totalArea = totalArea;
@@ -70,13 +72,13 @@ public class WorkCenterDetails implements Serializable {
 
     @Basic
     @Column(name = "SUPERFICIE")
-    public double getTotalArea() { return totalArea; }
-    public void setTotalArea(double totalArea) { this.totalArea = totalArea; }
+    public Double getTotalArea() { return totalArea; }
+    public void setTotalArea(Double totalArea) { this.totalArea = totalArea; }
 
     @Basic
     @Column(name = "PUESTOS_DISPONIBLES")
-    public int getJobAvailable() { return jobAvailable; }
-    public void setJobAvailable(int jobAvailable) { this.jobAvailable = jobAvailable; }
+    public Integer getJobAvailable() { return jobAvailable; }
+    public void setJobAvailable(Integer jobAvailable) { this.jobAvailable = jobAvailable; }
 
     @Basic
     @Column(name = "ACCESIBILIDAD")
