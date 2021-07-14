@@ -14,4 +14,5 @@ public interface WorkCentersByEntityRepository extends JpaRepository<WorkCenters
     List<WorkCentersByEntity> findByWorkCenter(WorkCenter workCenter);
 
     void deleteByWorkCenter(WorkCenter workCenter);
+
 }

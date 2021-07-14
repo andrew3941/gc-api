@@ -185,10 +185,16 @@ public class WorkCenterManager implements WorkCenterService{
         // Insertamos delegaci�n en RRHH.TM_DIM_NAVISION
         dimNavisionRepository.editWorkCenter(dimNavision);
 
-//        List<WorkCentersByEntity> workCentersByEntities = this.workCentersByEntitiesRepository.findAllByWorkCenter(newWorkCenter);
-
         // Editamos la delegaci�n en la tabla GC2006_RELEASE.PC_DELEGACIONES
         workCentersRepository.editWorkCenter(workCenterId, newWorkCenter, this.jwtTokenUtil.getUserWithRolesFromToken(request).getId());
+
+        // Eliminamos las entidades asociadas al centro
+        workCentersByEntitiesRepository.deleteByWorkCenter(newWorkCenter);
+
+        // Guardamos la nueva relación de entidades
+        for(WorkCentersByEntity workCentersByEntity : newWorkCenter.getWorkCentersByEntities()) {
+            workCentersByEntitiesRepository.save(workCentersByEntity);
+        }
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
