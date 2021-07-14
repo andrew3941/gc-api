@@ -1,6 +1,5 @@
 package com.preving.intranet.gestioncentrosapi.model.dao.workCenters;
 
-import com.preving.intranet.gestioncentrosapi.model.domain.Department;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import org.springframework.stereotype.Service;
@@ -9,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WorkCentersRepositoryManager implements WorkCentersCustomizeRepository {
@@ -21,14 +21,25 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
     public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
 
         String sql = "" +
-                "SELECT WC.ID, WC.LOCALIDAD_ID, WC.NOMBRE, WC.COD_IN_NAV, WC.DIRECCION, WC.C_POSTAL, WC.TFNO, WC.MAIL, " +
+                "SELECT DISTINCT WC.ID, WC.LOCALIDAD_ID, WC.NOMBRE, WC.COD_IN_NAV, WC.DIRECCION, WC.C_POSTAL, WC.TFNO, WC.MAIL, " +
                 "   WC.FECHA_ALTA, WC.FECHA_BAJA, WC.ACTIVO, LOC.LOC_NOMBRE LOCALIDAD_NOMBRE, " +
                 "   LOC.LOC_PRV_COD PROVINCIA_COD, PRV.PRV_NOMBRE PROVINCIA_NOMBRE " +
-                "FROM GC2006_RELEASE.PC_DELEGACIONES WC, " +
-                "   VIG_SALUD.LOCALIDADES LOC, " +
+                "FROM GC2006_RELEASE.PC_DELEGACIONES WC, ";
+
+        if(workCenterFilter.getWorkCenterEntities().size() > 0) {
+            sql += "GESTION_CENTROS.PC_DELEGACIONES_X_ENTIDADES WCE, ";
+        }
+
+        sql +=  "   VIG_SALUD.LOCALIDADES LOC, " +
                 "   VIG_SALUD.PROVINCIAS PRV " +
                 "WHERE WC.LOCALIDAD_ID = LOC.LOC_ID " +
                 "   AND LOC.LOC_PRV_COD LIKE PRV.PRV_COD ";
+
+        if(workCenterFilter.getWorkCenterEntities().size() > 0) {
+            String entities = workCenterFilter.getWorkCenterEntities().stream().map(wce -> String.valueOf(wce.getId())).collect(Collectors.joining(","));
+            sql +=  "AND WC.ID = WCE.DELEGACION_ID " +
+                    "AND WCE.ENTIDAD_ID IN (" + entities + ")";
+        }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getId() != 0){
             sql += "AND LOC.LOC_PRV_COD = :workCenterProvince ";

@@ -1,10 +1,9 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.workCenters;
 
-import org.springframework.beans.factory.annotation.Required;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.Entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @javax.persistence.Entity
@@ -32,6 +31,7 @@ public class WorkCentersByEntity implements Serializable {
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
+    @JsonBackReference
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
 //    @Required
     @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")

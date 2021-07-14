@@ -123,7 +123,7 @@ public class WorkCenterManager implements WorkCenterService{
         workCentersRepository.save(newWorkCenter);
 
         // save entity in the WorkCenterByEntity table
-        saveWorkCenterForEntity(newWorkCenter.getEntities(), newWorkCenter);
+        saveWorkCenterForEntity(newWorkCenter.getWorkCentersByEntities());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -162,12 +162,9 @@ public class WorkCenterManager implements WorkCenterService{
         return dimNavision;
     }
 
-    private void saveWorkCenterForEntity(List<Entity> entities, WorkCenter newWorkCenter) {
+    private void saveWorkCenterForEntity(List<WorkCentersByEntity> entities) {
 
-        for(Entity entity : entities) {
-            WorkCentersByEntity workCentersByEntity = new WorkCentersByEntity();
-            workCentersByEntity.setEntity(entity);
-            workCentersByEntity.setWorkCenter(newWorkCenter);
+        for(WorkCentersByEntity workCentersByEntity : entities) {
             workCentersByEntitiesRepository.save(workCentersByEntity);
         }
 
@@ -198,7 +195,17 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
-        return this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter);
+
+        // Getting the work centers list by filter
+        List<WorkCenter> workCenters = this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter);
+
+        // Setting entities related with the work center
+        for(WorkCenter workCenter : workCenters) {
+            workCenter.setWorkCentersByEntities(this.workCentersByEntitiesRepository.findByWorkCenter(workCenter));
+        }
+
+        return workCenters;
+
     }
 
     @Override

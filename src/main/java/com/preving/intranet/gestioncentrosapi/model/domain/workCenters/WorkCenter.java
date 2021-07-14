@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class WorkCenter implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date modified;
     private User modifiedBy;
-    private List<com.preving.intranet.gestioncentrosapi.model.domain.Entity> entities;
+    private List<WorkCentersByEntity> workCentersByEntities = new ArrayList<>();
 
     public WorkCenter() {}
 
@@ -285,9 +286,10 @@ public class WorkCenter implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
-    @Transient
-    public List<com.preving.intranet.gestioncentrosapi.model.domain.Entity> getEntities() { return entities; }
-    public void setEntities(List<com.preving.intranet.gestioncentrosapi.model.domain.Entity> entities) { this.entities = entities; }
+    @JsonManagedReference
+    @OneToMany(mappedBy = "workCenter")
+    public List<WorkCentersByEntity> getWorkCentersByEntities() { return workCentersByEntities; }
+    public void setWorkCentersByEntities(List<WorkCentersByEntity> workCentersByEntities) { this.workCentersByEntities = workCentersByEntities; }
 
     @Transient
     public int getEmployee() { return employee;}
