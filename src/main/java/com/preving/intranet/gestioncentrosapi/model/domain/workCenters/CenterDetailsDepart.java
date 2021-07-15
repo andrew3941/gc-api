@@ -5,27 +5,26 @@ import com.preving.intranet.gestioncentrosapi.model.domain.Department;
 import javax.persistence.*;
 
 @Entity
-@Table(schema = "gestion_centros",name = "pc_delegaciones_x_dptos")
+@Table(schema = "GESTION_CENTROS",name = "PC_DELEGACIONES_X_DPTOS")
 public class CenterDetailsDepart {
 
     private int id;
-    private WorkCenter delegation_id = new WorkCenter();
-    private Department department_id = new Department();
+    private WorkCenter workCenter = new WorkCenter();
+    private Department department = new Department();
 
     public CenterDetailsDepart() {
     }
 
-    public CenterDetailsDepart(int id, WorkCenter delegation_id, Department department_id) {
+    public CenterDetailsDepart(int id, WorkCenter workCenter, Department department) {
         this.id = id;
-        this.delegation_id = delegation_id;
-        this.department_id = department_id;
+        this.workCenter = workCenter;
+        this.department = department;
     }
-
 
     @Id
     @Column(name = "ID", nullable = false)
-    @SequenceGenerator(name = "PC_DELEGACIONES_DPTOS_SEQ", sequenceName = "PC_DELEGACIONES_DPTOS_SEQ", schema = "gestion_centros", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PC_DELEGACIONES_DPTOS_SEQ")
+    @SequenceGenerator(name = "PC_DELEGACIONES_X_DPTOS_SEQ", sequenceName = "PC_DELEGACIONES_X_DPTOS_SEQ", schema = "gestion_centros", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PC_DELEGACIONES_X_DPTOS_SEQ")
     public int getId() {
         return id;
     }
@@ -34,21 +33,13 @@ public class CenterDetailsDepart {
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "delegacion_id", referencedColumnName = "ID")
-    public WorkCenter getDelegation_id() {
-        return delegation_id;
-    }
-    public void setDelegation_id(WorkCenter delegation_id) {
-        this.delegation_id = delegation_id;
-    }
+    @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
+    public WorkCenter getWorkCenter() { return workCenter; }
+    public void setWorkCenter(WorkCenter workCenter) { this.workCenter = workCenter; }
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "departamento_id", referencedColumnName = "ID")
-    public Department getDepartment_id() {
-        return department_id;
-    }
-    public void setDepartment_id(Department department_id) {
-        this.department_id = department_id;
-    }
+    @JoinColumn(name = "DEPARTAMENTO_ID", referencedColumnName = "ID")
+    public Department getDepartment() { return department; }
+    public void setDepartment(Department department) { this.department = department; }
 
 }

@@ -42,9 +42,9 @@ public class City implements Serializable {
         this.province = province;
     }
 
-    public City(int id, int province, String name) {
+    public City(int id, String province, String name) {
         this.id = id;
-        this.province.setId(province);
+        this.province.setCod(province);
         this.name = name;
     }
   

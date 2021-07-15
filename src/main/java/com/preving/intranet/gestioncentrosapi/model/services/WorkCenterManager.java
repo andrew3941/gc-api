@@ -122,6 +122,12 @@ public class WorkCenterManager implements WorkCenterService{
         // Insertamos delegaci�n en GC2006_RELEASE.PC_DELEGACIONES
         workCentersRepository.save(newWorkCenter);
 
+        // Insertamos valores por defecto para detalles de centro
+        WorkCenterDetails workCenterDetails = new WorkCenterDetails();
+        workCenterDetails.setWorkCenter(newWorkCenter);
+        workCenterDetails.getCreatedBy().setId(userId);
+        workCenterDetailsRepository.save(workCenterDetails);
+
         // save entity in the WorkCenterByEntity table
         saveWorkCenterForEntity(newWorkCenter.getWorkCentersByEntities());
 
@@ -156,7 +162,7 @@ public class WorkCenterManager implements WorkCenterService{
         dimNavision.setActive(1);
         dimNavision.setOrder(444);
         dimNavision.setMcc_ln_mf("PT");
-        String provinceCod = String.valueOf(newWorkCenter.getCity().getProvince().getId());
+        String provinceCod = newWorkCenter.getCity().getProvince().getCod();
         dimNavision.setProvinceCod(provinceCod);
 
         return dimNavision;
@@ -252,13 +258,15 @@ public class WorkCenterManager implements WorkCenterService{
         List<Department> myDepartments =  workCenterDetails.getDepartment();
 
         workCenterDetails.getWorkCenter().setId(workCenterId);
-        workCenterDetails.setAllDepartment(false);
-        workCenterDetails.setCreated(new Date());
-        workCenterDetails.getCreatedBy().setId(userId);
+//        workCenterDetails.setAllDepartment(false);
+//        workCenterDetails.setCreated(new Date());
+//        workCenterDetails.getCreatedBy().setId(userId);
         workCenterDetails.setModified(new Date());
-       // workCenterDetails.getModifiedBy().setId(userId);
+        workCenterDetails.setModifiedBy(new User());
+        workCenterDetails.getModifiedBy().setId(userId);
 
-        workCenterDetailsRepository.save(workCenterDetails);
+//        workCenterDetailsRepository.save(workCenterDetails);
+        workCenterDetailsRepository.updateWorkCenterDetails(workCenterDetails);
 
         this.saveDelegationDepartment(myDepartments,workCenterId);
 
@@ -275,10 +283,9 @@ public class WorkCenterManager implements WorkCenterService{
 
             for(Department department: allDepartments)
             {
-                centerDetailsDepart.getDelegation_id().setId(workCenterId);
-                centerDetailsDepart.getDepartment_id().setId(department.getId());
-
-             centerDetailsDepartRepository.save(centerDetailsDepart);
+                centerDetailsDepart.getWorkCenter().setId(workCenterId);
+                centerDetailsDepart.getDepartment().setId(department.getId());
+                centerDetailsDepartRepository.save(centerDetailsDepart);
 
             }
         }

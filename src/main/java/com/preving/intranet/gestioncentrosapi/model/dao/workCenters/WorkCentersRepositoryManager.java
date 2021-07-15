@@ -41,7 +41,7 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
                     "AND WCE.ENTIDAD_ID IN (" + entities + ")";
         }
 
-        if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getId() != 0){
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getCod() != null){
             sql += "AND LOC.LOC_PRV_COD = :workCenterProvince ";
         }
 
@@ -61,15 +61,8 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
             query.setParameter("workCenterName", "%" + workCenterFilter.getWorkCenterName() + "%");
         }
 
-        if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getId() != 0){
-
-            String prvCod = String.valueOf(workCenterFilter.getWorkCenterProvince().getId());
-            if(workCenterFilter.getWorkCenterProvince().getId() < 10) {
-                prvCod = "0" + prvCod;
-            }
-
-            query.setParameter("workCenterProvince", prvCod);
-
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getCod() != null){
+            query.setParameter("workCenterProvince", workCenterFilter.getWorkCenterProvince().getCod());
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterStatus() != 2){

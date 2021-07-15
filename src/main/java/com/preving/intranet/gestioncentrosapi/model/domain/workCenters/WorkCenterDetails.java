@@ -7,7 +7,6 @@ import com.preving.intranet.gestioncentrosapi.model.domain.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import java.util.List;
 @Table(schema = "GESTION_CENTROS" , name = "PC_DELEGACIONES_DETALLES")
 public class WorkCenterDetails implements Serializable {
 
-    private int Id;
+    private int id;
     private WorkCenter workCenter;
     private Double totalArea;
     private Integer jobAvailable;
@@ -37,7 +36,7 @@ public class WorkCenterDetails implements Serializable {
     public WorkCenterDetails(int id, WorkCenter workCenter, Double totalArea, Integer jobAvailable, boolean accesibility,
                              boolean parking, int parkingPlace, String description, boolean allDepartment,
                              List<Department> departments, Date created, User createdBy, Date modified, User modifiedBy) {
-        Id = id;
+        this.id = id;
         this.workCenter = workCenter;
         this.totalArea = totalArea;
         this.jobAvailable = jobAvailable;
@@ -57,10 +56,10 @@ public class WorkCenterDetails implements Serializable {
     @Column(name = "ID", nullable = false)
     @SequenceGenerator(name = "PC_DELEGACIONES_DETALLES_SEQ", sequenceName = "PC_DELEGACIONES_DETALLES_SEQ", schema = "gestion_centros", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PC_DELEGACIONES_DETALLES_SEQ")
-    public int getId() { return Id; }
-    public void setId(int Id) { this.Id = Id;  }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id;  }
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     public WorkCenter getWorkCenter() {

@@ -84,7 +84,7 @@ public class WorkCenter implements Serializable {
         this.endDate = endDate;
         this.active = active;
         this.getCity().setName(localityName);
-        this.getCity().getProvince().setId(Integer.parseInt(prvCod));
+        this.getCity().getProvince().setCod(prvCod);
         this.getCity().getProvince().setName(prvName);
     }
 
