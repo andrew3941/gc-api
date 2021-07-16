@@ -22,7 +22,7 @@ public class CitiesRepositoryManager implements CitiesRepository {
         String sql = "" +
                 "SELECT * " +
                 "FROM ( " +
-                "   SELECT LOC_ID, CAST(LOC_PRV_COD AS INTEGER), LOC_NOMBRE FROM VIG_SALUD.LOCALIDADES " +
+                "   SELECT LOC_ID, LOC_PRV_COD, LOC_NOMBRE FROM VIG_SALUD.LOCALIDADES " +
                 "   WHERE LOC_PRV_COD LIKE :provinceCod ";
 
         if(criterion != null && !criterion.equals("")) {
@@ -32,10 +32,6 @@ public class CitiesRepositoryManager implements CitiesRepository {
 
         sql += "ORDER BY LOC_NOMBRE ASC) " +
                 "AS rs";
-
-        if(Integer.parseInt(provinceCod) < 10) {
-            provinceCod = "0" + provinceCod;
-        }
 
         Query query = manager.createNativeQuery(sql).setParameter("provinceCod", provinceCod);
 
@@ -52,7 +48,7 @@ public class CitiesRepositoryManager implements CitiesRepository {
 
         localities.stream().forEach((record) -> {
             City city = new City(((BigDecimal) record[0]).intValue(),
-                    ((int) record[1]),
+                    ((String) record[1]),
                     (String) record[2]);
             mappedCities.add(city);
         });

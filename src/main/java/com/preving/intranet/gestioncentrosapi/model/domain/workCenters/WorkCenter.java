@@ -1,13 +1,16 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.workCenters;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.City;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -47,13 +50,13 @@ public class WorkCenter implements Serializable {
     private String phoneNumber;
     private String email;
     private User headPerson;
+    private int employee;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date startDate = new Date();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date endDate = null;
     private int idInMp2;
     private Integer lineId;
-    private com.preving.intranet.gestioncentrosapi.model.domain.Entity entity;
     private int active;
     private int visible;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
@@ -62,12 +65,13 @@ public class WorkCenter implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date modified;
     private User modifiedBy;
+    private List<WorkCentersByEntity> workCentersByEntities = new ArrayList<>();
 
     public WorkCenter() {}
 
     public WorkCenter(int id, Integer localityId, String name, String navisionCode, String address, String postalCode,
                       String phoneNumber, String email, Date startDate, Date endDate, int active, String localityName,
-                      String prvCod, String prvName) {
+                      String prvCod, String prvName)  {
         this.id = id;
         this.city.setId(localityId) ;
         this.name = name;
@@ -80,14 +84,14 @@ public class WorkCenter implements Serializable {
         this.endDate = endDate;
         this.active = active;
         this.getCity().setName(localityName);
-        this.getCity().getProvince().setId(Integer.parseInt(prvCod));
+        this.getCity().getProvince().setCod(prvCod);
         this.getCity().getProvince().setName(prvName);
     }
 
     public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode,
-                      String phoneNumber, String email, User headPerson, Date startDate, Date endDate, int idInMp2,
-                      Integer lineId, com.preving.intranet.gestioncentrosapi.model.domain.Entity entity, int active,
-                      int visible, Date created, User createdBy, Date modified, User modifiedBy) {
+                      String phoneNumber, String email, User headPerson, Integer employee, Date startDate, Date endDate,
+                      int idInMp2, Integer lineId, int active, int visible, Date created, User createdBy, Date modified,
+                      User modifiedBy) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -97,11 +101,11 @@ public class WorkCenter implements Serializable {
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.headPerson = headPerson;
+        this.employee = employee;
         this.startDate = startDate;
         this.endDate = endDate;
         this.idInMp2 = idInMp2;
         this.lineId = lineId;
-        this.entity = entity;
         this.active = active;
         this.visible = visible;
         this.created = created;
@@ -231,15 +235,6 @@ public class WorkCenter implements Serializable {
         this.lineId = lineId;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "ENTIDAD_ID", referencedColumnName = "ID")
-    public com.preving.intranet.gestioncentrosapi.model.domain.Entity getEntity() {
-        return entity;
-    }
-    public void setEntity(com.preving.intranet.gestioncentrosapi.model.domain.Entity entity) {
-        this.entity = entity;
-    }
-
     @Basic
     @Column(name = "ACTIVO", nullable = false)
     public int getActive() {
@@ -293,6 +288,15 @@ public class WorkCenter implements Serializable {
     public void setModifiedBy(User modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "workCenter")
+    public List<WorkCentersByEntity> getWorkCentersByEntities() { return workCentersByEntities; }
+    public void setWorkCentersByEntities(List<WorkCentersByEntity> workCentersByEntities) { this.workCentersByEntities = workCentersByEntities; }
+
+    @Transient
+    public int getEmployee() { return employee;}
+    public void setEmployee(int employee) { this.employee = employee; }
 }
 
 

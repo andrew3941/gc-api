@@ -1,34 +1,36 @@
 package com.preving.intranet.gestioncentrosapi.model.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WorkCenterFilter {
 
     private String workCenterName;
     private Province workCenterProvince;
     private int workCenterStatus;
+    private List<Entity> workCenterEntities = new ArrayList<>();
 
     public WorkCenterFilter() {
     }
 
-    public WorkCenterFilter(String workCenterName, Province workCenterProvince, int workCenterStatus) {
+    public WorkCenterFilter(String workCenterName, Province workCenterProvince, int workCenterStatus,
+                            List<Entity> workCenterEntities) {
         this.workCenterName = workCenterName;
         this.workCenterProvince = workCenterProvince;
         this.workCenterStatus = workCenterStatus;
+        this.workCenterEntities = workCenterEntities;
     }
-
 
     public String getWorkCenterName() {
         return workCenterName;
     }
-
     public void setWorkCenterName(String workCenterName) {
         this.workCenterName = workCenterName;
     }
 
-
     public Province getWorkCenterProvince() {
         return workCenterProvince;
     }
-
     public void setWorkCenterProvince(Province workCenterProvince) {
         this.workCenterProvince = workCenterProvince;
     }
@@ -36,8 +38,11 @@ public class WorkCenterFilter {
     public int getWorkCenterStatus() {
         return workCenterStatus;
     }
-
     public void setWorkCenterStatus(int workCenterStatus) {
         this.workCenterStatus = workCenterStatus;
     }
+
+    public List<Entity> getWorkCenterEntities() { return workCenterEntities; }
+    public void setWorkCenterEntities(List<Entity> workCenterEntities) { this.workCenterEntities = workCenterEntities; }
+
 }
