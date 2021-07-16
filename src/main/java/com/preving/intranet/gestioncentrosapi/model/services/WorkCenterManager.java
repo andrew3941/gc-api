@@ -77,7 +77,7 @@ public class WorkCenterManager implements WorkCenterService{
     private WorkCentersByEntityRepository workCentersByEntitiesRepository;
 
     @Autowired
-    private CenterDetailsDepartRepository centerDetailsDepartRepository;
+    private WorkCenterDetailsByDepartRepository workCenterDetailsByDepartRepository;
 
     @PersistenceContext
     private EntityManager manager;
@@ -251,46 +251,38 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> editWorkCenterDetails(int workCenterId, WorkCenterDetails workCenterDetails, HttpServletRequest request) {
 
         long userId =  this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
-        List<Department> myDepartments =  workCenterDetails.getDepartment();
+        List<WorkCenterDetailsByDepart> departments = workCenterDetails.getDepartments();
 
         workCenterDetails.getWorkCenter().setId(workCenterId);
-//        workCenterDetails.setAllDepartment(false);
-//        workCenterDetails.setCreated(new Date());
-//        workCenterDetails.getCreatedBy().setId(userId);
         workCenterDetails.setModified(new Date());
         workCenterDetails.setModifiedBy(new User());
         workCenterDetails.getModifiedBy().setId(userId);
 
-//        workCenterDetailsRepository.save(workCenterDetails);
         workCenterDetailsRepository.updateWorkCenterDetails(workCenterDetails);
 
-        this.saveDelegationDepartment(myDepartments,workCenterId);
+        this.saveDelegationDepartment(departments, workCenterDetails);
 
         //TODO check if all department selected
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private void saveDelegationDepartment(List<Department> allDepartments, int workCenterId) {
+    private void saveDelegationDepartment(List<WorkCenterDetailsByDepart> departments, WorkCenterDetails workCenterDetails) {
 
-        if (allDepartments.size()> 0) {
+        // Deleting all the departments previously saved by the work center
+        workCenterDetailsByDepartRepository.deleteByWorkCenterDetails(workCenterDetails);
 
-            CenterDetailsDepart centerDetailsDepart = new CenterDetailsDepart();
-
-            for(Department department: allDepartments)
-            {
-                centerDetailsDepart.getWorkCenter().setId(workCenterId);
-                centerDetailsDepart.getDepartment().setId(department.getId());
-                centerDetailsDepartRepository.save(centerDetailsDepart);
-
-            }
+        // Saving the new departments related with the work center
+        for(WorkCenterDetailsByDepart department: departments) {
+            workCenterDetailsByDepartRepository.save(department);
         }
-    }
 
+    }
 
     @Override
     public WorkCenterDetails getWorkCenterDetails(int workCenterId) {

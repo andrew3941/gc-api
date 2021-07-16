@@ -2,6 +2,7 @@ package com.preving.intranet.gestioncentrosapi.model.domain.workCenters;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.Department;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 
@@ -23,7 +24,7 @@ public class WorkCenterDetails implements Serializable {
     private Integer parkingPlace;
     private String description;
     private boolean allDepartment;
-    private List<Department> departments;
+    private List<WorkCenterDetailsByDepart> departments;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
     private User createdBy = new User();
@@ -35,7 +36,8 @@ public class WorkCenterDetails implements Serializable {
 
     public WorkCenterDetails(int id, WorkCenter workCenter, Double totalArea, Integer jobAvailable, boolean accesibility,
                              boolean parking, int parkingPlace, String description, boolean allDepartment,
-                             List<Department> departments, Date created, User createdBy, Date modified, User modifiedBy) {
+                             List<WorkCenterDetailsByDepart> departments, Date created, User createdBy, Date modified,
+                             User modifiedBy) {
         this.id = id;
         this.workCenter = workCenter;
         this.totalArea = totalArea;
@@ -117,13 +119,10 @@ public class WorkCenterDetails implements Serializable {
         this.allDepartment = allDepartment;
     }
 
-    @Transient
-    public List<Department> getDepartment() {
-        return departments;
-    }
-    public void setDepartment(List<Department> department) {
-        this.departments = department;
-    }
+    @JsonManagedReference
+    @OneToMany(mappedBy = "workCenterDetails")
+    public List<WorkCenterDetailsByDepart> getDepartments() { return departments; }
+    public void setDepartments(List<WorkCenterDetailsByDepart> departments) { this.departments = departments; }
 
     @Basic
     @Column(name = "CREADO")
