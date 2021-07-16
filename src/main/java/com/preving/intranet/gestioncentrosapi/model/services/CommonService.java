@@ -11,4 +11,5 @@ public interface CommonService {
     List<Province> findAllProvinces();
 
     List<Entity> findAllEntities();
+
 }

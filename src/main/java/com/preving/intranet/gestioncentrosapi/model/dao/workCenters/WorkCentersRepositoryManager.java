@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WorkCentersRepositoryManager implements WorkCentersCustomizeRepository {
@@ -15,20 +16,32 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
     @PersistenceContext
     private EntityManager manager;
 
+
     @Override
     public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
 
         String sql = "" +
-                "SELECT WC.ID, WC.LOCALIDAD_ID, WC.NOMBRE, WC.COD_IN_NAV, WC.DIRECCION, WC.C_POSTAL, WC.TFNO, WC.MAIL, " +
+                "SELECT DISTINCT WC.ID, WC.LOCALIDAD_ID, WC.NOMBRE, WC.COD_IN_NAV, WC.DIRECCION, WC.C_POSTAL, WC.TFNO, WC.MAIL, " +
                 "   WC.FECHA_ALTA, WC.FECHA_BAJA, WC.ACTIVO, LOC.LOC_NOMBRE LOCALIDAD_NOMBRE, " +
                 "   LOC.LOC_PRV_COD PROVINCIA_COD, PRV.PRV_NOMBRE PROVINCIA_NOMBRE " +
-                "FROM GC2006_RELEASE.PC_DELEGACIONES WC, " +
-                "   VIG_SALUD.LOCALIDADES LOC, " +
+                "FROM GC2006_RELEASE.PC_DELEGACIONES WC, ";
+
+        if(workCenterFilter.getWorkCenterEntities().size() > 0) {
+            sql += "GESTION_CENTROS.PC_DELEGACIONES_X_ENTIDADES WCE, ";
+        }
+
+        sql +=  "   VIG_SALUD.LOCALIDADES LOC, " +
                 "   VIG_SALUD.PROVINCIAS PRV " +
                 "WHERE WC.LOCALIDAD_ID = LOC.LOC_ID " +
                 "   AND LOC.LOC_PRV_COD LIKE PRV.PRV_COD ";
 
-        if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getId() != 0){
+        if(workCenterFilter.getWorkCenterEntities().size() > 0) {
+            String entities = workCenterFilter.getWorkCenterEntities().stream().map(wce -> String.valueOf(wce.getId())).collect(Collectors.joining(","));
+            sql +=  "AND WC.ID = WCE.DELEGACION_ID " +
+                    "AND WCE.ENTIDAD_ID IN (" + entities + ")";
+        }
+
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getCod() != null){
             sql += "AND LOC.LOC_PRV_COD = :workCenterProvince ";
         }
 
@@ -37,7 +50,7 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterName() != null && workCenterFilter.getWorkCenterName() != ""){
-            sql += " AND LOWER(TRANSLATE(WC.NOMBRE, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) ";
+            sql += " AND LOWER(TRANSLATE(WC.NOMBRE, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN')) ";
         }
 
         sql += "ORDER BY WC.NOMBRE";
@@ -48,23 +61,33 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
             query.setParameter("workCenterName", "%" + workCenterFilter.getWorkCenterName() + "%");
         }
 
-        if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getId() != 0){
-
-            String prvCod = String.valueOf(workCenterFilter.getWorkCenterProvince().getId());
-            if(workCenterFilter.getWorkCenterProvince().getId() < 10) {
-                prvCod = "0" + prvCod;
-            }
-
-            query.setParameter("workCenterProvince", prvCod);
-
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getCod() != null){
+            query.setParameter("workCenterProvince", workCenterFilter.getWorkCenterProvince().getCod());
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterStatus() != 2){
             query.setParameter("workCenterStatus", workCenterFilter.getWorkCenterStatus());
         }
 
+
         List<WorkCenter>  allWorkCenters = query.getResultList();
 
         return allWorkCenters;
     }
+
+    @Override
+    public int getTotalEmployee(int workCenterId) {
+
+        String sql = "" +
+                "SELECT COUNT(*) FROM GC2006_RELEASE.PC_USUARIOS_DELEGACION UD " +
+                "WHERE DELEGACION_ID=:workCenterId";
+
+        Query query = manager.createNativeQuery(sql).setParameter("workCenterId", workCenterId);
+        int totalEmployee = Integer.parseInt(query.getSingleResult().toString());
+
+        return totalEmployee;
+
+    }
 }
+
+

@@ -37,4 +37,6 @@ public class Entity implements Serializable {
         this.id = id;
         this.name = name;
     }
+
+
 }
