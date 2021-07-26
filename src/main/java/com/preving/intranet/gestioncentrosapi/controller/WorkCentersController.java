@@ -85,7 +85,6 @@ public class WorkCentersController {
 
     }
 
-
     /**
      * A�adimos una delegaci�n
      * @RequestBody WorkCenter
@@ -161,7 +160,6 @@ public class WorkCentersController {
         }
     }
 
-
     /**
      * Obtenci�n de delegaci�n por Id
      * @param centerId
@@ -184,13 +182,6 @@ public class WorkCentersController {
      * @param workCenterId
      * @regreso
      */
-
-    /**
-     * Obtención de detalles del centro de trabajo por workCenterId
-     * @param workCenterId
-     * @regreso
-     */
-
     @RequestMapping(value = "{workCenterId}/details", method = RequestMethod.GET)
     public ResponseEntity<?> findWorkCenterDetails(@PathVariable(value = "workCenterId") int workCenterId){
 
@@ -239,7 +230,6 @@ public class WorkCentersController {
     }
 
 
-
     @RequestMapping(value = "{workCenterId}/drawings", method = RequestMethod.GET)
     public ResponseEntity<?> getDrawingByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
 
@@ -252,4 +242,27 @@ public class WorkCentersController {
 
     }
 
+    @RequestMapping(value = "{workCenterId}/rooms", method = RequestMethod.GET)
+    public ResponseEntity<?> getRoomByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
+
+        try {
+            return new ResponseEntity<>(workCenterService.getRoomByWorkCenter(workCenterId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @RequestMapping(value = "{workCenterId}/rooms/edit", method = RequestMethod.POST)
+    public ResponseEntity<?> editRoomList(HttpServletRequest request,
+                                          @PathVariable(value="workCenterId") int workCenterId){
+
+        try {
+            return new ResponseEntity<>(workCenterService.editRoomList(workCenterId, request), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

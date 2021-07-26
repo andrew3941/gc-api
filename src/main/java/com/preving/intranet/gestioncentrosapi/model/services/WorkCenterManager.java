@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 import com.preving.intranet.gestioncentrosapi.model.dao.department.DepartmentRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.dimNavision.DimNavisionRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.room.RoomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.*;
@@ -82,6 +83,9 @@ public class WorkCenterManager implements WorkCenterService{
     @Autowired
     private DrawingRepository drawingRepository;
 
+    @Autowired
+    private RoomRepository roomRepository;
+
     @PersistenceContext
     private EntityManager manager;
 
@@ -136,7 +140,6 @@ public class WorkCenterManager implements WorkCenterService{
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
     private Zona seteamosZona(WorkCenter newWorkCenter) {
 
@@ -417,14 +420,26 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
-   public List<Drawing> getDrawingByWorkCenter(int workCenterId){
+    public List<Drawing> getDrawingByWorkCenter(int workCenterId){
 
         WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
 
         return this.drawingRepository.findByWorkCenter(workCenter);
     }
 
+    @Override
+    public List<Room> getRoomByWorkCenter(int workCenterId){
 
+        Room room = roomRepository.getOne(workCenterId);
+
+        return this.roomRepository.findRoomByWorkCenter(room);
+    }
+
+    @Override
+    public ResponseEntity<?> editRoomList(int workCenterId, HttpServletRequest request) {
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }
 

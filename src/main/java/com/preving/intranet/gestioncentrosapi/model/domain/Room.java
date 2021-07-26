@@ -48,7 +48,7 @@ public class Room implements Serializable {
     @Id
     @Column(name = "ID", nullable = false)
     @SequenceGenerator(name = "PC_DELEGACIONES_X_SALAS_SEQ", sequenceName = "PC_DELEGACIONES_X_SALAS_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PC_DELEGACIONES_X_PLANOS_SEQ")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PC_DELEGACIONES_X_SALAS_SEQ")
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

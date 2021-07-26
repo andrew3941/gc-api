@@ -33,4 +33,9 @@ public interface WorkCenterService {
     WorkCenterDetails getWorkCenterDetails(int workCenterId);
 
     List<Drawing> getDrawingByWorkCenter(int workCenterId);
+
+    List<Room> getRoomByWorkCenter(int workCenterId);
+
+    ResponseEntity<?> editRoomList(int workCenterId, HttpServletRequest request);
+
 }
