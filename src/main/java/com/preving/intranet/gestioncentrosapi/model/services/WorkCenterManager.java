@@ -2,6 +2,7 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.dao.department.DepartmentRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.dimNavision.DimNavisionRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.*;
@@ -78,6 +79,8 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Autowired
     private WorkCenterDetailsByDepartRepository workCenterDetailsByDepartRepository;
+    @Autowired
+    private DrawingRepository drawingRepository;
 
     @PersistenceContext
     private EntityManager manager;
@@ -412,6 +415,16 @@ public class WorkCenterManager implements WorkCenterService{
 
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
+
+    @Override
+   public List<Drawing> getDrawingByWorkCenter(int workCenterId){
+
+        WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
+
+        return this.drawingRepository.findByWorkCenter(workCenter);
+    }
+
+
 
 }
 

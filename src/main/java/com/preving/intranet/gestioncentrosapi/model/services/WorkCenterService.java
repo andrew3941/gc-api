@@ -31,4 +31,6 @@ public interface WorkCenterService {
     ResponseEntity<?> exportWorkCenters(WorkCenterFilter workCenterFilter, HttpServletResponse response);
 
     WorkCenterDetails getWorkCenterDetails(int workCenterId);
+
+    List<Drawing> getDrawingByWorkCenter(int workCenterId);
 }

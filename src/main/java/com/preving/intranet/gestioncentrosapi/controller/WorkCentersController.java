@@ -238,4 +238,18 @@ public class WorkCentersController {
 
     }
 
+
+
+    @RequestMapping(value = "{workCenterId}/drawings", method = RequestMethod.GET)
+    public ResponseEntity<?> getDrawingByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
+
+        try {
+            return new ResponseEntity<>(workCenterService.getDrawingByWorkCenter(workCenterId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 }
