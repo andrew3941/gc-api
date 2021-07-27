@@ -242,6 +242,17 @@ public class WorkCentersController {
 
     }
 
+
+    @RequestMapping(value = "{workCenterId}/drawings/{drawingId}/delete", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteDrawing (HttpServletRequest request,
+                                            @PathVariable(value = "workCenterId") int workCenterId,
+                                            @PathVariable(value = "drawingId") int drawingId) {
+
+
+        return workCenterService.deleteDrawing(request,workCenterId,drawingId);
+
+    }
+
     @RequestMapping(value = "{workCenterId}/rooms", method = RequestMethod.GET)
     public ResponseEntity<?> getRoomByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
 

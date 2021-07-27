@@ -424,7 +424,28 @@ public class WorkCenterManager implements WorkCenterService{
 
         WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
 
-        return this.drawingRepository.findByWorkCenter(workCenter);
+      return this.drawingRepository.findByWorkCenter(workCenter);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteDrawing(HttpServletRequest request, int workCenterId, int drawingId) {
+
+        long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        Drawing drawing = this.drawingRepository.findDrawingById(drawingId);
+
+        if (drawing==null) {
+            return new ResponseEntity <>(HttpStatus.NOT_FOUND);
+        }
+        try {
+
+            this.drawingRepository.drawingLogicDelete((int) uId, drawingId, workCenterId);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
