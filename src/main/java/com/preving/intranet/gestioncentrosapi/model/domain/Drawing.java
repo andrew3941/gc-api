@@ -148,7 +148,7 @@ public class Drawing implements Serializable {
         this.deleted = deleted;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "BORRADO_POR", referencedColumnName = "ID")
     public User getDeletedBy() {
         return deletedBy;

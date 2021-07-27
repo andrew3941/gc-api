@@ -14,7 +14,6 @@ public class WorkCentersByEntity implements Serializable {
     private WorkCenter workCenter = new WorkCenter();
     private Entity entity = new Entity();
 
-
     public WorkCentersByEntity() {
     }
 

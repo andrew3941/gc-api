@@ -37,7 +37,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class WorkCenterManager implements WorkCenterService{
+public class WorkCenterManager implements WorkCenterService {
 
     @Autowired
     private ProvincesRepository provincesRepository;
@@ -106,27 +106,27 @@ public class WorkCenterManager implements WorkCenterService{
         // Construimos el objeto zona
         Zona zona = seteamosZona(newWorkCenter);
 
-        // Insertamos delegación en MP2.ZONA
+        // Insertamos delegaciï¿½n en MP2.ZONA
         zonaRepository.save(zona);
 
         // Construimos el objeto dimNavision
         DimNavision dimNavision = seteamosDimNavision(newWorkCenter);
 
-        // Insertamos delegación en RRHH.TM_DIM_NAVISION
+        // Insertamos delegaciï¿½n en RRHH.TM_DIM_NAVISION
         dimNavisionRepository.save(dimNavision);
 
         // Seteamos los valores necesarios para hacer el insert
         // TODO verificar con fecha de baja
         newWorkCenter.setActive(1);
         newWorkCenter.setVisible(1);
-        // Seteamos valores de creación
+        // Seteamos valores de creaciï¿½n
         newWorkCenter.setCreated(new Date());
         newWorkCenter.getCreatedBy().setId(userId);
         // Seteamos las ids de las tablas secundarias
         newWorkCenter.setIdInMp2(zona.getCodZona());
         newWorkCenter.setLineId(dimNavision.getId());
 
-        // Insertamos delegación en GC2006_RELEASE.PC_DELEGACIONES
+        // Insertamos delegaciï¿½n en GC2006_RELEASE.PC_DELEGACIONES
         workCentersRepository.save(newWorkCenter);
 
         // Insertamos valores por defecto para detalles de centro
@@ -178,7 +178,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     private void saveWorkCenterForEntity(List<WorkCentersByEntity> entities) {
 
-        for(WorkCentersByEntity workCentersByEntity : entities) {
+        for (WorkCentersByEntity workCentersByEntity : entities) {
             workCentersByEntitiesRepository.save(workCentersByEntity);
         }
 
@@ -190,25 +190,25 @@ public class WorkCenterManager implements WorkCenterService{
         // Construimos el objeto zona
         Zona zona = seteamosZona(newWorkCenter);
 
-        // Editamos la delegación en la tabla MP2.ZONA
+        // Editamos la delegaciï¿½n en la tabla MP2.ZONA
         zonaRepository.editWorkCenter(zona);
 
         if (newWorkCenter.getLineId() != null) {
             // Construimos el objeto dimNavision
             DimNavision dimNavision = seteamosDimNavision(newWorkCenter);
 
-            // Insertamos delegación en RRHH.TM_DIM_NAVISION
+            // Insertamos delegaciï¿½n en RRHH.TM_DIM_NAVISION
             dimNavisionRepository.editWorkCenter(dimNavision);
         }
 
-        // Editamos la delegación en la tabla GC2006_RELEASE.PC_DELEGACIONES
+        // Editamos la delegaciï¿½n en la tabla GC2006_RELEASE.PC_DELEGACIONES
         workCentersRepository.editWorkCenter(workCenterId, newWorkCenter, this.jwtTokenUtil.getUserWithRolesFromToken(request).getId());
 
         // Eliminamos las entidades asociadas al centro
         workCentersByEntitiesRepository.deleteByWorkCenter(newWorkCenter);
 
         // Guardamos la nueva relaciÃ³n de entidades
-        for(WorkCentersByEntity workCentersByEntity : newWorkCenter.getWorkCentersByEntities()) {
+        for (WorkCentersByEntity workCentersByEntity : newWorkCenter.getWorkCentersByEntities()) {
             workCentersByEntitiesRepository.save(workCentersByEntity);
         }
 
@@ -222,7 +222,7 @@ public class WorkCenterManager implements WorkCenterService{
         List<WorkCenter> workCenters = this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter);
 
         // Setting entities related with the work center
-        for(WorkCenter workCenter : workCenters) {
+        for (WorkCenter workCenter : workCenters) {
             workCenter.setWorkCentersByEntities(this.workCentersByEntitiesRepository.findByWorkCenter(workCenter));
         }
 
@@ -264,7 +264,7 @@ public class WorkCenterManager implements WorkCenterService{
     @Transactional
     public ResponseEntity<?> editWorkCenterDetails(int workCenterId, WorkCenterDetails workCenterDetails, HttpServletRequest request) {
 
-        long userId =  this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
         List<WorkCenterDetailsByDepart> departments = workCenterDetails.getDepartments();
 
@@ -288,7 +288,7 @@ public class WorkCenterManager implements WorkCenterService{
         workCenterDetailsByDepartRepository.deleteByWorkCenterDetails(workCenterDetails);
 
         // Saving the new departments related with the work center
-        for(WorkCenterDetailsByDepart department: departments) {
+        for (WorkCenterDetailsByDepart department : departments) {
             workCenterDetailsByDepartRepository.save(department);
         }
 
@@ -300,7 +300,7 @@ public class WorkCenterManager implements WorkCenterService{
         WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
         WorkCenterDetails workCenterDetails = workCenterDetailsRepository.findByWorkCenter(workCenter);
 
-        if(workCenterDetails == null) {
+        if (workCenterDetails == null) {
             workCenterDetails = new WorkCenterDetails();
             workCenterDetails.setWorkCenter(workCenter);
         }
@@ -310,9 +310,9 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
 
-    public ResponseEntity<?> exportWorkCenters(WorkCenterFilter workCenterFilter, HttpServletResponse response){
+    public ResponseEntity<?> exportWorkCenters(WorkCenterFilter workCenterFilter, HttpServletResponse response) {
 
-        byte[] content=null;
+        byte[] content = null;
 
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet hoja = workbook.createSheet();
@@ -403,7 +403,7 @@ public class WorkCenterManager implements WorkCenterService{
         try {
             String nombreFichero = "reporte-actuaciones";
             response.setContentType("application/vnd.ms-excel");
-            response.setHeader ("Content-Disposition", "inline; filename=\"" +
+            response.setHeader("Content-Disposition", "inline; filename=\"" +
                     java.net.URLEncoder.encode(nombreFichero, "UTF-8")
                     + "\"");
 
@@ -420,7 +420,7 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
-    public List<Drawing> getDrawingByWorkCenter(int workCenterId){
+    public List<Drawing> getDrawingByWorkCenter(int workCenterId) {
 
         WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
 
@@ -448,6 +448,33 @@ public class WorkCenterManager implements WorkCenterService{
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> addWorkCenterDrawing(int workCenterId, Drawing newWorkCenterDrawing, HttpServletRequest request) {
+        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        newWorkCenterDrawing.getWorkCenter().setId(workCenterId);
+        newWorkCenterDrawing.setDoc_content_type("pdf");
+        newWorkCenterDrawing.setDoc_name("previngconstFiles");
+        newWorkCenterDrawing.setDoc_url("../documnets/");
+        newWorkCenterDrawing.setCreated(new Date());
+        newWorkCenterDrawing.getCreatedBy().setId(userId);
+
+        drawingRepository.save(newWorkCenterDrawing);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int workCenterDrawingId, Drawing newWorkCenterDrawing, HttpServletRequest request) {
+
+//        drawingRepository.editWorkCenterDrawing(workCenterId, workCenterDrawingId, newWorkCenterDrawing);
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+
     @Override
     public List<Room> getRoomByWorkCenter(int workCenterId){
 
@@ -462,5 +489,7 @@ public class WorkCenterManager implements WorkCenterService{
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
 }
+
 
