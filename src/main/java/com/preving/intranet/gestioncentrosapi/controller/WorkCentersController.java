@@ -2,7 +2,6 @@ package com.preving.intranet.gestioncentrosapi.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
@@ -13,12 +12,10 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 
 @Controller
 @RequestMapping(path= "/workCenters")
@@ -87,6 +84,7 @@ public class WorkCentersController {
         }
 
     }
+
 
     /**
      * A�adimos una delegaci�n
@@ -163,6 +161,7 @@ public class WorkCentersController {
         }
     }
 
+
     /**
      * Obtenci�n de delegaci�n por Id
      * @param centerId
@@ -183,8 +182,15 @@ public class WorkCentersController {
     /**
      * Obtención de detalles del centro de trabajo por workCenterId
      * @param workCenterId
-     * @regresoy
+     * @regreso
      */
+
+    /**
+     * Obtención de detalles del centro de trabajo por workCenterId
+     * @param workCenterId
+     * @regreso
+     */
+
     @RequestMapping(value = "{workCenterId}/details", method = RequestMethod.GET)
     public ResponseEntity<?> findWorkCenterDetails(@PathVariable(value = "workCenterId") int workCenterId){
 
@@ -232,7 +238,6 @@ public class WorkCentersController {
 
     }
 
-
     @RequestMapping(value = "{workCenterId}/drawings", method = RequestMethod.GET)
     public ResponseEntity<?> getDrawingByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
 
@@ -245,85 +250,16 @@ public class WorkCentersController {
 
     }
 
-
-    @RequestMapping(value = "{workCenterId}/drawings/{drawingId}/delete", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteDrawing (HttpServletRequest request,
-                                            @PathVariable(value = "workCenterId") int workCenterId,
-                                            @PathVariable(value = "drawingId") int drawingId) {
-
-
-        return workCenterService.deleteDrawing(request,workCenterId,drawingId);
-
-    }
-
     @RequestMapping(value = "{workCenterId}/rooms", method = RequestMethod.GET)
-    public ResponseEntity<?> getRoomByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
+    public ResponseEntity<?> getRoomListByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
 
         try {
-            return new ResponseEntity<>(workCenterService.getRoomByWorkCenter(workCenterId), HttpStatus.OK);
+            return new ResponseEntity<>(workCenterService.getRoomListByWorkCenter(workCenterId), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
-
-    @RequestMapping(value = "{workCenterId}/rooms/edit", method = RequestMethod.POST)
-    public ResponseEntity<?> editRoomList(HttpServletRequest request,
-                                          @PathVariable(value="workCenterId") int workCenterId){
-
-        try {
-            return new ResponseEntity<>(workCenterService.editRoomList(workCenterId, request), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
-    /**
-     *
-     * @param workCenterDrawing
-     * @param workCenterId
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "{workCenterId}/drawings/add", method = RequestMethod.POST)
-    public ResponseEntity<?> saveWorkCenterDrawing(@RequestBody Drawing workCenterDrawing,
-                                             @PathVariable("workCenterId") int workCenterId, HttpServletRequest request) {
-        try {
-            workCenterService.addWorkCenterDrawing(workCenterId, workCenterDrawing, request);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
-
-    /**
-     *
-     * @param workCenterDrawing
-     * @param workCenterId
-     * @param workCenterDrawingId
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "{workCenterId}/drawings/{workCenterDrawingId}/edit", method = RequestMethod.POST)
-    public ResponseEntity<?> editWorkCenterDrawing(@RequestBody Drawing workCenterDrawing,
-                                                   @PathVariable("workCenterId") int workCenterId,
-                                                   @PathVariable("workCenterDrawingId") int workCenterDrawingId, HttpServletRequest request) {
-        try {
-            workCenterService.editWorkCenterDrawing( workCenterId, workCenterDrawingId, workCenterDrawing,  request);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
-
 
 }
