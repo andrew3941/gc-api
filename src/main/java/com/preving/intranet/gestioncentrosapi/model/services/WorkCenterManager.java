@@ -493,5 +493,25 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
 
+    @Override
+    public ResponseEntity<?> deleteRoom(HttpServletRequest request, int workCenterId, int roomId) {
+
+        long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        Room room = this.roomRepository.findRoomById(roomId);
+
+        if (room==null) {
+            return new ResponseEntity <>(HttpStatus.NOT_FOUND);
+        }
+        try {
+
+            this.roomRepository.roomLogicDelete((int) uId, roomId, workCenterId);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
 

@@ -16,14 +16,10 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 
     List<Room> findRoomListByWorkCenter(Room room);
 
-    Room findRoomById(int type_id);
+    Room findRoomById(int roomId);
 
     @Modifying
     @Transactional
-    @Query("update Room d set  borrado=CURRENT_TIMESTAMP, borrado_por=:deleted_by where id=:type_id and delegacion_id=:workCenterId")
-    void roomLogicDelete(@Param("deleted_by") int deleted_by, @Param("type_id") int type_id, @Param("workCenterId") int workCenterId);
-
-    void deleteRoomListByWorkCenter(WorkCenter workCenter);
-
-
+    @Query("update Room d set  borrado=CURRENT_TIMESTAMP, borrado_por=:deleted_by where id=:room_id and delegacion_id=:workCenterId")
+    void roomLogicDelete(@Param("deleted_by") int deleted_by, @Param("room_id") int type_id, @Param("workCenterId") int workCenterId);
 }

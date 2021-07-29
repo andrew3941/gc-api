@@ -43,4 +43,7 @@ public interface WorkCenterService {
     ResponseEntity<?> editRoomList(int workCenterId, HttpServletRequest request);
 
     List<Room> getRoomListByWorkCenter(int workCenterId);
+
+    ResponseEntity<?> deleteRoom(HttpServletRequest request,int workCenterId, int roomId);
+
 }

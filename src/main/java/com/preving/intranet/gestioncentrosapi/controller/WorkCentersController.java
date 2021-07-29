@@ -331,5 +331,14 @@ public class WorkCentersController {
     }
 
 
+    @RequestMapping(value = "{workCenterId}/rooms/{roomId}/delete", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteRoom (HttpServletRequest request,
+                                            @PathVariable(value = "workCenterId") int workCenterId,
+                                            @PathVariable(value = "roomId") int roomId) {
+
+
+        return workCenterService.deleteRoom(request,workCenterId,roomId);
+
+    }
 
 }
