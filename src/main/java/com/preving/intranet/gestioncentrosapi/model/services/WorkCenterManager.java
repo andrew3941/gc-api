@@ -421,13 +421,68 @@ public class WorkCenterManager implements WorkCenterService{
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
+
     @Override
-   public List<Drawing> getDrawingByWorkCenter(int workCenterId){
+    @Transactional
+    public ResponseEntity<?> addWorkCenterDrawing(int workCenterId, Drawing newWorkCenterDrawing, HttpServletRequest request) {
+        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        newWorkCenterDrawing.getWorkCenter().setId(workCenterId);
+        newWorkCenterDrawing.setDoc_content_type("pdf");
+        newWorkCenterDrawing.setDoc_name("previngconstFiles");
+        newWorkCenterDrawing.setDoc_url("../documnets/");
+        newWorkCenterDrawing.setCreated(new Date());
+        newWorkCenterDrawing.getCreatedBy().setId(userId);
+
+        drawingRepository.save(newWorkCenterDrawing);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int workCenterDrawingId, Drawing newWorkCenterDrawing, HttpServletRequest request) {
+
+//        drawingRepository.editWorkCenterDrawing(workCenterId, workCenterDrawingId, newWorkCenterDrawing);
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+
+    @Override
+    public ResponseEntity<?> deleteDrawing(HttpServletRequest request, int workCenterId, int drawingId) {
+
+        long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        Drawing drawing = this.drawingRepository.findDrawingById(drawingId);
+
+        if (drawing==null) {
+            return new ResponseEntity <>(HttpStatus.NOT_FOUND);
+        }
+        try {
+
+            this.drawingRepository.drawingLogicDelete((int) uId, drawingId, workCenterId);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public List<Drawing> getDrawingByWorkCenter(int workCenterId){
 
         WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
 
         return this.drawingRepository.findByWorkCenter(workCenter);
     }
+
+    @Override
+    public ResponseEntity<?> editRoomList(int workCenterId, HttpServletRequest request) {
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     @Override
     public List<Room> getRoomListByWorkCenter(int workCenterId){
@@ -436,5 +491,7 @@ public class WorkCenterManager implements WorkCenterService{
 
         return this.roomRepository.findRoomListByWorkCenter(room);
     }
+
+
 }
 

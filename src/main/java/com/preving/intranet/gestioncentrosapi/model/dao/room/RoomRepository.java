@@ -24,4 +24,6 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
     void roomLogicDelete(@Param("deleted_by") int deleted_by, @Param("type_id") int type_id, @Param("workCenterId") int workCenterId);
 
     void deleteRoomListByWorkCenter(WorkCenter workCenter);
+
+
 }
