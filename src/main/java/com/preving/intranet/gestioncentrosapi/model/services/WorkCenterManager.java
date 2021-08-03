@@ -504,8 +504,8 @@ public class WorkCenterManager implements WorkCenterService{
     public List<Room> getRoomListByWorkCenter(int workCenterId){
 
         WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
-return null;
-        //return this.roomRepository.findRoomByWorkCenter(workCenter);
+
+        return this.roomRepository.findRoomByWorkCenter(workCenter);
     }
 
     @Override
