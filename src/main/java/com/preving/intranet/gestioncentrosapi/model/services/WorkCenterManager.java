@@ -22,16 +22,19 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -86,6 +89,9 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Autowired
     private RoomRepository roomRepository;
+
+    @Autowired
+    private CommonService commonService;
 
     @PersistenceContext
     private EntityManager manager;
@@ -421,32 +427,13 @@ public class WorkCenterManager implements WorkCenterService{
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
-
     @Override
-    @Transactional
-    public ResponseEntity<?> addWorkCenterDrawing(int workCenterId, Drawing newWorkCenterDrawing, HttpServletRequest request) {
-        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+    public List<Drawing> getDrawingByWorkCenter(int workCenterId) {
 
-        newWorkCenterDrawing.getWorkCenter().setId(workCenterId);
-        newWorkCenterDrawing.setDoc_content_type("pdf");
-        newWorkCenterDrawing.setDoc_name("previngconstFiles");
-        newWorkCenterDrawing.setDoc_url("../documnets/");
-        newWorkCenterDrawing.setCreated(new Date());
-        newWorkCenterDrawing.getCreatedBy().setId(userId);
+        WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
 
-        drawingRepository.save(newWorkCenterDrawing);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+      return this.drawingRepository.findByWorkCenter(workCenter);
     }
-
-    @Override
-    public ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int workCenterDrawingId, Drawing newWorkCenterDrawing, HttpServletRequest request) {
-
-//        drawingRepository.editWorkCenterDrawing(workCenterId, workCenterDrawingId, newWorkCenterDrawing);
-        return new ResponseEntity<>(HttpStatus.OK);
-
-    }
-
 
     @Override
     public ResponseEntity<?> deleteDrawing(HttpServletRequest request, int workCenterId, int drawingId) {
@@ -470,19 +457,55 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
-    public List<Drawing> getDrawingByWorkCenter(int workCenterId){
+    public ResponseEntity<?> addWorkCenterDrawing(int workCenterId, Drawing newWorkCenterDrawing, MultipartFile attachedFile, HttpServletRequest request) {
 
-        WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
+        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
-        return this.drawingRepository.findByWorkCenter(workCenter);
+        newWorkCenterDrawing.getWorkCenter().setId(workCenterId);
+        newWorkCenterDrawing.setCreated(new Date());
+        newWorkCenterDrawing.setModified(new Date());
+        newWorkCenterDrawing.setDeleted(new Date());
+       // newWorkCenterDrawing.getCreatedBy().setId((long) 1);
+
+        newWorkCenterDrawing.setDoc_url("doc_url");
+        newWorkCenterDrawing.setDoc_name(attachedFile.getOriginalFilename());
+        newWorkCenterDrawing.setDoc_content_type(attachedFile.getContentType());
+
+        try {
+
+             String url = null;
+
+             Drawing drawing = drawingRepository.save(newWorkCenterDrawing);
+
+            url = commonService.saveDocumentServer(workCenterId, drawing.getId(), attachedFile);
+
+            if(url != null){
+
+            this.drawingRepository.updateDrawingDocUrl(drawing.getId(), url);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int workCenterDrawingId, Drawing newWorkCenterDrawing, HttpServletRequest request) {
+
+//        drawingRepository.editWorkCenterDrawing(workCenterId, workCenterDrawingId, newWorkCenterDrawing);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
     @Override
     public List<Room> getRoomListByWorkCenter(int workCenterId){
 
         WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
-
-        return this.roomRepository.findRoomByWorkCenter(workCenter);
+return null;
+        //return this.roomRepository.findRoomByWorkCenter(workCenter);
     }
 
     @Override
@@ -511,6 +534,7 @@ public class WorkCenterManager implements WorkCenterService{
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
 }
 

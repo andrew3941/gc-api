@@ -33,4 +33,9 @@ public interface DrawingRepository extends JpaRepository<Drawing, Integer> {
 //    void  editWorkCenterDrawing(@Param("workCenterId") int workCenterId, @Param("workCenterDrawingId") int workCenterDrawingId, @Param("newWorkCenterDrawing") Drawing newWorkCenterDrawing);
 
 
+    @Modifying
+    @Transactional
+    @Query("update Drawing d set d.doc_url=:drawingDocUrl where d.id=:drawingId")
+    void  updateDrawingDocUrl(@Param("drawingId") int drawingId, @Param("drawingDocUrl")String drawingDocUrl);
+
 }

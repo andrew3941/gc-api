@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -281,10 +282,17 @@ public class WorkCentersController {
      * @return
      */
     @RequestMapping(value = "{workCenterId}/drawings/add", method = RequestMethod.POST)
-    public ResponseEntity<?> saveWorkCenterDrawing(@RequestBody Drawing workCenterDrawing,
-                                                   @PathVariable("workCenterId") int workCenterId, HttpServletRequest request) {
+    public ResponseEntity<?> saveWorkCenterDrawing(
+            @RequestParam("workCenterDrawing") String workCenterDrawing,
+           // @RequestBody Drawing workCenterDrawing,
+            @PathVariable("workCenterId") int workCenterId,
+            @RequestParam("attachedFile") MultipartFile attachedFile,
+            HttpServletRequest request) {
+
+        Gson gson = new GsonBuilder().create();
+        Drawing newWCDrawing= gson.fromJson(workCenterDrawing, Drawing.class);
         try {
-            workCenterService.addWorkCenterDrawing(workCenterId, workCenterDrawing, request);
+            workCenterService.addWorkCenterDrawing(workCenterId, newWCDrawing, attachedFile, request);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

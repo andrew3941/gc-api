@@ -5,6 +5,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,7 +39,7 @@ public interface WorkCenterService {
 
     ResponseEntity<?> deleteDrawing(HttpServletRequest request,int workCenterId, int drawingId);
 
-    ResponseEntity<?> addWorkCenterDrawing(int workCenterId, Drawing newWorkCenterDrawing,  HttpServletRequest request);
+    ResponseEntity<?> addWorkCenterDrawing(int workCenterId, Drawing newWorkCenterDrawing, MultipartFile attachedFile, HttpServletRequest request);
 
     ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int WorkCenterDrawingId,  Drawing newWorkCenterDrawing, HttpServletRequest request);
 

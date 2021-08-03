@@ -18,18 +18,18 @@ public class Drawing implements Serializable {
    private String doc_url;
    private String doc_name;
    private String doc_content_type;
-   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
+   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
    private Date created = new Date();
    private User createdBy = new User();
-   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
-   private Date modified;
+   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+   private Date modified = new Date();
    private User modifiedBy;
-   private Date deleted;
+   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+   private Date deleted = new Date();
    private User deletedBy;
 
 
-    public Drawing() {
-    }
+    public Drawing() {}
 
     public Drawing(int id, WorkCenter workCenter, String name, String doc_url, String doc_name, String doc_content_type, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy) {
         this.id = id;
@@ -57,8 +57,8 @@ public class Drawing implements Serializable {
         this.id = id;
     }
 
-    @JsonBackReference
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    //  @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
     public WorkCenter getWorkCenter() {
         return workCenter;
@@ -130,7 +130,8 @@ public class Drawing implements Serializable {
         this.modified = modified;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "MODIFICADO_POR", referencedColumnName = "ID")
     public User getModifiedBy() {
         return modifiedBy;
