@@ -478,20 +478,18 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
+    public List<Room> getRoomListByWorkCenter(int workCenterId){
+
+        WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
+
+        return this.roomRepository.findRoomByWorkCenter(workCenter);
+    }
+
+    @Override
     public ResponseEntity<?> editRoomList(int workCenterId, HttpServletRequest request) {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-    @Override
-    public List<Room> getRoomListByWorkCenter(int workCenterId){
-
-        Room room = roomRepository.getOne(workCenterId);
-
-        return this.roomRepository.findRoomListByWorkCenter(room);
-    }
-
 
     @Override
     public ResponseEntity<?> deleteRoom(HttpServletRequest request, int workCenterId, int roomId) {
@@ -513,5 +511,6 @@ public class WorkCenterManager implements WorkCenterService{
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }
 
