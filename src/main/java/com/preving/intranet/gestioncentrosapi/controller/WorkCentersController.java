@@ -348,4 +348,15 @@ public class WorkCentersController {
 
     }
 
+
+    /**
+     * @param drawingId
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "{drawingId}/download", method = RequestMethod.GET)
+    public ResponseEntity<?> downloadDrawingDoc(HttpServletRequest request, @PathVariable(value = "drawingId") int drawingId) {
+
+        return ( workCenterService.downloadDrawingDoc(request,drawingId));
+    }
 }

@@ -47,4 +47,6 @@ public interface WorkCenterService {
 
     ResponseEntity<?> deleteRoom(HttpServletRequest request,int workCenterId, int roomId);
 
+    ResponseEntity<?> downloadDrawingDoc(HttpServletRequest request, int drawingId);
+
 }

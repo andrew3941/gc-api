@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
 
@@ -533,6 +534,31 @@ public class WorkCenterManager implements WorkCenterService{
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> downloadDrawingDoc(HttpServletRequest request, int drawingId) {
+
+        Drawing dra = null;
+        File file = null;
+        byte[] content=null;
+
+        try {
+            dra = this.drawingRepository.findDrawingById(drawingId);
+
+            file = new File(dra.getDoc_url());
+            if (file.exists()) {
+                content = Files.readAllBytes(file.toPath());
+            }else{
+                return new ResponseEntity<>("File not found",HttpStatus.NOT_FOUND);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<>("Uknown error",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
 
