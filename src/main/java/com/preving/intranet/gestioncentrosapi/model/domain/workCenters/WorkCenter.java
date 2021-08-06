@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.City;
 import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
+import com.preving.intranet.gestioncentrosapi.model.domain.Room;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -68,6 +69,7 @@ public class WorkCenter implements Serializable {
     private User modifiedBy;
     private List<WorkCentersByEntity> workCentersByEntities = new ArrayList<>();
     private List<Drawing> drawings = new ArrayList<>();
+    private List<Room> rooms = new ArrayList<>();
 
     public WorkCenter() {}
 
@@ -111,6 +113,10 @@ public class WorkCenter implements Serializable {
         this.createdBy = createdBy;
         this.modified = modified;
         this.modifiedBy = modifiedBy;
+    }
+
+    public WorkCenter(List<Room> rooms) {
+        this.rooms = rooms;
     }
 
     @Id
@@ -301,6 +307,13 @@ public class WorkCenter implements Serializable {
     public void setDrawings(List<Drawing> drawings) {
         this.drawings = drawings;
     }
+
+    // @JsonManagedReference
+    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL)
+    public List<Room> getRooms() {
+        return rooms;
+    }
+    public void setRooms(List<Room> rooms) { this.rooms = rooms; }
 
     @Transient
     public int getEmployee() { return employee;}

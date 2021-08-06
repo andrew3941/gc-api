@@ -193,6 +193,12 @@ public class WorkCenterManager implements WorkCenterService{
 
     }
 
+    private void saveWorkCenterForRoom(List<Room> rooms) {
+        for(Room room : rooms) {
+            roomRepository.save(room);
+        }
+    }
+
     @Transactional
     public ResponseEntity<?> editWorkCenter(int workCenterId, WorkCenter newWorkCenter, HttpServletRequest request) {
 
@@ -561,6 +567,26 @@ public class WorkCenterManager implements WorkCenterService{
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<?> addWorkCenterRoom(int workCenterId, Room newWorkCenterRoom, HttpServletRequest request) {
 
+        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        newWorkCenterRoom.getWorkCenter().setId(workCenterId);
+        newWorkCenterRoom.setCreated(new Date());
+        newWorkCenterRoom.setModified(new Date());
+        newWorkCenterRoom.setDeleted(new Date());
+
+        try {
+            Room room = roomRepository.save(newWorkCenterRoom);
+
+            saveWorkCenterForRoom(room.getWorkCenter().getRooms());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
 

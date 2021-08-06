@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
+import com.preving.intranet.gestioncentrosapi.model.domain.Room;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
@@ -181,18 +182,12 @@ public class WorkCentersController {
 
     }
 
-    /**
-     * Obtención de detalles del centro de trabajo por workCenterId
-     * @param workCenterId
-     * @regreso
-     */
 
     /**
      * Obtención de detalles del centro de trabajo por workCenterId
      * @param workCenterId
      * @regreso
      */
-
     @RequestMapping(value = "{workCenterId}/details", method = RequestMethod.GET)
     public ResponseEntity<?> findWorkCenterDetails(@PathVariable(value = "workCenterId") int workCenterId){
 
@@ -358,5 +353,29 @@ public class WorkCentersController {
     public ResponseEntity<?> downloadDrawingDoc(HttpServletRequest request, @PathVariable(value = "drawingId") int drawingId) {
 
         return ( workCenterService.downloadDrawingDoc(request,drawingId));
+    }
+
+    /**
+     * A�adimos una delegaci�n
+     * @RequestBody Salas
+     * @return
+     */
+    @RequestMapping(value = "{workCenterId}/rooms/add", method = RequestMethod.POST)
+    public ResponseEntity<?> saveWorkCenterRoom(
+            @RequestParam("workCenterRoom") String workCenterRoom,
+            // @RequestBody Room workCenterRoom,
+            @PathVariable("workCenterId") int workCenterId,
+            HttpServletRequest request) {
+
+        Gson gson = new GsonBuilder().create();
+        Room newWCRoom= gson.fromJson(workCenterRoom, Room.class);
+        try {
+            workCenterService.addWorkCenterRoom(workCenterId, newWCRoom, request);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }
