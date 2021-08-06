@@ -57,7 +57,7 @@ public class Drawing implements Serializable {
         this.id = id;
     }
 
-    //  @JsonBackReference
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
     public WorkCenter getWorkCenter() {

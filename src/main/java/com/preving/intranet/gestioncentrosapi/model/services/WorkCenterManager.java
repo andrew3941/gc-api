@@ -448,7 +448,7 @@ public class WorkCenterManager implements WorkCenterService{
         }
         try {
 
-            this.drawingRepository.drawingLogicDelete((int) uId, drawingId, workCenterId);
+            this.drawingRepository.drawingLogicDelete( 1, drawingId, workCenterId);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -466,7 +466,7 @@ public class WorkCenterManager implements WorkCenterService{
         newWorkCenterDrawing.setCreated(new Date());
         newWorkCenterDrawing.setModified(new Date());
         newWorkCenterDrawing.setDeleted(new Date());
-       // newWorkCenterDrawing.getCreatedBy().setId((long) 1);
+        newWorkCenterDrawing.getCreatedBy().setId((long) 1);
 
         newWorkCenterDrawing.setDoc_url("doc_url");
         newWorkCenterDrawing.setDoc_name(attachedFile.getOriginalFilename());
