@@ -436,10 +436,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public List<Drawing> getDrawingByWorkCenter(int workCenterId) {
-
-        WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
-
-      return this.drawingRepository.findByWorkCenter(workCenter);
+      return this.drawingRepository.findAllByWorkCenterIdAndDeletedIsNull(workCenterId);
     }
 
     @Override
@@ -454,7 +451,7 @@ public class WorkCenterManager implements WorkCenterService{
         }
         try {
 
-            this.drawingRepository.drawingLogicDelete( 1, drawingId, workCenterId);
+            this.drawingRepository.drawingLogicDelete( 1, drawing.getId(), workCenterId);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -470,8 +467,6 @@ public class WorkCenterManager implements WorkCenterService{
 
         newWorkCenterDrawing.getWorkCenter().setId(workCenterId);
         newWorkCenterDrawing.setCreated(new Date());
-        newWorkCenterDrawing.setModified(new Date());
-        newWorkCenterDrawing.setDeleted(new Date());
         newWorkCenterDrawing.getCreatedBy().setId((long) 1);
 
         newWorkCenterDrawing.setDoc_url("doc_url");
