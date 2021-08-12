@@ -102,7 +102,7 @@ public class CommonManager implements CommonService {
         String url = null;
 
         path = urlDrawingDocuments + "/" + workCenterId + "/"+ drawingId;
-        url = urlDrawingDocuments + "/" + workCenterId + "/" + drawingId +"/" + attachedFile.getOriginalFilename() + this.contentType(attachedFile.getContentType());
+        url = urlDrawingDocuments + "/" + workCenterId + "/" + drawingId +"/" + attachedFile.getOriginalFilename();
 
         File file = new File(url);
         if(file.exists()){
