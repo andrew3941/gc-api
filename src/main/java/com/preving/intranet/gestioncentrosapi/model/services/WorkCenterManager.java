@@ -601,7 +601,9 @@ public class WorkCenterManager implements WorkCenterService{
 //            saveWorkCenterForRoom(room.getWorkCenter().getRooms());
 
         } catch (Exception e) {
+
             e.printStackTrace();
+
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);

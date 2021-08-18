@@ -404,7 +404,7 @@ public class WorkCentersController {
             HttpServletRequest request) {
 
         Gson gson = new GsonBuilder().create();
-        Room newWCRoom= gson.fromJson(workCenterRoom, Room.class);
+        Room newWCRoom = gson.fromJson(workCenterRoom, Room.class);
         try {
             workCenterService.addWorkCenterRoom(workCenterId, newWCRoom, request);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -412,6 +412,5 @@ public class WorkCentersController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 }
