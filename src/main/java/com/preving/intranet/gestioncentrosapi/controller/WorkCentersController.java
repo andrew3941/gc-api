@@ -247,6 +247,18 @@ public class WorkCentersController {
 
     }
 
+    @RequestMapping(value = "drawings/{drawingId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getDrawingById(@PathVariable(value = "drawingId") int drawingId){
+
+        try {
+            return new ResponseEntity<>(workCenterService.getDrawingById(drawingId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
     @RequestMapping(value = "roomTypes", method = RequestMethod.GET)
     public ResponseEntity<?> getRoomTypes(){
 
@@ -264,6 +276,18 @@ public class WorkCentersController {
 
         try {
             return new ResponseEntity<>(workCenterService.getRoomListByWorkCenter(workCenterId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @RequestMapping(value = "rooms/{roomId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getRoomById(@PathVariable(value = "roomId") int roomId){
+
+        try {
+            return new ResponseEntity<>(workCenterService.getRoomById(roomId), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

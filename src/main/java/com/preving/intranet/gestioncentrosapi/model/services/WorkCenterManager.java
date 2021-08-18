@@ -606,5 +606,15 @@ public class WorkCenterManager implements WorkCenterService{
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @Override
+    public Drawing getDrawingById(int drawingId) {
+        return drawingRepository.findDrawingById(drawingId);
+    }
+
+    @Override
+    public Room getRoomById(int roomId) {
+        return roomRepository.findRoomById(roomId);
+    }
 }
 
