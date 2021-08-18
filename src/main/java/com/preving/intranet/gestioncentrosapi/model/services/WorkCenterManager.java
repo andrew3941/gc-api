@@ -4,6 +4,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.department.DepartmentRep
 import com.preving.intranet.gestioncentrosapi.model.dao.dimNavision.DimNavisionRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.room.RoomRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.room.RoomTypesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.*;
@@ -93,6 +94,9 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Autowired
     private CommonService commonService;
+
+    @Autowired
+    private RoomTypesRepository roomTypesRepository;
 
     @PersistenceContext
     private EntityManager manager;
@@ -258,7 +262,6 @@ public class WorkCenterManager implements WorkCenterService{
             workCenter.getHeadPerson().setCompleteName(workCenter.getHeadPerson().getLastname() + ", " + workCenter.getHeadPerson().getFirstname());
         }
 
-
         int totalEmployee = this.workCentersCustomizeRepository.getTotalEmployee(workCenterId);
         workCenter.setEmployee(totalEmployee);
 
@@ -284,15 +287,23 @@ public class WorkCenterManager implements WorkCenterService{
         List<WorkCenterDetailsByDepart> departments = workCenterDetails.getDepartments();
 
         workCenterDetails.getWorkCenter().setId(workCenterId);
-        workCenterDetails.setModified(new Date());
-        workCenterDetails.setModifiedBy(new User());
-        workCenterDetails.getModifiedBy().setId(userId);
 
-        workCenterDetailsRepository.updateWorkCenterDetails(workCenterDetails);
+        WorkCenterDetails wcDetails = workCenterDetailsRepository.findWorkCenterDetailsByWorkCenterId(workCenterId);
+        if (wcDetails == null) {
+            workCenterDetails.setCreated(new Date());
+            workCenterDetails.setCreatedBy(new User());
+            workCenterDetails.getCreatedBy().setId(userId);
+
+            workCenterDetailsRepository.save(workCenterDetails);
+        } else {
+            workCenterDetails.setModified(new Date());
+            workCenterDetails.setModifiedBy(new User());
+            workCenterDetails.getModifiedBy().setId(userId);
+
+            workCenterDetailsRepository.updateWorkCenterDetails(workCenterDetails);
+        }
 
         this.saveDelegationDepartment(departments, workCenterDetails);
-
-        //TODO check if all department selected
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -300,7 +311,7 @@ public class WorkCenterManager implements WorkCenterService{
     private void saveDelegationDepartment(List<WorkCenterDetailsByDepart> departments, WorkCenterDetails workCenterDetails) {
 
         // Deleting all the departments previously saved by the work center
-        workCenterDetailsByDepartRepository.deleteByWorkCenterDetails(workCenterDetails);
+        workCenterDetailsByDepartRepository.deleteByWorkCenterDetailsId(workCenterDetails.getId());
 
         // Saving the new departments related with the work center
         for(WorkCenterDetailsByDepart department: departments) {
@@ -313,7 +324,7 @@ public class WorkCenterManager implements WorkCenterService{
     public WorkCenterDetails getWorkCenterDetails(int workCenterId) {
 
         WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
-        WorkCenterDetails workCenterDetails = workCenterDetailsRepository.findByWorkCenter(workCenter);
+        WorkCenterDetails workCenterDetails = workCenterDetailsRepository.findWorkCenterDetailsByWorkCenter(workCenter);
 
         if(workCenterDetails == null) {
             workCenterDetails = new WorkCenterDetails();
@@ -360,6 +371,13 @@ public class WorkCenterManager implements WorkCenterService{
 
         // Obtenemos los datos
         List<WorkCenter> workCenters = this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter);
+
+        // Setting entities related with the work center
+        for(WorkCenter workCenter : workCenters) {
+            workCenter.setWorkCentersByEntities(this.workCentersByEntitiesRepository.findByWorkCenter(workCenter));
+        }
+
+
         String[] titulos = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4,
                 EXPORT_TITLE_5, EXPORT_TITLE_6, EXPORT_TITLE_7};
 
@@ -405,8 +423,12 @@ public class WorkCenterManager implements WorkCenterService{
                 status.setCellValue("Inactivo");
             }
 
-//            // Entidades
-//            TODO completar con la lista de entidades
+            // Entidades
+            HSSFCell entities = dataRow.createCell(6);
+            for (WorkCentersByEntity workCenterByEntity: workCenters.get(i).getWorkCentersByEntities()) {
+                entities.setCellValue(entities + workCenterByEntity.getEntity().getName() + ", ");
+            }
+
 
         }
 
@@ -467,7 +489,7 @@ public class WorkCenterManager implements WorkCenterService{
 
         newWorkCenterDrawing.getWorkCenter().setId(workCenterId);
         newWorkCenterDrawing.setCreated(new Date());
-        newWorkCenterDrawing.getCreatedBy().setId((long) 1);
+        newWorkCenterDrawing.getCreatedBy().setId(userId);
 
         newWorkCenterDrawing.setDoc_url("doc_url");
         newWorkCenterDrawing.setDoc_name(attachedFile.getOriginalFilename());
@@ -503,11 +525,13 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
+    public List<RoomTypes> getRoomTypes() {
+        return this.roomTypesRepository.findAll();
+    }
+
+    @Override
     public List<Room> getRoomListByWorkCenter(int workCenterId){
-
-        WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
-
-        return this.roomRepository.findRoomByWorkCenter(workCenter);
+        return this.roomRepository.findRoomListByWorkCenterId(workCenterId);
     }
 
     @Override
@@ -569,13 +593,12 @@ public class WorkCenterManager implements WorkCenterService{
 
         newWorkCenterRoom.getWorkCenter().setId(workCenterId);
         newWorkCenterRoom.setCreated(new Date());
-        newWorkCenterRoom.setModified(new Date());
-        newWorkCenterRoom.setDeleted(new Date());
+        newWorkCenterRoom.getCreatedBy().setId(userId);
 
         try {
             Room room = roomRepository.save(newWorkCenterRoom);
 
-            saveWorkCenterForRoom(room.getWorkCenter().getRooms());
+//            saveWorkCenterForRoom(room.getWorkCenter().getRooms());
 
         } catch (Exception e) {
             e.printStackTrace();

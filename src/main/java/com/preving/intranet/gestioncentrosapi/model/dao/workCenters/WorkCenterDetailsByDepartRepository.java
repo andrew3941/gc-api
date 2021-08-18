@@ -11,4 +11,6 @@ public interface WorkCenterDetailsByDepartRepository extends JpaRepository<WorkC
 
     void deleteByWorkCenterDetails(WorkCenterDetails workCenterDetails);
 
+    void deleteByWorkCenterDetailsId(int workCenterDetailsId);
+
 }

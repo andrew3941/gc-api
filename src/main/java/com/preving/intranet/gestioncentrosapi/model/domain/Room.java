@@ -15,7 +15,7 @@ public class Room implements Serializable {
     private int id;
     private WorkCenter workCenter = new WorkCenter();
     private String name;
-    private int type_id;
+    private RoomTypes type;
     private int surface;
     private String observation;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
@@ -31,11 +31,11 @@ public class Room implements Serializable {
 
     }
 
-    public Room(int id, WorkCenter workCenter, String name, int type_id, int surface, String observation, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy) {
+    public Room(int id, WorkCenter workCenter, String name, RoomTypes type, int surface, String observation, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy) {
         this.id = id;
         this.workCenter = workCenter;
         this.name = name;
-        this.type_id = type_id;
+        this.type = type;
         this.surface = surface;
         this.observation = observation;
         this.created = created;
@@ -45,6 +45,7 @@ public class Room implements Serializable {
         this.deleted = deleted;
         this.deletedBy = deletedBy;
     }
+
     @Id
     @Column(name = "ID", nullable = false)
     @SequenceGenerator(name = "PC_DELEGACIONES_X_SALAS_SEQ", sequenceName = "PC_DELEGACIONES_X_SALAS_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)
@@ -63,10 +64,14 @@ public class Room implements Serializable {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    @Basic
-    @Column(name = "TIPO_ID")
-    public int getType_id() { return type_id; }
-    public void setType_id(int type_id) { this.type_id = type_id; }
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "TIPO_ID", referencedColumnName = "ID")
+    public RoomTypes getType() {
+        return type;
+    }
+    public void setType(RoomTypes type) {
+        this.type = type;
+    }
 
     @Basic
     @Column(name = "SUPERFICIE")

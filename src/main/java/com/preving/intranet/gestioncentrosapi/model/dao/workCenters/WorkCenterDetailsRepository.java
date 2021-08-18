@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface WorkCenterDetailsRepository extends JpaRepository<WorkCenterDetails, Integer> {
 
-    WorkCenterDetails findByWorkCenter(WorkCenter workCenter);
+    WorkCenterDetails findWorkCenterDetailsByWorkCenter(WorkCenter workCenter);
+
+    WorkCenterDetails findWorkCenterDetailsByWorkCenterId(int workCenter);
 
     @Modifying
     @Transactional

@@ -247,6 +247,18 @@ public class WorkCentersController {
 
     }
 
+    @RequestMapping(value = "roomTypes", method = RequestMethod.GET)
+    public ResponseEntity<?> getRoomTypes(){
+
+        try {
+            return new ResponseEntity<>(workCenterService.getRoomTypes(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
     @RequestMapping(value = "{workCenterId}/rooms", method = RequestMethod.GET)
     public ResponseEntity<?> getRoomListByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
 

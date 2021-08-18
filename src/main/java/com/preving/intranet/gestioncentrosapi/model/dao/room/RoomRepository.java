@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Integer> {
 
-    List<Room> findRoomByWorkCenter(WorkCenter workCenter);
+    List<Room> findRoomListByWorkCenterId(int workCenterId);
 
     Room findRoomById(int roomId);
 
