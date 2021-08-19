@@ -43,7 +43,7 @@ public interface WorkCenterService {
 
     ResponseEntity<?> addWorkCenterDrawing(int workCenterId, Drawing newWorkCenterDrawing, MultipartFile attachedFile, HttpServletRequest request);
 
-    ResponseEntity<?> editWorkCenterDrawing(int WorkCenterDrawingId, Drawing drawing, MultipartFile attachedFile, HttpServletRequest request);
+    ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int WorkCenterDrawingId, Drawing drawing, MultipartFile attachedFile, HttpServletRequest request);
 
     void editWorkCenterRoom(Room room, HttpServletRequest request);
 

@@ -340,16 +340,17 @@ public class WorkCentersController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "drawings/{workCenterDrawingId}/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "{workCenterId}/drawings/{workCenterDrawingId}/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editWorkCenterDrawing(@RequestParam("workCenterDrawing") String workCenterDrawing,
                                                    @RequestParam("attachedFile") MultipartFile attachedFile,
+                                                   @PathVariable("workCenterId") int workCenterId,
                                                    @PathVariable("workCenterDrawingId") int workCenterDrawingId, HttpServletRequest request) {
 
         Gson gson = new GsonBuilder().create();
         Drawing drawing= gson.fromJson(workCenterDrawing, Drawing.class);
 
         try {
-            workCenterService.editWorkCenterDrawing(workCenterDrawingId, drawing, attachedFile, request);
+            workCenterService.editWorkCenterDrawing(workCenterId, workCenterDrawingId, drawing, attachedFile, request);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

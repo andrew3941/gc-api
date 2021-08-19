@@ -472,10 +472,9 @@ public class WorkCenterManager implements WorkCenterService{
         if (drawing==null) {
             return new ResponseEntity <>(HttpStatus.NOT_FOUND);
         }
+
         try {
-
-            this.drawingRepository.drawingLogicDelete( 1, drawing.getId(), workCenterId);
-
+            this.drawingRepository.drawingLogicDelete((int) uId, drawing.getId(), workCenterId);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -515,18 +514,33 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
-    public ResponseEntity<?> editWorkCenterDrawing(int workCenterDrawingId, Drawing drawing, MultipartFile attachedFile, HttpServletRequest request) {
+    public ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int workCenterDrawingId, Drawing drawing, MultipartFile attachedFile, HttpServletRequest request) {
 
 //        long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
         UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
-
-        //TODO setear url doc
 
         drawing.setDoc_url("doc_url");
         drawing.setDoc_name(attachedFile.getOriginalFilename());
         drawing.setDoc_content_type(attachedFile.getContentType());
 
-        drawingRepository.editWorkCenterDrawing(drawing, user.getId());
+//        drawingRepository.editWorkCenterDrawing(drawing, user.getId());
+
+        try {
+            // TODO borrar el doc antiguo
+//            commonService.deleteDocumentServer(workCenterId, drawing.getId());
+
+            String url = null;
+
+            url = commonService.saveDocumentServer(workCenterId, drawing.getId(), attachedFile);
+
+            if(url != null){
+                this.drawingRepository.updateDrawingDocUrl(drawing.getId(), url);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         return new ResponseEntity<>(HttpStatus.OK);
 

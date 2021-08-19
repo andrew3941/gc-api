@@ -28,7 +28,6 @@ public interface DrawingRepository extends JpaRepository<Drawing, Integer> {
     @Modifying
     @Transactional
     @Query("update Drawing d set d.name=:#{#drawing.name}, " +
-            "d.doc_url=:#{#drawing.doc_url}, " +
             "d.doc_name=:#{#drawing.doc_name}, " +
             "d.doc_content_type=:#{#drawing.doc_content_type}, " +
             "d.modified=CURRENT_TIMESTAMP, d.modifiedBy=:#{#uId} " +
