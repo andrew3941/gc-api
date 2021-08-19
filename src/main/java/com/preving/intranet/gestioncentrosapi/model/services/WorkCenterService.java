@@ -45,7 +45,7 @@ public interface WorkCenterService {
 
     ResponseEntity<?> editWorkCenterDrawing(int WorkCenterDrawingId, Drawing drawing, MultipartFile attachedFile, HttpServletRequest request);
 
-    ResponseEntity<?> editRoomList(int workCenterId, HttpServletRequest request);
+    void editWorkCenterRoom(Room room, HttpServletRequest request);
 
     ResponseEntity<?> deleteRoom(HttpServletRequest request,int workCenterId, int roomId);
 

@@ -543,9 +543,14 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
-    public ResponseEntity<?> editRoomList(int workCenterId, HttpServletRequest request) {
+    public void editWorkCenterRoom(Room room, HttpServletRequest request) {
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+        room.setModifiedBy(new User());
+        room.getModifiedBy().setId(uId);
+
+        roomRepository.editWorkCenterRoom(room);
+
     }
 
     @Override

@@ -22,4 +22,12 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
     @Transactional
     @Query("update Room d set  borrado=CURRENT_TIMESTAMP, borrado_por=:deleted_by where id=:room_id and delegacion_id=:workCenterId")
     void roomLogicDelete(@Param("deleted_by") int deleted_by, @Param("room_id") int type_id, @Param("workCenterId") int workCenterId);
+
+    @Modifying
+    @Transactional
+    @Query("update Room r set r.name=:#{#room.name}, r.type=:#{#room.type}, r.surface=:#{#room.surface}, " +
+            "r.observation=:#{#room.observation}, r.modified=CURRENT_TIMESTAMP, r.modifiedBy=:#{#room.modifiedBy} " +
+            "where r.id=:#{#room.id} ")
+    void editWorkCenterRoom(@Param("room") Room room);
+
 }
