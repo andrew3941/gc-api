@@ -30,9 +30,9 @@ public interface DrawingRepository extends JpaRepository<Drawing, Integer> {
     @Query("update Drawing d set d.name=:#{#drawing.name}, " +
             "d.doc_name=:#{#drawing.doc_name}, " +
             "d.doc_content_type=:#{#drawing.doc_content_type}, " +
-            "d.modified=CURRENT_TIMESTAMP, d.modifiedBy=:#{#uId} " +
+            "d.modified=CURRENT_TIMESTAMP, d.modifiedBy=:#{#drawing.modifiedBy} " +
             "where d.id=:#{#drawing.id} ")
-    void  editWorkCenterDrawing(@Param("drawing") Drawing drawing, @Param("uId") int uId);
+    void  editWorkCenterDrawing(@Param("drawing") Drawing drawing);
 
 
     @Modifying

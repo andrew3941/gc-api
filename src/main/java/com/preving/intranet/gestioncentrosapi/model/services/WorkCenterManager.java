@@ -516,14 +516,16 @@ public class WorkCenterManager implements WorkCenterService{
     @Override
     public ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int workCenterDrawingId, Drawing drawing, MultipartFile attachedFile, HttpServletRequest request) {
 
-//        long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
-        UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+        long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+//        UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
 
         drawing.setDoc_url("doc_url");
         drawing.setDoc_name(attachedFile.getOriginalFilename());
         drawing.setDoc_content_type(attachedFile.getContentType());
+        drawing.setModifiedBy(new User());
+        drawing.getModifiedBy().setId(uId);
 
-//        drawingRepository.editWorkCenterDrawing(drawing, user.getId());
+        drawingRepository.editWorkCenterDrawing(drawing);
 
         try {
             // TODO borrar el doc antiguo
