@@ -18,6 +18,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.security.JwtTokenUtil;
+import com.preving.security.domain.UsuarioWithRoles;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -496,17 +497,14 @@ public class WorkCenterManager implements WorkCenterService{
         newWorkCenterDrawing.setDoc_content_type(attachedFile.getContentType());
 
         try {
+            String url = null;
 
-             String url = null;
-
-             Drawing drawing = drawingRepository.save(newWorkCenterDrawing);
+            Drawing drawing = drawingRepository.save(newWorkCenterDrawing);
 
             url = commonService.saveDocumentServer(workCenterId, drawing.getId(), attachedFile);
 
             if(url != null){
-
-            this.drawingRepository.updateDrawingDocUrl(drawing.getId(), url);
-
+                this.drawingRepository.updateDrawingDocUrl(drawing.getId(), url);
             }
 
         } catch (Exception e) {
@@ -517,9 +515,19 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
-    public ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int workCenterDrawingId, Drawing newWorkCenterDrawing, HttpServletRequest request) {
+    public ResponseEntity<?> editWorkCenterDrawing(int workCenterDrawingId, Drawing drawing, MultipartFile attachedFile, HttpServletRequest request) {
 
-//        drawingRepository.editWorkCenterDrawing(workCenterId, workCenterDrawingId, newWorkCenterDrawing);
+//        long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+        UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+
+        //TODO setear url doc
+
+        drawing.setDoc_url("doc_url");
+        drawing.setDoc_name(attachedFile.getOriginalFilename());
+        drawing.setDoc_content_type(attachedFile.getContentType());
+
+        drawingRepository.editWorkCenterDrawing(drawing, user.getId());
+
         return new ResponseEntity<>(HttpStatus.OK);
 
     }

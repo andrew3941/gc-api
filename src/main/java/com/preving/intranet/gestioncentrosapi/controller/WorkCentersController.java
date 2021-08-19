@@ -315,13 +315,13 @@ public class WorkCentersController {
     @RequestMapping(value = "{workCenterId}/drawings/add", method = RequestMethod.POST)
     public ResponseEntity<?> saveWorkCenterDrawing(
             @RequestParam("workCenterDrawing") String workCenterDrawing,
-           // @RequestBody Drawing workCenterDrawing,
             @PathVariable("workCenterId") int workCenterId,
             @RequestParam("attachedFile") MultipartFile attachedFile,
             HttpServletRequest request) {
 
         Gson gson = new GsonBuilder().create();
         Drawing newWCDrawing= gson.fromJson(workCenterDrawing, Drawing.class);
+
         try {
             workCenterService.addWorkCenterDrawing(workCenterId, newWCDrawing, attachedFile, request);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -336,17 +336,20 @@ public class WorkCentersController {
     /**
      *
      * @param workCenterDrawing
-     * @param workCenterId
      * @param workCenterDrawingId
      * @param request
      * @return
      */
-    @RequestMapping(value = "{workCenterId}/drawings/{workCenterDrawingId}/edit", method = RequestMethod.POST)
-    public ResponseEntity<?> editWorkCenterDrawing(@RequestBody Drawing workCenterDrawing,
-                                                   @PathVariable("workCenterId") int workCenterId,
+    @RequestMapping(value = "drawings/{workCenterDrawingId}/edit", method = RequestMethod.POST)
+    public ResponseEntity<?> editWorkCenterDrawing(@RequestParam("workCenterDrawing") String workCenterDrawing,
+                                                   @RequestParam("attachedFile") MultipartFile attachedFile,
                                                    @PathVariable("workCenterDrawingId") int workCenterDrawingId, HttpServletRequest request) {
+
+        Gson gson = new GsonBuilder().create();
+        Drawing drawing= gson.fromJson(workCenterDrawing, Drawing.class);
+
         try {
-            workCenterService.editWorkCenterDrawing( workCenterId, workCenterDrawingId, workCenterDrawing,  request);
+            workCenterService.editWorkCenterDrawing(workCenterDrawingId, drawing, attachedFile, request);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

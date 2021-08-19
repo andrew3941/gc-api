@@ -22,10 +22,10 @@ public class Drawing implements Serializable {
    private Date created = new Date();
    private User createdBy = new User();
    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-   private Date modified = new Date();
+   private Date modified;
    private User modifiedBy;
    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-   private Date deleted = new Date();
+   private Date deleted;
    private User deletedBy;
 
 
