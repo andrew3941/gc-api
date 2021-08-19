@@ -102,7 +102,7 @@ api-comunicacion:
   keystore: classpath:ssl/tomcat.keystore
   keystore-password: preving
 
-
+url-drawing-documents: C:/home/preving/app/recursos/drawings
 urlSeguridad: http://localhost:8444/seguridad-api2
 
 

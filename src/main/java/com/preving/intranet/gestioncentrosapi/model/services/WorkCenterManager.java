@@ -2,6 +2,9 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.dao.department.DepartmentRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.dimNavision.DimNavisionRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.room.RoomRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.room.RoomTypesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.*;
@@ -15,22 +18,27 @@ import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.security.JwtTokenUtil;
+import com.preving.security.domain.UsuarioWithRoles;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
 
@@ -79,6 +87,18 @@ public class WorkCenterManager implements WorkCenterService{
     @Autowired
     private WorkCenterDetailsByDepartRepository workCenterDetailsByDepartRepository;
 
+    @Autowired
+    private DrawingRepository drawingRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
+
+    @Autowired
+    private CommonService commonService;
+
+    @Autowired
+    private RoomTypesRepository roomTypesRepository;
+
     @PersistenceContext
     private EntityManager manager;
 
@@ -99,27 +119,27 @@ public class WorkCenterManager implements WorkCenterService{
         // Construimos el objeto zona
         Zona zona = seteamosZona(newWorkCenter);
 
-        // Insertamos delegaci髇 en MP2.ZONA
+        // Insertamos delegaci贸n en MP2.ZONA
         zonaRepository.save(zona);
 
         // Construimos el objeto dimNavision
         DimNavision dimNavision = seteamosDimNavision(newWorkCenter);
 
-        // Insertamos delegaci髇 en RRHH.TM_DIM_NAVISION
+        // Insertamos delegaci贸n en RRHH.TM_DIM_NAVISION
         dimNavisionRepository.save(dimNavision);
 
         // Seteamos los valores necesarios para hacer el insert
         // TODO verificar con fecha de baja
         newWorkCenter.setActive(1);
         newWorkCenter.setVisible(1);
-        // Seteamos valores de creaci髇
+        // Seteamos valores de creaci贸n
         newWorkCenter.setCreated(new Date());
         newWorkCenter.getCreatedBy().setId(userId);
         // Seteamos las ids de las tablas secundarias
         newWorkCenter.setIdInMp2(zona.getCodZona());
         newWorkCenter.setLineId(dimNavision.getId());
 
-        // Insertamos delegaci髇 en GC2006_RELEASE.PC_DELEGACIONES
+        // Insertamos delegaci贸n en GC2006_RELEASE.PC_DELEGACIONES
         workCentersRepository.save(newWorkCenter);
 
         // Insertamos valores por defecto para detalles de centro
@@ -178,30 +198,36 @@ public class WorkCenterManager implements WorkCenterService{
 
     }
 
+    private void saveWorkCenterForRoom(List<Room> rooms) {
+        for(Room room : rooms) {
+            roomRepository.save(room);
+        }
+    }
+
     @Transactional
     public ResponseEntity<?> editWorkCenter(int workCenterId, WorkCenter newWorkCenter, HttpServletRequest request) {
 
         // Construimos el objeto zona
         Zona zona = seteamosZona(newWorkCenter);
 
-        // Editamos la delegaci髇 en la tabla MP2.ZONA
+        // Editamos la delegaci贸n en la tabla MP2.ZONA
         zonaRepository.editWorkCenter(zona);
 
         if (newWorkCenter.getLineId() != null) {
             // Construimos el objeto dimNavision
             DimNavision dimNavision = seteamosDimNavision(newWorkCenter);
 
-            // Insertamos delegaci髇 en RRHH.TM_DIM_NAVISION
+            // Insertamos delegaci贸n en RRHH.TM_DIM_NAVISION
             dimNavisionRepository.editWorkCenter(dimNavision);
         }
 
-        // Editamos la delegaci髇 en la tabla GC2006_RELEASE.PC_DELEGACIONES
+        // Editamos la delegaci贸n en la tabla GC2006_RELEASE.PC_DELEGACIONES
         workCentersRepository.editWorkCenter(workCenterId, newWorkCenter, this.jwtTokenUtil.getUserWithRolesFromToken(request).getId());
 
         // Eliminamos las entidades asociadas al centro
         workCentersByEntitiesRepository.deleteByWorkCenter(newWorkCenter);
 
-        // Guardamos la nueva relaci贸n de entidades
+        // Guardamos la nueva relaci脙鲁n de entidades
         for(WorkCentersByEntity workCentersByEntity : newWorkCenter.getWorkCentersByEntities()) {
             workCentersByEntitiesRepository.save(workCentersByEntity);
         }
@@ -237,7 +263,6 @@ public class WorkCenterManager implements WorkCenterService{
             workCenter.getHeadPerson().setCompleteName(workCenter.getHeadPerson().getLastname() + ", " + workCenter.getHeadPerson().getFirstname());
         }
 
-
         int totalEmployee = this.workCentersCustomizeRepository.getTotalEmployee(workCenterId);
         workCenter.setEmployee(totalEmployee);
 
@@ -263,15 +288,23 @@ public class WorkCenterManager implements WorkCenterService{
         List<WorkCenterDetailsByDepart> departments = workCenterDetails.getDepartments();
 
         workCenterDetails.getWorkCenter().setId(workCenterId);
-        workCenterDetails.setModified(new Date());
-        workCenterDetails.setModifiedBy(new User());
-        workCenterDetails.getModifiedBy().setId(userId);
 
-        workCenterDetailsRepository.updateWorkCenterDetails(workCenterDetails);
+        WorkCenterDetails wcDetails = workCenterDetailsRepository.findWorkCenterDetailsByWorkCenterId(workCenterId);
+        if (wcDetails == null) {
+            workCenterDetails.setCreated(new Date());
+            workCenterDetails.setCreatedBy(new User());
+            workCenterDetails.getCreatedBy().setId(userId);
+
+            workCenterDetailsRepository.save(workCenterDetails);
+        } else {
+            workCenterDetails.setModified(new Date());
+            workCenterDetails.setModifiedBy(new User());
+            workCenterDetails.getModifiedBy().setId(userId);
+
+            workCenterDetailsRepository.updateWorkCenterDetails(workCenterDetails);
+        }
 
         this.saveDelegationDepartment(departments, workCenterDetails);
-
-        //TODO check if all department selected
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -279,7 +312,7 @@ public class WorkCenterManager implements WorkCenterService{
     private void saveDelegationDepartment(List<WorkCenterDetailsByDepart> departments, WorkCenterDetails workCenterDetails) {
 
         // Deleting all the departments previously saved by the work center
-        workCenterDetailsByDepartRepository.deleteByWorkCenterDetails(workCenterDetails);
+        workCenterDetailsByDepartRepository.deleteByWorkCenterDetailsId(workCenterDetails.getId());
 
         // Saving the new departments related with the work center
         for(WorkCenterDetailsByDepart department: departments) {
@@ -292,7 +325,7 @@ public class WorkCenterManager implements WorkCenterService{
     public WorkCenterDetails getWorkCenterDetails(int workCenterId) {
 
         WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
-        WorkCenterDetails workCenterDetails = workCenterDetailsRepository.findByWorkCenter(workCenter);
+        WorkCenterDetails workCenterDetails = workCenterDetailsRepository.findWorkCenterDetailsByWorkCenter(workCenter);
 
         if(workCenterDetails == null) {
             workCenterDetails = new WorkCenterDetails();
@@ -339,6 +372,13 @@ public class WorkCenterManager implements WorkCenterService{
 
         // Obtenemos los datos
         List<WorkCenter> workCenters = this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter);
+
+        // Setting entities related with the work center
+        for(WorkCenter workCenter : workCenters) {
+            workCenter.setWorkCentersByEntities(this.workCentersByEntitiesRepository.findByWorkCenter(workCenter));
+        }
+
+
         String[] titulos = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4,
                 EXPORT_TITLE_5, EXPORT_TITLE_6, EXPORT_TITLE_7};
 
@@ -368,11 +408,11 @@ public class WorkCenterManager implements WorkCenterService{
             HSSFCell locality = dataRow.createCell(2);
             locality.setCellValue(workCenters.get(i).getCity().getName());
 
-            // Direcci贸n
+            // Direcci脙鲁n
             HSSFCell address = dataRow.createCell(3);
             address.setCellValue(workCenters.get(i).getAddress());
 
-            // Tel茅fono
+            // Tel脙漏fono
             HSSFCell phoneNumber = dataRow.createCell(4);
             phoneNumber.setCellValue(workCenters.get(i).getPhoneNumber());
 
@@ -384,8 +424,12 @@ public class WorkCenterManager implements WorkCenterService{
                 status.setCellValue("Inactivo");
             }
 
-//            // Entidades
-//            TODO completar con la lista de entidades
+            // Entidades
+            HSSFCell entities = dataRow.createCell(6);
+            for (WorkCentersByEntity workCenterByEntity: workCenters.get(i).getWorkCentersByEntities()) {
+                entities.setCellValue(entities + workCenterByEntity.getEntity().getName() + ", ");
+            }
+
 
         }
 
@@ -413,5 +457,195 @@ public class WorkCenterManager implements WorkCenterService{
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
+    @Override
+    public List<Drawing> getDrawingByWorkCenter(int workCenterId) {
+      return this.drawingRepository.findAllByWorkCenterIdAndDeletedIsNull(workCenterId);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteDrawing(HttpServletRequest request, int workCenterId, int drawingId) {
+
+        long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        Drawing drawing = this.drawingRepository.findDrawingById(drawingId);
+
+        if (drawing==null) {
+            return new ResponseEntity <>(HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            this.drawingRepository.drawingLogicDelete((int) uId, drawing.getId(), workCenterId);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> addWorkCenterDrawing(int workCenterId, Drawing newWorkCenterDrawing, MultipartFile attachedFile, HttpServletRequest request) {
+
+        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        newWorkCenterDrawing.getWorkCenter().setId(workCenterId);
+        newWorkCenterDrawing.setCreated(new Date());
+        newWorkCenterDrawing.getCreatedBy().setId(userId);
+
+        newWorkCenterDrawing.setDoc_url("doc_url");
+        newWorkCenterDrawing.setDoc_name(attachedFile.getOriginalFilename());
+        newWorkCenterDrawing.setDoc_content_type(attachedFile.getContentType());
+
+        try {
+            String url = null;
+
+            Drawing drawing = drawingRepository.save(newWorkCenterDrawing);
+
+            url = commonService.saveDocumentServer(workCenterId, drawing.getId(), attachedFile);
+
+            if(url != null){
+                this.drawingRepository.updateDrawingDocUrl(drawing.getId(), url);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int workCenterDrawingId, Drawing drawing, MultipartFile attachedFile, HttpServletRequest request) {
+
+        long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+//        UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+
+        drawing.setDoc_url("doc_url");
+        drawing.setDoc_name(attachedFile.getOriginalFilename());
+        drawing.setDoc_content_type(attachedFile.getContentType());
+        drawing.setModifiedBy(new User());
+        drawing.getModifiedBy().setId(uId);
+
+        drawingRepository.editWorkCenterDrawing(drawing);
+
+        try {
+            // TODO borrar el doc antiguo
+//            commonService.deleteDocumentServer(workCenterId, drawing.getId());
+
+            String url = null;
+
+            url = commonService.saveDocumentServer(workCenterId, drawing.getId(), attachedFile);
+
+            if(url != null){
+                this.drawingRepository.updateDrawingDocUrl(drawing.getId(), url);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @Override
+    public List<RoomTypes> getRoomTypes() {
+        return this.roomTypesRepository.findAll();
+    }
+
+    @Override
+    public List<Room> getRoomListByWorkCenter(int workCenterId){
+        return this.roomRepository.findRoomListByWorkCenterId(workCenterId);
+    }
+
+    @Override
+    public void editWorkCenterRoom(Room room, HttpServletRequest request) {
+
+        long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+        room.setModifiedBy(new User());
+        room.getModifiedBy().setId(uId);
+
+        roomRepository.editWorkCenterRoom(room);
+
+    }
+
+    @Override
+    public ResponseEntity<?> deleteRoom(HttpServletRequest request, int workCenterId, int roomId) {
+
+        long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        Room room = this.roomRepository.findRoomById(roomId);
+
+        if (room==null) {
+            return new ResponseEntity <>(HttpStatus.NOT_FOUND);
+        }
+        try {
+
+            this.roomRepository.roomLogicDelete((int) uId, roomId, workCenterId);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> downloadDrawingDoc(HttpServletRequest request, int drawingId) {
+
+        Drawing dra = null;
+        File file = null;
+        byte[] content=null;
+
+        try {
+            dra = this.drawingRepository.findDrawingById(drawingId);
+
+            file = new File(dra.getDoc_url());
+            if (file.exists()) {
+                content = Files.readAllBytes(file.toPath());
+            }else{
+                return new ResponseEntity<>("File not found",HttpStatus.NOT_FOUND);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<>("Uknown error",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<byte[]>(content, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> addWorkCenterRoom(int workCenterId, Room newWorkCenterRoom, HttpServletRequest request) {
+
+        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        newWorkCenterRoom.getWorkCenter().setId(workCenterId);
+        newWorkCenterRoom.setCreated(new Date());
+        newWorkCenterRoom.getCreatedBy().setId(userId);
+
+        try {
+            Room room = roomRepository.save(newWorkCenterRoom);
+
+//            saveWorkCenterForRoom(room.getWorkCenter().getRooms());
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public Drawing getDrawingById(int drawingId) {
+        return drawingRepository.findDrawingById(drawingId);
+    }
+
+    @Override
+    public Room getRoomById(int roomId) {
+        return roomRepository.findRoomById(roomId);
+    }
 }
 

@@ -3,6 +3,8 @@ package com.preving.intranet.gestioncentrosapi.model.domain.workCenters;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.City;
+import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
+import com.preving.intranet.gestioncentrosapi.model.domain.Room;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -66,6 +68,8 @@ public class WorkCenter implements Serializable {
     private Date modified;
     private User modifiedBy;
     private List<WorkCentersByEntity> workCentersByEntities = new ArrayList<>();
+    private List<Drawing> drawings = new ArrayList<>();
+    private List<Room> rooms = new ArrayList<>();
 
     public WorkCenter() {}
 
@@ -112,6 +116,10 @@ public class WorkCenter implements Serializable {
         this.createdBy = createdBy;
         this.modified = modified;
         this.modifiedBy = modifiedBy;
+    }
+
+    public WorkCenter(List<Room> rooms) {
+        this.rooms = rooms;
     }
 
     @Id
@@ -293,6 +301,22 @@ public class WorkCenter implements Serializable {
     @OneToMany(mappedBy = "workCenter")
     public List<WorkCentersByEntity> getWorkCentersByEntities() { return workCentersByEntities; }
     public void setWorkCentersByEntities(List<WorkCentersByEntity> workCentersByEntities) { this.workCentersByEntities = workCentersByEntities; }
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL)
+    public List<Drawing> getDrawings() {
+        return drawings;
+    }
+    public void setDrawings(List<Drawing> drawings) {
+        this.drawings = drawings;
+    }
+
+    // @JsonManagedReference
+    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL)
+    public List<Room> getRooms() {
+        return rooms;
+    }
+    public void setRooms(List<Room> rooms) { this.rooms = rooms; }
 
     @Transient
     public int getEmployee() { return employee;}
