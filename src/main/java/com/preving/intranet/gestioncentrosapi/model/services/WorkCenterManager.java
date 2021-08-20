@@ -555,7 +555,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public List<Room> getRoomListByWorkCenter(int workCenterId){
-        return this.roomRepository.findRoomListByWorkCenterId(workCenterId);
+        return this.roomRepository.findRoomListByWorkCenterIdAndDeletedIsNull(workCenterId);
     }
 
     @Override
