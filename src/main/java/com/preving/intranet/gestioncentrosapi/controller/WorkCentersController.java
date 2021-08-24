@@ -346,7 +346,7 @@ public class WorkCentersController {
                                                    @PathVariable("workCenterId") int workCenterId,
                                                    @PathVariable("workCenterDrawingId") int workCenterDrawingId, HttpServletRequest request) {
 
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         Drawing drawing= gson.fromJson(workCenterDrawing, Drawing.class);
 
         try {

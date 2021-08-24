@@ -1,7 +1,9 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
+import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
+import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.Entity;
 import com.preving.intranet.gestioncentrosapi.model.domain.Province;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class CommonManager implements CommonService {
 
     @Autowired
     private EntitiesRepository entitiesRepository;
+
+    @Autowired
+    private DrawingRepository drawingRepository;
 
     @Value("${url-drawing-documents}")
     private String urlDrawingDocuments;
@@ -122,6 +127,23 @@ public class CommonManager implements CommonService {
         }
         attachedFile.transferTo(file);
         return url;
+    }
+
+    public boolean deleteDocumentServer(int workCenterId, int drawingId) throws IOException {
+
+        // Obtenemos la URL del plano para borrarlo del servidor
+        Drawing drawing = drawingRepository.findDrawingById(drawingId);
+
+        File file = new File(drawing.getDocUrl());
+        Boolean borrado = null;
+        if (file.exists()) {
+            file.delete();
+
+            return borrado = true;
+        } else {
+            borrado = false;
+        }
+        return borrado;
     }
 
 }

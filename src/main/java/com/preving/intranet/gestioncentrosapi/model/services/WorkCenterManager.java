@@ -110,6 +110,9 @@ public class WorkCenterManager implements WorkCenterService{
     private static final String EXPORT_TITLE_6 = "Estado";
     private static final String EXPORT_TITLE_7 = "Entidades";
 
+    private static final int ACTIVE_WORK_CENTER = 1;
+    private static final int INACTIVE_WORK_CENTER = 0;
+
     @Transactional
     public ResponseEntity<?> addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request) {
 
@@ -129,8 +132,8 @@ public class WorkCenterManager implements WorkCenterService{
         dimNavisionRepository.save(dimNavision);
 
         // Seteamos los valores necesarios para hacer el insert
-        // TODO verificar con fecha de baja
-        newWorkCenter.setActive(1);
+        // TODO verificar si computa fecha de baja en este apartado
+        newWorkCenter.setActive(ACTIVE_WORK_CENTER);
         newWorkCenter.setVisible(1);
         // Seteamos valores de creación
         newWorkCenter.setCreated(new Date());
@@ -219,6 +222,11 @@ public class WorkCenterManager implements WorkCenterService{
 
             // Insertamos delegación en RRHH.TM_DIM_NAVISION
             dimNavisionRepository.editWorkCenter(dimNavision);
+        }
+
+        if (newWorkCenter.getEndDate() != null) {
+            newWorkCenter.setActive(INACTIVE_WORK_CENTER);
+            workCentersRepository.setInactiveWorkCenter(workCenterId);
         }
 
         // Editamos la delegación en la tabla GC2006_RELEASE.PC_DELEGACIONES
@@ -491,9 +499,9 @@ public class WorkCenterManager implements WorkCenterService{
         newWorkCenterDrawing.setCreated(new Date());
         newWorkCenterDrawing.getCreatedBy().setId(userId);
 
-        newWorkCenterDrawing.setDoc_url("doc_url");
-        newWorkCenterDrawing.setDoc_name(attachedFile.getOriginalFilename());
-        newWorkCenterDrawing.setDoc_content_type(attachedFile.getContentType());
+        newWorkCenterDrawing.setDocUrl("doc_url");
+        newWorkCenterDrawing.setDocName(attachedFile.getOriginalFilename());
+        newWorkCenterDrawing.setDocContentType(attachedFile.getContentType());
 
         try {
             String url = null;
@@ -517,24 +525,25 @@ public class WorkCenterManager implements WorkCenterService{
     public ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int workCenterDrawingId, Drawing drawing, MultipartFile attachedFile, HttpServletRequest request) {
 
         long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
-//        UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
 
-        drawing.setDoc_url("doc_url");
-        drawing.setDoc_name(attachedFile.getOriginalFilename());
-        drawing.setDoc_content_type(attachedFile.getContentType());
+        drawing.setDocUrl("doc_url");
+        drawing.setDocName(attachedFile.getOriginalFilename());
+        drawing.setDocContentType(attachedFile.getContentType());
         drawing.setModifiedBy(new User());
         drawing.getModifiedBy().setId(uId);
 
         drawingRepository.editWorkCenterDrawing(drawing);
 
         try {
-            // TODO borrar el doc antiguo
-//            commonService.deleteDocumentServer(workCenterId, drawing.getId());
+            // Borramos el documento anterior del servidor
+            commonService.deleteDocumentServer(workCenterId, drawing.getId());
 
             String url = null;
 
+            // Guardamos el nuevo documento adjunto
             url = commonService.saveDocumentServer(workCenterId, drawing.getId(), attachedFile);
 
+            // Actualizamos la URL del documento
             if(url != null){
                 this.drawingRepository.updateDrawingDocUrl(drawing.getId(), url);
             }
@@ -600,7 +609,7 @@ public class WorkCenterManager implements WorkCenterService{
         try {
             dra = this.drawingRepository.findDrawingById(drawingId);
 
-            file = new File(dra.getDoc_url());
+            file = new File(dra.getDocUrl());
             if (file.exists()) {
                 content = Files.readAllBytes(file.toPath());
             }else{

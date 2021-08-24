@@ -15,29 +15,29 @@ public class Drawing implements Serializable {
    private int id;
    private WorkCenter workCenter = new WorkCenter();
    private String name;
-   private String doc_url;
-   private String doc_name;
-   private String doc_content_type;
-   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+   private String docUrl;
+   private String docName;
+   private String docContentType;
+   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
    private Date created = new Date();
    private User createdBy = new User();
-   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
    private Date modified;
    private User modifiedBy;
-   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
    private Date deleted;
    private User deletedBy;
 
 
     public Drawing() {}
 
-    public Drawing(int id, WorkCenter workCenter, String name, String doc_url, String doc_name, String doc_content_type, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy) {
+    public Drawing(int id, WorkCenter workCenter, String name, String docUrl, String docName, String docContentType, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy) {
         this.id = id;
         this.workCenter = workCenter;
         this.name = name;
-        this.doc_url = doc_url;
-        this.doc_name = doc_name;
-        this.doc_content_type = doc_content_type;
+        this.docUrl = docUrl;
+        this.docName = docName;
+        this.docContentType = docContentType;
         this.created = created;
         this.createdBy = createdBy;
         this.modified = modified;
@@ -78,29 +78,29 @@ public class Drawing implements Serializable {
 
     @Basic
     @Column(name = "DOC_URL")
-    public String getDoc_url() {
-        return doc_url;
+    public String getDocUrl() {
+        return docUrl;
     }
-    public void setDoc_url(String doc_url) {
-        this.doc_url = doc_url;
+    public void setDocUrl(String docUrl) {
+        this.docUrl = docUrl;
     }
 
     @Basic
     @Column(name = "DOC_NOMBRE")
-    public String getDoc_name() {
-        return doc_name;
+    public String getDocName() {
+        return docName;
     }
-    public void setDoc_name(String doc_name) {
-        this.doc_name = doc_name;
+    public void setDocName(String docName) {
+        this.docName = docName;
     }
 
     @Basic
     @Column(name = "DOC_CONTENT_TYPE")
-    public String getDoc_content_type() {
-        return doc_content_type;
+    public String getDocContentType() {
+        return docContentType;
     }
-    public void setDoc_content_type(String doc_content_type) {
-        this.doc_content_type = doc_content_type;
+    public void setDocContentType(String docContentType) {
+        this.docContentType = docContentType;
     }
 
     @Basic
