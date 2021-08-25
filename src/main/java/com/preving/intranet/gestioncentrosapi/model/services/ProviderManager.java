@@ -1,13 +1,17 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
-import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ExpenditurePeriodRepository;
-import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderAreaRepository;
-import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderEvaluationTypesRepository;
-import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderTypesRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.vendor.*;
+import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.*;
+import com.preving.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -24,6 +28,15 @@ public class ProviderManager implements ProviderService {
 
     @Autowired
     private ExpenditurePeriodRepository expenditurePeriodRepository;
+
+    @Autowired
+    private ProviderRepository providerRepository;
+
+    @Autowired
+    private CommonService commonService;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
    @Override
     public List<Provider> getproviders(int workCenterId, ProviderFilter providerFilter) {
@@ -42,6 +55,37 @@ public class ProviderManager implements ProviderService {
 
     @Override
     public List<ExpenditurePeriod> getExpenditurePeriod(int workCenterId) { return expenditurePeriodRepository.findAll(); }
+
+ @Override
+ public ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, MultipartFile attachedFile, HttpServletRequest request) {
+
+  long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+  newProvider.getWorkCenter().setId(workCenterId);
+  newProvider.setCreated(new Date());
+  newProvider.getCreatedBy().setId(userId);
+  newProvider.setDoc_name(attachedFile.getOriginalFilename());
+  newProvider.setDoc_content_type(attachedFile.getContentType());
+
+ // setters
+  try {
+   String url = null;
+
+   Provider provider = providerRepository.save(newProvider);
+
+   url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile);
+
+   if(url != null){
+    this.providerRepository.updateProviderDocUrl(provider.getId(), url);
+   }
+
+  } catch (Exception e) {
+   e.printStackTrace();
+   return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+  return new ResponseEntity<>(HttpStatus.OK);
+ }
+
 
 
 }
