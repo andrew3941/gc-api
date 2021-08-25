@@ -1,7 +1,11 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.vendors;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(schema = "GESTION_CENTROS", name = "TM_PROVEEDORES_EVALUACION_TIPO")
@@ -10,14 +14,17 @@ public class ProviderEvaluationTypes implements Serializable {
     private String name;
     private String observations;
     private boolean active;
+    private List<Provider> providers = new ArrayList<>();
 
     public ProviderEvaluationTypes() { }
 
-    public ProviderEvaluationTypes(int id, String name, String observations, boolean active) {
+
+    public ProviderEvaluationTypes(int id, String name, String observations, boolean active, List<Provider> providers) {
         this.id = id;
         this.name = name;
         this.observations = observations;
         this.active = active;
+        this.providers = providers;
     }
 
     @Id
@@ -40,4 +47,12 @@ public class ProviderEvaluationTypes implements Serializable {
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "evaluationTypes", cascade = CascadeType.ALL)
+    public List<Provider> getProviders() {
+        return providers;
+    }
+    public void setProviders(List<Provider> providers) {
+        this.providers = providers;
+    }
 }

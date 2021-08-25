@@ -6,6 +6,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.City;
 import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.Room;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -70,6 +71,7 @@ public class WorkCenter implements Serializable {
     private List<WorkCentersByEntity> workCentersByEntities = new ArrayList<>();
     private List<Drawing> drawings = new ArrayList<>();
     private List<Room> rooms = new ArrayList<>();
+    private List<Provider> providers = new ArrayList<>();
 
     public WorkCenter() {}
 
@@ -318,6 +320,15 @@ public class WorkCenter implements Serializable {
     @Transient
     public int getEmployee() { return employee;}
     public void setEmployee(int employee) { this.employee = employee; }
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL)
+    public List<Provider> getProviders() {
+        return providers;
+    }
+    public void setProviders(List<Provider> providers) {
+        this.providers = providers;
+    }
 }
 
 
