@@ -112,6 +112,8 @@ public class WorkCenterManager implements WorkCenterService{
 
     private static final int ACTIVE_WORK_CENTER = 1;
     private static final int INACTIVE_WORK_CENTER = 0;
+    private static final int VISIBLE_WORK_CENTER = 1;
+    private static final int NO_VISIBLE_WORK_CENTER = 0;
 
     @Transactional
     public ResponseEntity<?> addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request) {
@@ -131,10 +133,15 @@ public class WorkCenterManager implements WorkCenterService{
         // Insertamos delegación en RRHH.TM_DIM_NAVISION
         dimNavisionRepository.save(dimNavision);
 
-        // Seteamos los valores necesarios para hacer el insert
-        // TODO verificar si computa fecha de baja en este apartado
-        newWorkCenter.setActive(ACTIVE_WORK_CENTER);
-        newWorkCenter.setVisible(1);
+        // Comprobamos si tiene fecha de baja y seteamos valores
+        if (newWorkCenter.getEndDate() != null) {
+            newWorkCenter.setActive(INACTIVE_WORK_CENTER);
+            newWorkCenter.setVisible(NO_VISIBLE_WORK_CENTER);
+        } else {
+            newWorkCenter.setActive(ACTIVE_WORK_CENTER);
+            newWorkCenter.setVisible(VISIBLE_WORK_CENTER);
+        }
+
         // Seteamos valores de creación
         newWorkCenter.setCreated(new Date());
         newWorkCenter.getCreatedBy().setId(userId);
@@ -184,7 +191,7 @@ public class WorkCenterManager implements WorkCenterService{
         dimNavision.setType("GEO");
         dimNavision.setCod("pru");
         dimNavision.setName(newWorkCenter.getName());
-        dimNavision.setActive(1);
+        dimNavision.setActive(ACTIVE_WORK_CENTER);
         dimNavision.setOrder(null);
         dimNavision.setMcc_ln_mf("PT");
         String provinceCod = newWorkCenter.getCity().getProvince().getCod();
@@ -224,8 +231,10 @@ public class WorkCenterManager implements WorkCenterService{
             dimNavisionRepository.editWorkCenter(dimNavision);
         }
 
+        // Seteamos NO activo si viene con fecha de baja incluida
         if (newWorkCenter.getEndDate() != null) {
             newWorkCenter.setActive(INACTIVE_WORK_CENTER);
+            newWorkCenter.setVisible(NO_VISIBLE_WORK_CENTER);
             workCentersRepository.setInactiveWorkCenter(workCenterId);
         }
 
