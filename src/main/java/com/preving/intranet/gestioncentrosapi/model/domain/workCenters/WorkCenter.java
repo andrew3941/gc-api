@@ -1,22 +1,20 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.workCenters;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.preving.intranet.gestioncentrosapi.model.domain.City;
-import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
-import com.preving.intranet.gestioncentrosapi.model.domain.Room;
-import com.preving.intranet.gestioncentrosapi.model.domain.User;
+import com.preving.intranet.gestioncentrosapi.model.domain.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 
 @Entity
 @Table(schema = "GC2006_RELEASE", name = "PC_DELEGACIONES")
@@ -50,6 +48,7 @@ public class WorkCenter implements Serializable {
     private String name;
     private City city = new City();
     private String navisionCode;
+    private DimNavision dimNavision = new DimNavision();
     private String address;
     private String postalCode;
     private String phoneNumber;
@@ -60,8 +59,7 @@ public class WorkCenter implements Serializable {
     private Date startDate = new Date();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date endDate = null;
-    private int idInMp2;
-    private Integer lineId;
+    private Zona zona = new Zona();
     private int active;
     private int visible;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
@@ -69,7 +67,7 @@ public class WorkCenter implements Serializable {
     private User createdBy = new User();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date modified;
-    private User modifiedBy;
+    private User modifiedBy = new User();
     private List<WorkCentersByEntity> workCentersByEntities = new ArrayList<>();
     private List<Drawing> drawings = new ArrayList<>();
     private List<Room> rooms = new ArrayList<>();
@@ -96,7 +94,10 @@ public class WorkCenter implements Serializable {
         this.getCity().getProvince().setName(prvName);
     }
 
-    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, User headPerson, Integer employee, Date startDate, Date endDate, int idInMp2, int lineId, int active, int visible, Date created, User createdBy, Date modified, User modifiedBy) {
+    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode,
+                      String phoneNumber, String email, User headPerson, Integer employee, Date startDate, Date endDate,
+                      int idInMp2, int active, int visible, Date created, User createdBy, Date modified,
+                      User modifiedBy) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -109,8 +110,7 @@ public class WorkCenter implements Serializable {
         this.employee = employee;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.idInMp2 = idInMp2;
-        this.lineId = lineId;
+        this.getZona().setCodZona(idInMp2);
         this.active = active;
         this.visible = visible;
         this.created = created;
@@ -255,23 +255,17 @@ public class WorkCenter implements Serializable {
         this.endDate = endDate;
     }
 
-    @Basic
-    @Column(name = "ID_IN_MP2")
-    public int getIdInMp2() {
-        return idInMp2;
-    }
-    public void setIdInMp2(int idInMp2) {
-        this.idInMp2 = idInMp2;
-    }
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "ID_IN_MP2", referencedColumnName = "COD_ZONA")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    public Zona getZona() { return zona; }
+    public void setZona(Zona zona) { this.zona = zona; }
 
-    @Basic
-    @Column(name = "LINEA_ID")
-    public Integer getLineId() {
-        return lineId;
-    }
-    public void setLineId(Integer lineId) {
-        this.lineId = lineId;
-    }
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "LINEA_ID", referencedColumnName = "ID")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    public DimNavision getDimNavision() { return dimNavision; }
+    public void setDimNavision(DimNavision dimNavision) { this.dimNavision = dimNavision; }
 
     @Basic
     @Column(name = "ACTIVO", nullable = false)
@@ -318,7 +312,7 @@ public class WorkCenter implements Serializable {
         this.modified = modified;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "MODIFICADO_POR", referencedColumnName = "ID")
     public User getModifiedBy() {
         return modifiedBy;
@@ -333,7 +327,7 @@ public class WorkCenter implements Serializable {
     public void setWorkCentersByEntities(List<WorkCentersByEntity> workCentersByEntities) { this.workCentersByEntities = workCentersByEntities; }
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "workCenter", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SELECT)
     public List<Drawing> getDrawings() {
         return drawings;
@@ -342,8 +336,7 @@ public class WorkCenter implements Serializable {
         this.drawings = drawings;
     }
 
-    // @JsonManagedReference
-    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "workCenter", fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SELECT)
     public List<Room> getRooms() {
         return rooms;
@@ -363,6 +356,7 @@ public class WorkCenter implements Serializable {
     public void setProviders(List<Provider> providers) {
         this.providers = providers;
     }
+
 }
 
 

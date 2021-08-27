@@ -15,9 +15,12 @@ public class DimNavision implements Serializable {
     private String name;
     private int active;
     private Integer order;
-    private String mcc_ln_mf;
+    private String mccLnMf;
     private String provinceCod;
 
+    //create a class constructor for dependency injection
+    public DimNavision() {
+    }
 
     @Id
     @Column(name = "ID", nullable = false)
@@ -57,7 +60,6 @@ public class DimNavision implements Serializable {
         this.name = name;
     }
 
-
     @Basic
     @Column(name = "ACTIVO")
     public int getActive() {
@@ -78,12 +80,8 @@ public class DimNavision implements Serializable {
 
     @Basic
     @Column(name = "MCC_LN_MF", length = 5)
-    public String getMcc_ln_mf() {
-        return mcc_ln_mf;
-    }
-    public void setMcc_ln_mf(String mcc_ln_mf) {
-        this.mcc_ln_mf = mcc_ln_mf;
-    }
+    public String getMccLnMf() { return mccLnMf; }
+    public void setMccLnMf(String mccLnMf) { this.mccLnMf = mccLnMf; }
 
     @Basic
     @Column(name = "PROVINCIA_COD", length = 3)
@@ -94,19 +92,14 @@ public class DimNavision implements Serializable {
         this.provinceCod = provinceCod;
     }
 
-
-    //create a class constructor for dependency injection
-    public DimNavision() {
-    }
-
-    public DimNavision(int id, String type, String cod, String name, int active, Integer order, String mcc_ln_mf, String provinceCod) {
+    public DimNavision(int id, String type, String cod, String name, int active, Integer order, String mccLnMf, String provinceCod) {
         this.id = id;
         this.type = type;
         this.cod = cod;
         this.name = name;
         this.active = active;
         this.order = order;
-        this.mcc_ln_mf = mcc_ln_mf;
+        this.mccLnMf = mccLnMf;
         this.provinceCod = provinceCod;
     }
 
