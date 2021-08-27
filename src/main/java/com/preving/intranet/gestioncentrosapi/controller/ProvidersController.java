@@ -76,7 +76,7 @@ public class ProvidersController {
      * @return
      */
 
-    @RequestMapping(value = "{workCenterId}/filter", method = RequestMethod.POST)
+    @RequestMapping(value = "{workCenterId}/providers/filter", method = RequestMethod.POST)
     public ResponseEntity<?> findWorkCenterByFilter(@RequestBody ProviderFilter providerFilter,
                                                     @PathVariable(value="workCenterId") int workCenterId) {
         try {

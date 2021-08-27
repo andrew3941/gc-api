@@ -15,6 +15,7 @@ public class ProviderArea implements Serializable {
     private String observations;
     private boolean active;
 
+
     public ProviderArea() {}
 
     public ProviderArea(int id, String name, String observations, boolean active) {
@@ -43,5 +44,6 @@ public class ProviderArea implements Serializable {
     @Column(name = "ACTIVO")
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
+
 
 }

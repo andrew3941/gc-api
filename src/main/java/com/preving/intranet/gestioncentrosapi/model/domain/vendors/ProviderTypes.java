@@ -17,11 +17,12 @@ public class ProviderTypes implements Serializable {
 
     public ProviderTypes(){ }
 
-    public ProviderTypes(int id, String name, String observations, boolean active) {
+    public ProviderTypes(int id, String name, String observations, boolean active, List<Provider> providers) {
         this.id = id;
         this.name = name;
         this.observations = observations;
         this.active = active;
+
     }
 
     @Id
@@ -43,5 +44,8 @@ public class ProviderTypes implements Serializable {
     @Column(name = "ACTIVO")
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
+
+
+
 
 }

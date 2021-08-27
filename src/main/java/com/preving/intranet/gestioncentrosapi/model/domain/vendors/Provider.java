@@ -11,6 +11,29 @@ import java.util.Date;
 
 @Entity
 @Table(schema = "GESTION_CENTROS", name = "PROVEEDORES")
+@SqlResultSetMapping(
+        name = "ProviderMapping",
+        classes = {
+                @ConstructorResult(
+                        targetClass = Provider.class,
+                        columns = {
+                                @ColumnResult(name = "ID", type = Integer.class),
+                                @ColumnResult(name = "DELEGACION_ID", type = Integer.class),
+                                @ColumnResult(name = "NOMBRE", type = String.class),
+                                @ColumnResult(name = "PROVEEDOR_CENTRALIZADO", type = String.class),
+                                @ColumnResult(name = "CIF", type = String.class),
+                                @ColumnResult(name = "TIPO_ID", type = Integer.class),
+                                @ColumnResult(name = "AREA_ID", type = Integer.class),
+                                @ColumnResult(name = "TIPO_EVALUACION_ID", type = Integer.class),
+                                @ColumnResult(name = "FECHA_INICIO_SERVICIO", type = Date.class),
+                                @ColumnResult(name = "FIN_INICIO_SERVICIO", type = Date.class),
+                                @ColumnResult(name = "PERIODICADAD_GASTO_ID", type = Integer.class),
+
+                        }
+                )
+        }
+)
+
 public class Provider implements Serializable {
     private int id;
     private WorkCenter workCenter = new WorkCenter();
@@ -73,7 +96,6 @@ public class Provider implements Serializable {
         this.modified = modified;
         this.modifiedBy = modifiedBy;
     }
-
 
     @Id
     @Column(name = "ID", nullable = false)
@@ -302,4 +324,5 @@ public class Provider implements Serializable {
     public void setModifiedBy(User modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
+
 }

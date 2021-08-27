@@ -33,6 +33,9 @@ public class ProviderManager implements ProviderService {
     private ProviderRepository providerRepository;
 
     @Autowired
+    private ProviderCustomRepository providerCustomRepository;
+
+    @Autowired
     private CommonService commonService;
 
     @Autowired
@@ -40,7 +43,9 @@ public class ProviderManager implements ProviderService {
 
    @Override
     public List<Provider> getproviders(int workCenterId, ProviderFilter providerFilter) {
-    return null;
+    List<Provider> providers = this.providerCustomRepository.getProviders(workCenterId, providerFilter);  ;
+       return providers;
+
     }
 
     @Override
@@ -61,7 +66,7 @@ public class ProviderManager implements ProviderService {
 
   long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
-  newProvider.getWorkCenter().setId(workCenterId);
+//  newProvider.getWorkCenter().setId(workCenterId);
   newProvider.setCreated(new Date());
   newProvider.getCreatedBy().setId(userId);
   newProvider.setDoc_name(attachedFile.getOriginalFilename());
