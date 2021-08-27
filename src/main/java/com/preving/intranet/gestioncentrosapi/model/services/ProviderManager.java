@@ -61,18 +61,18 @@ public class ProviderManager implements ProviderService {
     @Override
     public List<ExpenditurePeriod> getExpenditurePeriod(int workCenterId) { return expenditurePeriodRepository.findAll(); }
 
- @Override
- public ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, MultipartFile attachedFile, HttpServletRequest request) {
+    @Override
+    public ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, MultipartFile attachedFile, HttpServletRequest request) {
 
   long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
-//  newProvider.getWorkCenter().setId(workCenterId);
+  newProvider.getWorkCenter().setId(workCenterId);
   newProvider.setCreated(new Date());
-  newProvider.getCreatedBy().setId(userId);
-  newProvider.setDoc_name(attachedFile.getOriginalFilename());
-  newProvider.setDoc_content_type(attachedFile.getContentType());
+  newProvider.getCreatedBy().setId((long) 1);
+  newProvider.setDocName(attachedFile.getOriginalFilename());
+  newProvider.setDocContentType(attachedFile.getContentType());
+  newProvider.setServiceStartDate(new Date());
 
- // setters
   try {
    String url = null;
 

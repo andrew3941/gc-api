@@ -48,20 +48,21 @@ public class Provider implements Serializable {
     private String contactPerson;
     private String telephone;
     private String details;
-    private String doc_Url;
-    private String doc_name;
-    private String doc_content_type;
+    private String docUrl;
+    private String docName;
+    private String docContentType;
     private ExpenditurePeriod expenditurePeriod = new ExpenditurePeriod();
     private Integer spending;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date serviceStartDate = new Date();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
-    private Date serviceEndDate = null;
+    private Date serviceEndDate;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date serviceAlramDate = null;
+    private int responsable_id;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
-    private User createdBy;
+    private User createdBy = new User();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date modified;
     private User modifiedBy;
@@ -69,7 +70,7 @@ public class Provider implements Serializable {
     public Provider() {
     }
 
-    public Provider(int id, WorkCenter workCenter, String name, boolean centralProvider, String cif, ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes, String email, String direction, String contactPerson, String telephone, String details, String doc_Url, String doc_name, String doc_content_type, ExpenditurePeriod expenditurePeriod, Integer spending, Date serviceStartDate, Date serviceEndDate, Date serviceAlramDate, Date created, User createdBy, Date modified, User modifiedBy) {
+    public Provider(int id, WorkCenter workCenter, String name, boolean centralProvider, String cif, ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes, String email, String direction, String contactPerson, String telephone, String details, String docUrl, String docName, String docContentType, ExpenditurePeriod expenditurePeriod, Integer spending, Date serviceStartDate, Date serviceEndDate, Date serviceAlramDate, int responsable_id, Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
         this.workCenter = workCenter;
         this.name = name;
@@ -83,14 +84,15 @@ public class Provider implements Serializable {
         this.contactPerson = contactPerson;
         this.telephone = telephone;
         this.details = details;
-        this.doc_Url = doc_Url;
-        this.doc_name = doc_name;
-        this.doc_content_type = doc_content_type;
+        this.docUrl = docUrl;
+        this.docName = docName;
+        this.docContentType = docContentType;
         this.expenditurePeriod = expenditurePeriod;
         this.spending = spending;
         this.serviceStartDate = serviceStartDate;
         this.serviceEndDate = serviceEndDate;
         this.serviceAlramDate = serviceAlramDate;
+        this.responsable_id = responsable_id;
         this.created = created;
         this.createdBy = createdBy;
         this.modified = modified;
@@ -219,29 +221,29 @@ public class Provider implements Serializable {
 
     @Basic
     @Column(name = "DOC_URL")
-    public String getDoc_Url() {
-        return doc_Url;
+    public String getDocUrl() {
+        return docUrl;
     }
-    public void setDoc_Url(String doc_Url) {
-        this.doc_Url = doc_Url;
+    public void setDocUrl(String docUrl) {
+        this.docUrl = docUrl;
     }
 
     @Basic
     @Column(name = "DOC_NOMBRE")
-    public String getDoc_name() {
-        return doc_name;
+    public String getDocName() {
+        return docName;
     }
-    public void setDoc_name(String doc_name) {
-        this.doc_name = doc_name;
+    public void setDocName(String docName) {
+        this.docName = docName;
     }
 
     @Basic
     @Column(name = "DOC_CONTENT_TYPE")
-    public String getDoc_content_type() {
-        return doc_content_type;
+    public String getDocContentType() {
+        return docContentType;
     }
-    public void setDoc_content_type(String doc_content_type) {
-        this.doc_content_type = doc_content_type;
+    public void setDocContentType(String docContentType) {
+        this.docContentType = docContentType;
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -287,6 +289,15 @@ public class Provider implements Serializable {
     }
     public void setServiceAlramDate(Date serviceAlramDate) {
         this.serviceAlramDate = serviceAlramDate;
+    }
+
+    @Basic
+    @Column(name = "responsable_id")
+    public int getResponsable_id() {
+        return responsable_id;
+    }
+    public void setResponsable_id(int responsable_id) {
+        this.responsable_id = responsable_id;
     }
 
     @Basic

@@ -13,7 +13,7 @@ public interface ProviderRepository extends JpaRepository<Provider, Integer> {
 
     @Modifying
     @Transactional
-    @Query("update Provider p set p.doc_Url=:providerDocUrl where p.id=:providerId")
+    @Query("update Provider p set p.docUrl=:providerDocUrl where p.id=:providerId")
     void  updateProviderDocUrl(@Param("providerId") int providerId, @Param("providerDocUrl")String providerDocUrl);
 
 }
