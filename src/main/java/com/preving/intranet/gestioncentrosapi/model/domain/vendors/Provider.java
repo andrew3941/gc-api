@@ -29,14 +29,13 @@ public class Provider implements Serializable {
     private String doc_name;
     private String doc_content_type;
     private ExpenditurePeriod expenditurePeriod = new ExpenditurePeriod();
-    private int spending;
+    private Integer spending;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date serviceStartDate = new Date();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date serviceEndDate = null;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date serviceAlramDate = null;
-//    private int responsable_id;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
     private User createdBy;
@@ -47,7 +46,7 @@ public class Provider implements Serializable {
     public Provider() {
     }
 
-    public Provider(int id, WorkCenter workCenter, String name, boolean centralProvider, String cif, ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes, String email, String direction, String contactPerson, String telephone, String details, String doc_Url, String doc_name, String doc_content_type, ExpenditurePeriod expenditurePeriod, int spending, Date serviceStartDate, Date serviceEndDate, Date serviceAlramDate, Date created, User createdBy, Date modified, User modifiedBy) {
+    public Provider(int id, WorkCenter workCenter, String name, boolean centralProvider, String cif, ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes, String email, String direction, String contactPerson, String telephone, String details, String doc_Url, String doc_name, String doc_content_type, ExpenditurePeriod expenditurePeriod, Integer spending, Date serviceStartDate, Date serviceEndDate, Date serviceAlramDate, Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
         this.workCenter = workCenter;
         this.name = name;
@@ -78,8 +77,8 @@ public class Provider implements Serializable {
 
     @Id
     @Column(name = "ID", nullable = false)
-    @SequenceGenerator(name = "PROVEEDORES_SQ", sequenceName = "PROVEEDORES_SQ", schema = "GESTION_CENTROS", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROVEEDORES_SQ")
+    @SequenceGenerator(name = "PROVEEDORES_SEQ", sequenceName = "PROVEEDORES_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROVEEDORES_SEQ")
     public int getId() {
         return id;
     }
@@ -88,7 +87,8 @@ public class Provider implements Serializable {
     }
 
     @JsonBackReference
-    @JoinColumn(name = "delegacion_id", referencedColumnName = "ID")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
     public WorkCenter getWorkCenter() {
         return workCenter;
     }
@@ -106,7 +106,7 @@ public class Provider implements Serializable {
     }
 
     @Basic
-    @Column(name = "proveedor_centralizado")
+    @Column(name = "PROVEEDOR_CENTRALIZADO")
     public boolean isCentralProvider() {
         return centralProvider;
     }
@@ -124,7 +124,7 @@ public class Provider implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "tipo_id", referencedColumnName = "ID")
+    @JoinColumn(name = "TIPO_ID", referencedColumnName = "ID")
     public ProviderTypes getProviderTypes() {
         return providerTypes;
     }
@@ -133,7 +133,7 @@ public class Provider implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "area_id", referencedColumnName = "ID")
+    @JoinColumn(name = "AREA_ID", referencedColumnName = "ID")
     public ProviderArea getProviderArea() {
         return providerArea;
     }
@@ -142,7 +142,7 @@ public class Provider implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "tipo_evaluacion_id", referencedColumnName = "ID")
+    @JoinColumn(name = "TIPO_EVALUACION_ID", referencedColumnName = "ID")
     public ProviderEvaluationTypes getEvaluationTypes() {
         return evaluationTypes;
     }
@@ -169,7 +169,7 @@ public class Provider implements Serializable {
     }
 
     @Basic
-    @Column(name = "persona_contacto")
+    @Column(name = "PERSONA_CONTACTO")
     public String getContactPerson() {
         return contactPerson;
     }
@@ -178,7 +178,7 @@ public class Provider implements Serializable {
     }
 
     @Basic
-    @Column(name = "telefono")
+    @Column(name = "TELEFONO")
     public String getTelephone() {
         return telephone;
     }
@@ -187,7 +187,7 @@ public class Provider implements Serializable {
     }
 
     @Basic
-    @Column(name = "detalles")
+    @Column(name = "DETALLES")
     public String getDetails() {
         return details;
     }
@@ -196,7 +196,7 @@ public class Provider implements Serializable {
     }
 
     @Basic
-    @Column(name = "doc_url")
+    @Column(name = "DOC_URL")
     public String getDoc_Url() {
         return doc_Url;
     }
@@ -205,7 +205,7 @@ public class Provider implements Serializable {
     }
 
     @Basic
-    @Column(name = "doc_nombre")
+    @Column(name = "DOC_NOMBRE")
     public String getDoc_name() {
         return doc_name;
     }
@@ -214,7 +214,7 @@ public class Provider implements Serializable {
     }
 
     @Basic
-    @Column(name = "doc_content_type")
+    @Column(name = "DOC_CONTENT_TYPE")
     public String getDoc_content_type() {
         return doc_content_type;
     }
@@ -222,7 +222,8 @@ public class Provider implements Serializable {
         this.doc_content_type = doc_content_type;
     }
 
-    @JoinColumn(name = "periodicidad_gasto_id", referencedColumnName = "ID")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "PERIODICIDAD_GASTO_ID", referencedColumnName = "ID")
     public ExpenditurePeriod getExpenduture() {
         return expenditurePeriod;
     }
@@ -231,16 +232,16 @@ public class Provider implements Serializable {
     }
 
     @Basic
-    @Column(name = "gasto")
-    public int getSpending() {
+    @Column(name = "GASTO")
+    public Integer getSpending() {
         return spending;
     }
-    public void setSpending(int spending) {
+    public void setSpending(Integer spending) {
         this.spending = spending;
     }
 
     @Basic
-    @Column(name = "fecha_inicio_servicio")
+    @Column(name = "FECHA_INICIO_SERVICIO")
     public Date getServiceStartDate() {
         return serviceStartDate;
     }
@@ -249,7 +250,7 @@ public class Provider implements Serializable {
     }
 
     @Basic
-    @Column(name = "fecha_fin_servicio")
+    @Column(name = "FECHA_FIN_SERVICIO")
     public Date getServiceEndDate() {
         return serviceEndDate;
     }
@@ -258,7 +259,7 @@ public class Provider implements Serializable {
     }
 
     @Basic
-    @Column(name = "fecha_alarma_servicio")
+    @Column(name = "FECHA_ALARMA_SERVICIO")
     public Date getServiceAlramDate() {
         return serviceAlramDate;
     }
@@ -267,7 +268,7 @@ public class Provider implements Serializable {
     }
 
     @Basic
-    @Column(name = "creado")
+    @Column(name = "CREADO")
     public Date getCreated() {
         return created;
     }
@@ -276,7 +277,7 @@ public class Provider implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "creado_por", referencedColumnName = "ID")
+    @JoinColumn(name = "CREADO_POR", referencedColumnName = "ID")
     public User getCreatedBy() {
         return createdBy;
     }
@@ -285,7 +286,7 @@ public class Provider implements Serializable {
     }
 
     @Basic
-    @Column(name = "modificado")
+    @Column(name = "MODIFICADO")
     public Date getModified() {
         return modified;
     }
@@ -294,7 +295,7 @@ public class Provider implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "modificado_por", referencedColumnName = "ID")
+    @JoinColumn(name = "MODIFICADO_POR", referencedColumnName = "ID")
     public User getModifiedBy() {
         return modifiedBy;
     }

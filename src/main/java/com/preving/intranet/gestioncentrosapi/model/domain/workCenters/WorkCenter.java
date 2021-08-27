@@ -7,6 +7,8 @@ import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.Room;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -302,7 +304,8 @@ public class WorkCenter implements Serializable {
     public void setWorkCentersByEntities(List<WorkCentersByEntity> workCentersByEntities) { this.workCentersByEntities = workCentersByEntities; }
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SELECT)
     public List<Drawing> getDrawings() {
         return drawings;
     }
@@ -311,7 +314,8 @@ public class WorkCenter implements Serializable {
     }
 
     // @JsonManagedReference
-    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SELECT)
     public List<Room> getRooms() {
         return rooms;
     }
@@ -322,7 +326,8 @@ public class WorkCenter implements Serializable {
     public void setEmployee(int employee) { this.employee = employee; }
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SELECT)
     public List<Provider> getProviders() {
         return providers;
     }

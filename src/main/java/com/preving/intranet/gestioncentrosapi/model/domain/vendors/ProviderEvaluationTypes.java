@@ -14,17 +14,15 @@ public class ProviderEvaluationTypes implements Serializable {
     private String name;
     private String observations;
     private boolean active;
-    private List<Provider> providers = new ArrayList<>();
 
     public ProviderEvaluationTypes() { }
 
 
-    public ProviderEvaluationTypes(int id, String name, String observations, boolean active, List<Provider> providers) {
+    public ProviderEvaluationTypes(int id, String name, String observations, boolean active) {
         this.id = id;
         this.name = name;
         this.observations = observations;
         this.active = active;
-        this.providers = providers;
     }
 
     @Id
@@ -47,12 +45,4 @@ public class ProviderEvaluationTypes implements Serializable {
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "evaluationTypes", cascade = CascadeType.ALL)
-    public List<Provider> getProviders() {
-        return providers;
-    }
-    public void setProviders(List<Provider> providers) {
-        this.providers = providers;
-    }
 }

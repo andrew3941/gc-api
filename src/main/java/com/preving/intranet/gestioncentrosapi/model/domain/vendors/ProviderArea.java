@@ -14,7 +14,6 @@ public class ProviderArea implements Serializable {
     private String name;
     private String observations;
     private boolean active;
-    private List<Provider> providers = new ArrayList<>();
 
     public ProviderArea() {}
 
@@ -45,12 +44,4 @@ public class ProviderArea implements Serializable {
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "providerArea", cascade = CascadeType.ALL)
-    public List<Provider> getProviders() {
-        return providers;
-    }
-    public void setProviders(List<Provider> providers) {
-        this.providers = providers;
-    }
 }
