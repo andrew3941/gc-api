@@ -35,10 +35,14 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
                 "WHERE WC.LOCALIDAD_ID = LOC.LOC_ID " +
                 "   AND LOC.LOC_PRV_COD LIKE PRV.PRV_COD ";
 
-        if(workCenterFilter.getWorkCenterEntities().size() > 0) {
-            String entities = workCenterFilter.getWorkCenterEntities().stream().map(wce -> String.valueOf(wce.getId())).collect(Collectors.joining(","));
-            sql +=  "AND WC.ID = WCE.DELEGACION_ID " +
-                    "AND WCE.ENTIDAD_ID IN (" + entities + ")";
+        if (workCenterFilter.isAllEntitiesSelected()) {
+                sql += "AND WC.ID = WCE.DELEGACION_ID ";
+        } else {
+            if(workCenterFilter.getWorkCenterEntities().size() > 0) {
+                String entities = workCenterFilter.getWorkCenterEntities().stream().map(wce -> String.valueOf(wce.getId())).collect(Collectors.joining(","));
+                sql += "AND WC.ID = WCE.DELEGACION_ID " +
+                        "AND WCE.ENTIDAD_ID IN (" + entities + ")";
+            }
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getCod() != null){

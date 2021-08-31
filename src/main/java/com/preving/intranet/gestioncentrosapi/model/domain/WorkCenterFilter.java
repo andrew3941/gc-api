@@ -8,16 +8,17 @@ public class WorkCenterFilter {
     private String workCenterName;
     private Province workCenterProvince;
     private int workCenterStatus;
+    private boolean allEntitiesSelected;
     private List<Entity> workCenterEntities = new ArrayList<>();
 
     public WorkCenterFilter() {
     }
 
-    public WorkCenterFilter(String workCenterName, Province workCenterProvince, int workCenterStatus,
-                            List<Entity> workCenterEntities) {
+    public WorkCenterFilter(String workCenterName, Province workCenterProvince, int workCenterStatus, boolean allEntitiesSelected, List<Entity> workCenterEntities) {
         this.workCenterName = workCenterName;
         this.workCenterProvince = workCenterProvince;
         this.workCenterStatus = workCenterStatus;
+        this.allEntitiesSelected = allEntitiesSelected;
         this.workCenterEntities = workCenterEntities;
     }
 
@@ -40,6 +41,13 @@ public class WorkCenterFilter {
     }
     public void setWorkCenterStatus(int workCenterStatus) {
         this.workCenterStatus = workCenterStatus;
+    }
+
+    public boolean isAllEntitiesSelected() {
+        return allEntitiesSelected;
+    }
+    public void setAllEntitiesSelected(boolean allEntitiesSelected) {
+        this.allEntitiesSelected = allEntitiesSelected;
     }
 
     public List<Entity> getWorkCenterEntities() { return workCenterEntities; }

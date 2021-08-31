@@ -15,4 +15,6 @@ public interface CommonService {
     List<Entity> findAllEntities();
 
     String saveDocumentServer(int workCenterId, int drawingId, MultipartFile attachedFile) throws IOException;
+
+    boolean deleteDocumentServer(int workCenterId, int drawingId) throws IOException;
 }

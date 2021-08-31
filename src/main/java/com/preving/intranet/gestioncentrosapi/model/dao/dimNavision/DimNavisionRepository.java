@@ -14,8 +14,8 @@ public interface DimNavisionRepository extends JpaRepository<DimNavision, Intege
 
     @Modifying
     @Transactional
-    @Query("update DimNavision dm set dm.name=:#{#dimNavision.name}, " +
-            "dm.provinceCod=:#{#dimNavision.provinceCod} " +
+    @Query("update DimNavision dm set dm.cod=:#{#dimNavision.cod}, dm.name=:#{#dimNavision.name}, " +
+            "dm.order=:#{#dimNavision.order}, dm.provinceCod=:#{#dimNavision.provinceCod} " +
             "where dm.id=:#{#dimNavision.id} ")
     void  editWorkCenter(@Param("dimNavision") DimNavision dimNavision);
 

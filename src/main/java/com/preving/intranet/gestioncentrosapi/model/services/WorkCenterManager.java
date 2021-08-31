@@ -18,13 +18,11 @@ import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.security.JwtTokenUtil;
-import com.preving.security.domain.UsuarioWithRoles;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -110,6 +108,9 @@ public class WorkCenterManager implements WorkCenterService{
     private static final String EXPORT_TITLE_6 = "Estado";
     private static final String EXPORT_TITLE_7 = "Entidades";
 
+    private static final int TRUE_VALUE = 1;
+    private static final int FALSE_VALUE = 0;
+
     @Transactional
     public ResponseEntity<?> addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request) {
 
@@ -117,32 +118,29 @@ public class WorkCenterManager implements WorkCenterService{
         long userId =  this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
         // Construimos el objeto zona
-        Zona zona = seteamosZona(newWorkCenter);
-
-        // Insertamos delegación en MP2.ZONA
-        zonaRepository.save(zona);
+        seteamosZona(newWorkCenter);
 
         // Construimos el objeto dimNavision
-        DimNavision dimNavision = seteamosDimNavision(newWorkCenter);
+        seteamosDimNavision(newWorkCenter);
 
-        // Insertamos delegación en RRHH.TM_DIM_NAVISION
-        dimNavisionRepository.save(dimNavision);
+        // Comprobamos si tiene fecha de baja y seteamos valores
+        if (newWorkCenter.getEndDate() != null) {
+            newWorkCenter.setActive(TRUE_VALUE);
+            newWorkCenter.setVisible(TRUE_VALUE);
+        } else {
+            newWorkCenter.setActive(TRUE_VALUE);
+            newWorkCenter.setVisible(TRUE_VALUE);
+        }
 
-        // Seteamos los valores necesarios para hacer el insert
-        // TODO verificar con fecha de baja
-        newWorkCenter.setActive(1);
-        newWorkCenter.setVisible(1);
         // Seteamos valores de creación
         newWorkCenter.setCreated(new Date());
         newWorkCenter.getCreatedBy().setId(userId);
-        // Seteamos las ids de las tablas secundarias
-        newWorkCenter.setIdInMp2(zona.getCodZona());
-        newWorkCenter.setLineId(dimNavision.getId());
 
         // Insertamos delegación en GC2006_RELEASE.PC_DELEGACIONES
         workCentersRepository.save(newWorkCenter);
 
         // Insertamos valores por defecto para detalles de centro
+        // TODO: 27/08/2021 - Meter en el save de work-center
         WorkCenterDetails workCenterDetails = new WorkCenterDetails();
         workCenterDetails.setWorkCenter(newWorkCenter);
         workCenterDetails.getCreatedBy().setId(userId);
@@ -155,39 +153,26 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
 
-    private Zona seteamosZona(WorkCenter newWorkCenter) {
+    private void seteamosZona(WorkCenter newWorkCenter) {
 
-        Zona zona = new Zona();
+        newWorkCenter.getZona().setDenomination(newWorkCenter.getName());
+        newWorkCenter.getZona().setName(newWorkCenter.getName());
+        newWorkCenter.getZona().setTelephone(newWorkCenter.getPhoneNumber());
+        newWorkCenter.getZona().setEmail(newWorkCenter.getEmail());
+        newWorkCenter.getZona().setAddress(newWorkCenter.getAddress());
+        newWorkCenter.getZona().setCodPostal(newWorkCenter.getPostalCode());
+        newWorkCenter.getZona().setPoblacion(newWorkCenter.getCity().getName());
 
-        zona.setCodZona(newWorkCenter.getIdInMp2());
-        zona.setDenomination(newWorkCenter.getName());
-        zona.setName(newWorkCenter.getName());
-        zona.setTelephone(newWorkCenter.getPhoneNumber());
-        zona.setEmail(newWorkCenter.getEmail());
-        zona.setAddress(newWorkCenter.getAddress());
-        zona.setCodPostal(newWorkCenter.getPostalCode());
-        zona.setPoblacion(newWorkCenter.getCity().getName());
-
-        return zona;
     }
 
-    private DimNavision seteamosDimNavision(WorkCenter newWorkCenter) {
+    private void seteamosDimNavision(WorkCenter newWorkCenter) {
 
-        DimNavision dimNavision = new DimNavision();
+        newWorkCenter.getDimNavision().setType("GEO");
+        newWorkCenter.getDimNavision().setName(newWorkCenter.getName());
+        newWorkCenter.getDimNavision().setActive(TRUE_VALUE);
+        newWorkCenter.getDimNavision().setMccLnMf("PT");
+        newWorkCenter.getDimNavision().setProvinceCod(newWorkCenter.getCity().getProvince().getCod());
 
-        if (newWorkCenter.getLineId() != null) {
-            dimNavision.setId(newWorkCenter.getLineId());
-        }
-        dimNavision.setType("GEO");
-        dimNavision.setCod("pru");
-        dimNavision.setName(newWorkCenter.getName());
-        dimNavision.setActive(1);
-        dimNavision.setOrder(null);
-        dimNavision.setMcc_ln_mf("PT");
-        String provinceCod = newWorkCenter.getCity().getProvince().getCod();
-        dimNavision.setProvinceCod(provinceCod);
-
-        return dimNavision;
     }
 
     private void saveWorkCenterForEntity(List<WorkCentersByEntity> entities) {
@@ -208,17 +193,26 @@ public class WorkCenterManager implements WorkCenterService{
     public ResponseEntity<?> editWorkCenter(int workCenterId, WorkCenter newWorkCenter, HttpServletRequest request) {
 
         // Construimos el objeto zona
-        Zona zona = seteamosZona(newWorkCenter);
+        seteamosZona(newWorkCenter);
 
         // Editamos la delegación en la tabla MP2.ZONA
-        zonaRepository.editWorkCenter(zona);
+        zonaRepository.editWorkCenter(newWorkCenter.getZona());
 
-        if (newWorkCenter.getLineId() != null) {
+        if (newWorkCenter.getDimNavision() != null && newWorkCenter.getDimNavision().getId() > 0) {
+
             // Construimos el objeto dimNavision
-            DimNavision dimNavision = seteamosDimNavision(newWorkCenter);
+            seteamosDimNavision(newWorkCenter);
 
             // Insertamos delegación en RRHH.TM_DIM_NAVISION
-            dimNavisionRepository.editWorkCenter(dimNavision);
+            dimNavisionRepository.editWorkCenter(newWorkCenter.getDimNavision());
+
+        }
+
+        // Seteamos NO activo si viene con fecha de baja incluida
+        if (newWorkCenter.getEndDate() != null) {
+            newWorkCenter.setActive(TRUE_VALUE);
+            newWorkCenter.setVisible(FALSE_VALUE);
+            workCentersRepository.setInactiveWorkCenter(workCenterId);
         }
 
         // Editamos la delegación en la tabla GC2006_RELEASE.PC_DELEGACIONES
@@ -459,7 +453,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public List<Drawing> getDrawingByWorkCenter(int workCenterId) {
-      return this.drawingRepository.findAllByWorkCenterIdAndDeletedIsNull(workCenterId);
+      return this.drawingRepository.findAllByWorkCenterIdAndDeletedIsNullOrderByCreated(workCenterId);
     }
 
     @Override
@@ -491,9 +485,9 @@ public class WorkCenterManager implements WorkCenterService{
         newWorkCenterDrawing.setCreated(new Date());
         newWorkCenterDrawing.getCreatedBy().setId(userId);
 
-        newWorkCenterDrawing.setDoc_url("doc_url");
-        newWorkCenterDrawing.setDoc_name(attachedFile.getOriginalFilename());
-        newWorkCenterDrawing.setDoc_content_type(attachedFile.getContentType());
+        newWorkCenterDrawing.setDocUrl("doc_url");
+        newWorkCenterDrawing.setDocName(attachedFile.getOriginalFilename());
+        newWorkCenterDrawing.setDocContentType(attachedFile.getContentType());
 
         try {
             String url = null;
@@ -517,24 +511,25 @@ public class WorkCenterManager implements WorkCenterService{
     public ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int workCenterDrawingId, Drawing drawing, MultipartFile attachedFile, HttpServletRequest request) {
 
         long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
-//        UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
 
-        drawing.setDoc_url("doc_url");
-        drawing.setDoc_name(attachedFile.getOriginalFilename());
-        drawing.setDoc_content_type(attachedFile.getContentType());
+        drawing.setDocUrl("doc_url");
+        drawing.setDocName(attachedFile.getOriginalFilename());
+        drawing.setDocContentType(attachedFile.getContentType());
         drawing.setModifiedBy(new User());
         drawing.getModifiedBy().setId(uId);
 
         drawingRepository.editWorkCenterDrawing(drawing);
 
         try {
-            // TODO borrar el doc antiguo
-//            commonService.deleteDocumentServer(workCenterId, drawing.getId());
+            // Borramos el documento anterior del servidor
+            commonService.deleteDocumentServer(workCenterId, drawing.getId());
 
             String url = null;
 
+            // Guardamos el nuevo documento adjunto
             url = commonService.saveDocumentServer(workCenterId, drawing.getId(), attachedFile);
 
+            // Actualizamos la URL del documento
             if(url != null){
                 this.drawingRepository.updateDrawingDocUrl(drawing.getId(), url);
             }
@@ -555,7 +550,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public List<Room> getRoomListByWorkCenter(int workCenterId){
-        return this.roomRepository.findRoomListByWorkCenterId(workCenterId);
+        return this.roomRepository.findRoomListByWorkCenterIdAndDeletedIsNullOrderByCreated(workCenterId);
     }
 
     @Override
@@ -600,7 +595,7 @@ public class WorkCenterManager implements WorkCenterService{
         try {
             dra = this.drawingRepository.findDrawingById(drawingId);
 
-            file = new File(dra.getDoc_url());
+            file = new File(dra.getDocUrl());
             if (file.exists()) {
                 content = Files.readAllBytes(file.toPath());
             }else{

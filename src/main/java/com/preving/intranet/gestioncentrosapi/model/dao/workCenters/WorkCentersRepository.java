@@ -30,4 +30,10 @@ public interface WorkCentersRepository extends JpaRepository<WorkCenter, Integer
             "where w.id=:workCenterId ")
     void  editWorkCenter(@Param("workCenterId") int workCenterId, @Param("newWorkCenter") WorkCenter newWorkCenter, @Param("editBy") int editBy);
 
+    @Modifying
+    @Transactional
+    @Query("update WorkCenter w set w.active=0 " +
+            "where w.id=:workCenterId ")
+    void setInactiveWorkCenter(@Param("workCenterId") int workCenterId);
+
 }
