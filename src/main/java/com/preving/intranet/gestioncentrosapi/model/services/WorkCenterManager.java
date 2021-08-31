@@ -453,7 +453,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public List<Drawing> getDrawingByWorkCenter(int workCenterId) {
-      return this.drawingRepository.findAllByWorkCenterIdAndDeletedIsNull(workCenterId);
+      return this.drawingRepository.findAllByWorkCenterIdAndDeletedIsNullOrderByCreated(workCenterId);
     }
 
     @Override
@@ -550,7 +550,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public List<Room> getRoomListByWorkCenter(int workCenterId){
-        return this.roomRepository.findRoomListByWorkCenterIdAndDeletedIsNull(workCenterId);
+        return this.roomRepository.findRoomListByWorkCenterIdAndDeletedIsNullOrderByCreated(workCenterId);
     }
 
     @Override

@@ -76,6 +76,10 @@ public class WorkCentersController {
         }
     }
 
+    /**
+     * Obtiene la lista de departamentos
+     * @return
+     */
     @RequestMapping(value = "departments", method = RequestMethod.GET)
     public ResponseEntity<?> getDepartments() {
 
@@ -90,7 +94,7 @@ public class WorkCentersController {
 
 
     /**
-     * A�adimos una delegaci�n
+     * Agregamos un centro de trabajo
      * @RequestBody WorkCenter
      * @return
      */
@@ -108,7 +112,7 @@ public class WorkCentersController {
     }
 
     /**
-     * Editamos una delegaci�n
+     * Editamos un centro de trabajo
      * @param workCenterId
      * @RequestBody WorkCenter
      * @return
@@ -132,7 +136,7 @@ public class WorkCentersController {
     }
 
     /**
-     * Obtenci�n listado de localidades por cod_provincia
+     * Obtiene un listado de localidades por cod_provincia
      * @param provinceCod, criterion
      * @return
      */
@@ -166,7 +170,7 @@ public class WorkCentersController {
 
 
     /**
-     * Obtenci�n de delegaci�n por Id
+     * Obtiene un centro de trabajo por Id
      * @param centerId
      * @return
      */
@@ -182,9 +186,8 @@ public class WorkCentersController {
 
     }
 
-
     /**
-     * Obtención de detalles del centro de trabajo por workCenterId
+     * Obtiene los detalles del centro de trabajo por Id
      * @param workCenterId
      * @regreso
      */
@@ -200,6 +203,11 @@ public class WorkCentersController {
 
     }
 
+    /**
+     * Editamos un centro de trabajo por Id
+     * @param workCenterId
+     * @regreso
+     */
     @RequestMapping(value = "{workCenterId}/details/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editWorkCenterDetails(HttpServletRequest request,
                                                    @PathVariable(value="workCenterId") int workCenterId,
@@ -235,6 +243,12 @@ public class WorkCentersController {
 
     }
 
+
+    // TODO mover a otro controller todos los métodos desde aquí
+    /**
+     * Obtiene listado de planos de un centro de trabajo por Id
+     * @return
+     */
     @RequestMapping(value = "{workCenterId}/drawings", method = RequestMethod.GET)
     public ResponseEntity<?> getDrawingByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
 
@@ -247,6 +261,10 @@ public class WorkCentersController {
 
     }
 
+    /**
+     * Obtiene los detalles de un plano de un centro de trabajo por Id
+     * @return
+     */
     @RequestMapping(value = "drawings/{drawingId}", method = RequestMethod.GET)
     public ResponseEntity<?> getDrawingById(@PathVariable(value = "drawingId") int drawingId){
 
@@ -259,6 +277,10 @@ public class WorkCentersController {
 
     }
 
+    /**
+     * Obtiene listado de los tipos de salas
+     * @return
+     */
     @RequestMapping(value = "roomTypes", method = RequestMethod.GET)
     public ResponseEntity<?> getRoomTypes(){
 
@@ -271,6 +293,10 @@ public class WorkCentersController {
 
     }
 
+    /**
+     * Obtiene listado de salas de un centro de trabajo por Id
+     * @return
+     */
     @RequestMapping(value = "{workCenterId}/rooms", method = RequestMethod.GET)
     public ResponseEntity<?> getRoomListByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
 
@@ -283,6 +309,10 @@ public class WorkCentersController {
 
     }
 
+    /**
+     * Obtiene los detalles de una sala de reuniones de un centro de trabajo por Id
+     * @return
+     */
     @RequestMapping(value = "rooms/{roomId}", method = RequestMethod.GET)
     public ResponseEntity<?> getRoomById(@PathVariable(value = "roomId") int roomId){
 
@@ -295,6 +325,10 @@ public class WorkCentersController {
 
     }
 
+    /**
+     * Borramos un plano de un centro de trabajo por Id
+     * @return
+     */
     @RequestMapping(value = "{workCenterId}/drawings/{drawingId}/delete", method = RequestMethod.POST)
     public ResponseEntity<?> deleteDrawing (HttpServletRequest request,
                                             @PathVariable(value = "workCenterId") int workCenterId,
@@ -306,7 +340,7 @@ public class WorkCentersController {
     }
 
     /**
-     *
+     * Agregamos un plano al centro de trabajo
      * @param workCenterDrawing
      * @param workCenterId
      * @param request
@@ -334,7 +368,7 @@ public class WorkCentersController {
 
 
     /**
-     *
+     * Editamos un plano de un centro de trabajo
      * @param workCenterDrawing
      * @param workCenterDrawingId
      * @param request
@@ -359,7 +393,13 @@ public class WorkCentersController {
 
     }
 
-
+    /**
+     * Editamos una sala de un centro de trabajo
+     * @param workCenterId
+     * @param roomId
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "{workCenterId}/rooms/{roomId}/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editRoomList(HttpServletRequest request,
                                           @RequestBody Room room,
@@ -376,6 +416,10 @@ public class WorkCentersController {
     }
 
 
+    /**
+     * Borramos una sala de reuniones de un centro de trabajo por Id
+     * @return
+     */
     @RequestMapping(value = "{workCenterId}/rooms/{roomId}/delete", method = RequestMethod.POST)
     public ResponseEntity<?> deleteRoom (HttpServletRequest request,
                                             @PathVariable(value = "workCenterId") int workCenterId,
@@ -388,6 +432,7 @@ public class WorkCentersController {
 
 
     /**
+     * Descargamos el fichero de un plano
      * @param drawingId
      * @param request
      * @return
@@ -399,14 +444,13 @@ public class WorkCentersController {
     }
 
     /**
-     * A�adimos una delegaci�n
+     * Agregamos una sala de reunions al centro de trabajo
      * @RequestBody Salas
      * @return
      */
     @RequestMapping(value = "{workCenterId}/rooms/add", method = RequestMethod.POST)
     public ResponseEntity<?> saveWorkCenterRoom(
             @RequestParam("workCenterRoom") String workCenterRoom,
-            // @RequestBody Room workCenterRoom,
             @PathVariable("workCenterId") int workCenterId,
             HttpServletRequest request) {
 
