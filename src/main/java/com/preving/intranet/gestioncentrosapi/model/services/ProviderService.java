@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ProviderService {
 
-    List<Provider> getproviders(int workCenterId, ProviderFilter providerFilter);
+    List<Provider> getProviders(int workCenterId, ProviderFilter providerFilter);
 
     List<ProviderTypes> getProviderTypes(int workCenterId);
 

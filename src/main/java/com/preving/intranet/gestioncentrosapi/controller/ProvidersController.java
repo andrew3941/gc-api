@@ -86,7 +86,7 @@ public class ProvidersController {
     public ResponseEntity<?> findWorkCenterByFilter(@RequestBody ProviderFilter providerFilter,
                                                     @PathVariable(value="workCenterId") int workCenterId) {
         try {
-            return new ResponseEntity<>(this.providerService.getproviders(workCenterId, providerFilter), HttpStatus.OK);
+            return new ResponseEntity<>(this.providerService.getProviders(workCenterId, providerFilter), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

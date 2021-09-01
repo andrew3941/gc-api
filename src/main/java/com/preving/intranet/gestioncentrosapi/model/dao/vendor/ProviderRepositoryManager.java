@@ -17,42 +17,40 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
     private EntityManager manager;
 
     @Override
-    public List<Provider> getProviders( int workCenterId, ProviderFilter providerFilter) {
+    public List<Provider> getProviders( Integer workCenterId, ProviderFilter providerFilter) {
 
         String sql = "" +
-                "SELECT DISTINCT P.ID, P.DELEGACION_ID, P.NOMBRE, P.PROVEEDOR_CENTRALIZADO, P.CIF, P.TIPO_ID, P.AREA_ID, P.TIPO_EVALUACION_ID, " +
-                "   P.FECHA_INICIO_SERVICIO, P.FIN_INICIO_SERVICIO, P.PERIODICADAD_GASTO_ID " +
+                "SELECT DISTINCT P.ID, P.DELEGACION_ID, P.NOMBRE, P.PROVEEDOR_CENTRALIZADO, P.CIF," +
+                " P.TIPO_ID, P.AREA_ID, " +
+                "P.TIPO_EVALUACION_ID, " +
+                "P.FECHA_INICIO_SERVICIO, P.FECHA_FIN_SERVICIO, P.PERIODICIDAD_GASTO_ID " +
                 "FROM GESTION_CENTROS.PROVEEDORES P, " +
-               "GC2006_RELEASE.PC_DELEGACIONES WC " +
-                "AND P.DELEGACION_ID = WC.ID ";
+                "GC2006_RELEASE.PC_DELEGACIONES WC, " +
+                "GESTION_CENTROS.TM_PROVEEDORES_TIPOS PT " +
+                "WHERE P.DELEGACION_ID = WC.ID " +
+                "AND WC.ID= :workCenterId ";
 
         if(providerFilter.getProviderTypes().size() > 0){
-            sql += "GESTION_CENTROS.PROVEEDORES.TM_PROVEEDORES_TIPOS PT";
+            sql += " AND PT.ID =:providerTypes ";
         }
 
-        if(providerFilter.getProviderTypes().size() > 0) {
-            String providerTypes = providerFilter.getProviderTypes().stream().map(pt -> String.valueOf(pt.getId())).collect(Collectors.joining(","));
-            sql += "AND P.ID = PT.PROVIDER_ID" +
-                    "AND PT_ID IN (" + providerTypes + ")";
-        }
-
-        if(providerFilter != null && providerFilter.getProviderStatus() != 2){
-            sql += "AND P.ACTIVO = :providerStatus ";
-        }
+//        if(providerFilter != null && providerFilter.getProviderStatus() != 2){
+//            sql += "AND P.ACTIVO = :providerStatus ";
+//        }
 
         if(providerFilter != null && providerFilter.getProviderName() != null && providerFilter.getProviderName() != ""){
-            sql += " AND LOWER(TRANSLATE(WC.NOMBRE, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:providerName, '������������', 'aeiounAEIOUN')) ";
+            sql += " AND LOWER(TRANSLATE(P.NOMBRE, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:providerName, '������������', 'aeiounAEIOUN')) ";
         }
 
-        sql += "ORDER BY P.NOMBRE";
+        sql += " ORDER BY P.NOMBRE ";
 
-        Query query = manager.createNativeQuery(sql, "ProviderMapping");
+        Query query = manager.createNativeQuery(sql, "ProviderMapping").setParameter("workCenterId", workCenterId);
 
         if(providerFilter != null && providerFilter.getProviderName() != null && providerFilter.getProviderName() != "") {
             query.setParameter("providerName", "%" + providerFilter.getProviderName() + "%");
         }
 
-        if(providerFilter != null && providerFilter.getProviderTypes() != null){
+        if(providerFilter != null && providerFilter.getProviderTypes().size() > 0 && providerFilter.getProviderTypes() != null){
             query.setParameter("providerTypes", providerFilter.getProviderTypes());
         }
 

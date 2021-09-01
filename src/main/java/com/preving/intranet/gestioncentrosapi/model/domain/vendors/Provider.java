@@ -20,14 +20,15 @@ import java.util.Date;
                                 @ColumnResult(name = "ID", type = Integer.class),
                                 @ColumnResult(name = "DELEGACION_ID", type = Integer.class),
                                 @ColumnResult(name = "NOMBRE", type = String.class),
-                                @ColumnResult(name = "PROVEEDOR_CENTRALIZADO", type = String.class),
+                                @ColumnResult(name = "PROVEEDOR_CENTRALIZADO", type = Boolean.class),
                                 @ColumnResult(name = "CIF", type = String.class),
                                 @ColumnResult(name = "TIPO_ID", type = Integer.class),
                                 @ColumnResult(name = "AREA_ID", type = Integer.class),
                                 @ColumnResult(name = "TIPO_EVALUACION_ID", type = Integer.class),
                                 @ColumnResult(name = "FECHA_INICIO_SERVICIO", type = Date.class),
-                                @ColumnResult(name = "FIN_INICIO_SERVICIO", type = Date.class),
-                                @ColumnResult(name = "PERIODICADAD_GASTO_ID", type = Integer.class),
+                                @ColumnResult(name = "FECHA_FIN_SERVICIO", type = Date.class),
+                                @ColumnResult(name = "ACTIVO", type = Integer.class),
+                                @ColumnResult(name = "PERIODICIDAD_GASTO_ID", type = Integer.class),
 
                         }
                 )
@@ -245,7 +246,6 @@ public class Provider implements Serializable {
     public void setDocContentType(String docContentType) {
         this.docContentType = docContentType;
     }
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PERIODICIDAD_GASTO_ID", referencedColumnName = "ID")
     public ExpenditurePeriod getExpenduture() {

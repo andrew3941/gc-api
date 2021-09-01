@@ -10,6 +10,6 @@ import java.util.List;
 @Service
 public interface ProviderCustomRepository  {
 
-    List<Provider> getProviders(int workCenterId, ProviderFilter providerFilter);
+    List<Provider> getProviders(Integer workCenterId, ProviderFilter providerFilter);
 
 }

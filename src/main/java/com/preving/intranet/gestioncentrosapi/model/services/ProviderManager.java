@@ -42,10 +42,9 @@ public class ProviderManager implements ProviderService {
     private JwtTokenUtil jwtTokenUtil;
 
    @Override
-    public List<Provider> getproviders(int workCenterId, ProviderFilter providerFilter) {
+    public List<Provider> getProviders(int workCenterId, ProviderFilter providerFilter) {
     List<Provider> providers = this.providerCustomRepository.getProviders(workCenterId, providerFilter);  ;
        return providers;
-
     }
 
     @Override
