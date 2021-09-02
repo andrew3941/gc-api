@@ -25,15 +25,17 @@ import java.util.Date;
                                 @ColumnResult(name = "TIPO_ID", type = Integer.class),
                                 @ColumnResult(name = "AREA_ID", type = Integer.class),
                                 @ColumnResult(name = "TIPO_EVALUACION_ID", type = Integer.class),
+                                @ColumnResult(name = "PERIODICIDAD_GASTO_ID", type = Integer.class),
                                 @ColumnResult(name = "FECHA_INICIO_SERVICIO", type = Date.class),
                                 @ColumnResult(name = "FECHA_FIN_SERVICIO", type = Date.class),
-                                @ColumnResult(name = "ACTIVO", type = Integer.class),
-                                @ColumnResult(name = "PERIODICIDAD_GASTO_ID", type = Integer.class),
+
 
                         }
                 )
         }
 )
+
+
 
 public class Provider implements Serializable {
     private int id;
@@ -98,6 +100,22 @@ public class Provider implements Serializable {
         this.createdBy = createdBy;
         this.modified = modified;
         this.modifiedBy = modifiedBy;
+    }
+
+    public Provider(int id, Integer workCenterId, String name, boolean centralProvider, String cif,
+                    Integer providerTypeId, Integer providerAreaId, Integer evaluationTypeId,
+                    Integer expenditurePeriodId, Date serviceStartDate, Date serviceEndDate) {
+        this.id = id;
+        this.getWorkCenter().setId(workCenterId);
+        this.name = name;
+        this.centralProvider = centralProvider;
+        this.cif = cif;
+        this.getProviderTypes().setId(providerTypeId);
+        this.getProviderArea().setId(providerAreaId);
+        this.getEvaluationTypes().setId(evaluationTypeId);
+        this.getExpenduture().setId(expenditurePeriodId);
+        this.serviceStartDate = serviceStartDate;
+        this.serviceEndDate = serviceEndDate;
     }
 
     @Id

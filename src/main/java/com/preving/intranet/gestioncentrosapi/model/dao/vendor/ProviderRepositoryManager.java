@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProviderRepositoryManager implements ProviderCustomRepository {
@@ -54,9 +53,9 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
             query.setParameter("providerTypes", providerFilter.getProviderTypes());
         }
 
-        if(providerFilter != null && providerFilter.getProviderStatus() != 2){
-            query.setParameter("providerStatus", providerFilter.getProviderStatus());
-        }
+//        if(providerFilter != null && providerFilter.getProviderStatus() != 2){
+//            query.setParameter("providerStatus", providerFilter.getProviderStatus());
+//        }
 
         List<Provider> providerResults = query.getResultList();
 

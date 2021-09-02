@@ -63,7 +63,7 @@ public class ProvidersController {
 
     }
 
-    @RequestMapping(value = "{workCenterId}/providers/periodicity ", method = RequestMethod.GET)
+    @RequestMapping(value = "{workCenterId}/providers/periodicity", method = RequestMethod.GET)
     public ResponseEntity<?> getExpenditurePeriod( @PathVariable(value="workCenterId") int workCenterId){
 
         try {
