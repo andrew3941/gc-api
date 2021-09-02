@@ -121,32 +121,6 @@ public class WorkCenter implements Serializable {
         this.drawings = drawings;
         this.rooms = rooms;
     }
-//    public WorkCenter(int id, String name, City city, String navisionCode, String address, String postalCode, String phoneNumber, String email, User headPerson, int employee, Date startDate, Date endDate, int idInMp2, Integer lineId, int active, int visible, Date created, User createdBy, Date modified, User modifiedBy, List<WorkCentersByEntity> workCentersByEntities, List<Drawing> drawings, List<Room> rooms, List<Provider> providers) {
-//        this.id = id;
-//        this.name = name;
-//        this.city = city;
-//        this.navisionCode = navisionCode;
-//        this.address = address;
-//        this.postalCode = postalCode;
-//        this.phoneNumber = phoneNumber;
-//        this.email = email;
-//        this.headPerson = headPerson;
-//        this.employee = employee;
-//        this.startDate = startDate;
-//        this.endDate = endDate;
-//        this.idInMp2 = idInMp2;
-//        this.lineId = lineId;
-//        this.active = active;
-//        this.visible = visible;
-//        this.created = created;
-//        this.createdBy = createdBy;
-//        this.modified = modified;
-//        this.modifiedBy = modifiedBy;
-//        this.workCentersByEntities = workCentersByEntities;
-//        this.drawings = drawings;
-//        this.rooms = rooms;
-//        this.providers = providers;
-//    }
 
     public WorkCenter(List<Room> rooms) {
         this.rooms = rooms;

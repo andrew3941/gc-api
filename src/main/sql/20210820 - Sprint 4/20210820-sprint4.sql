@@ -136,3 +136,87 @@ COMMENT ON COLUMN GESTION_CENTROS.PROVEEDORES.MODIFICADO IS 'Fecha de última mod
 COMMENT ON COLUMN GESTION_CENTROS.PROVEEDORES.MODIFICADO_POR IS 'FK: GC2006_RELEASE.PC_USUARIOS.ID';
 
 CREATE SEQUENCE GESTION_CENTROS.PROVEEDORES_SEQ MINVALUE 1 MAXVALUE 9999999999999999 INCREMENT BY 1;
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+-- Insert data
+------------------------------------------------------------------------------------------------------------------------
+
+-- GESTION_CENTROS.TM_PROVEEDORES_TIPOS
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+values (1, 'LIMPIEZA', '', true);
+
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+values (2, 'MANTENIMIENTO', '', true);
+
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+values (3, 'TELECOMUNICACIONES', '', true);
+
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+values (4, 'TECNOLOGICO', '', true);
+
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+values (5, 'SUMINISTROS', '', true);
+
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+values (6, 'ALQUILER CENTRO', '', true);
+
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+values (7, 'PARKING', '', true);
+
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+values (8, 'MATERIAL DE OFICINA', '', true);
+
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+values (9, 'MENSAJERÍA', '', true);
+
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+values (10, 'OTROS', '', true);
+
+
+-- GESTION_CENTROS.TM_PROVEEDORES_AREAS
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+values (1, 'COMPRAS', '', true);
+
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+values (2, 'INFRAESTRUCTURAS', '', true);
+
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+values (3, 'TIC', '', true);
+
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+values (4, 'TECNICA', '', true);
+
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+values (5, 'VS', '', true);
+
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+values (6, 'ADMINISTRACION', '', true);
+
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+values (7, 'COMERCIAL', '', true);
+
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+values (8, 'SAC', '', true);
+
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+values (9, 'FORMACION', '', true);
+
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+values (10, 'OTROS', '', true);
+
+
+-- GESTION_CENTROS.TM_PROVEEDORES_EVALUACION_TIPO
+insert into gestion_centros.tm_proveedores_evaluacion_tipo (id, denominacion, observaciones, activo)
+values (1, 'CONTINUA', '', true);
+
+insert into gestion_centros.tm_proveedores_evaluacion_tipo (id, denominacion, observaciones, activo)
+values (2, 'TRIMESTRAL', '', true);
+
+insert into gestion_centros.tm_proveedores_evaluacion_tipo (id, denominacion, observaciones, activo)
+values (3, 'SEMESTRAL', '', true);
+
+insert into gestion_centros.tm_proveedores_evaluacion_tipo (id, denominacion, observaciones, activo)
+values (4, 'ANUAL', '', true);
+
