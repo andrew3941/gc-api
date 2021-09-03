@@ -115,4 +115,23 @@ public class ProvidersController {
 
     }
 
+    /**
+     * Obtiene un proveedor de centro por Id
+     * @param workCenterId
+     * @param providerId
+     * @return
+     */
+    @RequestMapping(value = "{workCenterId}/provider/{providerId}", method = RequestMethod.GET)
+    public ResponseEntity<?> findWorkCenterById(@PathVariable(value = "workCenterId") int workCenterId,
+                                                @PathVariable(value = "providerId") int providerId){
+
+        try {
+            return new ResponseEntity<>(providerService.getProviderById(workCenterId, providerId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 }

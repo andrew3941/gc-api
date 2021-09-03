@@ -27,15 +27,11 @@ import java.util.Date;
                                 @ColumnResult(name = "TIPO_EVALUACION_ID", type = Integer.class),
                                 @ColumnResult(name = "PERIODICIDAD_GASTO_ID", type = Integer.class),
                                 @ColumnResult(name = "FECHA_INICIO_SERVICIO", type = Date.class),
-                                @ColumnResult(name = "FECHA_FIN_SERVICIO", type = Date.class),
-
-
+                                @ColumnResult(name = "FECHA_FIN_SERVICIO", type = Date.class)
                         }
                 )
         }
 )
-
-
 
 public class Provider implements Serializable {
     private int id;
@@ -47,10 +43,10 @@ public class Provider implements Serializable {
     private ProviderArea providerArea = new ProviderArea();
     private ProviderEvaluationTypes evaluationTypes = new ProviderEvaluationTypes();
     private String email;
-    private String direction;
+    private String address;
     private String contactPerson;
     private String telephone;
-    private String details;
+    private String serviceDetails;
     private String docUrl;
     private String docName;
     private String docContentType;
@@ -73,7 +69,7 @@ public class Provider implements Serializable {
     public Provider() {
     }
 
-    public Provider(int id, WorkCenter workCenter, String name, boolean centralProvider, String cif, ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes, String email, String direction, String contactPerson, String telephone, String details, String docUrl, String docName, String docContentType, ExpenditurePeriod expenditurePeriod, Integer spending, Date serviceStartDate, Date serviceEndDate, Date serviceAlramDate, int responsable_id, Date created, User createdBy, Date modified, User modifiedBy) {
+    public Provider(int id, WorkCenter workCenter, String name, boolean centralProvider, String cif, ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes, String email, String address, String contactPerson, String telephone, String serviceDetails, String docUrl, String docName, String docContentType, ExpenditurePeriod expenditurePeriod, Integer spending, Date serviceStartDate, Date serviceEndDate, Date serviceAlramDate, int responsable_id, Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
         this.workCenter = workCenter;
         this.name = name;
@@ -83,10 +79,10 @@ public class Provider implements Serializable {
         this.providerArea = providerArea;
         this.evaluationTypes = evaluationTypes;
         this.email = email;
-        this.direction = direction;
+        this.address = address;
         this.contactPerson = contactPerson;
         this.telephone = telephone;
-        this.details = details;
+        this.serviceDetails = serviceDetails;
         this.docUrl = docUrl;
         this.docName = docName;
         this.docContentType = docContentType;
@@ -113,7 +109,7 @@ public class Provider implements Serializable {
         this.getProviderTypes().setId(providerTypeId);
         this.getProviderArea().setId(providerAreaId);
         this.getEvaluationTypes().setId(evaluationTypeId);
-        this.getExpenduture().setId(expenditurePeriodId);
+        this.getExpenditurePeriod().setId(expenditurePeriodId);
         this.serviceStartDate = serviceStartDate;
         this.serviceEndDate = serviceEndDate;
     }
@@ -204,11 +200,11 @@ public class Provider implements Serializable {
 
     @Basic
     @Column(name = "DIRECCION")
-    public String getDirection() {
-        return direction;
+    public String getAddress() {
+        return address;
     }
-    public void setDirection(String direction) {
-        this.direction = direction;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     @Basic
@@ -231,11 +227,11 @@ public class Provider implements Serializable {
 
     @Basic
     @Column(name = "DETALLES")
-    public String getDetails() {
-        return details;
+    public String getServiceDetails() {
+        return serviceDetails;
     }
-    public void setDetails(String details) {
-        this.details = details;
+    public void setServiceDetails(String serviceDetails) {
+        this.serviceDetails = serviceDetails;
     }
 
     @Basic
@@ -264,12 +260,13 @@ public class Provider implements Serializable {
     public void setDocContentType(String docContentType) {
         this.docContentType = docContentType;
     }
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PERIODICIDAD_GASTO_ID", referencedColumnName = "ID")
-    public ExpenditurePeriod getExpenduture() {
+    public ExpenditurePeriod getExpenditurePeriod() {
         return expenditurePeriod;
     }
-    public void setExpenduture(ExpenditurePeriod expenditurePeriod) {
+    public void setExpenditurePeriod(ExpenditurePeriod expenditurePeriod) {
         this.expenditurePeriod = expenditurePeriod;
     }
 

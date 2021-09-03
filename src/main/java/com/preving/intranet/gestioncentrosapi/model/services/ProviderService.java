@@ -21,5 +21,5 @@ public interface ProviderService {
 
     ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, MultipartFile attachedFile, HttpServletRequest request);
 
-
+    Provider getProviderById(int workCenterId, int providerId);
 }
