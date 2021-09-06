@@ -453,7 +453,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public List<Drawing> getDrawingByWorkCenter(int workCenterId) {
-      return this.drawingRepository.findAllByWorkCenterIdAndDeletedIsNullOrderByCreated(workCenterId);
+      return this.drawingRepository.findAllByWorkCenterIdAndDeletedIsNullOrderByCreatedDesc(workCenterId);
     }
 
     @Override
@@ -512,26 +512,31 @@ public class WorkCenterManager implements WorkCenterService{
 
         long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
-        drawing.setDocUrl("doc_url");
-        drawing.setDocName(attachedFile.getOriginalFilename());
-        drawing.setDocContentType(attachedFile.getContentType());
+        if (attachedFile != null) {
+            drawing.setDocUrl("doc_url");
+            drawing.setDocName(attachedFile.getOriginalFilename());
+            drawing.setDocContentType(attachedFile.getContentType());
+        }
+
         drawing.setModifiedBy(new User());
         drawing.getModifiedBy().setId(uId);
 
         drawingRepository.editWorkCenterDrawing(drawing);
 
         try {
-            // Borramos el documento anterior del servidor
-            commonService.deleteDocumentServer(workCenterId, drawing.getId());
+            if (attachedFile != null) {
+                // Borramos el documento anterior del servidor
+                commonService.deleteDocumentServer(workCenterId, drawing.getId());
 
-            String url = null;
+                String url = null;
 
-            // Guardamos el nuevo documento adjunto
-            url = commonService.saveDocumentServer(workCenterId, drawing.getId(), attachedFile);
+                // Guardamos el nuevo documento adjunto
+                url = commonService.saveDocumentServer(workCenterId, drawing.getId(), attachedFile);
 
-            // Actualizamos la URL del documento
-            if(url != null){
-                this.drawingRepository.updateDrawingDocUrl(drawing.getId(), url);
+                // Actualizamos la URL del documento
+                if(url != null){
+                    this.drawingRepository.updateDrawingDocUrl(drawing.getId(), url);
+                }
             }
 
         } catch (Exception e) {
@@ -550,7 +555,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public List<Room> getRoomListByWorkCenter(int workCenterId){
-        return this.roomRepository.findRoomListByWorkCenterIdAndDeletedIsNullOrderByCreated(workCenterId);
+        return this.roomRepository.findRoomListByWorkCenterIdAndDeletedIsNullOrderByCreatedDesc(workCenterId);
     }
 
     @Override

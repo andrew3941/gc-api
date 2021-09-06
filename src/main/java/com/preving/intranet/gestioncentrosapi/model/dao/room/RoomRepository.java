@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Integer> {
 
-    List<Room> findRoomListByWorkCenterIdAndDeletedIsNullOrderByCreated(int workCenterId);
+    List<Room> findRoomListByWorkCenterIdAndDeletedIsNullOrderByCreatedDesc(int workCenterId);
 
     Room findRoomById(int roomId);
 

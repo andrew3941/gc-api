@@ -376,7 +376,7 @@ public class WorkCentersController {
      */
     @RequestMapping(value = "{workCenterId}/drawings/{workCenterDrawingId}/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editWorkCenterDrawing(@RequestParam("workCenterDrawing") String workCenterDrawing,
-                                                   @RequestParam("attachedFile") MultipartFile attachedFile,
+                                                   @RequestParam(value="attachedFile", required = false) MultipartFile attachedFile,
                                                    @PathVariable("workCenterId") int workCenterId,
                                                    @PathVariable("workCenterDrawingId") int workCenterDrawingId, HttpServletRequest request) {
 
