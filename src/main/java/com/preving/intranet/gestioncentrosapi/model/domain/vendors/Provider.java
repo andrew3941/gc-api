@@ -22,10 +22,13 @@ import java.util.Date;
                                 @ColumnResult(name = "NOMBRE", type = String.class),
                                 @ColumnResult(name = "PROVEEDOR_CENTRALIZADO", type = Boolean.class),
                                 @ColumnResult(name = "CIF", type = String.class),
+                                @ColumnResult(name = "DETALLES", type = String.class),
+                                @ColumnResult(name = "GASTO", type = Integer.class),
                                 @ColumnResult(name = "TIPO_ID", type = Integer.class),
                                 @ColumnResult(name = "AREA_ID", type = Integer.class),
                                 @ColumnResult(name = "TIPO_EVALUACION_ID", type = Integer.class),
                                 @ColumnResult(name = "PERIODICIDAD_GASTO_ID", type = Integer.class),
+                                @ColumnResult(name = "DENOMINACION", type = String.class),
                                 @ColumnResult(name = "FECHA_INICIO_SERVICIO", type = Date.class),
                                 @ColumnResult(name = "FECHA_FIN_SERVICIO", type = Date.class)
                         }
@@ -98,18 +101,24 @@ public class Provider implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
-    public Provider(int id, Integer workCenterId, String name, boolean centralProvider, String cif,
+    public Provider(int id, Integer workCenterId, String name, boolean centralProvider, String cif, String details, Integer spending,
                     Integer providerTypeId, Integer providerAreaId, Integer evaluationTypeId,
-                    Integer expenditurePeriodId, Date serviceStartDate, Date serviceEndDate) {
+                    Integer expenditurePeriodId, String denomination, Date serviceStartDate, Date serviceEndDate) {
         this.id = id;
         this.getWorkCenter().setId(workCenterId);
         this.name = name;
         this.centralProvider = centralProvider;
         this.cif = cif;
+        this.serviceDetails = details;
+        this.spending = spending;
         this.getProviderTypes().setId(providerTypeId);
+        this.getProviderTypes().setName(denomination);
         this.getProviderArea().setId(providerAreaId);
+        this.getProviderArea().setName(denomination);
         this.getEvaluationTypes().setId(evaluationTypeId);
+        this.getEvaluationTypes().setName(denomination);
         this.getExpenditurePeriod().setId(expenditurePeriodId);
+        this.getExpenditurePeriod().setName(denomination);
         this.serviceStartDate = serviceStartDate;
         this.serviceEndDate = serviceEndDate;
     }
