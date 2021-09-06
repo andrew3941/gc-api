@@ -28,7 +28,10 @@ import java.util.Date;
                                 @ColumnResult(name = "AREA_ID", type = Integer.class),
                                 @ColumnResult(name = "TIPO_EVALUACION_ID", type = Integer.class),
                                 @ColumnResult(name = "PERIODICIDAD_GASTO_ID", type = Integer.class),
-                                @ColumnResult(name = "DENOMINACION", type = String.class),
+                                @ColumnResult(name = "PROVIDER_TYPE", type = String.class),
+                                @ColumnResult(name = "PROVIDERAREA_TYPE", type = String.class),
+                                @ColumnResult(name = "PROVIDEREVALUATION_TYPE", type = String.class),
+                                @ColumnResult(name = "PERIODICITY", type = String.class),
                                 @ColumnResult(name = "FECHA_INICIO_SERVICIO", type = Date.class),
                                 @ColumnResult(name = "FECHA_FIN_SERVICIO", type = Date.class)
                         }
@@ -103,7 +106,7 @@ public class Provider implements Serializable {
 
     public Provider(int id, Integer workCenterId, String name, boolean centralProvider, String cif, String details, Integer spending,
                     Integer providerTypeId, Integer providerAreaId, Integer evaluationTypeId,
-                    Integer expenditurePeriodId, String denomination, Date serviceStartDate, Date serviceEndDate) {
+                    Integer expenditurePeriodId, String providerType ,String providerAreaType, String ProviderEvaluationType, String expenditurePeriodType, Date serviceStartDate, Date serviceEndDate) {
         this.id = id;
         this.getWorkCenter().setId(workCenterId);
         this.name = name;
@@ -112,13 +115,13 @@ public class Provider implements Serializable {
         this.serviceDetails = details;
         this.spending = spending;
         this.getProviderTypes().setId(providerTypeId);
-        this.getProviderTypes().setName(denomination);
+        this.getProviderTypes().setName(providerType);
         this.getProviderArea().setId(providerAreaId);
-        this.getProviderArea().setName(denomination);
+        this.getProviderArea().setName(providerAreaType);
         this.getEvaluationTypes().setId(evaluationTypeId);
-        this.getEvaluationTypes().setName(denomination);
+        this.getEvaluationTypes().setName(ProviderEvaluationType);
         this.getExpenditurePeriod().setId(expenditurePeriodId);
-        this.getExpenditurePeriod().setName(denomination);
+        this.getExpenditurePeriod().setName(expenditurePeriodType);
         this.serviceStartDate = serviceStartDate;
         this.serviceEndDate = serviceEndDate;
     }
