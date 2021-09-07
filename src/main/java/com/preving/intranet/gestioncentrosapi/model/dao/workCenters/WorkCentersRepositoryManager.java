@@ -92,6 +92,28 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
         return totalEmployee;
 
     }
+
+    @Override
+    public List<WorkCenter> findAll(String criterion) {
+
+        String sql = "" +
+                "SELECT * " +
+                "FROM (" +
+                "   GC2006_RELEASE.PC_DELEGACIONES WC  "+
+                "   AND WC.ACTIVO = 1 "+
+                "   AND LOWER(TRANSLATE(WC_NOMBRE, '������������', 'aeiounAEIOUN')) " +
+                "   LIKE LOWER(TRANSLATE(:criterion, '������������', 'aeiounAEIOUN')) " +
+                "   ORDER BY WC_NOMBRE ASC)" +
+                "WHERE ROWNUM <= 10 ";
+
+        Query query = manager.createNativeQuery(sql).setParameter("criterion", "%" + criterion + "%");
+
+        List<WorkCenter>  allWorkCenters = query.getResultList();
+
+        return allWorkCenters;
+    }
+
+
 }
 
 

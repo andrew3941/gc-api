@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.services.ProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 @RestController
@@ -131,6 +133,26 @@ public class ProvidersController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+    }
+
+    /**
+     * Obtención listado de workCenters
+     * @param criterion
+     * @return
+     */
+    @RequestMapping(value = "workCenters", method = RequestMethod.GET)
+    public ResponseEntity<?> findAll( @RequestParam(value = "criterion") String criterion) {
+
+
+        List<WorkCenter> workCenters = null;
+        workCenters = providerService.findByWorkCenters(criterion);
+
+        if(workCenters == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<List<WorkCenter>>(workCenters, HttpStatus.OK);
 
     }
 

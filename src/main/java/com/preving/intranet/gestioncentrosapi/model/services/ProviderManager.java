@@ -1,7 +1,10 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.dao.vendor.*;
+import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersCustomizeRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.*;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,6 +36,9 @@ public class ProviderManager implements ProviderService {
 
     @Autowired
     private ProviderCustomRepository providerCustomRepository;
+
+    @Autowired
+    WorkCentersCustomizeRepository workCentersCustomizeRepository;
 
     @Autowired
     private CommonService commonService;
@@ -101,6 +107,11 @@ public class ProviderManager implements ProviderService {
         Provider provider = this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
 
         return provider;
+    }
+
+    @Override
+    public List<WorkCenter> findByWorkCenters(String criterion) {
+        return workCentersCustomizeRepository.findAll(criterion);
     }
 
 }
