@@ -136,6 +136,26 @@ public class ProvidersController {
 
     }
 
+    @RequestMapping(value = "{workCenterId}/providers/{providerId}/edit", method = RequestMethod.POST)
+    public ResponseEntity<?> editProvider(@RequestParam("provider") String myProvider,
+                                          @PathVariable("workCenterId") int workCenterId,
+                                          @PathVariable("providerId") int providerId,
+                                          @RequestParam(value="attachedFile", required = false) MultipartFile attachedFile,
+                                          HttpServletRequest request) {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        Provider provider = gson.fromJson(myProvider, Provider.class);
+
+        try {
+            providerService.editProvider(workCenterId, providerId, provider, attachedFile, request);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
     /**
      * Obtención listado de workCenters
      * @param criterion

@@ -22,6 +22,8 @@ public interface ProviderService {
 
     ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, MultipartFile attachedFile, HttpServletRequest request);
 
+    ResponseEntity<?> editProvider(int workCenterId, int providerId, Provider provider, MultipartFile attachedFile, HttpServletRequest request);
+
     Provider getProviderById(int workCenterId, int providerId);
 
     List<WorkCenter>findByWorkCenters(String criterion);

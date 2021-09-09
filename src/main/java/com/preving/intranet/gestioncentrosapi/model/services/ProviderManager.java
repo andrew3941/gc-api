@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 import com.preving.intranet.gestioncentrosapi.model.dao.vendor.*;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersCustomizeRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersRepository;
+import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.security.JwtTokenUtil;
@@ -79,7 +80,7 @@ public class ProviderManager implements ProviderService {
 
         newProvider.getWorkCenter().setId(workCenterId);
         newProvider.setCreated(new Date());
-        newProvider.getCreatedBy().setId((long) 1);
+        newProvider.getCreatedBy().setId(userId);
         newProvider.setDocName(attachedFile.getOriginalFilename());
         newProvider.setDocContentType(attachedFile.getContentType());
         newProvider.setServiceStartDate(new Date());
@@ -104,9 +105,39 @@ public class ProviderManager implements ProviderService {
 
     @Override
     public Provider getProviderById(int workCenterId, int providerId) {
-        Provider provider = this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
+        return this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
+    }
 
-        return provider;
+    @Override
+    public ResponseEntity<?> editProvider(int workCenterId, int providerId, Provider provider, MultipartFile attachedFile, HttpServletRequest request) {
+
+        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+//        newProvider.getWorkCenter().setId(workCenterId);
+        provider.setModifiedBy(new User());
+        provider.getModifiedBy().setId(userId);
+        if (attachedFile != null) {
+            provider.setDocUrl("doc_url");
+            provider.setDocName(attachedFile.getOriginalFilename());
+            provider.setDocContentType(attachedFile.getContentType());
+        }
+
+        try {
+            String url = null;
+
+            providerRepository.editProvider(provider);
+
+//            url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile);
+
+//            if(url != null){
+//                this.providerRepository.updateProviderDocUrl(provider.getId(), url);
+//            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
