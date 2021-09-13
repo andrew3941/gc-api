@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -647,5 +648,30 @@ public class WorkCenterManager implements WorkCenterService{
     public Room getRoomById(int roomId) {
         return roomRepository.findRoomById(roomId);
     }
+
+    @Override
+    public void desactivateWorkCenters() {
+
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("--- INICIO DEL PROCESO DE DESACTIVACION DE DELEGACIONES");
+        System.out.println("--------------------------------------------------------------");
+
+        // Getting work centers with expired end date
+        List<WorkCenter> workCenters = workCentersRepository.findWorkCentersByEndDateIsLessThanEqual(new Date());
+
+        System.out.println("----- Se han obtenido " + workCenters.size() + " delegaciones para finalizar");
+
+        // Setting inactive attribute for each work center
+        workCenters.forEach(workCenter -> {
+            workCentersRepository.setInactiveWorkCenter(workCenter.getId());
+            System.out.println("--------- Delegacion (" + workCenter.getId() + ") -> Desactivada");
+        });
+
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("--- FIN DEL PROCESO DE DESACTIVACION DE DELEGACIONES");
+        System.out.println("--------------------------------------------------------------");
+
+    }
+
 }
 

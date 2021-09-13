@@ -10,9 +10,11 @@ import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCente
 import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
 import com.preving.intranet.gestioncentrosapi.model.services.WorkCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +32,9 @@ public class WorkCentersController {
 
     @Autowired
     private WorkCenterService workCenterService;
+
+    @Value("${modo-debug}")
+    private boolean modoDebug;
 
     /**
      * Obtiene la lista de provincias
@@ -463,5 +468,20 @@ public class WorkCentersController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Scheduled(cron="0 0 0 * * ?")
+    public void initProjectService() {
+
+        if(!modoDebug) {
+
+            try {
+                workCenterService.desactivateWorkCenters();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
     }
 }

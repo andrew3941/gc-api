@@ -8,6 +8,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
+
 
 @Repository
 public interface WorkCentersRepository extends JpaRepository<WorkCenter, Integer> {
@@ -35,5 +38,7 @@ public interface WorkCentersRepository extends JpaRepository<WorkCenter, Integer
     @Query("update WorkCenter w set w.active=0 " +
             "where w.id=:workCenterId ")
     void setInactiveWorkCenter(@Param("workCenterId") int workCenterId);
+
+    List<WorkCenter> findWorkCentersByEndDateIsLessThanEqual(Date date);
 
 }
