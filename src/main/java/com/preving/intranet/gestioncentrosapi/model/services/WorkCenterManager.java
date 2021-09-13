@@ -673,5 +673,10 @@ public class WorkCenterManager implements WorkCenterService{
 
     }
 
+    @Override
+    public List<WorkCenter> findByWorkCenters() {
+        return workCentersRepository.findAllByActiveIsTrue();
+    }
+
 }
 

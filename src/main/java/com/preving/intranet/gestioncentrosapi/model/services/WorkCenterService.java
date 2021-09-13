@@ -59,4 +59,6 @@ public interface WorkCenterService {
 
     void desactivateWorkCenters();
 
+    List<WorkCenter>findByWorkCenters();
+
 }

@@ -26,5 +26,4 @@ public interface ProviderService {
 
     Provider getProviderById(int workCenterId, int providerId);
 
-    List<WorkCenter>findByWorkCenters(String criterion);
 }

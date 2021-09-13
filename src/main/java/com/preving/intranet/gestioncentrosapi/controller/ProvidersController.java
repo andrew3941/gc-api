@@ -156,24 +156,5 @@ public class ProvidersController {
 
     }
 
-    /**
-     * Obtención listado de workCenters
-     * @param criterion
-     * @return
-     */
-    @RequestMapping(value = "workCenters", method = RequestMethod.GET)
-    public ResponseEntity<?> findAll( @RequestParam(value = "criterion") String criterion) {
-
-
-        List<WorkCenter> workCenters = null;
-        workCenters = providerService.findByWorkCenters(criterion);
-
-        if(workCenters == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<List<WorkCenter>>(workCenters, HttpStatus.OK);
-
-    }
 
 }

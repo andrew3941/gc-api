@@ -41,4 +41,6 @@ public interface WorkCentersRepository extends JpaRepository<WorkCenter, Integer
 
     List<WorkCenter> findWorkCentersByEndDateIsLessThanEqual(Date date);
 
+    List<WorkCenter> findAllByActiveIsTrue();
+
 }

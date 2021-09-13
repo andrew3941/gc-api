@@ -140,9 +140,6 @@ public class ProviderManager implements ProviderService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Override
-    public List<WorkCenter> findByWorkCenters(String criterion) {
-        return workCentersCustomizeRepository.findAll(criterion);
-    }
+
 
 }

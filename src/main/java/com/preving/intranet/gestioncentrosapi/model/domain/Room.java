@@ -15,7 +15,7 @@ public class Room implements Serializable {
     private int id;
     private WorkCenter workCenter = new WorkCenter();
     private String name;
-    private RoomTypes type;
+//    private RoomTypes type;
     private int surface;
     private String observation;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
@@ -31,11 +31,11 @@ public class Room implements Serializable {
 
     }
 
-    public Room(int id, WorkCenter workCenter, String name, RoomTypes type, int surface, String observation, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy) {
+    public Room(int id, WorkCenter workCenter, String name, int surface, String observation, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy) {
         this.id = id;
         this.workCenter = workCenter;
         this.name = name;
-        this.type = type;
+//        this.type = type;
         this.surface = surface;
         this.observation = observation;
         this.created = created;
@@ -64,14 +64,14 @@ public class Room implements Serializable {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "TIPO_ID", referencedColumnName = "ID")
-    public RoomTypes getType() {
-        return type;
-    }
-    public void setType(RoomTypes type) {
-        this.type = type;
-    }
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "TIPO_ID", referencedColumnName = "ID")
+//    public RoomTypes getType() {
+//        return type;
+//    }
+//    public void setType(RoomTypes type) {
+//        this.type = type;
+//    }
 
     @Basic
     @Column(name = "SUPERFICIE")

@@ -25,7 +25,7 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 
     @Modifying
     @Transactional
-    @Query("update Room r set r.name=:#{#room.name}, r.type=:#{#room.type}, r.surface=:#{#room.surface}, " +
+    @Query("update Room r set r.name=:#{#room.name}, r.surface=:#{#room.surface}, " +
             "r.observation=:#{#room.observation}, r.modified=CURRENT_TIMESTAMP, r.modifiedBy=:#{#room.modifiedBy} " +
             "where r.id=:#{#room.id} ")
     void editWorkCenterRoom(@Param("room") Room room);

@@ -5,9 +5,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(schema = "GESTION_CENTROS", name = "PROVEEDORES")
@@ -42,6 +45,8 @@ import java.util.Date;
 public class Provider implements Serializable {
     private int id;
     private WorkCenter workCenter = new WorkCenter();
+//    private boolean allWorkCenterSelected;
+//    private List<WorkCenter> providerWorkCenters = new ArrayList<>();
     private String name;
     private boolean centralProvider;
     private String cif;
@@ -75,9 +80,11 @@ public class Provider implements Serializable {
     public Provider() {
     }
 
-    public Provider(int id, WorkCenter workCenter, String name, boolean centralProvider, String cif, ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes, String email, String address, String contactPerson, String telephone, String serviceDetails, String docUrl, String docName, String docContentType, ExpenditurePeriod expenditurePeriod, Integer spending, Date serviceStartDate, Date serviceEndDate, Date serviceAlramDate, int responsable_id, Date created, User createdBy, Date modified, User modifiedBy) {
+    public Provider(int id, WorkCenter workCenter,  String name, boolean centralProvider, String cif, ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes, String email, String address, String contactPerson, String telephone, String serviceDetails, String docUrl, String docName, String docContentType, ExpenditurePeriod expenditurePeriod, Integer spending, Date serviceStartDate, Date serviceEndDate, Date serviceAlramDate, int responsable_id, Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
         this.workCenter = workCenter;
+//        this.allWorkCenterSelected = allWorkCenterSelected;
+//        this.providerWorkCenters = providerWorkCenters;
         this.name = name;
         this.centralProvider = centralProvider;
         this.cif = cif;
@@ -133,9 +140,7 @@ public class Provider implements Serializable {
     public int getId() {
         return id;
     }
-    public void setId(int id) {
-        this.id = id;
-    }
+    public void setId(int id) {this.id = id; }
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
@@ -363,4 +368,17 @@ public class Provider implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
+
+//    public boolean isAllWorkCenterSelected() { return allWorkCenterSelected; }
+//
+//    public void setAllWorkCenterSelected(boolean allWorkCenterSelected) { this.allWorkCenterSelected = allWorkCenterSelected;
+//    }
+//
+//    public List<WorkCenter> getProviderWorkCenters() {
+//        return providerWorkCenters;
+//    }
+//
+//    public void setProviderWorkCenters(List<WorkCenter> providerWorkCenters) {
+//        this.providerWorkCenters = providerWorkCenters;
+//    }
 }

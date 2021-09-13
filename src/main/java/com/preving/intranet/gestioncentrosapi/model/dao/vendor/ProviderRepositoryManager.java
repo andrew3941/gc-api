@@ -41,7 +41,6 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
            sql += "AND PT.ID =:providerTypes ";
         }
 
-
         if(providerFilter != null && providerFilter.getProviderName() != null && providerFilter.getProviderName() != ""){
             sql += " AND LOWER(TRANSLATE(P.NOMBRE, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:providerName, '������������', 'aeiounAEIOUN')) ";
         }

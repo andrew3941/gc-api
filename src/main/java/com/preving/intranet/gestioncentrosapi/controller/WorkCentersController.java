@@ -484,4 +484,20 @@ public class WorkCentersController {
         }
 
     }
+
+    /**
+     * Obtención listado de workCenters
+     * @return
+     */
+    @RequestMapping(value = "workCenters", method = RequestMethod.GET)
+    public ResponseEntity<?> findAllByActiveIsTrue() {
+
+        try {
+            return new ResponseEntity<>(workCenterService.findByWorkCenters(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 }

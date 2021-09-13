@@ -2,6 +2,7 @@ package com.preving.intranet.gestioncentrosapi.model.dao.workCenters;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
+import com.preving.intranet.gestioncentrosapi.model.services.ProviderManager;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -16,6 +17,7 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
     @PersistenceContext
     private EntityManager manager;
 
+    private ProviderManager providerManager;
 
     @Override
     public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
@@ -92,27 +94,6 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
         return totalEmployee;
 
     }
-
-    @Override
-    public List<WorkCenter> findAll(String criterion) {
-
-        String sql = "" +
-                "SELECT * " +
-                "FROM (" +
-                "   GC2006_RELEASE.PC_DELEGACIONES WC  "+
-                "   AND WC.ACTIVO = 1 "+
-                "   AND LOWER(TRANSLATE(WC_NOMBRE, '������������', 'aeiounAEIOUN')) " +
-                "   LIKE LOWER(TRANSLATE(:criterion, '������������', 'aeiounAEIOUN')) " +
-                "   ORDER BY WC_NOMBRE ASC)" +
-                "WHERE ROWNUM <= 10 ";
-
-        Query query = manager.createNativeQuery(sql).setParameter("criterion", "%" + criterion + "%");
-
-        List<WorkCenter>  allWorkCenters = query.getResultList();
-
-        return allWorkCenters;
-    }
-
 
 }
 
