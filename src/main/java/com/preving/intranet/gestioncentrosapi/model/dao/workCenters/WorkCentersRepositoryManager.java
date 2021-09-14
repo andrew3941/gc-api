@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +20,8 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
     private EntityManager manager;
 
     private ProviderManager providerManager;
+
+    private WorkCentersCustomizeRepository workCentersCustomizeRepository;
 
     @Override
     public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
@@ -92,6 +96,33 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
         int totalEmployee = Integer.parseInt(query.getSingleResult().toString());
 
         return totalEmployee;
+
+    }
+
+    @Override
+    public List<WorkCenter> findAllByActive() {
+
+        String sql = "" +
+                "SELECT WC.ID, WC.NOMBRE FROM GC2006_RELEASE.PC_DELEGACIONES WC " +
+                "WHERE WC.ACTIVO = 1";
+
+        Query query = manager.createNativeQuery(sql);
+
+
+        return mappingWorkCenters(query.getResultList());
+    }
+
+    private List<WorkCenter> mappingWorkCenters(List<Object[]> workCenters) {
+
+        List<WorkCenter> mappingWorkCenters = new ArrayList<>();
+
+        workCenters.stream().forEach((record) -> {
+            WorkCenter workCenter = new WorkCenter(((BigDecimal) record[0]).intValue(),
+                    (String) record[1]);
+            mappingWorkCenters.add(workCenter);
+        });
+
+        return mappingWorkCenters;
 
     }
 

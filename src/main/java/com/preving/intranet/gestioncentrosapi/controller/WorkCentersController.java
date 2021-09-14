@@ -489,7 +489,7 @@ public class WorkCentersController {
      * Obtención listado de workCenters
      * @return
      */
-    @RequestMapping(value = "workCenters", method = RequestMethod.GET)
+    @RequestMapping(value = "list", method = RequestMethod.GET)
     public ResponseEntity<?> findAllByActiveIsTrue() {
 
         try {
