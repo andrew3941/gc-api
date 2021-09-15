@@ -95,15 +95,14 @@ public class ProvidersController {
 
     }
 
-
     @RequestMapping(value = "{workCenterId}/providers/add", method = RequestMethod.POST)
     public ResponseEntity<?> saveProvider(
             @RequestParam("provider") String myProvider,
             @PathVariable("workCenterId") int workCenterId,
-            @RequestParam("attachedFile") MultipartFile attachedFile,
+            @RequestParam(value="attachedFile", required = false) MultipartFile attachedFile,
             HttpServletRequest request) {
 
-       Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         Provider newProvider = gson.fromJson(myProvider, Provider.class);
 
         try {
@@ -113,7 +112,6 @@ public class ProvidersController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     /**

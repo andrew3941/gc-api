@@ -74,38 +74,44 @@ public class ProviderManager implements ProviderService {
     }
 
     @Override
-    public ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, MultipartFile attachedFile, HttpServletRequest request) {
+    public ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, MultipartFile attachedFile, HttpServletRequest request){
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
         newProvider.getWorkCenter().setId(workCenterId);
         newProvider.setCreated(new Date());
         newProvider.getCreatedBy().setId(userId);
-        newProvider.setDocName(attachedFile.getOriginalFilename());
-        newProvider.setDocContentType(attachedFile.getContentType());
-        newProvider.setServiceStartDate(new Date());
+
+        if (attachedFile != null) {
+
+            newProvider.setDocUrl("doc_url");
+
+            newProvider.setDocName(attachedFile.getOriginalFilename());
+
+            newProvider.setDocContentType(attachedFile.getContentType());
+
+            newProvider.setServiceStartDate(new Date());
+        }
 
         try {
-            String url = null;
+        String url = null;
 
-            Provider provider = providerRepository.save(newProvider);
+        Provider provider = providerRepository.save(newProvider);
 
-            url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile);
+    } catch (Exception e) {
 
-            if(url != null){
-                this.providerRepository.updateProviderDocUrl(provider.getId(), url);
-            }
+        e.printStackTrace();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+        return new ResponseEntity<>(HttpStatus.OK);
+}
 
     @Override
     public Provider getProviderById(int workCenterId, int providerId) {
+
         return this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
+
     }
 
     @Override
@@ -113,7 +119,7 @@ public class ProviderManager implements ProviderService {
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
-//        newProvider.getWorkCenter().setId(workCenterId);
+//      newProvider.getWorkCenter().setId(workCenterId);
         provider.setModifiedBy(new User());
         provider.getModifiedBy().setId(userId);
         if (attachedFile != null) {
