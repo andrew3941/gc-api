@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 import com.preving.intranet.gestioncentrosapi.model.dao.department.DepartmentRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.dimNavision.DimNavisionRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.room.RoomByTypesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.room.RoomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.room.RoomTypesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserCustomRepository;
@@ -98,6 +99,9 @@ public class WorkCenterManager implements WorkCenterService{
     @Autowired
     private RoomTypesRepository roomTypesRepository;
 
+    @Autowired
+    private RoomByTypesRepository roomByTypesRepository;
+
     @PersistenceContext
     private EntityManager manager;
 
@@ -109,8 +113,8 @@ public class WorkCenterManager implements WorkCenterService{
     private static final String EXPORT_TITLE_6 = "Estado";
     private static final String EXPORT_TITLE_7 = "Entidades";
 
-    private static final int TRUE_VALUE = 1;
-    private static final int FALSE_VALUE = 0;
+    private static final int ACTIVE = 1;
+    private static final int INACTIVE = 0;
 
     @Transactional
     public ResponseEntity<?> addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request) {
@@ -126,11 +130,11 @@ public class WorkCenterManager implements WorkCenterService{
 
         // Comprobamos si tiene fecha de baja y seteamos valores
         if (newWorkCenter.getEndDate() != null) {
-            newWorkCenter.setActive(TRUE_VALUE);
-            newWorkCenter.setVisible(TRUE_VALUE);
+            newWorkCenter.setActive(INACTIVE);
+            newWorkCenter.setVisible(INACTIVE);
         } else {
-            newWorkCenter.setActive(TRUE_VALUE);
-            newWorkCenter.setVisible(TRUE_VALUE);
+            newWorkCenter.setActive(ACTIVE);
+            newWorkCenter.setVisible(ACTIVE);
         }
 
         // Seteamos valores de creación
@@ -170,7 +174,7 @@ public class WorkCenterManager implements WorkCenterService{
 
         newWorkCenter.getDimNavision().setType("GEO");
         newWorkCenter.getDimNavision().setName(newWorkCenter.getName());
-        newWorkCenter.getDimNavision().setActive(TRUE_VALUE);
+        newWorkCenter.getDimNavision().setActive(ACTIVE);
         newWorkCenter.getDimNavision().setMccLnMf("PT");
         newWorkCenter.getDimNavision().setProvinceCod(newWorkCenter.getCity().getProvince().getCod());
 
@@ -184,9 +188,14 @@ public class WorkCenterManager implements WorkCenterService{
 
     }
 
-    private void saveWorkCenterForRoom(List<Room> rooms) {
-        for(Room room : rooms) {
-            roomRepository.save(room);
+    private void saveRoomByTypes(int roomId, List<RoomByTypes> types) {
+
+        for(RoomByTypes type : types) {
+            // Seteamos el id de la sala relacionada
+            type.getRoom().setId(roomId);
+
+            // Guardamos tipos de salas
+            roomByTypesRepository.save(type);
         }
     }
 
@@ -211,9 +220,11 @@ public class WorkCenterManager implements WorkCenterService{
 
         // Seteamos NO activo si viene con fecha de baja incluida
         if (newWorkCenter.getEndDate() != null) {
-            newWorkCenter.setActive(TRUE_VALUE);
-            newWorkCenter.setVisible(FALSE_VALUE);
-            workCentersRepository.setInactiveWorkCenter(workCenterId);
+            newWorkCenter.setActive(INACTIVE);
+            newWorkCenter.setVisible(INACTIVE);
+        } else {
+            newWorkCenter.setActive(ACTIVE);
+            newWorkCenter.setVisible(ACTIVE);
         }
 
         // Editamos la delegación en la tabla GC2006_RELEASE.PC_DELEGACIONES
@@ -559,18 +570,25 @@ public class WorkCenterManager implements WorkCenterService{
         return this.roomRepository.findRoomListByWorkCenterIdAndDeletedIsNullOrderByCreatedDesc(workCenterId);
     }
 
-    @Override
+    @Transactional
     public void editWorkCenterRoom(Room room, HttpServletRequest request) {
 
         long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
         room.setModifiedBy(new User());
         room.getModifiedBy().setId(uId);
 
+        // Guardamos la sala
         roomRepository.editWorkCenterRoom(room);
+
+        // Borramos los tipos de las salas guardadas
+        this.roomByTypesRepository.deleteByRoomId(room.getId());
+
+        // Guardamos los tipos de salas
+        saveRoomByTypes(room.getId(), room.getTypes());
 
     }
 
-    @Override
+    @Transactional
     public ResponseEntity<?> deleteRoom(HttpServletRequest request, int workCenterId, int roomId) {
 
         long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
@@ -583,6 +601,8 @@ public class WorkCenterManager implements WorkCenterService{
         try {
 
             this.roomRepository.roomLogicDelete((int) uId, roomId, workCenterId);
+
+            this.roomByTypesRepository.deleteByRoomId(roomId);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -616,7 +636,7 @@ public class WorkCenterManager implements WorkCenterService{
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
-    @Override
+    @Transactional
     public ResponseEntity<?> addWorkCenterRoom(int workCenterId, Room newWorkCenterRoom, HttpServletRequest request) {
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
@@ -626,9 +646,11 @@ public class WorkCenterManager implements WorkCenterService{
         newWorkCenterRoom.getCreatedBy().setId(userId);
 
         try {
+            // Guardamos la sala
             Room room = roomRepository.save(newWorkCenterRoom);
 
-//            saveWorkCenterForRoom(room.getWorkCenter().getRooms());
+            // Guardamos el tipo de la sala
+            saveRoomByTypes(room.getId(), newWorkCenterRoom.getTypes());
 
         } catch (Exception e) {
 
@@ -676,7 +698,6 @@ public class WorkCenterManager implements WorkCenterService{
     @Override
     public List<WorkCenter> findByWorkCenters() {
         return workCentersCustomizeRepository.findAllByActive();
-
     }
 
 }

@@ -55,12 +55,12 @@ public class ProviderManager implements ProviderService {
 
     @Override
     public List<ProviderTypes> getProviderTypes(int workCenterId) {
-        return providerTypesRepository.findAll();
+        return providerTypesRepository.findAllByOrderByOrder();
     }
 
     @Override
     public List<ProviderArea> getProviderArea(int workCenterId) {
-        return providerAreaRepository.findAll();
+        return providerAreaRepository.findAllByOrderByOrder();
     }
 
     @Override

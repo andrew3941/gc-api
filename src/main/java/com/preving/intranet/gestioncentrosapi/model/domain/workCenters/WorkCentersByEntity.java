@@ -32,16 +32,12 @@ public class WorkCentersByEntity implements Serializable {
 
     @JsonBackReference
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-//    @Required
     @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
-//    @NotNull
     public WorkCenter getWorkCenter() { return workCenter; }
     public void setWorkCenter(WorkCenter workCenter) { this.workCenter = workCenter; }
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
-//    @Required
     @JoinColumn(name = "ENTIDAD_ID", referencedColumnName = "ID")
-//    @NotNull
     public Entity getEntity() { return entity; }
     public void setEntity(Entity entity) { this.entity = entity; }
 

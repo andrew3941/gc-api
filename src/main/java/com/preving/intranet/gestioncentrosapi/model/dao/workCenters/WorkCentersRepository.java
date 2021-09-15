@@ -20,6 +20,7 @@ public interface WorkCentersRepository extends JpaRepository<WorkCenter, Integer
     @Modifying
     @Transactional
     @Query("update WorkCenter w set w.name=:#{#newWorkCenter.name}, " +
+            "w.active=:#{#newWorkCenter.active}, w.visible=:#{#newWorkCenter.visible}," +
             "w.city=:#{#newWorkCenter.city}, " +
             "w.navisionCode=:#{#newWorkCenter.navisionCode}, " +
             "w.address=:#{#newWorkCenter.address}, " +
