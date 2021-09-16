@@ -116,6 +116,8 @@ public class WorkCenterManager implements WorkCenterService{
     private static final int ACTIVE = 1;
     private static final int INACTIVE = 0;
 
+    private static final int DRAWINGS_DOCUMENTS = 1;
+
     @Transactional
     public ResponseEntity<?> addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request) {
 
@@ -506,7 +508,7 @@ public class WorkCenterManager implements WorkCenterService{
 
             Drawing drawing = drawingRepository.save(newWorkCenterDrawing);
 
-            url = commonService.saveDocumentServer(workCenterId, drawing.getId(), attachedFile);
+            url = commonService.saveDocumentServer(workCenterId, drawing.getId(), attachedFile, DRAWINGS_DOCUMENTS);
 
             if(url != null){
                 this.drawingRepository.updateDrawingDocUrl(drawing.getId(), url);
@@ -538,12 +540,12 @@ public class WorkCenterManager implements WorkCenterService{
         try {
             if (attachedFile != null) {
                 // Borramos el documento anterior del servidor
-                commonService.deleteDocumentServer(workCenterId, drawing.getId());
+                commonService.deleteDocumentServer(workCenterId, drawing.getId(), DRAWINGS_DOCUMENTS);
 
                 String url = null;
 
                 // Guardamos el nuevo documento adjunto
-                url = commonService.saveDocumentServer(workCenterId, drawing.getId(), attachedFile);
+                url = commonService.saveDocumentServer(workCenterId, drawing.getId(), attachedFile, DRAWINGS_DOCUMENTS);
 
                 // Actualizamos la URL del documento
                 if(url != null){

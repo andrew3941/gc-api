@@ -47,6 +47,8 @@ public class ProviderManager implements ProviderService {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    private static final int PROVIDER_DOCUMENTS = 2;
+
     @Override
     public List<Provider> getProviders(int workCenterId, ProviderFilter providerFilter) {
         List<Provider> providers = this.providerCustomRepository.getProviders(workCenterId, providerFilter);  ;
@@ -83,20 +85,26 @@ public class ProviderManager implements ProviderService {
         newProvider.getCreatedBy().setId(userId);
 
         if (attachedFile != null) {
-
             newProvider.setDocUrl("doc_url");
-
             newProvider.setDocName(attachedFile.getOriginalFilename());
-
             newProvider.setDocContentType(attachedFile.getContentType());
-
-            newProvider.setServiceStartDate(new Date());
         }
 
         try {
-        String url = null;
+            if (attachedFile != null) {
+                String url = null;
 
-        Provider provider = providerRepository.save(newProvider);
+                // Guardamos proveedor
+                Provider provider = providerRepository.save(newProvider);
+
+                // Guardamos el nuevo documento adjunto
+                url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
+
+                // Actualizamos la URL del documento
+                if(url != null){
+                    this.providerRepository.updateProviderDocUrl(provider.getId(), url);
+                }
+            }
 
     } catch (Exception e) {
 
@@ -119,25 +127,31 @@ public class ProviderManager implements ProviderService {
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
-//      newProvider.getWorkCenter().setId(workCenterId);
         provider.setModifiedBy(new User());
         provider.getModifiedBy().setId(userId);
+
         if (attachedFile != null) {
             provider.setDocUrl("doc_url");
             provider.setDocName(attachedFile.getOriginalFilename());
             provider.setDocContentType(attachedFile.getContentType());
         }
 
+        // Editamos el proveedor
+        providerRepository.editProvider(provider);
+
         try {
-            String url = null;
+            if (attachedFile != null) {
+                // Borramos el documento anterior del servidor
+                commonService.deleteDocumentServer(workCenterId, provider.getId(), PROVIDER_DOCUMENTS);
 
-            providerRepository.editProvider(provider);
+                String url = null;
 
-//            url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile);
+                url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
 
-//            if(url != null){
-//                this.providerRepository.updateProviderDocUrl(provider.getId(), url);
-//            }
+                if(url != null){
+                    this.providerRepository.updateProviderDocUrl(provider.getId(), url);
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
