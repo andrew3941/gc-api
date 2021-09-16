@@ -3,9 +3,11 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.Entity;
 import com.preving.intranet.gestioncentrosapi.model.domain.Province;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,8 +29,14 @@ public class CommonManager implements CommonService {
     @Autowired
     private DrawingRepository drawingRepository;
 
-    @Value("${url-drawing-documents}")
+    @Autowired
+    private ProviderRepository providerRepository;
+
+    @Value("${url-documentos-planos}")
     private String urlDrawingDocuments;
+
+    @Value("${url-documentos-proveedor}")
+    private String urlProviderDocuments;
 
     private static final String CONTENT_TYPE_PDF = "application/pdf";
     private static final String CONTENT_TYPE_ZIP = "application/x-zip-compressed";
@@ -42,6 +50,9 @@ public class CommonManager implements CommonService {
     private static final String CONTENT_TYPE_JPEG = "image/jpeg";
     private static final String CONTENT_TYPE_PNG = "image/png";
     private static final String CONTENT_TYPE_RAR= "application/x-rar-compressed";
+
+    private static final int DRAWINGS = 1;
+    private static final int PROVIDERS = 2;
 
 
     @Override
@@ -101,13 +112,18 @@ public class CommonManager implements CommonService {
     }
 
 
-    public String saveDocumentServer(int workCenterId, int drawingId, MultipartFile attachedFile) throws IOException {
+    public String saveDocumentServer(int workCenterId, int itemId, MultipartFile attachedFile, int tipoDoc) throws IOException {
 
         String path= null;
         String url = null;
 
-        path = urlDrawingDocuments + "/" + workCenterId + "/"+ drawingId;
-        url = urlDrawingDocuments + "/" + workCenterId + "/" + drawingId +"/" + attachedFile.getOriginalFilename();
+        if (tipoDoc == DRAWINGS) {
+            path = urlDrawingDocuments + "/" + workCenterId + "/planos/" + itemId;
+            url = urlDrawingDocuments + "/" + workCenterId + "/planos/" + itemId + "/" + attachedFile.getOriginalFilename();
+        } else {
+            path = urlProviderDocuments + "/" + workCenterId + "/proveedores/" + itemId;
+            url = urlProviderDocuments + "/" + workCenterId + "/proveedores/" + itemId +"/" + attachedFile.getOriginalFilename();
+        }
 
         File file = new File(url);
         if(file.exists()){
@@ -129,12 +145,22 @@ public class CommonManager implements CommonService {
         return url;
     }
 
-    public boolean deleteDocumentServer(int workCenterId, int drawingId) throws IOException {
+    public boolean deleteDocumentServer(int workCenterId, int itemId, int tipoDoc) throws IOException {
 
-        // Obtenemos la URL del plano para borrarlo del servidor
-        Drawing drawing = drawingRepository.findDrawingById(drawingId);
+        String docUrl = "";
 
-        File file = new File(drawing.getDocUrl());
+        if (tipoDoc == DRAWINGS) {
+            // Obtenemos la URL del plano para borrarlo del servidor
+            Drawing drawing = drawingRepository.findDrawingById(itemId);
+            docUrl = drawing.getDocUrl();
+        } else {
+            // Obtenemos la URL del documento del proveedor para borrarlo del servidor
+            Provider provider = providerRepository.findProviderByWorkCenterIdAndId(workCenterId, itemId);
+            docUrl = provider.getDocUrl();
+        }
+
+
+        File file = new File(docUrl);
         Boolean borrado = null;
         if (file.exists()) {
             file.delete();

@@ -102,7 +102,8 @@ api-comunicacion:
   keystore: classpath:ssl/tomcat.keystore
   keystore-password: preving
 
-url-drawing-documents: C:/home/preving/app/recursos/drawings
+url-documentos-planos: C:/home/preving/app/recursos/gestion_centros
+url-documentos-proveedor: C:/home/preving/app/recursos/gestion_centros
 urlSeguridad: http://localhost:8444/seguridad-api2
 modo-debug: true
 
@@ -133,7 +134,8 @@ api-comunicacion:
   keystore-password: preving
 
 
-url-drawing-documents: /home/preving/app/recursos/drawings
+url-documentos-planos: /home/preving/app/recursos/gestion_centros
+url-documentos-proveedor: /home/preving/app/recursos/gestion_centros
 urlSeguridad: https://demointranet.preving.com/seguridad-api2
 modo-debug: false
 
@@ -160,7 +162,8 @@ api-comunicacion:
   keystore-password: preving
 
 
-url-drawing-documents: /home/preving/app/recursos/drawings
+url-documentos-planos: /home/preving/app/recursos/gestion_centros
+url-documentos-proveedor: /home/preving/app/recursos/gestion_centros
 urlSeguridad: https://intranet.preving.com/seguridad-api
 modo-debug: false
 
