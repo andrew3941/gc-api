@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 @RestController
@@ -63,7 +64,7 @@ public class ProvidersController {
 
     }
 
-    @RequestMapping(value = "{workCenterId}/providers/periodicity ", method = RequestMethod.GET)
+    @RequestMapping(value = "{workCenterId}/providers/periodicity", method = RequestMethod.GET)
     public ResponseEntity<?> getExpenditurePeriod( @PathVariable(value="workCenterId") int workCenterId){
 
         try {
@@ -86,7 +87,7 @@ public class ProvidersController {
     public ResponseEntity<?> findWorkCenterByFilter(@RequestBody ProviderFilter providerFilter,
                                                     @PathVariable(value="workCenterId") int workCenterId) {
         try {
-            return new ResponseEntity<>(this.providerService.getproviders(workCenterId, providerFilter), HttpStatus.OK);
+            return new ResponseEntity<>(this.providerService.getProviders(workCenterId, providerFilter), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -94,15 +95,14 @@ public class ProvidersController {
 
     }
 
-
     @RequestMapping(value = "{workCenterId}/providers/add", method = RequestMethod.POST)
     public ResponseEntity<?> saveProvider(
             @RequestParam("provider") String myProvider,
             @PathVariable("workCenterId") int workCenterId,
-            @RequestParam("attachedFile") MultipartFile attachedFile,
+            @RequestParam(value="attachedFile", required = false) MultipartFile attachedFile,
             HttpServletRequest request) {
 
-       Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         Provider newProvider = gson.fromJson(myProvider, Provider.class);
 
         try {
@@ -112,7 +112,46 @@ public class ProvidersController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * Obtiene un proveedor de centro por Id
+     * @param workCenterId
+     * @param providerId
+     * @return
+     */
+    @RequestMapping(value = "{workCenterId}/provider/{providerId}", method = RequestMethod.GET)
+    public ResponseEntity<?> findWorkCenterById(@PathVariable(value = "workCenterId") int workCenterId,
+                                                @PathVariable(value = "providerId") int providerId){
+
+        try {
+            return new ResponseEntity<>(providerService.getProviderById(workCenterId, providerId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
+
+    @RequestMapping(value = "{workCenterId}/providers/{providerId}/edit", method = RequestMethod.POST)
+    public ResponseEntity<?> editProvider(@RequestParam("provider") String myProvider,
+                                          @PathVariable("workCenterId") int workCenterId,
+                                          @PathVariable("providerId") int providerId,
+                                          @RequestParam(value="attachedFile", required = false) MultipartFile attachedFile,
+                                          HttpServletRequest request) {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        Provider provider = gson.fromJson(myProvider, Provider.class);
+
+        try {
+            providerService.editProvider(workCenterId, providerId, provider, attachedFile, request);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 
 }

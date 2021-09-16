@@ -10,9 +10,12 @@ import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCente
 import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
 import com.preving.intranet.gestioncentrosapi.model.services.WorkCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +32,9 @@ public class WorkCentersController {
 
     @Autowired
     private WorkCenterService workCenterService;
+
+    @Value("${modo-debug}")
+    private boolean modoDebug;
 
     /**
      * Obtiene la lista de provincias
@@ -375,7 +381,7 @@ public class WorkCentersController {
      */
     @RequestMapping(value = "{workCenterId}/drawings/{workCenterDrawingId}/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editWorkCenterDrawing(@RequestParam("workCenterDrawing") String workCenterDrawing,
-                                                   @RequestParam("attachedFile") MultipartFile attachedFile,
+                                                   @RequestParam(value="attachedFile", required = false) MultipartFile attachedFile,
                                                    @PathVariable("workCenterId") int workCenterId,
                                                    @PathVariable("workCenterDrawingId") int workCenterDrawingId, HttpServletRequest request) {
 
@@ -462,5 +468,36 @@ public class WorkCentersController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Scheduled(cron="0 0 0 * * ?")
+    public void initProjectService() {
+
+        if(!modoDebug) {
+
+            try {
+                workCenterService.desactivateWorkCenters();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    /**
+     * Obtención listado de workCenters
+     * @return
+     */
+    @RequestMapping(value = "list", method = RequestMethod.GET)
+    public ResponseEntity<?> findAllByActiveIsTrue() {
+
+        try {
+            return new ResponseEntity<>(workCenterService.findByWorkCenters(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

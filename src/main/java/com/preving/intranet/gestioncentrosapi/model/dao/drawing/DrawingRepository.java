@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface DrawingRepository extends JpaRepository<Drawing, Integer> {
 
-    List<Drawing> findAllByWorkCenterIdAndDeletedIsNullOrderByCreated(int workCenterId);
+    List<Drawing> findAllByWorkCenterIdAndDeletedIsNullOrderByCreatedDesc(int workCenterId);
 
     Drawing findDrawingById(int drawingId);
 

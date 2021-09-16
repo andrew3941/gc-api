@@ -14,15 +14,17 @@ public class ProviderArea implements Serializable {
     private String name;
     private String observations;
     private boolean active;
+    private int order;
 
 
     public ProviderArea() {}
 
-    public ProviderArea(int id, String name, String observations, boolean active) {
+    public ProviderArea(int id, String name, String observations, boolean active, int order) {
         this.id = id;
         this.name = name;
         this.observations = observations;
         this.active = active;
+        this.order = order;
     }
 
     @Id
@@ -45,5 +47,12 @@ public class ProviderArea implements Serializable {
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 
-
+    @Basic
+    @Column(name = "ORDEN")
+    public int getOrder() {
+        return order;
+    }
+    public void setOrder(int order) {
+        this.order = order;
+    }
 }

@@ -1,6 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.*;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface ProviderService {
 
-    List<Provider> getproviders(int workCenterId, ProviderFilter providerFilter);
+    List<Provider> getProviders(int workCenterId, ProviderFilter providerFilter);
 
     List<ProviderTypes> getProviderTypes(int workCenterId);
 
@@ -21,5 +22,8 @@ public interface ProviderService {
 
     ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, MultipartFile attachedFile, HttpServletRequest request);
 
+    ResponseEntity<?> editProvider(int workCenterId, int providerId, Provider provider, MultipartFile attachedFile, HttpServletRequest request);
+
+    Provider getProviderById(int workCenterId, int providerId);
 
 }

@@ -122,6 +122,11 @@ public class WorkCenter implements Serializable {
         this.rooms = rooms;
     }
 
+    public WorkCenter(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public WorkCenter(List<Room> rooms) {
         this.rooms = rooms;
     }

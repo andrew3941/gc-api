@@ -2,12 +2,15 @@ package com.preving.intranet.gestioncentrosapi.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(schema = "GESTION_CENTROS", name = "PC_DELEGACIONES_X_SALAS")
@@ -15,8 +18,7 @@ public class Room implements Serializable {
     private int id;
     private WorkCenter workCenter = new WorkCenter();
     private String name;
-    private RoomTypes type;
-    private int surface;
+    private float surface;
     private String observation;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
@@ -26,16 +28,16 @@ public class Room implements Serializable {
     private User modifiedBy;
     private Date deleted;
     private User deletedBy;
+    private List<RoomByTypes> types = new ArrayList<>();
 
     public Room(){
 
     }
 
-    public Room(int id, WorkCenter workCenter, String name, RoomTypes type, int surface, String observation, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy) {
+    public Room(int id, WorkCenter workCenter, String name, float surface, String observation, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy, List<RoomByTypes> types) {
         this.id = id;
         this.workCenter = workCenter;
         this.name = name;
-        this.type = type;
         this.surface = surface;
         this.observation = observation;
         this.created = created;
@@ -44,6 +46,7 @@ public class Room implements Serializable {
         this.modifiedBy = modifiedBy;
         this.deleted = deleted;
         this.deletedBy = deletedBy;
+        this.types = types;
     }
 
     @Id
@@ -64,19 +67,10 @@ public class Room implements Serializable {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "TIPO_ID", referencedColumnName = "ID")
-    public RoomTypes getType() {
-        return type;
-    }
-    public void setType(RoomTypes type) {
-        this.type = type;
-    }
-
     @Basic
     @Column(name = "SUPERFICIE")
-    public int getSurface() { return surface; }
-    public void setSurface(int surface) { this.surface = surface; }
+    public float getSurface() { return surface; }
+    public void setSurface(float surface) { this.surface = surface; }
 
     @Basic
     @Column(name = "OBSERVACIONES")
@@ -112,4 +106,13 @@ public class Room implements Serializable {
     @JoinColumn(name = "BORRADO_POR", referencedColumnName = "ID")
     public User getDeletedBy() { return deletedBy; }
     public void setDeletedBy(User deletedBy) { this.deletedBy = deletedBy; }
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "room")
+    public List<RoomByTypes> getTypes() {
+        return types;
+    }
+    public void setTypes(List<RoomByTypes> types) {
+        this.types = types;
+    }
 }

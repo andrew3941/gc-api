@@ -104,7 +104,7 @@ api-comunicacion:
 
 url-drawing-documents: C:/home/preving/app/recursos/drawings
 urlSeguridad: http://localhost:8444/seguridad-api2
-
+modo-debug: true
 
 soffice:
   host: 155.155.16.198
@@ -133,8 +133,9 @@ api-comunicacion:
   keystore-password: preving
 
 
-urlSeguridad: https://demointranet.preving.com/seguridad-api
-
+url-drawing-documents: /home/preving/app/recursos/drawings
+urlSeguridad: https://demointranet.preving.com/seguridad-api2
+modo-debug: false
 
 ---
 
@@ -159,7 +160,8 @@ api-comunicacion:
   keystore-password: preving
 
 
+url-drawing-documents: /home/preving/app/recursos/drawings
 urlSeguridad: https://intranet.preving.com/seguridad-api
-
+modo-debug: false
 
 

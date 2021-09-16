@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ProviderAreaRepository  extends JpaRepository<ProviderArea, Integer> {
-    List<ProviderArea> findAll();
+    List<ProviderArea> findAllByOrderByOrder();
 }

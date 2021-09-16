@@ -57,4 +57,8 @@ public interface WorkCenterService {
 
     Room getRoomById(int roomId);
 
+    void desactivateWorkCenters();
+
+    List<WorkCenter>findByWorkCenters();
+
 }
