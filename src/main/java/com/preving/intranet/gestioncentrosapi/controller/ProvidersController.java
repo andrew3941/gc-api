@@ -6,14 +6,15 @@ import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
 import com.preving.intranet.gestioncentrosapi.model.services.ProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-
 
 @RestController
 @RequestMapping(path = "/workCenters")
@@ -22,6 +23,9 @@ public class ProvidersController {
 
     @Autowired
     public ProviderService providerService;
+
+    @Value("${modo-debug}")
+    private boolean modoDebug;
 
     /**
      *
@@ -153,5 +157,40 @@ public class ProvidersController {
 
     }
 
+    /**
+     * Scheduled process to activate providers when the start date matches with the current date
+     */
+    @Scheduled(cron="0 5 0 * * ?")
+    public void activateProviders() {
+
+        if(!modoDebug) {
+
+            try {
+                providerService.activateProvider();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    /**
+     * Scheduled process to finalize providers when the end date matches with the current date
+     */
+    @Scheduled(cron="0 15 0 * * ?")
+    public void desactivateProviders() {
+
+        if(!modoDebug) {
+
+            try {
+                providerService.desactivateProvider();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
 
 }

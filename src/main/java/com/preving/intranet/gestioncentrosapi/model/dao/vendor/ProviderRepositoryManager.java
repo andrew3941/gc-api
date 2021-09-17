@@ -45,6 +45,10 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
             sql += " AND LOWER(TRANSLATE(P.NOMBRE, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:providerName, '������������', 'aeiounAEIOUN')) ";
         }
 
+        if(providerFilter != null && providerFilter.getProviderStatus() != 2) {
+            sql += " AND P.ACTIVO IS :providerStatus ";
+        }
+
         sql += " ORDER BY P.NOMBRE ";
 
         Query query = manager.createNativeQuery(sql, "ProviderMapping").setParameter("workCenterId", workCenterId);
@@ -55,6 +59,10 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
 
         if(providerFilter != null && providerFilter.getProviderTypes().size() != 0 && providerFilter.getProviderTypes() != null){
             query.setParameter("providerTypes", providerFilter.getProviderTypes());
+        }
+
+        if(providerFilter != null && providerFilter.getProviderStatus() != 2) {
+            query.setParameter("providerStatus", providerFilter.getProviderStatus() == 1);
         }
 
         List<Provider> providerResults = query.getResultList();

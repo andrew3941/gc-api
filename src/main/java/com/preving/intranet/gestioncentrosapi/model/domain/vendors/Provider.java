@@ -45,8 +45,6 @@ import java.util.List;
 public class Provider implements Serializable {
     private int id;
     private WorkCenter workCenter = new WorkCenter();
-//    private boolean allWorkCenterSelected;
-//    private List<WorkCenter> providerWorkCenters = new ArrayList<>();
     private String name;
     private boolean centralProvider;
     private String cif;
@@ -76,15 +74,19 @@ public class Provider implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date modified;
     private User modifiedBy;
+    private boolean active = true;
 
     public Provider() {
     }
 
-    public Provider(int id, WorkCenter workCenter,  String name, boolean centralProvider, String cif, ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes, String email, String address, String contactPerson, String telephone, String serviceDetails, String docUrl, String docName, String docContentType, ExpenditurePeriod expenditurePeriod, Integer spending, Date serviceStartDate, Date serviceEndDate, Date serviceAlramDate, int responsable_id, Date created, User createdBy, Date modified, User modifiedBy) {
+    public Provider(int id, WorkCenter workCenter,  String name, boolean centralProvider, String cif,
+                    ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes,
+                    String email, String address, String contactPerson, String telephone, String serviceDetails,
+                    String docUrl, String docName, String docContentType, ExpenditurePeriod expenditurePeriod,
+                    Integer spending, Date serviceStartDate, Date serviceEndDate, Date serviceAlramDate,
+                    int responsable_id, Date created, User createdBy, Date modified, User modifiedBy, boolean active) {
         this.id = id;
         this.workCenter = workCenter;
-//        this.allWorkCenterSelected = allWorkCenterSelected;
-//        this.providerWorkCenters = providerWorkCenters;
         this.name = name;
         this.centralProvider = centralProvider;
         this.cif = cif;
@@ -109,6 +111,7 @@ public class Provider implements Serializable {
         this.createdBy = createdBy;
         this.modified = modified;
         this.modifiedBy = modifiedBy;
+        this.active = active;
     }
 
     public Provider(int id, Integer workCenterId, String name, boolean centralProvider, String cif, String details, Integer spending,
@@ -368,17 +371,9 @@ public class Provider implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
+    @Basic
+    @Column(name = "ACTIVO", nullable = false)
+    public boolean getActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 
-//    public boolean isAllWorkCenterSelected() { return allWorkCenterSelected; }
-//
-//    public void setAllWorkCenterSelected(boolean allWorkCenterSelected) { this.allWorkCenterSelected = allWorkCenterSelected;
-//    }
-//
-//    public List<WorkCenter> getProviderWorkCenters() {
-//        return providerWorkCenters;
-//    }
-//
-//    public void setProviderWorkCenters(List<WorkCenter> providerWorkCenters) {
-//        this.providerWorkCenters = providerWorkCenters;
-//    }
 }

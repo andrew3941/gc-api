@@ -38,7 +38,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -131,13 +132,7 @@ public class WorkCenterManager implements WorkCenterService{
         seteamosDimNavision(newWorkCenter);
 
         // Comprobamos si tiene fecha de baja y seteamos valores
-        if (newWorkCenter.getEndDate() != null) {
-            newWorkCenter.setActive(INACTIVE);
-            newWorkCenter.setVisible(INACTIVE);
-        } else {
-            newWorkCenter.setActive(ACTIVE);
-            newWorkCenter.setVisible(ACTIVE);
-        }
+        activeInactiveWorkCenter(newWorkCenter);
 
         // Seteamos valores de creación
         newWorkCenter.setCreated(new Date());
@@ -221,13 +216,7 @@ public class WorkCenterManager implements WorkCenterService{
         }
 
         // Seteamos NO activo si viene con fecha de baja incluida
-        if (newWorkCenter.getEndDate() != null) {
-            newWorkCenter.setActive(INACTIVE);
-            newWorkCenter.setVisible(INACTIVE);
-        } else {
-            newWorkCenter.setActive(ACTIVE);
-            newWorkCenter.setVisible(ACTIVE);
-        }
+        activeInactiveWorkCenter(newWorkCenter);
 
         // Editamos la delegación en la tabla GC2006_RELEASE.PC_DELEGACIONES
         workCentersRepository.editWorkCenter(workCenterId, newWorkCenter, this.jwtTokenUtil.getUserWithRolesFromToken(request).getId());
@@ -241,6 +230,19 @@ public class WorkCenterManager implements WorkCenterService{
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private void activeInactiveWorkCenter(WorkCenter workCenter) {
+
+        if (workCenter.getEndDate() != null
+                && (workCenter.getEndDate().before(new Date()) || workCenter.getEndDate().equals(new Date()))) {
+            workCenter.setActive(INACTIVE);
+            workCenter.setVisible(INACTIVE);
+        } else {
+            workCenter.setActive(ACTIVE);
+            workCenter.setVisible(ACTIVE);
+        }
+
     }
 
     @Override
@@ -674,6 +676,30 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
+    public void activateWorkCenters() {
+
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("--- INICIO DEL PROCESO DE ACTIVACION DE DELEGACIONES");
+        System.out.println("--------------------------------------------------------------");
+
+        // Getting work centers with expired end date
+        List<WorkCenter> workCenters = workCentersRepository.findWorkCentersByStartDateEquals(formatCurrentDate());
+
+        System.out.println("----- Se han obtenido " + workCenters.size() + " delegaciones para activar");
+
+        // Setting inactive attribute for each work center
+        workCenters.forEach(workCenter -> {
+            workCentersRepository.setActiveWorkCenter(workCenter.getId());
+            System.out.println("--------- Delegacion (" + workCenter.getId() + ") -> Activada");
+        });
+
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("--- FIN DEL PROCESO DE ACTIVACION DE DELEGACIONES");
+        System.out.println("--------------------------------------------------------------");
+
+    }
+
+    @Override
     public void desactivateWorkCenters() {
 
         System.out.println("--------------------------------------------------------------");
@@ -681,7 +707,7 @@ public class WorkCenterManager implements WorkCenterService{
         System.out.println("--------------------------------------------------------------");
 
         // Getting work centers with expired end date
-        List<WorkCenter> workCenters = workCentersRepository.findWorkCentersByEndDateIsLessThanEqual(new Date());
+        List<WorkCenter> workCenters = workCentersRepository.findWorkCentersByEndDateEquals(formatCurrentDate());
 
         System.out.println("----- Se han obtenido " + workCenters.size() + " delegaciones para finalizar");
 
@@ -694,6 +720,22 @@ public class WorkCenterManager implements WorkCenterService{
         System.out.println("--------------------------------------------------------------");
         System.out.println("--- FIN DEL PROCESO DE DESACTIVACION DE DELEGACIONES");
         System.out.println("--------------------------------------------------------------");
+
+    }
+
+    private Date formatCurrentDate() {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateStr = sdf.format(new Date());
+        Date date = null;
+
+        try {
+            date = sdf.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
 
     }
 

@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +50,8 @@ public class ProviderManager implements ProviderService {
     private JwtTokenUtil jwtTokenUtil;
 
     private static final int PROVIDER_DOCUMENTS = 2;
+    private static final boolean ACTIVE = true;
+    private static final boolean INACTIVE = false;
 
     @Override
     public List<Provider> getProviders(int workCenterId, ProviderFilter providerFilter) {
@@ -90,12 +94,16 @@ public class ProviderManager implements ProviderService {
             newProvider.setDocContentType(attachedFile.getContentType());
         }
 
+        // Setting active or inactive provider
+        activeInactiveProvider(newProvider);
+
+        // Guardamos proveedor
+        Provider provider = providerRepository.save(newProvider);
+
         try {
+
             if (attachedFile != null) {
                 String url = null;
-
-                // Guardamos proveedor
-                Provider provider = providerRepository.save(newProvider);
 
                 // Guardamos el nuevo documento adjunto
                 url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
@@ -104,21 +112,100 @@ public class ProviderManager implements ProviderService {
                 if(url != null){
                     this.providerRepository.updateProviderDocUrl(provider.getId(), url);
                 }
+
             }
 
-    } catch (Exception e) {
+        } catch (Exception e) {
 
-        e.printStackTrace();
+            e.printStackTrace();
 
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        }
+
         return new ResponseEntity<>(HttpStatus.OK);
-}
+
+    }
+
+    private void activeInactiveProvider(Provider provider) {
+
+        if (provider.getServiceEndDate() != null
+                && (provider.getServiceEndDate().before(new Date()) || provider.getServiceEndDate().equals(new Date()))) {
+            provider.setActive(INACTIVE);
+        } else {
+            provider.setActive(ACTIVE);
+        }
+
+    }
 
     @Override
     public Provider getProviderById(int workCenterId, int providerId) {
 
         return this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
+
+    }
+
+    @Override
+    public void activateProvider() {
+
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("--- INICIO DEL PROCESO DE ACTIVACION DE PROVEEDORES");
+        System.out.println("--------------------------------------------------------------");
+
+        // Getting work centers with expired end date
+        List<Provider> providers = providerRepository.findProvidersByServiceStartDateEquals(formatCurrentDate());
+
+        System.out.println("----- Se han obtenido " + providers.size() + " proveedores para activar");
+
+        // Setting inactive attribute for each work center
+        providers.forEach(provider -> {
+            providerRepository.setActiveProvider(provider.getId());
+            System.out.println("--------- Proveedor (" + provider.getId() + ") -> Activado");
+        });
+
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("--- FIN DEL PROCESO DE ACTIVACION DE PROVEEDORES");
+        System.out.println("--------------------------------------------------------------");
+
+    }
+
+    @Override
+    public void desactivateProvider() {
+
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("--- INICIO DEL PROCESO DE DESACTIVACION DE PROVEEDORES");
+        System.out.println("--------------------------------------------------------------");
+
+        // Getting work centers with expired end date
+        List<Provider> providers = providerRepository.findProvidersByServiceEndDateEquals(formatCurrentDate());
+
+        System.out.println("----- Se han obtenido " + providers.size() + " proveedores para finalizar");
+
+        // Setting inactive attribute for each work center
+        providers.forEach(provider -> {
+            providerRepository.setInactiveProvider(provider.getId());
+            System.out.println("--------- Proveedor (" + provider.getId() + ") -> Desactivado");
+        });
+
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("--- FIN DEL PROCESO DE DESACTIVACION DE PROVEEDORES");
+        System.out.println("--------------------------------------------------------------");
+
+    }
+
+    private Date formatCurrentDate() {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateStr = sdf.format(new Date());
+        Date date = null;
+
+        try {
+            date = sdf.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
 
     }
 
@@ -135,6 +222,9 @@ public class ProviderManager implements ProviderService {
             provider.setDocName(attachedFile.getOriginalFilename());
             provider.setDocContentType(attachedFile.getContentType());
         }
+
+        // Setting active or inactive provider
+        activeInactiveProvider(provider);
 
         // Editamos el proveedor
         providerRepository.editProvider(provider);

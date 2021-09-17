@@ -26,4 +26,8 @@ public interface ProviderService {
 
     Provider getProviderById(int workCenterId, int providerId);
 
+    void desactivateProvider();
+
+    void activateProvider();
+
 }

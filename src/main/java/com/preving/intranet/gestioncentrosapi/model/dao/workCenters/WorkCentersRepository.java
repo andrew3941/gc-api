@@ -40,7 +40,15 @@ public interface WorkCentersRepository extends JpaRepository<WorkCenter, Integer
             "where w.id=:workCenterId ")
     void setInactiveWorkCenter(@Param("workCenterId") int workCenterId);
 
-    List<WorkCenter> findWorkCentersByEndDateIsLessThanEqual(Date date);
+    @Modifying
+    @Transactional
+    @Query("update WorkCenter w set w.active=1 " +
+            "where w.id=:workCenterId ")
+    void setActiveWorkCenter(@Param("workCenterId") int workCenterId);
+
+    List<WorkCenter> findWorkCentersByStartDateEquals(Date date);
+
+    List<WorkCenter> findWorkCentersByEndDateEquals(Date date);
 
     List<WorkCenter> findAllByActiveIsTrue();
 
