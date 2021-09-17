@@ -158,6 +158,20 @@ public class ProvidersController {
     }
 
     /**
+     * Descargamos el fichero de un servicio de
+     * @param providerId
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "{workCenterId}/providers/{providerId}/download", method = RequestMethod.GET)
+    public ResponseEntity<?> downloadProviderDoc(HttpServletRequest request,
+                                                 @PathVariable(value = "providerId") int providerId,
+                                                 @PathVariable(value = "workCenterId") int workCenterId) {
+
+        return ( providerService.downloadProviderDoc(request, workCenterId, providerId));
+    }
+
+    /**
      * Scheduled process to activate providers when the start date matches with the current date
      */
     @Scheduled(cron="0 5 0 * * ?")

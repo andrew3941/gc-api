@@ -27,6 +27,8 @@ import java.util.List;
                                 @ColumnResult(name = "CIF", type = String.class),
                                 @ColumnResult(name = "DETALLES", type = String.class),
                                 @ColumnResult(name = "GASTO", type = Integer.class),
+                                @ColumnResult(name = "DOC_NOMBRE", type = String.class),
+                                @ColumnResult(name = "DOC_CONTENT_TYPE", type = String.class),
                                 @ColumnResult(name = "TIPO_ID", type = Integer.class),
                                 @ColumnResult(name = "AREA_ID", type = Integer.class),
                                 @ColumnResult(name = "TIPO_EVALUACION_ID", type = Integer.class),
@@ -115,7 +117,7 @@ public class Provider implements Serializable {
     }
 
     public Provider(int id, Integer workCenterId, String name, boolean centralProvider, String cif, String details, Integer spending,
-                    Integer providerTypeId, Integer providerAreaId, Integer evaluationTypeId,
+                    String docName, String docContentType, Integer providerTypeId, Integer providerAreaId, Integer evaluationTypeId,
                     Integer expenditurePeriodId, String providerType ,String providerAreaType, String ProviderEvaluationType, String expenditurePeriodType, Date serviceStartDate, Date serviceEndDate) {
         this.id = id;
         this.getWorkCenter().setId(workCenterId);
@@ -124,6 +126,8 @@ public class Provider implements Serializable {
         this.cif = cif;
         this.serviceDetails = details;
         this.spending = spending;
+        this.docName = docName;
+        this.docContentType = docContentType;
         this.getProviderTypes().setId(providerTypeId);
         this.getProviderTypes().setName(providerType);
         this.getProviderArea().setId(providerAreaId);

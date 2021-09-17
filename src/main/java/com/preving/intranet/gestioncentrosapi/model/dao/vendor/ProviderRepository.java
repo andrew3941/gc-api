@@ -30,7 +30,8 @@ public interface ProviderRepository extends JpaRepository<Provider, Integer> {
             "p.evaluationTypes=:#{#provider.evaluationTypes}, p.expenditurePeriod=:#{#provider.expenditurePeriod}, " +
             "p.email=:#{#provider.email}, p.address=:#{#provider.address}, p.telephone=:#{#provider.telephone}, " +
             "p.serviceDetails=:#{#provider.serviceDetails}, p.spending=:#{#provider.spending}, " +
-            "p.serviceStartDate=:#{#provider.serviceStartDate}, p.serviceEndDate=:#{#provider.serviceEndDate}," +
+            "p.serviceStartDate=:#{#provider.serviceStartDate}, p.serviceEndDate=:#{#provider.serviceEndDate}, " +
+            "p.active=:#{#provider.active} , " +
             "p.modified=CURRENT_TIMESTAMP, p.modifiedBy=:#{#provider.modifiedBy} " +
             "where p.id=:#{#provider.id} ")
     void  editProvider(@Param("provider") Provider provider);

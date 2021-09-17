@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.io.File;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
 
@@ -250,6 +252,30 @@ public class ProviderManager implements ProviderService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<?> downloadProviderDoc(HttpServletRequest request, int workCenterId, int providerId) {
+
+        Provider provider = null;
+        File file = null;
+        byte[] content=null;
+
+        try {
+            provider = this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
+
+            file = new File(provider.getDocUrl());
+            if (file.exists()) {
+                content = Files.readAllBytes(file.toPath());
+            }else{
+                return new ResponseEntity<>("File not found",HttpStatus.NOT_FOUND);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<>("Unknown error",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<byte[]>(content, HttpStatus.OK);
+    }
 
 
 }

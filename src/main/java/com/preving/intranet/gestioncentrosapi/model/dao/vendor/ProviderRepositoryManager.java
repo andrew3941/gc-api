@@ -20,6 +20,7 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
 
         String sql = "" +
                 "SELECT DISTINCT P.ID, P.DELEGACION_ID, P.NOMBRE, P.PROVEEDOR_CENTRALIZADO, P.CIF, P.DETALLES, P.GASTO, " +
+                "P.DOC_NOMBRE, P.DOC_CONTENT_TYPE, " +
                 "P.TIPO_ID, PT.DENOMINACION AS PROVIDER_TYPE, P.AREA_ID, PA.DENOMINACION AS PROVIDERAREA_TYPE, " +
                 "P.TIPO_EVALUACION_ID, PET.DENOMINACION AS PROVIDEREVALUATION_TYPE, P.PERIODICIDAD_GASTO_ID, PG.DENOMINACION AS PERIODICITY, " +
                 "P.FECHA_INICIO_SERVICIO, P.FECHA_FIN_SERVICIO " +
@@ -46,7 +47,7 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
         }
 
         if(providerFilter != null && providerFilter.getProviderStatus() != 2) {
-            sql += " AND P.ACTIVO IS :providerStatus ";
+            sql += " AND P.ACTIVO = :providerStatus ";
         }
 
         sql += " ORDER BY P.NOMBRE ";
