@@ -8,6 +8,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
+
 @Repository
 public interface ProviderRepository extends JpaRepository<Provider, Integer> {
 
@@ -27,9 +30,24 @@ public interface ProviderRepository extends JpaRepository<Provider, Integer> {
             "p.evaluationTypes=:#{#provider.evaluationTypes}, p.expenditurePeriod=:#{#provider.expenditurePeriod}, " +
             "p.email=:#{#provider.email}, p.address=:#{#provider.address}, p.telephone=:#{#provider.telephone}, " +
             "p.serviceDetails=:#{#provider.serviceDetails}, p.spending=:#{#provider.spending}, " +
-            "p.serviceStartDate=:#{#provider.serviceStartDate}, p.serviceEndDate=:#{#provider.serviceEndDate}," +
+            "p.serviceStartDate=:#{#provider.serviceStartDate}, p.serviceEndDate=:#{#provider.serviceEndDate}, " +
+            "p.active=:#{#provider.active} , " +
             "p.modified=CURRENT_TIMESTAMP, p.modifiedBy=:#{#provider.modifiedBy} " +
             "where p.id=:#{#provider.id} ")
     void  editProvider(@Param("provider") Provider provider);
+
+    List<Provider> findProvidersByServiceStartDateEquals(Date date);
+
+    List<Provider> findProvidersByServiceEndDateEquals(Date date);
+
+    @Modifying
+    @Transactional
+    @Query("update Provider p set p.active = false where p.id = :providerId")
+    void setInactiveProvider(@Param("providerId") int providerId);
+
+    @Modifying
+    @Transactional
+    @Query("update Provider p set p.active = true where p.id = :providerId")
+    void setActiveProvider(@Param("providerId") int providerId);
 
 }

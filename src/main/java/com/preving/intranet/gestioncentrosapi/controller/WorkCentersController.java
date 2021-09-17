@@ -470,21 +470,6 @@ public class WorkCentersController {
         }
     }
 
-    @Scheduled(cron="0 0 0 * * ?")
-    public void initProjectService() {
-
-        if(!modoDebug) {
-
-            try {
-                workCenterService.desactivateWorkCenters();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
-    }
-
     /**
      * Obtención listado de workCenters
      * @return
@@ -500,4 +485,41 @@ public class WorkCentersController {
         }
 
     }
+
+    /**
+     * Scheduled process to activate work centers when the start date matches with the current date
+     */
+    @Scheduled(cron="0 0 0 * * ?")
+    public void activateWorkCenters() {
+
+        if(!modoDebug) {
+
+            try {
+                workCenterService.activateWorkCenters();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    /**
+     * Scheduled process to finalize work centers when the end date matches with the current date
+     */
+    @Scheduled(cron="0 10 0 * * ?")
+    public void desactivateWorkCenters() {
+
+        if(!modoDebug) {
+
+            try {
+                workCenterService.desactivateWorkCenters();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
 }

@@ -26,4 +26,10 @@ public interface ProviderService {
 
     Provider getProviderById(int workCenterId, int providerId);
 
+    ResponseEntity<?> downloadProviderDoc(HttpServletRequest request, int workCenterId, int providerId);
+
+    void desactivateProvider();
+
+    void activateProvider();
+
 }
