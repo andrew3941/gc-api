@@ -48,6 +48,6 @@ create sequence MP2.ZONA_SQ
 
 -- Creamos secuencia para la tabla RRHH.TM_DIM_NAVISION
 create sequence RRHH.TM_DIM_NAVISION_SQ
-  minvalue 800
+  minvalue 814
   maxvalue 999999
   increment by 1;
