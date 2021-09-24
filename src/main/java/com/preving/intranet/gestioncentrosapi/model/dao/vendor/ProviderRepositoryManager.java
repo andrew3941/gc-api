@@ -19,10 +19,10 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
     public List<Provider> getProviders( Integer workCenterId, ProviderFilter providerFilter) {
 
         String sql = "" +
-                "SELECT DISTINCT P.ID, P.DELEGACION_ID, P.NOMBRE, P.PROVEEDOR_CENTRALIZADO, P.CIF, P.DETALLES, P.GASTO, " +
+                "SELECT DISTINCT P.ID, P.DELEGACION_ID, P.NOMBRE, P.CIF, P.DETALLES, " +
                 "P.DOC_NOMBRE, P.DOC_CONTENT_TYPE, " +
                 "P.TIPO_ID, PT.DENOMINACION AS PROVIDER_TYPE, P.AREA_ID, PA.DENOMINACION AS PROVIDERAREA_TYPE, " +
-                "P.TIPO_EVALUACION_ID, PET.DENOMINACION AS PROVIDEREVALUATION_TYPE, P.PERIODICIDAD_GASTO_ID, PG.DENOMINACION AS PERIODICITY, " +
+                "P.TIPO_EVALUACION_ID, PET.DENOMINACION AS PROVIDEREVALUATION_TYPE, PG.DENOMINACION AS PERIODICITY, " +
                 "P.FECHA_INICIO_SERVICIO, P.FECHA_FIN_SERVICIO " +
                 "FROM GESTION_CENTROS.PROVEEDORES P, " +
                 "GC2006_RELEASE.PC_DELEGACIONES WC, " +
@@ -34,8 +34,7 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
                 "AND WC.ID= :workCenterId " +
                 "AND P.TIPO_ID = PT.ID "+
                 "AND P.AREA_ID = PA.ID "+
-                "AND P.TIPO_EVALUACION_ID = PET.ID "+
-                "AND P.PERIODICIDAD_GASTO_ID = PG.ID ";
+                "AND P.TIPO_EVALUACION_ID = PET.ID ";
 
 
         if(providerFilter != null && providerFilter.getProviderTypes().size() != 0){
