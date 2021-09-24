@@ -57,6 +57,8 @@ public class Provider implements Serializable {
     private String address;
     private String contactPerson;
     private String telephone;
+    private String Locality_id;
+    private String postal_code;
     private String serviceDetails;
     private String docUrl;
     private String docName;
@@ -83,7 +85,7 @@ public class Provider implements Serializable {
 
     public Provider(int id, WorkCenter workCenter,  String name, boolean centralProvider, String cif,
                     ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes,
-                    String email, String address, String contactPerson, String telephone, String serviceDetails,
+                    String email, String address, String contactPerson, String telephone, String Locality_id,String postal_code, String serviceDetails,
                     String docUrl, String docName, String docContentType, ExpenditurePeriod expenditurePeriod,
                     Integer spending, Date serviceStartDate, Date serviceEndDate, Date serviceAlramDate,
                     int responsable_id, Date created, User createdBy, Date modified, User modifiedBy, boolean active) {
@@ -248,6 +250,16 @@ public class Provider implements Serializable {
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
+
+    @Basic
+    @Column(name = "localidad_id")
+    public String getLocality_id() { return Locality_id; }
+    public void setLocality_id(String locality_id) { Locality_id = locality_id; }
+
+    @Basic
+    @Column(name = "codigo_postal")
+    public String getPostal_code() { return postal_code; }
+    public void setPostal_code(String postal_code) { this.postal_code = postal_code; }
 
     @Basic
     @Column(name = "DETALLES")
