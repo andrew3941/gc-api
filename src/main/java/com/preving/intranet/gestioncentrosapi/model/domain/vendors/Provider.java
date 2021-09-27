@@ -22,20 +22,24 @@ import java.util.Date;
                         columns = {
                                 @ColumnResult(name = "ID", type = Integer.class),
                                 @ColumnResult(name = "DELEGACION_ID", type = Integer.class),
+                                @ColumnResult(name = "WORK_CENTER", type = String.class),
                                 @ColumnResult(name = "NOMBRE", type = String.class),
                                 @ColumnResult(name = "CIF", type = String.class),
-                                @ColumnResult(name = "DETALLES", type = String.class),
                                 @ColumnResult(name = "DOC_NOMBRE", type = String.class),
                                 @ColumnResult(name = "DOC_CONTENT_TYPE", type = String.class),
+                                @ColumnResult(name = "ACTIVO", type = boolean.class),
                                 @ColumnResult(name = "TIPO_ID", type = Integer.class),
                                 @ColumnResult(name = "AREA_ID", type = Integer.class),
-                                @ColumnResult(name = "TIPO_EVALUACION_ID", type = Integer.class),
+                                @ColumnResult(name = "LOCALIDAD_ID", type = Integer.class),
+                                @ColumnResult(name = "LOC_NOMBRE", type = String.class),
+                                @ColumnResult(name = "PRV_NOMBRE", type = String.class),
                                 @ColumnResult(name = "PROVIDER_TYPE", type = String.class),
                                 @ColumnResult(name = "PROVIDERAREA_TYPE", type = String.class),
+                                @ColumnResult(name = "TIPO_EVALUACION_ID", type = Integer.class),
                                 @ColumnResult(name = "PROVIDEREVALUATION_TYPE", type = String.class),
-                                @ColumnResult(name = "PERIODICITY", type = String.class),
+                               // @ColumnResult(name = "PERIODICITY", type = String.class),
                                 @ColumnResult(name = "FECHA_INICIO_SERVICIO", type = Date.class),
-                                @ColumnResult(name = "FECHA_FIN_SERVICIO", type = Date.class)
+
                         }
                 )
         }
@@ -103,24 +107,49 @@ public class Provider implements Serializable {
         this.active = active;
     }
 
-    public Provider(int id, Integer workCenterId, String name, String cif, String details,
-                    String docName, String docContentType, Integer providerTypeId, Integer providerAreaId, Integer evaluationTypeId,
-                    String providerType , String providerAreaType, String ProviderEvaluationType, Date serviceStartDate, Date serviceEndDate) {
+    public Provider(
+            int id,
+            Integer workCenterId,
+            String workCenterName,
+            String name,
+            String cif,
+            String docName,
+            String docContentType,
+            boolean providerStatus,
+            Integer providerTypeId,
+            Integer providerAreaId,
+            Integer localitiId,
+            String localityName,
+            String provinceName,
+            String providerType ,
+            String providerAreaType,
+            Integer evaluationTypeId,
+            String evaluationTypeName,
+            Date serviceStartDate) {
         this.id = id;
-        this.getWorkCenter().setId(workCenterId);
+        this.workCenter.setId(workCenterId);
+        this.workCenter.setName(workCenterName);
         this.name = name;
         this.cif = cif;
-        this.serviceDetails = details;
         this.docName = docName;
         this.docContentType = docContentType;
+        this.active = providerStatus;
+        this.providerTypes.setId(providerTypeId);
+        this.providerArea.setId(providerAreaId);
+        this.city.setId(localitiId);
+        this.city.setName(localityName);
+        this.city.getProvince().setName(provinceName);
+        this.providerTypes.setName(providerType);
+        this.providerArea.setName(providerAreaType);
+        this.evaluationTypes.setId(evaluationTypeId);
+        this.evaluationTypes.setName(evaluationTypeName);
         this.getProviderTypes().setId(providerTypeId);
         this.getProviderTypes().setName(providerType);
         this.getProviderArea().setId(providerAreaId);
         this.getProviderArea().setName(providerAreaType);
         this.getEvaluationTypes().setId(evaluationTypeId);
-        this.getEvaluationTypes().setName(ProviderEvaluationType);
+        this.getEvaluationTypes().setName(evaluationTypeName);
         this.serviceStartDate = serviceStartDate;
-        this.serviceEndDate = serviceEndDate;
     }
 
 
