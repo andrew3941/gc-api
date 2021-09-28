@@ -33,9 +33,13 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
                 "GESTION_CENTROS.TM_PROVEEDORES_EVALUACION_TIPO PET, "+
                 "VIG_SALUD.LOCALIDADES L, "+
                 "VIG_SALUD.PROVINCIAS V "+
-                "WHERE P.DELEGACION_ID = WC.ID " +
-                "AND WC.ID= :workCenterId " +
-                "AND P.TIPO_ID = PT.ID "+
+                "WHERE P.DELEGACION_ID = WC.ID ";
+
+                if (workCenterId != 0) {
+                    sql += "AND WC.ID= :workCenterId ";
+                }
+
+                sql += "AND P.TIPO_ID = PT.ID "+
                 "AND P.AREA_ID = PA.ID "+
                 "AND P.TIPO_EVALUACION_ID = PET.ID "+
                 "AND P.LOCALIDAD_ID = L.LOC_ID " +
@@ -62,7 +66,7 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
 
         sql += " ORDER BY P.NOMBRE ";
 
-        Query query = manager.createNativeQuery(sql, "ProviderMapping").setParameter("workCenterId", workCenterId);
+        Query query = manager.createNativeQuery(sql, "ProviderMapping");
 
         if(providerFilter != null && providerFilter.getProviderName() != null && providerFilter.getProviderName() != "") {
             query.setParameter("providerName", "%" + providerFilter.getProviderName() + "%");
@@ -76,7 +80,7 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
             query.setParameter("areaTypes", providerFilter.getAreaTypes());
         }
 
-        if(providerFilter != null && providerFilter.getCenters().size() != 0 && providerFilter.getCenters() != null){
+        if (providerFilter != null && workCenterId != 0) {
             query.setParameter("workCenterId", providerFilter.getCenters());
         }
 

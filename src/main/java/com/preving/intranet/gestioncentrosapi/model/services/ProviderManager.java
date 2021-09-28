@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -81,12 +82,11 @@ public class ProviderManager implements ProviderService {
         return expenditurePeriodRepository.findAll();
     }
 
-    @Override
+    @Transactional
     public ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, MultipartFile attachedFile, HttpServletRequest request){
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
-        newProvider.getWorkCenter().setId(workCenterId);
         newProvider.setCreated(new Date());
         newProvider.getCreatedBy().setId(userId);
 
@@ -99,22 +99,26 @@ public class ProviderManager implements ProviderService {
         // Setting active or inactive provider
         activeInactiveProvider(newProvider);
 
-        // Guardamos proveedor
-        Provider provider = providerRepository.save(newProvider);
-
         try {
+            // TODO revisar porque guarda siempre sobre el mismo
+            for(WorkCenter workCenter : newProvider.getWorkCenters()) {
+                newProvider.getWorkCenter().setId(workCenter.getId());
 
-            if (attachedFile != null) {
-                String url = null;
+                // Guardamos proveedor
+                Provider provider = providerRepository.save(newProvider);
 
-                // Guardamos el nuevo documento adjunto
-                url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
+                if (attachedFile != null) {
+                    String url = null;
 
-                // Actualizamos la URL del documento
-                if(url != null){
-                    this.providerRepository.updateProviderDocUrl(provider.getId(), url);
+                    // Guardamos el nuevo documento adjunto
+                    url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
+
+                    // Actualizamos la URL del documento
+                    if(url != null){
+                        this.providerRepository.updateProviderDocUrl(provider.getId(), url);
+                    }
+
                 }
-
             }
 
         } catch (Exception e) {

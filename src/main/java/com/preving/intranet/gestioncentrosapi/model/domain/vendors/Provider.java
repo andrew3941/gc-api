@@ -9,7 +9,9 @@ import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCente
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -37,7 +39,6 @@ import java.util.Date;
                                 @ColumnResult(name = "PROVIDERAREA_TYPE", type = String.class),
                                 @ColumnResult(name = "TIPO_EVALUACION_ID", type = Integer.class),
                                 @ColumnResult(name = "PROVIDEREVALUATION_TYPE", type = String.class),
-                               // @ColumnResult(name = "PERIODICITY", type = String.class),
                                 @ColumnResult(name = "FECHA_INICIO_SERVICIO", type = Date.class),
 
                         }
@@ -48,6 +49,7 @@ import java.util.Date;
 public class Provider implements Serializable {
     private int id;
     private WorkCenter workCenter = new WorkCenter();
+    private List<WorkCenter> workCenters = new ArrayList<>();
     private String name;
     private String cif;
     private ProviderTypes providerTypes = new ProviderTypes();
@@ -78,11 +80,10 @@ public class Provider implements Serializable {
     public Provider() {
     }
 
-    public Provider(int id, WorkCenter workCenter, String name, String cif, ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes, String email, String address, String contactPerson, String telephone,
-                    City city, String postalCode, String serviceDetails, String docUrl, String docName,
-                    String docContentType, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy, boolean active) {
+    public Provider(int id, WorkCenter workCenter, List<WorkCenter> workCenters, String name, String cif, ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes, String email, String address, String contactPerson, String telephone, City city, String postalCode, String serviceDetails, String docUrl, String docName, String docContentType, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy, boolean active) {
         this.id = id;
         this.workCenter = workCenter;
+        this.workCenters = workCenters;
         this.name = name;
         this.cif = cif;
         this.providerTypes = providerTypes;
@@ -153,7 +154,6 @@ public class Provider implements Serializable {
     }
 
 
-
     @Id
     @Column(name = "ID", nullable = false)
     @SequenceGenerator(name = "PROVEEDORES_SEQ", sequenceName = "PROVEEDORES_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)
@@ -171,6 +171,14 @@ public class Provider implements Serializable {
     }
     public void setWorkCenter(WorkCenter workCenter) {
         this.workCenter = workCenter;
+    }
+
+    @Transient
+    public List<WorkCenter> getWorkCenters() {
+        return workCenters;
+    }
+    public void setWorkCenters(List<WorkCenter> workCenters) {
+        this.workCenters = workCenters;
     }
 
     @Basic
