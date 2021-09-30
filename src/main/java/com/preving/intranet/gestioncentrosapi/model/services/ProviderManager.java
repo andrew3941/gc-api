@@ -55,6 +55,9 @@ public class ProviderManager implements ProviderService {
     @Autowired
     private ProvidersByWorkCentersRepository providersByWorkCentersRepository;
 
+    @Autowired
+    private WorkCentersRepository workCentersRepository;
+
     private static final int PROVIDER_DOCUMENTS = 2;
     private static final boolean ACTIVE = true;
     private static final boolean INACTIVE = false;
@@ -63,8 +66,18 @@ public class ProviderManager implements ProviderService {
     public List<Provider> getProviders(int workCenterId, ProviderFilter providerFilter) {
         List<Provider> providers = this.providerCustomRepository.getProviders(workCenterId, providerFilter);
 
-        // TODO
+        for (Provider provider: providers) {
+            // Buscar los centros por proveedorId
+            List<ProvidersByWorkCenters> providersByWorkCenters = providersByWorkCentersRepository.findAllByProvider(provider);
 
+            for (ProvidersByWorkCenters provByWorkCenters : providersByWorkCenters) {
+                // Obtener los datos del centro por id
+                WorkCenter workCenter = this.workCentersRepository.findWorkCenterById(provByWorkCenters.getWorkCenter().getId());
+
+                // Meter los centros en la lista de proveedores
+                provider.getWorkCenters().add(workCenter);
+            }
+        }
 
         return providers;
     }
