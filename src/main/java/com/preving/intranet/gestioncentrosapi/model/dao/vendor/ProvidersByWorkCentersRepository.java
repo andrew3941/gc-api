@@ -10,4 +10,6 @@ import java.util.List;
 public interface ProvidersByWorkCentersRepository extends JpaRepository<ProvidersByWorkCenters, Integer> {
 
     List<ProvidersByWorkCenters> findAllByProvider (Provider provider);
+
+    void deleteByProviderId(int providerId);
 }

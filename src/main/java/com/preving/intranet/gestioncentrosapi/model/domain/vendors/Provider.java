@@ -1,6 +1,5 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.vendors;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.preving.intranet.gestioncentrosapi.model.domain.City;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;

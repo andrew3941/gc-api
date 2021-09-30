@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.io.File;
-import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
 
@@ -259,22 +258,32 @@ public class ProviderManager implements ProviderService {
         // Setting active or inactive provider
         activeInactiveProvider(provider);
 
-        // Editamos el proveedor
+              // Editamos el proveedor
         providerRepository.editProvider(provider);
 
         try {
+            for(WorkCenter workCenter : provider.getWorkCenters()) {
 
+                ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
+                providersByWorkCenters.getProvider().setId(provider.getId());
+                providersByWorkCenters.getWorkCenter().setId(workCenter.getId());
 
-            if (attachedFile != null) {
-                // Borramos el documento anterior del servidor
-                commonService.deleteDocumentServer(workCenterId, provider.getId(), PROVIDER_DOCUMENTS);
+                if (attachedFile != null) {
 
-                String url = null;
+                    // Borramos el documento anterior del servidor
+                    commonService.deleteDocumentServer(workCenterId, provider.getId(), PROVIDER_DOCUMENTS);
 
-                url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
+                    String url = null;
 
-                if(url != null){
-                    this.providerRepository.updateProviderDocUrl(provider.getId(), url);
+                    url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
+
+                    if (url != null) {
+                        this.providerRepository.updateProviderDocUrl(provider.getId(), url);
+                    }
+
+                    providersByWorkCentersRepository.deleteByProviderId(provider.getId());
+
+                    providersByWorkCentersRepository.save(providersByWorkCenters);
                 }
             }
 
@@ -311,5 +320,4 @@ public class ProviderManager implements ProviderService {
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
-
-}
+   }
