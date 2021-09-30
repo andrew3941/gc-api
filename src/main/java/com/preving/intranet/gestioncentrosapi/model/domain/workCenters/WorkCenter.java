@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProvidersByWorkCenters;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -71,7 +72,7 @@ public class WorkCenter implements Serializable {
     private List<WorkCentersByEntity> workCentersByEntities = new ArrayList<>();
     private List<Drawing> drawings = new ArrayList<>();
     private List<Room> rooms = new ArrayList<>();
-    private List<Provider> providers = new ArrayList<>();
+    private List<ProvidersByWorkCenters> providers = new ArrayList<>();
 
     public WorkCenter() {}
 
@@ -329,13 +330,12 @@ public class WorkCenter implements Serializable {
     @JsonManagedReference
     @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SELECT)
-    public List<Provider> getProviders() {
+    public List<ProvidersByWorkCenters> getProviders() {
         return providers;
     }
-    public void setProviders(List<Provider> providers) {
+    public void setProviders(List<ProvidersByWorkCenters> providers) {
         this.providers = providers;
     }
-
 }
 
 

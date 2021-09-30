@@ -19,7 +19,9 @@ public interface ProviderRepository extends JpaRepository<Provider, Integer> {
     @Query("update Provider p set p.docUrl=:providerDocUrl where p.id=:providerId")
     void  updateProviderDocUrl(@Param("providerId") int providerId, @Param("providerDocUrl")String providerDocUrl);
 
-    Provider findProviderByWorkCenterIdAndId(int workCenterId, int providerId);
+//    Provider findProviderByWorkCenterIdAndId(int workCenterId, int providerId);
+
+    Provider findProviderById(int providerId);
 
     @Modifying
     @Transactional

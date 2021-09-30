@@ -52,13 +52,20 @@ public class ProviderManager implements ProviderService {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    private ProvidersByWorkCentersRepository providersByWorkCentersRepository;
+
     private static final int PROVIDER_DOCUMENTS = 2;
     private static final boolean ACTIVE = true;
     private static final boolean INACTIVE = false;
 
     @Override
     public List<Provider> getProviders(int workCenterId, ProviderFilter providerFilter) {
-        List<Provider> providers = this.providerCustomRepository.getProviders(workCenterId, providerFilter);  ;
+        List<Provider> providers = this.providerCustomRepository.getProviders(workCenterId, providerFilter);
+
+        // TODO
+
+
         return providers;
     }
 
@@ -99,34 +106,35 @@ public class ProviderManager implements ProviderService {
         // Setting active or inactive provider
         activeInactiveProvider(newProvider);
 
-        try {
-            // TODO revisar porque guarda siempre sobre el mismo
-            for(WorkCenter workCenter : newProvider.getWorkCenters()) {
-                newProvider.getWorkCenter().setId(workCenter.getId());
+        // Guardamos proveedor
+        Provider provider = providerRepository.save(newProvider);
 
-                // Guardamos proveedor
-                Provider provider = providerRepository.save(newProvider);
+        // Luego guardamos proveedores_x_delegaciones
+        try {
+            for(WorkCenter workCenter : newProvider.getWorkCenters()) {
+
+                ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
+                providersByWorkCenters.getProvider().setId(provider.getId());
+                providersByWorkCenters.getWorkCenter().setId(workCenter.getId());
+
+                providersByWorkCentersRepository.save(providersByWorkCenters);
 
                 if (attachedFile != null) {
                     String url = null;
 
                     // Guardamos el nuevo documento adjunto
-                    url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
+                    url = commonService.saveDocumentServer(workCenter.getId(), provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
 
                     // Actualizamos la URL del documento
                     if(url != null){
                         this.providerRepository.updateProviderDocUrl(provider.getId(), url);
                     }
-
                 }
             }
 
         } catch (Exception e) {
-
             e.printStackTrace();
-
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -147,7 +155,13 @@ public class ProviderManager implements ProviderService {
     @Override
     public Provider getProviderById(int workCenterId, int providerId) {
 
-        return this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
+        if (workCenterId != 0) {
+            // TODO
+//            return this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
+            return null;
+        } else {
+            return this.providerRepository.findProviderById(providerId);
+        }
 
     }
 
@@ -236,6 +250,8 @@ public class ProviderManager implements ProviderService {
         providerRepository.editProvider(provider);
 
         try {
+
+
             if (attachedFile != null) {
                 // Borramos el documento anterior del servidor
                 commonService.deleteDocumentServer(workCenterId, provider.getId(), PROVIDER_DOCUMENTS);
@@ -264,14 +280,15 @@ public class ProviderManager implements ProviderService {
         byte[] content=null;
 
         try {
-            provider = this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
+            // TODO
+//            provider = this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
 
-            file = new File(provider.getDocUrl());
-            if (file.exists()) {
-                content = Files.readAllBytes(file.toPath());
-            }else{
-                return new ResponseEntity<>("File not found",HttpStatus.NOT_FOUND);
-            }
+//            file = new File(provider.getDocUrl());
+//            if (file.exists()) {
+//                content = Files.readAllBytes(file.toPath());
+//            }else{
+//                return new ResponseEntity<>("File not found",HttpStatus.NOT_FOUND);
+//            }
 
         } catch (Exception ex) {
             ex.printStackTrace();

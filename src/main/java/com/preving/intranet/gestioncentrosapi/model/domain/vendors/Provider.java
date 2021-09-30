@@ -23,8 +23,6 @@ import java.util.List;
                         targetClass = Provider.class,
                         columns = {
                                 @ColumnResult(name = "ID", type = Integer.class),
-                                @ColumnResult(name = "DELEGACION_ID", type = Integer.class),
-                                @ColumnResult(name = "WORK_CENTER", type = String.class),
                                 @ColumnResult(name = "NOMBRE", type = String.class),
                                 @ColumnResult(name = "CIF", type = String.class),
                                 @ColumnResult(name = "DOC_NOMBRE", type = String.class),
@@ -48,7 +46,6 @@ import java.util.List;
 
 public class Provider implements Serializable {
     private int id;
-    private WorkCenter workCenter = new WorkCenter();
     private List<WorkCenter> workCenters = new ArrayList<>();
     private String name;
     private String cif;
@@ -80,9 +77,8 @@ public class Provider implements Serializable {
     public Provider() {
     }
 
-    public Provider(int id, WorkCenter workCenter, List<WorkCenter> workCenters, String name, String cif, ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes, String email, String address, String contactPerson, String telephone, City city, String postalCode, String serviceDetails, String docUrl, String docName, String docContentType, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy, boolean active) {
+    public Provider(int id, List<WorkCenter> workCenters, String name, String cif, ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes, String email, String address, String contactPerson, String telephone, City city, String postalCode, String serviceDetails, String docUrl, String docName, String docContentType, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy, boolean active) {
         this.id = id;
-        this.workCenter = workCenter;
         this.workCenters = workCenters;
         this.name = name;
         this.cif = cif;
@@ -110,8 +106,6 @@ public class Provider implements Serializable {
 
     public Provider(
             int id,
-            Integer workCenterId,
-            String workCenterName,
             String name,
             String cif,
             String docName,
@@ -128,8 +122,6 @@ public class Provider implements Serializable {
             String evaluationTypeName,
             Date serviceStartDate) {
         this.id = id;
-        this.workCenter.setId(workCenterId);
-        this.workCenter.setName(workCenterName);
         this.name = name;
         this.cif = cif;
         this.docName = docName;
@@ -162,16 +154,6 @@ public class Provider implements Serializable {
         return id;
     }
     public void setId(int id) {this.id = id; }
-
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
-    public WorkCenter getWorkCenter() {
-        return workCenter;
-    }
-    public void setWorkCenter(WorkCenter workCenter) {
-        this.workCenter = workCenter;
-    }
 
     @Transient
     public List<WorkCenter> getWorkCenters() {
