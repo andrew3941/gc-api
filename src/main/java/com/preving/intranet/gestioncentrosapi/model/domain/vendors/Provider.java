@@ -1,7 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.vendors;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.preving.intranet.gestioncentrosapi.model.domain.City;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 @Entity
 @Table(schema = "GESTION_CENTROS", name = "PROVEEDORES")
 @SqlResultSetMapping(
@@ -21,24 +22,22 @@ import java.util.List;
                         targetClass = Provider.class,
                         columns = {
                                 @ColumnResult(name = "ID", type = Integer.class),
-                                @ColumnResult(name = "DELEGACION_ID", type = Integer.class),
                                 @ColumnResult(name = "NOMBRE", type = String.class),
-                                @ColumnResult(name = "PROVEEDOR_CENTRALIZADO", type = Boolean.class),
                                 @ColumnResult(name = "CIF", type = String.class),
-                                @ColumnResult(name = "DETALLES", type = String.class),
-                                @ColumnResult(name = "GASTO", type = Integer.class),
                                 @ColumnResult(name = "DOC_NOMBRE", type = String.class),
                                 @ColumnResult(name = "DOC_CONTENT_TYPE", type = String.class),
+                                @ColumnResult(name = "ACTIVO", type = boolean.class),
                                 @ColumnResult(name = "TIPO_ID", type = Integer.class),
                                 @ColumnResult(name = "AREA_ID", type = Integer.class),
-                                @ColumnResult(name = "TIPO_EVALUACION_ID", type = Integer.class),
-                                @ColumnResult(name = "PERIODICIDAD_GASTO_ID", type = Integer.class),
+                                @ColumnResult(name = "LOCALIDAD_ID", type = Integer.class),
+                                @ColumnResult(name = "LOC_NOMBRE", type = String.class),
+                                @ColumnResult(name = "PRV_NOMBRE", type = String.class),
                                 @ColumnResult(name = "PROVIDER_TYPE", type = String.class),
                                 @ColumnResult(name = "PROVIDERAREA_TYPE", type = String.class),
+                                @ColumnResult(name = "TIPO_EVALUACION_ID", type = Integer.class),
                                 @ColumnResult(name = "PROVIDEREVALUATION_TYPE", type = String.class),
-                                @ColumnResult(name = "PERIODICITY", type = String.class),
                                 @ColumnResult(name = "FECHA_INICIO_SERVICIO", type = Date.class),
-                                @ColumnResult(name = "FECHA_FIN_SERVICIO", type = Date.class)
+
                         }
                 )
         }
@@ -46,9 +45,8 @@ import java.util.List;
 
 public class Provider implements Serializable {
     private int id;
-    private WorkCenter workCenter = new WorkCenter();
+    private List<WorkCenter> workCenters = new ArrayList<>();
     private String name;
-    private boolean centralProvider;
     private String cif;
     private ProviderTypes providerTypes = new ProviderTypes();
     private ProviderArea providerArea = new ProviderArea();
@@ -57,19 +55,16 @@ public class Provider implements Serializable {
     private String address;
     private String contactPerson;
     private String telephone;
+    private City city = new City();
+    private String postalCode;
     private String serviceDetails;
     private String docUrl;
     private String docName;
     private String docContentType;
-    private ExpenditurePeriod expenditurePeriod = new ExpenditurePeriod();
-    private Integer spending;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date serviceStartDate = new Date();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date serviceEndDate;
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
-    private Date serviceAlramDate = null;
-    private int responsable_id;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
     private User createdBy = new User();
@@ -81,16 +76,10 @@ public class Provider implements Serializable {
     public Provider() {
     }
 
-    public Provider(int id, WorkCenter workCenter,  String name, boolean centralProvider, String cif,
-                    ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes,
-                    String email, String address, String contactPerson, String telephone, String serviceDetails,
-                    String docUrl, String docName, String docContentType, ExpenditurePeriod expenditurePeriod,
-                    Integer spending, Date serviceStartDate, Date serviceEndDate, Date serviceAlramDate,
-                    int responsable_id, Date created, User createdBy, Date modified, User modifiedBy, boolean active) {
+    public Provider(int id, List<WorkCenter> workCenters, String name, String cif, ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes, String email, String address, String contactPerson, String telephone, City city, String postalCode, String serviceDetails, String docUrl, String docName, String docContentType, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy, boolean active) {
         this.id = id;
-        this.workCenter = workCenter;
+        this.workCenters = workCenters;
         this.name = name;
-        this.centralProvider = centralProvider;
         this.cif = cif;
         this.providerTypes = providerTypes;
         this.providerArea = providerArea;
@@ -99,16 +88,14 @@ public class Provider implements Serializable {
         this.address = address;
         this.contactPerson = contactPerson;
         this.telephone = telephone;
+        this.city = city;
+        this.postalCode = postalCode;
         this.serviceDetails = serviceDetails;
         this.docUrl = docUrl;
         this.docName = docName;
         this.docContentType = docContentType;
-        this.expenditurePeriod = expenditurePeriod;
-        this.spending = spending;
         this.serviceStartDate = serviceStartDate;
         this.serviceEndDate = serviceEndDate;
-        this.serviceAlramDate = serviceAlramDate;
-        this.responsable_id = responsable_id;
         this.created = created;
         this.createdBy = createdBy;
         this.modified = modified;
@@ -116,29 +103,47 @@ public class Provider implements Serializable {
         this.active = active;
     }
 
-    public Provider(int id, Integer workCenterId, String name, boolean centralProvider, String cif, String details, Integer spending,
-                    String docName, String docContentType, Integer providerTypeId, Integer providerAreaId, Integer evaluationTypeId,
-                    Integer expenditurePeriodId, String providerType ,String providerAreaType, String ProviderEvaluationType, String expenditurePeriodType, Date serviceStartDate, Date serviceEndDate) {
+    public Provider(
+            int id,
+            String name,
+            String cif,
+            String docName,
+            String docContentType,
+            boolean providerStatus,
+            Integer providerTypeId,
+            Integer providerAreaId,
+            Integer localitiId,
+            String localityName,
+            String provinceName,
+            String providerType ,
+            String providerAreaType,
+            Integer evaluationTypeId,
+            String evaluationTypeName,
+            Date serviceStartDate) {
         this.id = id;
-        this.getWorkCenter().setId(workCenterId);
         this.name = name;
-        this.centralProvider = centralProvider;
         this.cif = cif;
-        this.serviceDetails = details;
-        this.spending = spending;
         this.docName = docName;
         this.docContentType = docContentType;
+        this.active = providerStatus;
+        this.providerTypes.setId(providerTypeId);
+        this.providerArea.setId(providerAreaId);
+        this.city.setId(localitiId);
+        this.city.setName(localityName);
+        this.city.getProvince().setName(provinceName);
+        this.providerTypes.setName(providerType);
+        this.providerArea.setName(providerAreaType);
+        this.evaluationTypes.setId(evaluationTypeId);
+        this.evaluationTypes.setName(evaluationTypeName);
         this.getProviderTypes().setId(providerTypeId);
         this.getProviderTypes().setName(providerType);
         this.getProviderArea().setId(providerAreaId);
         this.getProviderArea().setName(providerAreaType);
         this.getEvaluationTypes().setId(evaluationTypeId);
-        this.getEvaluationTypes().setName(ProviderEvaluationType);
-        this.getExpenditurePeriod().setId(expenditurePeriodId);
-        this.getExpenditurePeriod().setName(expenditurePeriodType);
+        this.getEvaluationTypes().setName(evaluationTypeName);
         this.serviceStartDate = serviceStartDate;
-        this.serviceEndDate = serviceEndDate;
     }
+
 
     @Id
     @Column(name = "ID", nullable = false)
@@ -149,14 +154,12 @@ public class Provider implements Serializable {
     }
     public void setId(int id) {this.id = id; }
 
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
-    public WorkCenter getWorkCenter() {
-        return workCenter;
+    @Transient
+    public List<WorkCenter> getWorkCenters() {
+        return workCenters;
     }
-    public void setWorkCenter(WorkCenter workCenter) {
-        this.workCenter = workCenter;
+    public void setWorkCenters(List<WorkCenter> workCenters) {
+        this.workCenters = workCenters;
     }
 
     @Basic
@@ -166,15 +169,6 @@ public class Provider implements Serializable {
     }
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Basic
-    @Column(name = "PROVEEDOR_CENTRALIZADO")
-    public boolean isCentralProvider() {
-        return centralProvider;
-    }
-    public void setCentralProvider(boolean centralProvider) {
-        this.centralProvider = centralProvider;
     }
 
     @Basic
@@ -249,6 +243,21 @@ public class Provider implements Serializable {
         this.telephone = telephone;
     }
 
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "LOCALIDAD_ID", referencedColumnName = "LOC_ID")
+    public City getCity() {
+        return city;
+    }
+    public void setCity(City city) {
+        this.city = city;
+    }
+
+    @Basic
+    @Column(name = "CODIGO_POSTAL")
+    public String getPostalCode() { return postalCode;  }
+    public void setPostalCode(String postalCode) { this.postalCode = postalCode; }
+
     @Basic
     @Column(name = "DETALLES")
     public String getServiceDetails() {
@@ -285,24 +294,6 @@ public class Provider implements Serializable {
         this.docContentType = docContentType;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "PERIODICIDAD_GASTO_ID", referencedColumnName = "ID")
-    public ExpenditurePeriod getExpenditurePeriod() {
-        return expenditurePeriod;
-    }
-    public void setExpenditurePeriod(ExpenditurePeriod expenditurePeriod) {
-        this.expenditurePeriod = expenditurePeriod;
-    }
-
-    @Basic
-    @Column(name = "GASTO")
-    public Integer getSpending() {
-        return spending;
-    }
-    public void setSpending(Integer spending) {
-        this.spending = spending;
-    }
-
     @Basic
     @Column(name = "FECHA_INICIO_SERVICIO")
     public Date getServiceStartDate() {
@@ -319,24 +310,6 @@ public class Provider implements Serializable {
     }
     public void setServiceEndDate(Date serviceEndDate) {
         this.serviceEndDate = serviceEndDate;
-    }
-
-    @Basic
-    @Column(name = "FECHA_ALARMA_SERVICIO")
-    public Date getServiceAlramDate() {
-        return serviceAlramDate;
-    }
-    public void setServiceAlramDate(Date serviceAlramDate) {
-        this.serviceAlramDate = serviceAlramDate;
-    }
-
-    @Basic
-    @Column(name = "responsable_id")
-    public int getResponsable_id() {
-        return responsable_id;
-    }
-    public void setResponsable_id(int responsable_id) {
-        this.responsable_id = responsable_id;
     }
 
     @Basic
@@ -379,5 +352,6 @@ public class Provider implements Serializable {
     @Column(name = "ACTIVO", nullable = false)
     public boolean getActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
+
 
 }

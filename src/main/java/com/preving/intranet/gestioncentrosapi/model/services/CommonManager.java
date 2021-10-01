@@ -154,9 +154,10 @@ public class CommonManager implements CommonService {
             Drawing drawing = drawingRepository.findDrawingById(itemId);
             docUrl = drawing.getDocUrl();
         } else {
+            // TODO
             // Obtenemos la URL del documento del proveedor para borrarlo del servidor
-            Provider provider = providerRepository.findProviderByWorkCenterIdAndId(workCenterId, itemId);
-            docUrl = provider.getDocUrl();
+//            Provider provider = providerRepository.findProviderByWorkCenterIdAndId(workCenterId, itemId);
+//            docUrl = provider.getDocUrl();
         }
 
 

@@ -14,26 +14,27 @@ import java.util.List;
 @Repository
 public interface ProviderRepository extends JpaRepository<Provider, Integer> {
 
+    Provider findProviderById(int providerId);
+
     @Modifying
     @Transactional
     @Query("update Provider p set p.docUrl=:providerDocUrl where p.id=:providerId")
     void  updateProviderDocUrl(@Param("providerId") int providerId, @Param("providerDocUrl")String providerDocUrl);
 
-    Provider findProviderByWorkCenterIdAndId(int workCenterId, int providerId);
+//    Provider findProviderByWorkCenterIdAndId(int workCenterId, int providerId);
 
     @Modifying
     @Transactional
     @Query("update Provider p set p.name=:#{#provider.name}, " +
-            "p.centralProvider=:#{#provider.centralProvider}, " +
             "p.docName=:#{#provider.docName}, p.docContentType=:#{#provider.docContentType}," +
             "p.cif=:#{#provider.cif}, p.providerTypes=:#{#provider.providerTypes}, p.providerArea=:#{#provider.providerArea}, " +
-            "p.evaluationTypes=:#{#provider.evaluationTypes}, p.expenditurePeriod=:#{#provider.expenditurePeriod}, " +
+            "p.evaluationTypes=:#{#provider.evaluationTypes}, p.city=:#{#provider.city},p.postalCode=:#{#provider.postalCode}," +
             "p.email=:#{#provider.email}, p.address=:#{#provider.address}, p.telephone=:#{#provider.telephone}, " +
-            "p.serviceDetails=:#{#provider.serviceDetails}, p.spending=:#{#provider.spending}, " +
+            "p.serviceDetails=:#{#provider.serviceDetails}, " +
             "p.serviceStartDate=:#{#provider.serviceStartDate}, p.serviceEndDate=:#{#provider.serviceEndDate}, " +
-            "p.active=:#{#provider.active} , " +
+            "p.active=:#{#provider.active}, " +
             "p.modified=CURRENT_TIMESTAMP, p.modifiedBy=:#{#provider.modifiedBy} " +
-            "where p.id=:#{#provider.id} ")
+            "where p.id=:#{#provider.id}")
     void  editProvider(@Param("provider") Provider provider);
 
     List<Provider> findProvidersByServiceStartDateEquals(Date date);

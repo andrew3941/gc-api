@@ -11,13 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.io.File;
-import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
 
@@ -51,13 +51,33 @@ public class ProviderManager implements ProviderService {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    private ProvidersByWorkCentersRepository providersByWorkCentersRepository;
+
+    @Autowired
+    private WorkCentersRepository workCentersRepository;
+
     private static final int PROVIDER_DOCUMENTS = 2;
     private static final boolean ACTIVE = true;
     private static final boolean INACTIVE = false;
 
     @Override
     public List<Provider> getProviders(int workCenterId, ProviderFilter providerFilter) {
-        List<Provider> providers = this.providerCustomRepository.getProviders(workCenterId, providerFilter);  ;
+        List<Provider> providers = this.providerCustomRepository.getProviders(workCenterId, providerFilter);
+
+        for (Provider provider: providers) {
+            // Buscar los centros por proveedorId
+            List<ProvidersByWorkCenters> providersByWorkCenters = providersByWorkCentersRepository.findAllByProvider(provider);
+
+            for (ProvidersByWorkCenters provByWorkCenters : providersByWorkCenters) {
+                // Obtener los datos del centro por id
+                WorkCenter workCenter = this.workCentersRepository.findWorkCenterById(provByWorkCenters.getWorkCenter().getId());
+
+                // Meter los centros en la lista de proveedores
+                provider.getWorkCenters().add(workCenter);
+            }
+        }
+
         return providers;
     }
 
@@ -81,12 +101,11 @@ public class ProviderManager implements ProviderService {
         return expenditurePeriodRepository.findAll();
     }
 
-    @Override
+    @Transactional
     public ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, MultipartFile attachedFile, HttpServletRequest request){
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
-        newProvider.getWorkCenter().setId(workCenterId);
         newProvider.setCreated(new Date());
         newProvider.getCreatedBy().setId(userId);
 
@@ -103,26 +122,31 @@ public class ProviderManager implements ProviderService {
         Provider provider = providerRepository.save(newProvider);
 
         try {
+            for(WorkCenter workCenter : newProvider.getWorkCenters()) {
+                // Seteamos los valores del objeto
+                ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
+                providersByWorkCenters.getProvider().setId(provider.getId());
+                providersByWorkCenters.getWorkCenter().setId(workCenter.getId());
 
-            if (attachedFile != null) {
-                String url = null;
+                // Guardamos en proveedores_x_delegaciones
+                providersByWorkCentersRepository.save(providersByWorkCenters);
 
-                // Guardamos el nuevo documento adjunto
-                url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
+                if (attachedFile != null) {
+                    String url = null;
 
-                // Actualizamos la URL del documento
-                if(url != null){
-                    this.providerRepository.updateProviderDocUrl(provider.getId(), url);
+                    // Guardamos el nuevo documento adjunto
+                    url = commonService.saveDocumentServer(workCenter.getId(), provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
+
+                    // Actualizamos la URL del documento
+                    if(url != null){
+                        this.providerRepository.updateProviderDocUrl(provider.getId(), url);
+                    }
                 }
-
             }
 
         } catch (Exception e) {
-
             e.printStackTrace();
-
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -143,7 +167,29 @@ public class ProviderManager implements ProviderService {
     @Override
     public Provider getProviderById(int workCenterId, int providerId) {
 
-        return this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
+        if (workCenterId != 0) {
+            // TODO
+//            return this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
+            return null;
+        } else {
+            // Obtenemos el proveedor por id
+            Provider provider = this.providerRepository.findProviderById(providerId);
+
+            // Buscar las delegaciones por proveedorId
+            List<ProvidersByWorkCenters> providersByWorkCenters = providersByWorkCentersRepository.findAllByProvider(provider);
+
+            for (ProvidersByWorkCenters provByWorkCenters : providersByWorkCenters) {
+                WorkCenter workCenter = new WorkCenter();
+
+                workCenter.setId(provByWorkCenters.getWorkCenter().getId());
+                workCenter.setName(provByWorkCenters.getWorkCenter().getName());
+
+                // Meter los centros en la lista de proveedores
+                provider.getWorkCenters().add(workCenter);
+            }
+
+            return provider;
+        }
 
     }
 
@@ -211,7 +257,7 @@ public class ProviderManager implements ProviderService {
 
     }
 
-    @Override
+    @Transactional
     public ResponseEntity<?> editProvider(int workCenterId, int providerId, Provider provider, MultipartFile attachedFile, HttpServletRequest request) {
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
@@ -231,17 +277,31 @@ public class ProviderManager implements ProviderService {
         // Editamos el proveedor
         providerRepository.editProvider(provider);
 
+        //Borramos las delegaciones por proveedor con el id
+        providersByWorkCentersRepository.deleteAllByProvider(provider);
+
         try {
-            if (attachedFile != null) {
-                // Borramos el documento anterior del servidor
-                commonService.deleteDocumentServer(workCenterId, provider.getId(), PROVIDER_DOCUMENTS);
+            for(WorkCenter workCenter : provider.getWorkCenters()) {
+                // Seteamos los valores del objeto
+                ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
+                providersByWorkCenters.getProvider().setId(provider.getId());
+                providersByWorkCenters.getWorkCenter().setId(workCenter.getId());
 
-                String url = null;
+                providersByWorkCentersRepository.save(providersByWorkCenters);
 
-                url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
+                if (attachedFile != null) {
+                    // Borramos el documento anterior del servidor
+                    commonService.deleteDocumentServer(workCenterId, provider.getId(), PROVIDER_DOCUMENTS);
 
-                if(url != null){
-                    this.providerRepository.updateProviderDocUrl(provider.getId(), url);
+                    String url = null;
+
+                    // Guardamos documento en el server
+                    url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
+
+                    // Actualizamos la ruta del documento guardado
+                    if (url != null) {
+                        this.providerRepository.updateProviderDocUrl(provider.getId(), url);
+                    }
                 }
             }
 
@@ -260,14 +320,15 @@ public class ProviderManager implements ProviderService {
         byte[] content=null;
 
         try {
-            provider = this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
+            // TODO
+//            provider = this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
 
-            file = new File(provider.getDocUrl());
-            if (file.exists()) {
-                content = Files.readAllBytes(file.toPath());
-            }else{
-                return new ResponseEntity<>("File not found",HttpStatus.NOT_FOUND);
-            }
+//            file = new File(provider.getDocUrl());
+//            if (file.exists()) {
+//                content = Files.readAllBytes(file.toPath());
+//            }else{
+//                return new ResponseEntity<>("File not found",HttpStatus.NOT_FOUND);
+//            }
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -277,5 +338,4 @@ public class ProviderManager implements ProviderService {
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
-
-}
+   }
