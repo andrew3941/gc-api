@@ -302,12 +302,12 @@ public class WorkCenter implements Serializable {
     }
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "workCenter")
+    @OneToMany(mappedBy = "workCenter", fetch = FetchType.LAZY)
     public List<WorkCentersByEntity> getWorkCentersByEntities() { return workCentersByEntities; }
     public void setWorkCentersByEntities(List<WorkCentersByEntity> workCentersByEntities) { this.workCentersByEntities = workCentersByEntities; }
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "workCenter", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "workCenter", fetch = FetchType.LAZY)
     @Fetch(value = FetchMode.SELECT)
     public List<Drawing> getDrawings() {
         return drawings;
@@ -316,7 +316,7 @@ public class WorkCenter implements Serializable {
         this.drawings = drawings;
     }
 
-    @OneToMany(mappedBy = "workCenter", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "workCenter", fetch = FetchType.LAZY)
     @Fetch(value = FetchMode.SELECT)
     public List<Room> getRooms() {
         return rooms;
@@ -328,7 +328,7 @@ public class WorkCenter implements Serializable {
     public void setEmployee(int employee) { this.employee = employee; }
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Fetch(value = FetchMode.SELECT)
     public List<ProvidersByWorkCenters> getProviders() {
         return providers;

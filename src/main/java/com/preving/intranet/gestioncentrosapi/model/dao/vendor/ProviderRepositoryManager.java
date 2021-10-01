@@ -46,6 +46,10 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
             sql += "AND PA.ID =:areaTypes ";
         }
 
+        if(providerFilter != null && providerFilter.getProvinces().size() != 0){
+            sql += "AND V.PRV_COD =:provinceCod ";
+        }
+
         if(providerFilter != null && providerFilter.getProviderName() != null && providerFilter.getProviderName() != ""){
             sql += " AND LOWER(TRANSLATE(P.NOMBRE, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:providerName, '������������', 'aeiounAEIOUN')) ";
         }
@@ -70,8 +74,8 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
             query.setParameter("areaTypes", providerFilter.getAreaTypes());
         }
 
-        if (providerFilter != null && workCenterId != 0) {
-            query.setParameter("workCenterId", providerFilter.getCenters());
+        if(providerFilter != null && providerFilter.getProvinces().size() != 0 && providerFilter.getProvinces() != null){
+            query.setParameter("provinceCod", providerFilter.getProvinces());
         }
 
         if(providerFilter != null && providerFilter.getProviderStatus() != 2) {

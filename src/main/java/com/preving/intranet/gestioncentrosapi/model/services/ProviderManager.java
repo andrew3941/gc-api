@@ -121,14 +121,14 @@ public class ProviderManager implements ProviderService {
         // Guardamos proveedor
         Provider provider = providerRepository.save(newProvider);
 
-        // Luego guardamos proveedores_x_delegaciones
         try {
             for(WorkCenter workCenter : newProvider.getWorkCenters()) {
-
+                // Seteamos los valores del objeto
                 ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
                 providersByWorkCenters.getProvider().setId(provider.getId());
                 providersByWorkCenters.getWorkCenter().setId(workCenter.getId());
 
+                // Guardamos en proveedores_x_delegaciones
                 providersByWorkCentersRepository.save(providersByWorkCenters);
 
                 if (attachedFile != null) {
@@ -172,7 +172,23 @@ public class ProviderManager implements ProviderService {
 //            return this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
             return null;
         } else {
-            return this.providerRepository.findProviderById(providerId);
+            // Obtenemos el proveedor por id
+            Provider provider = this.providerRepository.findProviderById(providerId);
+
+            // Buscar las delegaciones por proveedorId
+            List<ProvidersByWorkCenters> providersByWorkCenters = providersByWorkCentersRepository.findAllByProvider(provider);
+
+            for (ProvidersByWorkCenters provByWorkCenters : providersByWorkCenters) {
+                WorkCenter workCenter = new WorkCenter();
+
+                workCenter.setId(provByWorkCenters.getWorkCenter().getId());
+                workCenter.setName(provByWorkCenters.getWorkCenter().getName());
+
+                // Meter los centros en la lista de proveedores
+                provider.getWorkCenters().add(workCenter);
+            }
+
+            return provider;
         }
 
     }
@@ -241,7 +257,7 @@ public class ProviderManager implements ProviderService {
 
     }
 
-    @Override
+    @Transactional
     public ResponseEntity<?> editProvider(int workCenterId, int providerId, Provider provider, MultipartFile attachedFile, HttpServletRequest request) {
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
@@ -258,32 +274,34 @@ public class ProviderManager implements ProviderService {
         // Setting active or inactive provider
         activeInactiveProvider(provider);
 
-              // Editamos el proveedor
+        // Editamos el proveedor
         providerRepository.editProvider(provider);
+
+        //Borramos las delegaciones por proveedor con el id
+        providersByWorkCentersRepository.deleteAllByProvider(provider);
 
         try {
             for(WorkCenter workCenter : provider.getWorkCenters()) {
-
+                // Seteamos los valores del objeto
                 ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
                 providersByWorkCenters.getProvider().setId(provider.getId());
                 providersByWorkCenters.getWorkCenter().setId(workCenter.getId());
 
-                if (attachedFile != null) {
+                providersByWorkCentersRepository.save(providersByWorkCenters);
 
+                if (attachedFile != null) {
                     // Borramos el documento anterior del servidor
                     commonService.deleteDocumentServer(workCenterId, provider.getId(), PROVIDER_DOCUMENTS);
 
                     String url = null;
 
+                    // Guardamos documento en el server
                     url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
 
+                    // Actualizamos la ruta del documento guardado
                     if (url != null) {
                         this.providerRepository.updateProviderDocUrl(provider.getId(), url);
                     }
-
-                    providersByWorkCentersRepository.deleteByProviderId(provider.getId());
-
-                    providersByWorkCentersRepository.save(providersByWorkCenters);
                 }
             }
 
