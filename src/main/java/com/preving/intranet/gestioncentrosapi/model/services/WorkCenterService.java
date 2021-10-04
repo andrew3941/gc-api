@@ -4,6 +4,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterTypes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,5 +63,8 @@ public interface WorkCenterService {
     void activateWorkCenters();
 
     List<WorkCenter>findByWorkCenters();
+
+    List<WorkCenterTypes> getWorkCenterTypes();
+
 
 }

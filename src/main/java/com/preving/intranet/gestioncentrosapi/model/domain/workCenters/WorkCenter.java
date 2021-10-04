@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderTypes;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProvidersByWorkCenters;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -72,6 +73,7 @@ public class WorkCenter implements Serializable {
     private List<WorkCentersByEntity> workCentersByEntities = new ArrayList<>();
     private List<Drawing> drawings = new ArrayList<>();
     private List<Room> rooms = new ArrayList<>();
+    private WorkCenterTypes workCenterTypes = new WorkCenterTypes();
     private List<ProvidersByWorkCenters> providers = new ArrayList<>();
 
     public WorkCenter() {}
@@ -178,6 +180,8 @@ public class WorkCenter implements Serializable {
     public void setAddress(String address) {
         this.address = address;
     }
+
+
 
     @Basic
     @Column(name = "C_POSTAL")
@@ -322,6 +326,16 @@ public class WorkCenter implements Serializable {
         return rooms;
     }
     public void setRooms(List<Room> rooms) { this.rooms = rooms; }
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "TIPO_EVALUACION_ID", referencedColumnName = "ID")
+    public WorkCenterTypes getWorkCenterTypes() {
+        return workCenterTypes;
+    }
+    public void setWorkCenterTypes(WorkCenterTypes evaluationTypes) {
+        this.workCenterTypes = workCenterTypes;
+    }
+
 
     @Transient
     public int getEmployee() { return employee;}

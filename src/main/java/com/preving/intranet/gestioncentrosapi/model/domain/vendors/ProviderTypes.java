@@ -1,11 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.vendors;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(schema = "GESTION_CENTROS", name = "TM_PROVEEDORES_TIPOS")
