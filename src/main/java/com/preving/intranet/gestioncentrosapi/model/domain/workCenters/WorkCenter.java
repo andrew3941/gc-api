@@ -328,7 +328,7 @@ public class WorkCenter implements Serializable {
     public void setRooms(List<Room> rooms) { this.rooms = rooms; }
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "TIPO_EVALUACION_ID", referencedColumnName = "ID")
+    @JoinColumn(name = "TIPO", referencedColumnName = "ID")
     public WorkCenterTypes getWorkCenterTypes() {
         return workCenterTypes;
     }
