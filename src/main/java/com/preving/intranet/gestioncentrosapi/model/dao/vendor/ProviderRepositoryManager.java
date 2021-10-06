@@ -30,16 +30,18 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
                 "GESTION_CENTROS.TM_PROVEEDORES_AREAS PA, " +
                 "GESTION_CENTROS.TM_PERIODICIDAD_GASTO PG, " +
                 "GESTION_CENTROS.TM_PROVEEDORES_EVALUACION_TIPO PET, "+
+                "GESTION_CENTROS.PROVEEDORES_X_DELEGACIONES PW, "+
                 "VIG_SALUD.LOCALIDADES L, "+
                 "VIG_SALUD.PROVINCIAS V "+
                 "WHERE P.TIPO_ID = PT.ID " +
                 "AND P.AREA_ID = PA.ID "+
                 "AND P.TIPO_EVALUACION_ID = PET.ID "+
                 "AND P.LOCALIDAD_ID = L.LOC_ID " +
-                "AND L.LOC_PRV_COD = V.PRV_COD ";
+                "AND L.LOC_PRV_COD = V.PRV_COD " +
+                "AND P.ID = PW.PROVEEDOR_ID ";
 
         if(providerFilter != null && providerFilter.getProviderTypes().size() != 0){
-           sql += "AND PT.ID =:providerTypes ";
+            sql += "AND PT.ID =:providerTypes ";
         }
 
         if(providerFilter != null && providerFilter.getAreaTypes().size() != 0){
@@ -48,6 +50,10 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
 
         if(providerFilter != null && providerFilter.getProvinces().size() != 0){
             sql += "AND V.PRV_COD =:provinceCod ";
+        }
+
+        if(providerFilter != null && providerFilter.getCenters().size() != 0){
+            sql += "AND PW.DELEGACION_ID =:workCenterId ";
         }
 
         if(providerFilter != null && providerFilter.getProviderName() != null && providerFilter.getProviderName() != ""){
@@ -76,6 +82,10 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
 
         if(providerFilter != null && providerFilter.getProvinces().size() != 0 && providerFilter.getProvinces() != null){
             query.setParameter("provinceCod", providerFilter.getProvinces());
+        }
+
+        if(providerFilter != null && providerFilter.getCenters().size() != 0 && providerFilter.getCenters() != null){
+            query.setParameter("workCenterId", providerFilter.getCenters());
         }
 
         if(providerFilter != null && providerFilter.getProviderStatus() != 2) {
