@@ -332,7 +332,7 @@ public class WorkCenter implements Serializable {
     public WorkCenterTypes getWorkCenterTypes() {
         return workCenterTypes;
     }
-    public void setWorkCenterTypes(WorkCenterTypes evaluationTypes) {
+    public void setWorkCenterTypes(WorkCenterTypes workCenterTypes) {
         this.workCenterTypes = workCenterTypes;
     }
 

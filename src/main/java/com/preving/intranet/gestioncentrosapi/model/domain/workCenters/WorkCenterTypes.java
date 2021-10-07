@@ -23,6 +23,9 @@ public class WorkCenterTypes implements Serializable {
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
+
+
+
     @Basic
     @Column(name = "DENOMINACION")
     public String getName() { return name; }
