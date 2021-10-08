@@ -64,6 +64,7 @@ public class WorkCenter implements Serializable {
     private Zona zona = new Zona();
     private int active;
     private int visible;
+    private WorkCenterTypes workCenterTypes = new WorkCenterTypes();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
     private User createdBy = new User();
@@ -73,7 +74,6 @@ public class WorkCenter implements Serializable {
     private List<WorkCentersByEntity> workCentersByEntities = new ArrayList<>();
     private List<Drawing> drawings = new ArrayList<>();
     private List<Room> rooms = new ArrayList<>();
-    private WorkCenterTypes workCenterTypes = new WorkCenterTypes();
     private List<ProvidersByWorkCenters> providers = new ArrayList<>();
 
     public WorkCenter() {}
@@ -181,8 +181,6 @@ public class WorkCenter implements Serializable {
         this.address = address;
     }
 
-
-
     @Basic
     @Column(name = "C_POSTAL")
     public String getPostalCode() {
@@ -269,6 +267,15 @@ public class WorkCenter implements Serializable {
         this.visible = visible;
     }
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "TIPO_ID", referencedColumnName = "ID")
+    public WorkCenterTypes getWorkCenterTypes() {
+        return workCenterTypes;
+    }
+    public void setWorkCenterTypes(WorkCenterTypes workCenterTypes) {
+        this.workCenterTypes = workCenterTypes;
+    }
+
     @Basic
     @Column(name = "CREADO")
     public Date getCreated() {
@@ -326,16 +333,6 @@ public class WorkCenter implements Serializable {
         return rooms;
     }
     public void setRooms(List<Room> rooms) { this.rooms = rooms; }
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "TIPO", referencedColumnName = "ID")
-    public WorkCenterTypes getWorkCenterTypes() {
-        return workCenterTypes;
-    }
-    public void setWorkCenterTypes(WorkCenterTypes workCenterTypes) {
-        this.workCenterTypes = workCenterTypes;
-    }
-
 
     @Transient
     public int getEmployee() { return employee;}

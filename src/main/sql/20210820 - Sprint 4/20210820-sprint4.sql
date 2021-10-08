@@ -164,66 +164,66 @@ INCREMENT BY 1;
 ------------------------------------------------------------------------------------------------------------------------
 
 -- GESTION_CENTROS.TM_PROVEEDORES_TIPOS
-insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
 values (1, 'LIMPIEZA', '', true, 2);
 
-insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
 values (2, 'MANTENIMIENTO', '', true, 3);
 
-insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
 values (3, 'TELECOMUNICACIONES', '', true, 9);
 
-insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
 values (4, 'TECNOLOGICO', '', true, 8);
 
-insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
 values (5, 'SUMINISTROS', '', true, 7);
 
-insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
 values (6, 'ALQUILER CENTRO', '', true, 1);
 
-insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
 values (7, 'PARKING', '', true, 6);
 
-insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
 values (8, 'MATERIAL DE OFICINA', '', true, 4);
 
-insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
 values (9, 'MENSAJERÍA', '', true, 5);
 
-insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
 values (10, 'OTROS', '', true, 50);
 
 
 -- GESTION_CENTROS.TM_PROVEEDORES_AREAS
-insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo, orden)
 values (1, 'COMPRAS', '', true, 3);
 
-insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo, orden)
 values (2, 'INFRAESTRUCTURAS', '', true, 5);
 
-insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo, orden)
 values (3, 'TIC', '', true, 8);
 
-insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo, orden)
 values (4, 'TECNICA', '', true, 7);
 
-insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo, orden)
 values (5, 'VS', '', true, 9);
 
-insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo, orden)
 values (6, 'ADMINISTRACION', '', true, 1);
 
-insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo, orden)
 values (7, 'COMERCIAL', '', true, 2);
 
-insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo, orden)
 values (8, 'SAC', '', true, 6);
 
-insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo, orden)
 values (9, 'FORMACION', '', true, 4);
 
-insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo)
+insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo, orden)
 values (10, 'OTROS', '', true, 50);
 
 

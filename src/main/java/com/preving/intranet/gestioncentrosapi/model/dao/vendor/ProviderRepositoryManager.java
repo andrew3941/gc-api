@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProviderRepositoryManager implements ProviderCustomRepository {
@@ -52,8 +53,9 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
             sql += "AND V.PRV_COD =:provinceCod ";
         }
 
-        if(providerFilter != null && providerFilter.getCenters().size() != 0){
-            sql += "AND PW.DELEGACION_ID =:workCenterId ";
+        if(providerFilter != null && providerFilter.getCenters().size() > 0) {
+            String centers = providerFilter.getCenters().stream().map(wce -> String.valueOf(wce.getId())).collect(Collectors.joining(","));
+            sql += "AND PW.DELEGACION_ID IN (" + centers + ")";
         }
 
         if(providerFilter != null && providerFilter.getProviderName() != null && providerFilter.getProviderName() != ""){
@@ -82,10 +84,6 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
 
         if(providerFilter != null && providerFilter.getProvinces().size() != 0 && providerFilter.getProvinces() != null){
             query.setParameter("provinceCod", providerFilter.getProvinces());
-        }
-
-        if(providerFilter != null && providerFilter.getCenters().size() != 0 && providerFilter.getCenters() != null){
-            query.setParameter("workCenterId", providerFilter.getCenters());
         }
 
         if(providerFilter != null && providerFilter.getProviderStatus() != 2) {
