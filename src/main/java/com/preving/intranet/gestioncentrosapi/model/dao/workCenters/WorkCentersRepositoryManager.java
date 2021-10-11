@@ -28,7 +28,7 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
 
         String sql = "" +
                 "SELECT DISTINCT WC.ID, WC.LOCALIDAD_ID, WC.NOMBRE, WC.COD_IN_NAV, WC.DIRECCION, WC.C_POSTAL, WC.TFNO, WC.MAIL, " +
-                "   WC.FECHA_ALTA, WC.FECHA_BAJA, WC.ACTIVO, LOC.LOC_NOMBRE LOCALIDAD_NOMBRE, " +
+                "   WC.FECHA_ALTA, WC.FECHA_BAJA, WC.ACTIVO, WC.TIPO_ID, LOC.LOC_NOMBRE LOCALIDAD_NOMBRE, " +
                 "   LOC.LOC_PRV_COD PROVINCIA_COD, PRV.PRV_NOMBRE PROVINCIA_NOMBRE " +
                 "FROM GC2006_RELEASE.PC_DELEGACIONES WC, ";
 
@@ -59,6 +59,10 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
             sql += " AND WC.ACTIVO = :workCenterStatus ";
         }
 
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterTypes() != 2){
+            sql += " AND WC.TIPO_ID = :workCenterTypes ";
+        }
+
         if(workCenterFilter != null && workCenterFilter.getWorkCenterName() != null && workCenterFilter.getWorkCenterName() != ""){
             sql += " AND LOWER(TRANSLATE(WC.NOMBRE, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, '������������', 'aeiounAEIOUN')) ";
         }
@@ -78,6 +82,11 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
         if(workCenterFilter != null && workCenterFilter.getWorkCenterStatus() != 2){
             query.setParameter("workCenterStatus", workCenterFilter.getWorkCenterStatus());
         }
+
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterTypes() != 2){
+            query.setParameter("workCenterTypes", workCenterFilter.getWorkCenterTypes());
+        }
+
 
 
         List<WorkCenter>  allWorkCenters = query.getResultList();
