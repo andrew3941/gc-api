@@ -126,6 +126,7 @@ public class ProviderManager implements ProviderService {
 
         try {
             for(WorkCenter workCenter : newProvider.getWorkCenters()) {
+
                 // Seteamos los valores del objeto
                 ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
                 providersByWorkCenters.getProvider().setId(provider.getId());
@@ -133,31 +134,25 @@ public class ProviderManager implements ProviderService {
 
                 // Guardamos en proveedores_x_delegaciones
                 providersByWorkCentersRepository.save(providersByWorkCenters);
-
                 // TODO guardar detalles comunes del proveedor
-//                providersCommonDetailsRepository.save();
+                if (attachedFile != null) {
+                    String url = null;
 
-//                if (attachedFile != null) {
-//                    String url = null;
-//
-//                    // Guardamos el nuevo documento adjunto
-//                    url = commonService.saveDocumentServer(workCenter.getId(), provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
-//
-//                    // Actualizamos la URL del documento
-//                    if(url != null){
-//                        // TODO actualizar en la nueva tabla proveedores_detalles_comun
-//                        this.providerRepository.updateProviderDocUrl(provider.getId(), url);
-//                    }
-//                }
+                    // Guardamos documento en el server
+                    url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
+
+                    // Actualizamos la ruta del documento guardado
+                    if (url != null) {
+                        this.providersCommonDetailsRepository.updateProviderDocUrl(provider.getId(), url);
+                    }
+                }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
         return new ResponseEntity<>(HttpStatus.OK);
-
     }
 
     private void activeInactiveProvider(Provider provider) {
