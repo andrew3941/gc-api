@@ -112,11 +112,11 @@ public class ProviderManager implements ProviderService {
         newProvider.setCreated(new Date());
         newProvider.getCreatedBy().setId(userId);
 
-        if (attachedFile != null) {
-            newProvider.setDocUrl("doc_url");
-            newProvider.setDocName(attachedFile.getOriginalFilename());
-            newProvider.setDocContentType(attachedFile.getContentType());
-        }
+//        if (attachedFile != null) {
+//            newProvider.setDocUrl("doc_url");
+//            newProvider.setDocName(attachedFile.getOriginalFilename());
+//            newProvider.setDocContentType(attachedFile.getContentType());
+//        }
 
         // Setting active or inactive provider
         activeInactiveProvider(newProvider);
@@ -135,6 +135,22 @@ public class ProviderManager implements ProviderService {
                 // Guardamos en proveedores_x_delegaciones
                 providersByWorkCentersRepository.save(providersByWorkCenters);
                 // TODO guardar detalles comunes del proveedor
+
+                ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
+                providersCommonDetails.setCreated(new Date());
+                providersCommonDetails.getCreatedBy().setId(userId);
+                providersCommonDetails.getExpenditurePeriod().setId(5);
+
+                providersCommonDetails.setProvDelegacionId(providersCommonDetails.getId());
+                if (attachedFile != null) {
+
+                    providersCommonDetails.setDocUrl("doc_url");
+                    providersCommonDetails.setDocName(attachedFile.getOriginalFilename());
+                    providersCommonDetails.setDocContentType(attachedFile.getContentType());
+                    providersCommonDetailsRepository.save(providersCommonDetails);
+
+                }
+                this.providersCommonDetailsRepository.save(providersCommonDetails);
                 if (attachedFile != null) {
                     String url = null;
 
