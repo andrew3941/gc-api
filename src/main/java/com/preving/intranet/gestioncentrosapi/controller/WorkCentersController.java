@@ -522,4 +522,16 @@ public class WorkCentersController {
 
     }
 
+    @RequestMapping(value = "workCenterTypes", method = RequestMethod.GET)
+    public ResponseEntity<?> getWorkCenterTypes(){
+
+        try {
+            return new ResponseEntity<>(workCenterService.getWorkCenterTypes(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 }

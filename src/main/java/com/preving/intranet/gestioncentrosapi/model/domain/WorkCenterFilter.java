@@ -1,5 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.domain;
 
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterTypes;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,16 +10,18 @@ public class WorkCenterFilter {
     private String workCenterName;
     private Province workCenterProvince;
     private int workCenterStatus;
+    private List<WorkCenterTypes> workCenterTypes = new ArrayList<>();
     private boolean allEntitiesSelected;
     private List<Entity> workCenterEntities = new ArrayList<>();
 
     public WorkCenterFilter() {
     }
 
-    public WorkCenterFilter(String workCenterName, Province workCenterProvince, int workCenterStatus, boolean allEntitiesSelected, List<Entity> workCenterEntities) {
+    public WorkCenterFilter(String workCenterName, Province workCenterProvince, int workCenterStatus, List<WorkCenterTypes> workCenterTypes, boolean allEntitiesSelected, List<Entity> workCenterEntities) {
         this.workCenterName = workCenterName;
         this.workCenterProvince = workCenterProvince;
         this.workCenterStatus = workCenterStatus;
+        this.workCenterTypes = workCenterTypes;
         this.allEntitiesSelected = allEntitiesSelected;
         this.workCenterEntities = workCenterEntities;
     }
@@ -42,6 +46,9 @@ public class WorkCenterFilter {
     public void setWorkCenterStatus(int workCenterStatus) {
         this.workCenterStatus = workCenterStatus;
     }
+
+    public List<WorkCenterTypes> getWorkCenterTypes() {  return workCenterTypes;  }
+    public void setWorkCenterTypes(List<WorkCenterTypes> workCenterTypes) { this.workCenterTypes = workCenterTypes; }
 
     public boolean isAllEntitiesSelected() {
         return allEntitiesSelected;

@@ -11,5 +11,4 @@ import java.util.List;
 public interface ProviderCustomRepository  {
 
     List<Provider> getProviders(Integer workCenterId, ProviderFilter providerFilter);
-
 }

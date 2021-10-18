@@ -103,6 +103,8 @@ public class WorkCenterManager implements WorkCenterService{
     @Autowired
     private RoomByTypesRepository roomByTypesRepository;
 
+    @Autowired WorkCenterTypesRepository workCenterTypesRepository;
+
     @PersistenceContext
     private EntityManager manager;
 
@@ -742,6 +744,12 @@ public class WorkCenterManager implements WorkCenterService{
     @Override
     public List<WorkCenter> findByWorkCenters() {
         return workCentersCustomizeRepository.findAllByActive();
+    }
+
+
+    @Override
+    public List<WorkCenterTypes> getWorkCenterTypes() {
+        return workCenterTypesRepository.findAll();
     }
 
 }
