@@ -6,7 +6,7 @@ import java.io.Serializable;
 @Entity
 @Table(schema = "GESTION_CENTROS", name = "TM_DELEGACIONES_TIPOS")
 public class WorkCenterTypes implements Serializable {
-    private Integer id;
+    private int id;
     private String name;
     private boolean active;
 

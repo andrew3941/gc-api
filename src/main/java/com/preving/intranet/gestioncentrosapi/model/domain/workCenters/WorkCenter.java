@@ -81,7 +81,7 @@ public class WorkCenter implements Serializable {
     }
 
     public WorkCenter(int id, Integer localityId, String name, String navisionCode, String address, String postalCode,
-                      String phoneNumber, String email, Date startDate, Date endDate, int active, Integer workCenterTypesStatusId, String localityName,
+                      String phoneNumber, String email, Date startDate, Date endDate, int active, int workCenterTypesStatusId, String localityName,
                       String prvCod, String prvName)  {
         this.id = id;
         this.city.setId(localityId) ;
