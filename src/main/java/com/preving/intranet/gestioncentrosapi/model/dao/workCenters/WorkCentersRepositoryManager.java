@@ -59,7 +59,7 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
             sql += " AND WC.ACTIVO = :workCenterStatus ";
         }
 
-        if(workCenterFilter != null && workCenterFilter.getWorkCenterTypes() != null){
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterTypes().size() > 0){
             sql += " AND WC.TIPO_ID = :workCenterTypes ";
         }
 
@@ -83,7 +83,7 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
             query.setParameter("workCenterStatus", workCenterFilter.getWorkCenterStatus());
         }
 
-        if(workCenterFilter != null && workCenterFilter.getWorkCenterTypes() != null){
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterTypes().size() > 0){
             query.setParameter("workCenterTypes", workCenterFilter.getWorkCenterTypes());
         }
 

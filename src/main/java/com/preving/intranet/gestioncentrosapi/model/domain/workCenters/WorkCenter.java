@@ -77,7 +77,8 @@ public class WorkCenter implements Serializable {
     private List<Room> rooms = new ArrayList<>();
     private List<ProvidersByWorkCenters> providers = new ArrayList<>();
 
-    public WorkCenter() {}
+    public WorkCenter() {
+    }
 
     public WorkCenter(int id, Integer localityId, String name, String navisionCode, String address, String postalCode,
                       String phoneNumber, String email, Date startDate, Date endDate, int active, Integer workCenterTypesStatusId, String localityName,
