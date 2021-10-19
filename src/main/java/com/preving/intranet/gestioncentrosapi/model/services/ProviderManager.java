@@ -105,14 +105,14 @@ public class ProviderManager implements ProviderService {
     }
 
     @Transactional
-    public ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, MultipartFile attachedFile, HttpServletRequest request){
+    public ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, MultipartFile attachedFile, HttpServletRequest request) {
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
         newProvider.setCreated(new Date());
         newProvider.getCreatedBy().setId(userId);
 
-//        if (attachedFile != null) {
+//         if (attachedFile != null) {
 //            newProvider.setDocUrl("doc_url");
 //            newProvider.setDocName(attachedFile.getOriginalFilename());
 //            newProvider.setDocContentType(attachedFile.getContentType());
@@ -123,7 +123,6 @@ public class ProviderManager implements ProviderService {
 
         // Guardamos proveedor
         Provider provider = providerRepository.save(newProvider);
-
         try {
             for(WorkCenter workCenter : newProvider.getWorkCenters()) {
 
@@ -139,16 +138,15 @@ public class ProviderManager implements ProviderService {
                 ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
                 providersCommonDetails.setCreated(new Date());
                 providersCommonDetails.getCreatedBy().setId(userId);
-                providersCommonDetails.getExpenditurePeriod().setId(5);
+                providersCommonDetails.getExpenditurePeriod().setId(4);
 
                 providersCommonDetails.setProvDelegacionId(providersCommonDetails.getId());
-                if (attachedFile != null) {
 
+                if (attachedFile != null) {
                     providersCommonDetails.setDocUrl("doc_url");
                     providersCommonDetails.setDocName(attachedFile.getOriginalFilename());
                     providersCommonDetails.setDocContentType(attachedFile.getContentType());
                     providersCommonDetailsRepository.save(providersCommonDetails);
-
                 }
                 this.providersCommonDetailsRepository.save(providersCommonDetails);
                 if (attachedFile != null) {
@@ -372,4 +370,4 @@ public class ProviderManager implements ProviderService {
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
-   }
+}

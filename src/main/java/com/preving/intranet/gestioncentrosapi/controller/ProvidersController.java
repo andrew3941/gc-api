@@ -110,7 +110,7 @@ public class ProvidersController {
         Provider newProvider = gson.fromJson(myProvider, Provider.class);
 
         try {
-            providerService.saveProvider(workCenterId, newProvider, attachedFile, request);
+            providerService.saveProvider(workCenterId,newProvider,attachedFile,request);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
