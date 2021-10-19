@@ -13,7 +13,8 @@ import java.util.List;
 @Repository
 public interface ProvidersCommonDetailsRepository extends JpaRepository<ProvidersCommonDetails, Integer> {
 
-    List<ProvidersCommonDetails> findAllByProvDelegacionId(int provDelegacionId);
+//    List<ProvidersCommonDetails> findAllByProvDelegacionId(int provDelegacionId);
+    ProvidersCommonDetails findAllByProvDelegacionId(int provDelegacionId);
 
     @Modifying
     @Transactional

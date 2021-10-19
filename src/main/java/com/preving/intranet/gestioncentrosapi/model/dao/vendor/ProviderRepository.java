@@ -51,4 +51,5 @@ public interface ProviderRepository extends JpaRepository<Provider, Integer> {
     @Query("update Provider p set p.active = true where p.id = :providerId")
     void setActiveProvider(@Param("providerId") int providerId);
 
+//    Provider findProviderByWorkCenterIdAndId(int workCenterId, int providerId);
 }
