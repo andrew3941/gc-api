@@ -58,6 +58,11 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
             sql += "AND PW.DELEGACION_ID IN (" + centers + ")";
         }
 
+        if(workCenterId != 0){
+            sql += "AND PW.DELEGACION_ID =:workCenterId ";
+        }
+
+
         if(providerFilter != null && providerFilter.getProviderName() != null && providerFilter.getProviderName() != ""){
             sql += " AND LOWER(TRANSLATE(P.NOMBRE, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:providerName, '������������', 'aeiounAEIOUN')) ";
         }
@@ -84,6 +89,10 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
 
         if(providerFilter != null && providerFilter.getProvinces().size() != 0 && providerFilter.getProvinces() != null){
             query.setParameter("provinceCod", providerFilter.getProvinces());
+        }
+
+        if(workCenterId != 0){
+            query.setParameter("workCenterId", workCenterId);
         }
 
         if(providerFilter != null && providerFilter.getProviderStatus() != 2) {
