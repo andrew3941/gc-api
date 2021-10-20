@@ -51,6 +51,8 @@ public class ProvidersCommonDetails implements Serializable {
 
     @Id
     @Column(name = "ID", nullable = false, precision = 0)
+    @SequenceGenerator(name = "PROVEEDORES_DETALLES_COMUN_SEQ", sequenceName = "PROVEEDORES_DETALLES_COMUN_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROVEEDORES_DETALLES_COMUN_SEQ")
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

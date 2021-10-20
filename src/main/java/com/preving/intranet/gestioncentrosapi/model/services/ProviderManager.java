@@ -112,17 +112,12 @@ public class ProviderManager implements ProviderService {
         newProvider.setCreated(new Date());
         newProvider.getCreatedBy().setId(userId);
 
-//         if (attachedFile != null) {
-//            newProvider.setDocUrl("doc_url");
-//            newProvider.setDocName(attachedFile.getOriginalFilename());
-//            newProvider.setDocContentType(attachedFile.getContentType());
-//        }
-
         // Setting active or inactive provider
         activeInactiveProvider(newProvider);
 
         // Guardamos proveedor
         Provider provider = providerRepository.save(newProvider);
+
         try {
             for(WorkCenter workCenter : newProvider.getWorkCenters()) {
 
@@ -133,22 +128,21 @@ public class ProviderManager implements ProviderService {
 
                 // Guardamos en proveedores_x_delegaciones
                 providersByWorkCentersRepository.save(providersByWorkCenters);
-                // TODO guardar detalles comunes del proveedor
 
                 ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
                 providersCommonDetails.setCreated(new Date());
                 providersCommonDetails.getCreatedBy().setId(userId);
                 providersCommonDetails.getExpenditurePeriod().setId(4);
-
-                providersCommonDetails.setProvDelegacionId(providersCommonDetails.getId());
+                providersCommonDetails.setProvDelegacionId(providersByWorkCenters.getId());
 
                 if (attachedFile != null) {
                     providersCommonDetails.setDocUrl("doc_url");
                     providersCommonDetails.setDocName(attachedFile.getOriginalFilename());
                     providersCommonDetails.setDocContentType(attachedFile.getContentType());
-                    providersCommonDetailsRepository.save(providersCommonDetails);
                 }
+
                 this.providersCommonDetailsRepository.save(providersCommonDetails);
+
                 if (attachedFile != null) {
                     String url = null;
 
@@ -219,7 +213,6 @@ public class ProviderManager implements ProviderService {
                 // Meter los centros en la lista de proveedores
                 provider.getWorkCenters().add(workCenter);
             }
-
             return provider;
         }
 
