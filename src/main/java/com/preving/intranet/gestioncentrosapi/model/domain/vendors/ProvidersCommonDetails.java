@@ -67,9 +67,7 @@ public class ProvidersCommonDetails implements Serializable {
 
     @Basic
     @Column(name = "DOC_URL")
-    public String getDocUrl() {
-        return docUrl;
-    }
+    public String getDocUrl() { return docUrl; }
     public void setDocUrl(String docUrl) {
         this.docUrl = docUrl;
     }

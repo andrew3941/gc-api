@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.io.File;
@@ -132,7 +133,7 @@ public class ProviderManager implements ProviderService {
                 ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
                 providersCommonDetails.setCreated(new Date());
                 providersCommonDetails.getCreatedBy().setId(userId);
-                providersCommonDetails.getExpenditurePeriod().setId(4);
+                providersCommonDetails.getExpenditurePeriod().setId(providersCommonDetails.getExpenditurePeriod().getId());
                 providersCommonDetails.setProvDelegacionId(providersByWorkCenters.getId());
 
                 if (attachedFile != null) {
@@ -141,7 +142,7 @@ public class ProviderManager implements ProviderService {
                     providersCommonDetails.setDocContentType(attachedFile.getContentType());
                 }
 
-                this.providersCommonDetailsRepository.save(providersCommonDetails);
+                ProvidersCommonDetails providersComDetails = this.providersCommonDetailsRepository.save(providersCommonDetails);
 
                 if (attachedFile != null) {
                     String url = null;
@@ -151,7 +152,7 @@ public class ProviderManager implements ProviderService {
 
                     // Actualizamos la ruta del documento guardado
                     if (url != null) {
-                        this.providersCommonDetailsRepository.updateProviderDocUrl(provider.getId(), url);
+                        this.providersCommonDetailsRepository.updateProviderDocUrl(providersComDetails.getId(), url);
                     }
                 }
             }
@@ -345,8 +346,6 @@ public class ProviderManager implements ProviderService {
         byte[] content=null;
 
         try {
-            // TODO
-//            provider = this.providerRepository.findProviderByWorkCenterIdAndId(workCenterId, providerId);
 
 //            file = new File(provider.getDocUrl());
 //            if (file.exists()) {
@@ -363,4 +362,4 @@ public class ProviderManager implements ProviderService {
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
-}
+   }
