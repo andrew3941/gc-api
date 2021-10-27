@@ -17,6 +17,7 @@ public class ProvidersCommonDetails implements Serializable {
     private String docContentType;
     private String serviceDetails;
     private int spending;
+    private int anualSpending;
     private ExpenditurePeriod expenditurePeriod = new ExpenditurePeriod();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date serviceStartDate = new Date();
@@ -32,7 +33,7 @@ public class ProvidersCommonDetails implements Serializable {
 
     public ProvidersCommonDetails() {}
 
-    public ProvidersCommonDetails(int id, int provDelegacionId, String docUrl, String docName, String docContentType, String serviceDetails, int spending, ExpenditurePeriod expenditurePeriod, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy) {
+    public ProvidersCommonDetails(int id, int provDelegacionId, String docUrl, String docName, String docContentType, String serviceDetails, int spending, int anualSpending, ExpenditurePeriod expenditurePeriod, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
         this.provDelegacionId = provDelegacionId;
         this.docUrl = docUrl;
@@ -40,6 +41,7 @@ public class ProvidersCommonDetails implements Serializable {
         this.docContentType = docContentType;
         this.serviceDetails = serviceDetails;
         this.spending = spending;
+        this.anualSpending = anualSpending;
         this.expenditurePeriod = expenditurePeriod;
         this.serviceStartDate = serviceStartDate;
         this.serviceEndDate = serviceEndDate;
@@ -106,6 +108,15 @@ public class ProvidersCommonDetails implements Serializable {
     }
     public void setSpending(int spending) {
         this.spending = spending;
+    }
+
+    @Basic
+    @Column(name = "GASTO_ANUAL")
+    public int getAnualSpending() {
+        return anualSpending;
+    }
+    public void setAnualSpending(int anualSpending) {
+        this.anualSpending = anualSpending;
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
