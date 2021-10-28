@@ -112,21 +112,15 @@ public class ProvidersCommonDetails implements Serializable {
 
     @Basic
     @Column(name = "GASTO_ANUAL")
-    public int getAnualSpending() {
-        return anualSpending;
-    }
+    public int getAnualSpending() { return anualSpending;}
     public void setAnualSpending(int anualSpending) {
         this.anualSpending = anualSpending;
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PERIODICIDAD_GASTO_ID", referencedColumnName = "ID")
-    public ExpenditurePeriod getExpenditurePeriod() {
-        return expenditurePeriod;
-    }
-    public void setExpenditurePeriod(ExpenditurePeriod expenditurePeriod) {
-        this.expenditurePeriod = expenditurePeriod;
-    }
+    public ExpenditurePeriod getExpenditurePeriod() { return expenditurePeriod; }
+    public void setExpenditurePeriod(ExpenditurePeriod expenditurePeriod) { this.expenditurePeriod = expenditurePeriod; }
 
     @Basic
     @Column(name = "FECHA_INICIO_SERVICIO")

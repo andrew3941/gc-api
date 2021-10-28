@@ -362,4 +362,24 @@ public class ProviderManager implements ProviderService {
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
-   }
+//
+@Override
+public List<ProvidersByWorkCenters> getDataByWorkCenter(int workCenterId, int providerId) {
+
+        Provider myProvider =  this.providerRepository.findProviderById(providerId);
+
+        List<ProvidersByWorkCenters> providersByWorkCenters = providersByWorkCentersRepository.findAllByProvider(myProvider);
+
+        for (ProvidersByWorkCenters provByWorkCenters : providersByWorkCenters) {
+
+            if (provByWorkCenters.getProvider().getId() == providerId){
+
+                ProvidersCommonDetails details = providersCommonDetailsRepository.findAllByProvDelegacionId(provByWorkCenters.getId());
+
+                myProvider.setProvidersCommonDetails(details);
+            }
+        }
+        return providersByWorkCenters;
+    }
+}
+
