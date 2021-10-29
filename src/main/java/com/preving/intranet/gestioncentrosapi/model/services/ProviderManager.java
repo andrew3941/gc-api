@@ -304,32 +304,15 @@ public class ProviderManager implements ProviderService {
         providerRepository.editProvider(provider);
 
         //Borramos las delegaciones por proveedor con el id
-        providersByWorkCentersRepository.deleteAllByProvider(provider);
+       // providersByWorkCentersRepository.deleteByProvider(provider);
 
         try {
-            for(WorkCenter workCenter : provider.getWorkCenters()) {
-                // Seteamos los valores del objeto
-                ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
-                providersByWorkCenters.getProvider().setId(provider.getId());
-                providersByWorkCenters.getWorkCenter().setId(workCenter.getId());
+            ProvidersCommonDetails providersCommonDetails = provider.getProvidersCommonDetails();
+            providersCommonDetails.setModified(new Date());
+            providersCommonDetails.setModifiedBy(new User());
+            providersCommonDetails.getModifiedBy().setId(userId);
 
-                providersByWorkCentersRepository.save(providersByWorkCenters);
-
-                if (attachedFile != null) {
-                    // Borramos el documento anterior del servidor
-                    commonService.deleteDocumentServer(workCenterId, provider.getId(), PROVIDER_DOCUMENTS);
-
-                    String url = null;
-
-                    // Guardamos documento en el server
-                    url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
-
-                    // Actualizamos la ruta del documento guardado
-                    if (url != null) {
-                        this.providerRepository.updateProviderDocUrl(provider.getId(), url);
-                    }
-                }
-            }
+            this.providersCommonDetailsRepository.editProviderCommonDetails(providersCommonDetails);
 
         } catch (Exception e) {
             e.printStackTrace();
