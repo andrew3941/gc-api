@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.io.File;
@@ -90,10 +89,13 @@ public class ProviderManager implements ProviderService {
                    // Meter los centros en la lista de proveedores
                    provider.getWorkCenters().add(workCenter);
                }
+               else {
+                   ProvidersCommonDetails details = providersCommonDetailsRepository.findAllByProvDelegacionId(provByWorkCenters.getId());
 
+                   provider.setProvidersCommonDetails(details);
+               }
             }
         }
-
         return providers;
     }
 
@@ -357,9 +359,8 @@ public class ProviderManager implements ProviderService {
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
-//
-@Override
-public List<ProvidersByWorkCenters> getDataByWorkCenter(int workCenterId, int providerId) {
+    @Override
+    public List<ProvidersByWorkCenters> getDataByWorkCenter(int workCenterId, int providerId) {
 
         Provider myProvider =  this.providerRepository.findProviderById(providerId);
 
