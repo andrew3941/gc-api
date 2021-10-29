@@ -77,18 +77,19 @@ public class ProviderManager implements ProviderService {
                 // Obtener los datos del centro por
                 // id
 
-;                WorkCenter workCenter = this.workCentersRepository.findWorkCenterById(workCenterId);
+               WorkCenter workCenter = this.workCentersRepository.findWorkCenterById(workCenterId);
 
+               if (workCenterId != 0){
+                   if ((provByWorkCenters.getWorkCenter().getId() == workCenterId) && (provByWorkCenters.getProvider().getId() == provider.getId())){
 
-                if ((provByWorkCenters.getWorkCenter().getId() == workCenterId) && (provByWorkCenters.getProvider().getId() == provider.getId())){
+                       ProvidersCommonDetails details = providersCommonDetailsRepository.findAllByProvDelegacionId(provByWorkCenters.getId());
 
-                    ProvidersCommonDetails details = providersCommonDetailsRepository.findAllByProvDelegacionId(provByWorkCenters.getId());
+                       provider.setProvidersCommonDetails(details);
+                   }
 
-                    provider.setProvidersCommonDetails(details);
-                }
-
-                // Meter los centros en la lista de proveedores
-                provider.getWorkCenters().add(workCenter);
+                   // Meter los centros en la lista de proveedores
+                   provider.getWorkCenters().add(workCenter);
+               }
 
             }
         }
