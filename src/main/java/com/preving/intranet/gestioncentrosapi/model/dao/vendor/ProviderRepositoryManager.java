@@ -23,7 +23,7 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
                 "SELECT DISTINCT P.ID, P.NOMBRE, P.CIF, " +
                 "P.DOC_NOMBRE, P.DOC_CONTENT_TYPE, P.ACTIVO, " +
                 "P.TIPO_ID, P.AREA_ID, P.LOCALIDAD_ID, L.LOC_NOMBRE,V.PRV_NOMBRE, " +
-                "PT.DENOMINACION AS PROVIDER_TYPE,  PA.DENOMINACION AS PROVIDERAREA_TYPE, " +
+                "PT.DENOMINACION AS PROVIDER_TYPE, PA.DENOMINACION AS PROVIDERAREA_TYPE, " +
                 "P.TIPO_EVALUACION_ID, PET.DENOMINACION AS PROVIDEREVALUATION_TYPE, " +
                 "P.FECHA_INICIO_SERVICIO " +
                 "FROM GESTION_CENTROS.PROVEEDORES P, " +
@@ -32,6 +32,7 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
                 "GESTION_CENTROS.TM_PERIODICIDAD_GASTO PG, " +
                 "GESTION_CENTROS.TM_PROVEEDORES_EVALUACION_TIPO PET, "+
                 "GESTION_CENTROS.PROVEEDORES_X_DELEGACIONES PW, "+
+                "GESTION_CENTROS.PROVEEDORES_DETALLES_COMUN PDC, "+
                 "VIG_SALUD.LOCALIDADES L, "+
                 "VIG_SALUD.PROVINCIAS V "+
                 "WHERE P.TIPO_ID = PT.ID " +

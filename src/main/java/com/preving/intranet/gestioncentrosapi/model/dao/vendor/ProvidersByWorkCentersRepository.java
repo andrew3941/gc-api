@@ -13,6 +13,8 @@ public interface ProvidersByWorkCentersRepository extends JpaRepository<Provider
 
     List<ProvidersByWorkCenters> findAllByProvider (Provider provider);
 
+    ProvidersByWorkCenters findAllByWorkCenter(WorkCenter workCenter);
+
     List<ProvidersByWorkCenters> findAllByProviderAndWorkCenter(Provider provider, WorkCenter workCenter);
     void deleteByProvider(Provider provider);
 
