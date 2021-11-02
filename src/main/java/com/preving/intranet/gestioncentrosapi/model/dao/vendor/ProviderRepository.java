@@ -21,8 +21,6 @@ public interface ProviderRepository extends JpaRepository<Provider, Integer> {
     @Query("update Provider p set p.docUrl=:providerDocUrl where p.id=:providerId")
     void  updateProviderDocUrl(@Param("providerId") int providerId, @Param("providerDocUrl")String providerDocUrl);
 
-//    Provider findProviderByWorkCenterIdAndId(int workCenterId, int providerId);
-
     @Modifying
     @Transactional
     @Query("update Provider p set p.name=:#{#provider.name}, " +
@@ -51,5 +49,4 @@ public interface ProviderRepository extends JpaRepository<Provider, Integer> {
     @Query("update Provider p set p.active = true where p.id = :providerId")
     void setActiveProvider(@Param("providerId") int providerId);
 
-//    Provider findProviderByWorkCenterIdAndId(int workCenterId, int providerId);
 }

@@ -104,4 +104,28 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
         return providerResults;
     }
 
+
+    @Override
+    public String findDocUrlByProviderId(int providerId, int workCenterId) {
+
+        String sql = "" +
+                "SELECT DET.DOC_URL " +
+                "FROM GESTION_CENTROS.PROVEEDORES_DETALLES_COMUN DET, " +
+                "       GC2006_RELEASE.PC_DELEGACIONES DEL, " +
+                "       GESTION_CENTROS.PROVEEDORES_X_DELEGACIONES PROV " +
+                "WHERE DET.PROV_X_DELEGACION_ID = PROV.ID " +
+                "       AND PROV.DELEGACION_ID = DEL.ID " +
+                "AND PROV.PROVEEDOR_ID = :providerId " +
+                "       AND PROV.DELEGACION_ID = :workCenterId ";
+
+        Query query = manager.createNativeQuery(sql)
+                .setParameter("providerId", providerId)
+                .setParameter("workCenterId", workCenterId);
+
+        String docUrl = query.getSingleResult().toString();
+
+        return docUrl;
+
+    }
+
 }

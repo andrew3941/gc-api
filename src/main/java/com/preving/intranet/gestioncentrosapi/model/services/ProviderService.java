@@ -31,5 +31,4 @@ public interface ProviderService {
 
     void activateProvider();
 
-    List<ProvidersByWorkCenters> getDataByWorkCenter(int workCenterId, int providerId);
 }

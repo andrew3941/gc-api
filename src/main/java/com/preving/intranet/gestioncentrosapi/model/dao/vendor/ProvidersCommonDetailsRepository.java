@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 public interface ProvidersCommonDetailsRepository extends JpaRepository<ProvidersCommonDetails, Integer> {
 
-//    List<ProvidersCommonDetails> findAllByProvDelegacionId(int provDelegacionId);
     ProvidersCommonDetails findAllByProvDelegacionId(int provDelegacionId);
 
     @Modifying
@@ -21,6 +20,7 @@ public interface ProvidersCommonDetailsRepository extends JpaRepository<Provider
     @Query("update ProvidersCommonDetails p set p.docUrl=:providerDocUrl where p.id=:providerId")
     void  updateProviderDocUrl(@Param("providerId") int providerId, @Param("providerDocUrl")String providerDocUrl);
 
+    void deleteAllById(int provByWorkCentersId);
 
     @Modifying
     @Transactional
