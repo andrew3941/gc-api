@@ -161,7 +161,6 @@ public class CommonManager implements CommonService {
 
         } else if (tipoDoc == PROVIDERS){
             // Obtenemos la URL del documento del proveedor para borrarlo del servidor
-            providerRepository.findProviderById(itemId);
             docUrl= this.providerCustomRepository.findDocUrlByProviderId(itemId, workCenterId);
         }
 

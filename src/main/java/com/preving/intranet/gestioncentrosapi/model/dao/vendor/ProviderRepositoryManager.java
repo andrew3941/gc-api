@@ -128,4 +128,21 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
 
     }
 
+    @Override
+    public boolean checkProviderCIf(String providerCif) {
+
+        String sql = "" +
+                "SELECT COUNT(*)  " +
+                "FROM GESTION_CENTROS.PROVEEDORES " +
+                "       WHERE LOWER(cif) = LOWER(:providerCif) ";
+
+        Query query = manager.createNativeQuery(sql)
+                .setParameter("providerCif", providerCif);
+
+        boolean providerExist = Integer.parseInt(query.getSingleResult().toString()) > 0;
+
+        return providerExist;
+
+    }
+
 }
