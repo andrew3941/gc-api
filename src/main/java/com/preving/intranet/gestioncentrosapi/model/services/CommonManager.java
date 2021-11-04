@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.Entity;
@@ -31,6 +32,9 @@ public class CommonManager implements CommonService {
 
     @Autowired
     private ProviderRepository providerRepository;
+
+    @Autowired
+    private ProviderCustomRepository providerCustomRepository;
 
     @Value("${url-documentos-planos}")
     private String urlDrawingDocuments;
@@ -152,14 +156,13 @@ public class CommonManager implements CommonService {
         if (tipoDoc == DRAWINGS) {
             // Obtenemos la URL del plano para borrarlo del servidor
             Drawing drawing = drawingRepository.findDrawingById(itemId);
-            docUrl = drawing.getDocUrl();
-        } else {
-            // TODO
-            // Obtenemos la URL del documento del proveedor para borrarlo del servidor
-//            Provider provider = providerRepository.findProviderByWorkCenterIdAndId(workCenterId, itemId);
-//            docUrl = provider.getDocUrl();
-        }
 
+            docUrl = drawing.getDocUrl();
+
+        } else if (tipoDoc == PROVIDERS){
+            // Obtenemos la URL del documento del proveedor para borrarlo del servidor
+            docUrl= this.providerCustomRepository.findDocUrlByProviderId(itemId, workCenterId);
+        }
 
         File file = new File(docUrl);
         Boolean borrado = null;

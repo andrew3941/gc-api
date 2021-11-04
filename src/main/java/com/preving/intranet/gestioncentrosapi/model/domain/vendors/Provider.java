@@ -51,6 +51,7 @@ public class Provider implements Serializable {
     private ProviderTypes providerTypes = new ProviderTypes();
     private ProviderArea providerArea = new ProviderArea();
     private ProviderEvaluationTypes evaluationTypes = new ProviderEvaluationTypes();
+    private ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
     private String email;
     private String address;
     private String contactPerson;
@@ -205,6 +206,14 @@ public class Provider implements Serializable {
     }
     public void setEvaluationTypes(ProviderEvaluationTypes evaluationTypes) {
         this.evaluationTypes = evaluationTypes;
+    }
+
+    @Transient
+    public ProvidersCommonDetails getProvidersCommonDetails() {
+        return providersCommonDetails;
+    }
+    public void setProvidersCommonDetails(ProvidersCommonDetails providersCommonDetails) {
+        this.providersCommonDetails = providersCommonDetails;
     }
 
     @Basic

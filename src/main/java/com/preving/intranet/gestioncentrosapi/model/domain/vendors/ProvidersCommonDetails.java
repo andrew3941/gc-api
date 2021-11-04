@@ -17,6 +17,7 @@ public class ProvidersCommonDetails implements Serializable {
     private String docContentType;
     private String serviceDetails;
     private int spending;
+    private int anualSpending;
     private ExpenditurePeriod expenditurePeriod = new ExpenditurePeriod();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date serviceStartDate = new Date();
@@ -32,7 +33,7 @@ public class ProvidersCommonDetails implements Serializable {
 
     public ProvidersCommonDetails() {}
 
-    public ProvidersCommonDetails(int id, int provDelegacionId, String docUrl, String docName, String docContentType, String serviceDetails, int spending, ExpenditurePeriod expenditurePeriod, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy) {
+    public ProvidersCommonDetails(int id, int provDelegacionId, String docUrl, String docName, String docContentType, String serviceDetails, int spending, int anualSpending, ExpenditurePeriod expenditurePeriod, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
         this.provDelegacionId = provDelegacionId;
         this.docUrl = docUrl;
@@ -40,6 +41,7 @@ public class ProvidersCommonDetails implements Serializable {
         this.docContentType = docContentType;
         this.serviceDetails = serviceDetails;
         this.spending = spending;
+        this.anualSpending = anualSpending;
         this.expenditurePeriod = expenditurePeriod;
         this.serviceStartDate = serviceStartDate;
         this.serviceEndDate = serviceEndDate;
@@ -51,6 +53,8 @@ public class ProvidersCommonDetails implements Serializable {
 
     @Id
     @Column(name = "ID", nullable = false, precision = 0)
+    @SequenceGenerator(name = "PROVEEDORES_DETALLES_COMUN_SEQ", sequenceName = "PROVEEDORES_DETALLES_COMUN_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROVEEDORES_DETALLES_COMUN_SEQ")
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -65,9 +69,7 @@ public class ProvidersCommonDetails implements Serializable {
 
     @Basic
     @Column(name = "DOC_URL")
-    public String getDocUrl() {
-        return docUrl;
-    }
+    public String getDocUrl() { return docUrl; }
     public void setDocUrl(String docUrl) {
         this.docUrl = docUrl;
     }
@@ -108,14 +110,17 @@ public class ProvidersCommonDetails implements Serializable {
         this.spending = spending;
     }
 
+    @Basic
+    @Column(name = "GASTO_ANUAL")
+    public int getAnualSpending() { return anualSpending;}
+    public void setAnualSpending(int anualSpending) {
+        this.anualSpending = anualSpending;
+    }
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PERIODICIDAD_GASTO_ID", referencedColumnName = "ID")
-    public ExpenditurePeriod getExpenditurePeriod() {
-        return expenditurePeriod;
-    }
-    public void setExpenditurePeriod(ExpenditurePeriod expenditurePeriod) {
-        this.expenditurePeriod = expenditurePeriod;
-    }
+    public ExpenditurePeriod getExpenditurePeriod() { return expenditurePeriod; }
+    public void setExpenditurePeriod(ExpenditurePeriod expenditurePeriod) { this.expenditurePeriod = expenditurePeriod; }
 
     @Basic
     @Column(name = "FECHA_INICIO_SERVICIO")

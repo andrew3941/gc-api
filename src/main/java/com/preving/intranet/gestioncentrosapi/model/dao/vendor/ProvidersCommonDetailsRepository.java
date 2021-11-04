@@ -13,11 +13,25 @@ import java.util.List;
 @Repository
 public interface ProvidersCommonDetailsRepository extends JpaRepository<ProvidersCommonDetails, Integer> {
 
-    List<ProvidersCommonDetails> findAllByProvDelegacionId(int provDelegacionId);
+    ProvidersCommonDetails findAllByProvDelegacionId(int provDelegacionId);
 
     @Modifying
     @Transactional
     @Query("update ProvidersCommonDetails p set p.docUrl=:providerDocUrl where p.id=:providerId")
     void  updateProviderDocUrl(@Param("providerId") int providerId, @Param("providerDocUrl")String providerDocUrl);
 
+    void deleteAllById(int provByWorkCentersId);
+
+    void deleteAllByProvDelegacionId(int provByWorkCentersId);
+
+    @Modifying
+    @Transactional
+    @Query("update ProvidersCommonDetails pcd set pcd.provDelegacionId=:#{#providersCommonDetails.provDelegacionId}, " +
+            "pcd.docUrl=:#{#providersCommonDetails.docUrl}, pcd.docName=:#{#providersCommonDetails.docName}, pcd.docContentType=:#{#providersCommonDetails.docContentType}, " +
+            "pcd.serviceDetails=:#{#providersCommonDetails.serviceDetails}, pcd.spending=:#{#providersCommonDetails.spending}, pcd.anualSpending=:#{#providersCommonDetails.anualSpending}, " +
+            "pcd.expenditurePeriod=:#{#providersCommonDetails.expenditurePeriod}, " +
+            "pcd.serviceStartDate=:#{#providersCommonDetails.serviceStartDate}, pcd.serviceEndDate=:#{#providersCommonDetails.serviceEndDate}, " +
+            "pcd.modified=CURRENT_TIMESTAMP, pcd.modifiedBy=:#{#providersCommonDetails.modifiedBy} " +
+            "where pcd.id=:#{#providersCommonDetails.id}")
+    void editProviderCommonDetails(@Param("providersCommonDetails") ProvidersCommonDetails providersCommonDetails);
 }

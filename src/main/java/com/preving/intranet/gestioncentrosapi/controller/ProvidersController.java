@@ -106,16 +106,13 @@ public class ProvidersController {
             @RequestParam(value="attachedFile", required = false) MultipartFile attachedFile,
             HttpServletRequest request) {
 
+        ResponseEntity<?> response=null;
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         Provider newProvider = gson.fromJson(myProvider, Provider.class);
 
-        try {
-            providerService.saveProvider(workCenterId, newProvider, attachedFile, request);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        response = providerService.saveProvider(workCenterId,newProvider,attachedFile,request);
+
+        return response;
     }
 
     /**

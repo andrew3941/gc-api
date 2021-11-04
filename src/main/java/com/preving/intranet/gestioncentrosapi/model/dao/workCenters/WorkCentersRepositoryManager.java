@@ -112,7 +112,7 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
     public List<WorkCenter> findAllByActive() {
 
         String sql = "" +
-                "SELECT WC.ID, WC.NOMBRE FROM GC2006_RELEASE.PC_DELEGACIONES WC " +
+                "SELECT WC.ID, WC.NOMBRE, WC.TIPO_ID FROM GC2006_RELEASE.PC_DELEGACIONES WC " +
                 "WHERE WC.ACTIVO = 1 " +
                 "ORDER BY NOMBRE ";
 

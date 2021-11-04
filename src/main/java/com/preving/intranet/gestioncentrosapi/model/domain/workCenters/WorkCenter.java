@@ -272,6 +272,7 @@ public class WorkCenter implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TIPO_ID", referencedColumnName = "ID")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     public WorkCenterTypes getWorkCenterTypes() {
         return workCenterTypes;
     }

@@ -11,4 +11,8 @@ import java.util.List;
 public interface ProviderCustomRepository  {
 
     List<Provider> getProviders(Integer workCenterId, ProviderFilter providerFilter);
+
+    String findDocUrlByProviderId(int providerId, int workCenterId);
+
+    boolean checkProviderCIf(String providerCif);
 }
