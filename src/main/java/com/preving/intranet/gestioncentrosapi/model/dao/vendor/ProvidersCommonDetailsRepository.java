@@ -22,6 +22,8 @@ public interface ProvidersCommonDetailsRepository extends JpaRepository<Provider
 
     void deleteAllById(int provByWorkCentersId);
 
+    void deleteAllByProvDelegacionId(int provByWorkCentersId);
+
     @Modifying
     @Transactional
     @Query("update ProvidersCommonDetails pcd set pcd.provDelegacionId=:#{#providersCommonDetails.provDelegacionId}, " +

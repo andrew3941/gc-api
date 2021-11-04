@@ -19,4 +19,6 @@ public interface ProvidersByWorkCentersRepository extends JpaRepository<Provider
 
     void deleteAllById(int provByWorkCenterId);
 
+    void deleteAllByProvider_Id(int providerId);
+
 }

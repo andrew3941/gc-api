@@ -317,11 +317,16 @@ public class ProviderManager implements ProviderService {
         // Editamos el proveedor
         providerRepository.editProvider(provider);
 
-        // Borramos los detalles comunes del proveedor
-        providersCommonDetailsRepository.deleteAllById(provider.getProvidersCommonDetails().getId());
+        // Obtenemos todos los registros de detalles del proveedor
+        List<ProvidersByWorkCenters> provByWorkCenters = providersByWorkCentersRepository.findAllByProvider(provider);
 
-        //Borramos las delegaciones por proveedor con el id
-        providersByWorkCentersRepository.deleteAllById(provider.getProvidersCommonDetails().getProvDelegacionId());
+        for (ProvidersByWorkCenters provByWorkCenter: provByWorkCenters) {
+            // Borramos los detalles comunes del proveedor
+            providersCommonDetailsRepository.deleteAllByProvDelegacionId(provByWorkCenter.getId());
+        }
+
+        // Borramos todas las delegaciones por proveedor con el id de proveedor
+        providersByWorkCentersRepository.deleteAllByProvider_Id(provider.getId());
 
         try {
             for(WorkCenter workCenter : provider.getWorkCenters()) {
