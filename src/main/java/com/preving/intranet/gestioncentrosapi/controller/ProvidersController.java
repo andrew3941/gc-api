@@ -143,14 +143,11 @@ public class ProvidersController {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         Provider provider = gson.fromJson(myProvider, Provider.class);
+        ResponseEntity<?> response=null;
 
-        try {
-            providerService.editProvider(workCenterId, providerId, provider, attachedFile, request);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        response = providerService.editProvider(workCenterId, providerId, provider, attachedFile, request);
+
+        return response;
 
     }
 
