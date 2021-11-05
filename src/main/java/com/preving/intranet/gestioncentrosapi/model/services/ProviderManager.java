@@ -356,13 +356,14 @@ public class ProviderManager implements ProviderService {
                ProvidersCommonDetails providersComDetails = this.providersCommonDetailsRepository.save(providersCommonDetails);
 
                 if (attachedFile != null) {
+                    // TODO obtener los ficheros guardados
                     // Borramos el documento anterior del servidor
-                    commonService.deleteDocumentServer(workCenterId, provider.getId(), PROVIDER_DOCUMENTS);
+//                    commonService.deleteDocumentServer(workCenter.getId(), provider.getId(), PROVIDER_DOCUMENTS);
 
                     String url = null;
 
                     // Guardamos documento en el server
-                    url = commonService.saveDocumentServer(workCenterId, provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
+                    url = commonService.saveDocumentServer(workCenter.getId(), provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
 
                     // Actualizamos la ruta del documento guardado
                     if (url != null) {
