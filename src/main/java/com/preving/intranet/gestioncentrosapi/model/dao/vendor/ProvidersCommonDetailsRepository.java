@@ -20,6 +20,7 @@ public interface ProvidersCommonDetailsRepository extends JpaRepository<Provider
     @Query("update ProvidersCommonDetails p set p.docUrl=:providerDocUrl where p.id=:providerId")
     void  updateProviderDocUrl(@Param("providerId") int providerId, @Param("providerDocUrl")String providerDocUrl);
 
+    ProvidersCommonDetails findProvidersCommonDetailsById(int proComDetails);
     void deleteAllById(int provByWorkCentersId);
 
     void deleteAllByProvDelegacionId(int provByWorkCentersId);
