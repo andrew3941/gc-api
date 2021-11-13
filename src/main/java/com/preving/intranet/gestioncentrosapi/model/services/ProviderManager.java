@@ -7,15 +7,21 @@ import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.security.JwtTokenUtil;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.io.File;
@@ -306,6 +312,26 @@ public class ProviderManager implements ProviderService {
     @Transactional
     public ResponseEntity<?> editProvider(int workCenterId, int providerId, Provider provider, MultipartFile attachedFile, HttpServletRequest request) {
 
+        // check if file is null and create the existing file
+        if (attachedFile == null){
+            byte[] content= null;
+            File file = new File(provider.getProvidersCommonDetails().getDocUrl());
+            String name = provider.getProvidersCommonDetails().getDocName();
+            String contentType = provider.getProvidersCommonDetails().getDocContentType();
+
+            try {
+                if (file.exists()) {
+                    content = Files.readAllBytes(file.toPath());
+                }
+            } catch (final IOException e) {
+                e.printStackTrace();
+            }
+
+            MultipartFile result = new MockMultipartFile(name, file.getName(), contentType, content);
+
+            attachedFile = result;
+        }
+
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
         provider.setModifiedBy(new User());
@@ -324,7 +350,6 @@ public class ProviderManager implements ProviderService {
         providersByWorkCentersRepository.deleteAllById(provider.getProvidersCommonDetails().getProvDelegacionId());
 
         try {
-
            if (workCenterId == 0){
 
                for(WorkCenter workCenter : provider.getWorkCenters()) {
