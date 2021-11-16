@@ -7,21 +7,15 @@ import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.security.JwtTokenUtil;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.io.File;
@@ -312,26 +306,6 @@ public class ProviderManager implements ProviderService {
     @Transactional
     public ResponseEntity<?> editProvider(int workCenterId, int providerId, Provider provider, MultipartFile attachedFile, HttpServletRequest request) {
 
-        // check if file is null and create the existing file
-        if (attachedFile == null){
-            byte[] content= null;
-            File file = new File(provider.getProvidersCommonDetails().getDocUrl());
-            String name = provider.getProvidersCommonDetails().getDocName();
-            String contentType = provider.getProvidersCommonDetails().getDocContentType();
-
-            try {
-                if (file.exists()) {
-                    content = Files.readAllBytes(file.toPath());
-                }
-            } catch (final IOException e) {
-                e.printStackTrace();
-            }
-
-            MultipartFile result = new MockMultipartFile(name, file.getName(), contentType, content);
-
-            attachedFile = result;
-        }
-
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
         provider.setModifiedBy(new User());
@@ -342,12 +316,17 @@ public class ProviderManager implements ProviderService {
 
         // Editamos el proveedor
         providerRepository.editProvider(provider);
-// Obtenemos todos los registros de detalles del proveedor
 
-        providersCommonDetailsRepository.deleteAllById(provider.getProvidersCommonDetails().getId());
+        // Obtenemos todos los registros de detalles del proveedor
+        List<ProvidersByWorkCenters> provByWorkCenters = providersByWorkCentersRepository.findAllByProvider(provider);
 
-        //Borramos las delegaciones por proveedor con el id
-        providersByWorkCentersRepository.deleteAllById(provider.getProvidersCommonDetails().getProvDelegacionId());
+        for (ProvidersByWorkCenters provByWorkCenter: provByWorkCenters) {
+            // Borramos los detalles comunes del proveedor
+            providersCommonDetailsRepository.deleteAllByProvDelegacionId(provByWorkCenter.getId());
+        }
+
+        // Borramos todas las delegaciones por proveedor con el id de proveedor
+        providersByWorkCentersRepository.deleteAllByProvider_Id(provider.getId());
 
         try {
            if (workCenterId == 0){
@@ -358,37 +337,37 @@ public class ProviderManager implements ProviderService {
                    providersByWorkCenters.getProvider().setId(provider.getId());
                    providersByWorkCenters.getWorkCenter().setId(workCenter.getId());
 
-                   providersByWorkCentersRepository.save(providersByWorkCenters);
+                providersByWorkCentersRepository.save(providersByWorkCenters);
 
-                   ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
+                ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
 
-                   if (attachedFile != null) {
-                       providersCommonDetails.setDocName(attachedFile.getOriginalFilename());
-                       providersCommonDetails.setDocContentType(attachedFile.getContentType());
-                   }
-                   providersCommonDetails.setCreated(new Date());
-                   providersCommonDetails.getCreatedBy().setId(userId);
-                   providersCommonDetails.setDocUrl(provider.getProvidersCommonDetails().getDocUrl());
-                   providersCommonDetails.setDocName(provider.getProvidersCommonDetails().getDocName());
-                   providersCommonDetails.setServiceDetails(provider.getProvidersCommonDetails().getServiceDetails());
-                   providersCommonDetails.setServiceStartDate(provider.getProvidersCommonDetails().getServiceStartDate());
-                   providersCommonDetails.setServiceEndDate(provider.getProvidersCommonDetails().getServiceEndDate());
-                   providersCommonDetails.getExpenditurePeriod().setId(provider.getProvidersCommonDetails().getExpenditurePeriod().getId());
-                   providersCommonDetails.setProvDelegacionId(providersByWorkCenters.getId());
-                   providersCommonDetails.setAnualSpending(provider.getProvidersCommonDetails().getAnualSpending());
-                   providersCommonDetails.setSpending(provider.getProvidersCommonDetails().getSpending());
+                if (attachedFile != null) {
+                    providersCommonDetails.setDocName(attachedFile.getOriginalFilename());
+                    providersCommonDetails.setDocContentType(attachedFile.getContentType());
+                }
+                providersCommonDetails.setCreated(new Date());
+                providersCommonDetails.getCreatedBy().setId(userId);
+                providersCommonDetails.setServiceDetails(provider.getProvidersCommonDetails().getServiceDetails());
+                providersCommonDetails.setServiceStartDate(provider.getProvidersCommonDetails().getServiceStartDate());
+                providersCommonDetails.setServiceEndDate(provider.getProvidersCommonDetails().getServiceEndDate());
+                providersCommonDetails.getExpenditurePeriod().setId(provider.getProvidersCommonDetails().getExpenditurePeriod().getId());
+                providersCommonDetails.setProvDelegacionId(providersByWorkCenters.getId());
+                providersCommonDetails.setAnualSpending(provider.getProvidersCommonDetails().getAnualSpending());
+                providersCommonDetails.setSpending(provider.getProvidersCommonDetails().getSpending());
+                providersCommonDetails.setDocName(provider.getProvidersCommonDetails().getDocName());
+                providersCommonDetails.setDocUrl(provider.getProvidersCommonDetails().getDocUrl());
+                providersCommonDetails.setDocContentType(provider.getProvidersCommonDetails().getDocContentType());
 
                    ProvidersCommonDetails providersComDetails = this.providersCommonDetailsRepository.save(providersCommonDetails);
 
                    if (attachedFile != null) {
-                       // TODO obtener los ficheros guardados
-                    //Borramos el documento anterior del servidor
+                       //Borramos el documento anterior del servidor
                        commonService.deleteDocumentServer(workCenter.getId(), providersComDetails.getId(), PROVIDER_DOCUMENTS);
 
                        String url = null;
 
                        // Guardamos documento en el server
-                       url = commonService.saveDocumentServer(workCenter.getId(), providersComDetails.getId(), attachedFile, PROVIDER_DOCUMENTS);
+                       url = commonService.saveDocumentServer(workCenter.getId(), providerId, attachedFile, PROVIDER_DOCUMENTS);
 
                        // Actualizamos la ruta del documento guardado
                        if (url != null) {
@@ -432,7 +411,7 @@ public class ProviderManager implements ProviderService {
 
                        String url = null;
                        // Guardamos documento en el server
-                       url = commonService.saveDocumentServer(workCenterId, providersComDetails.getId(), attachedFile, PROVIDER_DOCUMENTS);
+                       url = commonService.saveDocumentServer(workCenterId, providerId, attachedFile, PROVIDER_DOCUMENTS);
 
                        // Actualizamos la ruta del documento guardado
                        if (url != null) {
