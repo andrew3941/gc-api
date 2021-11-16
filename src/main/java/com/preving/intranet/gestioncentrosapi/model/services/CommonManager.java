@@ -5,10 +5,12 @@ import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesReposit
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProvidersCommonDetailsRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.Entity;
 import com.preving.intranet.gestioncentrosapi.model.domain.Province;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProvidersCommonDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,10 @@ public class CommonManager implements CommonService {
 
     @Autowired
     private ProviderCustomRepository providerCustomRepository;
+
+    @Autowired
+    private ProvidersCommonDetailsRepository providersCommonDetailsRepository;
+
 
     @Value("${url-documentos-planos}")
     private String urlDrawingDocuments;
@@ -152,6 +158,7 @@ public class CommonManager implements CommonService {
     public boolean deleteDocumentServer(int workCenterId, int itemId, int tipoDoc) throws IOException {
 
         String docUrl = "";
+        Boolean borrado = null;
 
         if (tipoDoc == DRAWINGS) {
             // Obtenemos la URL del plano para borrarlo del servidor
@@ -161,19 +168,27 @@ public class CommonManager implements CommonService {
 
         } else if (tipoDoc == PROVIDERS){
             // Obtenemos la URL del documento del proveedor para borrarlo del servidor
-            docUrl= this.providerCustomRepository.findDocUrlByProviderId(itemId, workCenterId);
+            ProvidersCommonDetails pCommonDetails =  providersCommonDetailsRepository.findProvidersCommonDetailsById(itemId);
+            docUrl = pCommonDetails.getDocUrl();
         }
 
-        File file = new File(docUrl);
-        Boolean borrado = null;
-        if (file.exists()) {
-            file.delete();
+        if (docUrl != null){
 
-            return borrado = true;
+            File file = new File(docUrl);
+
+            if (file.exists()) {
+                file.delete();
+                 borrado = true;
+            } else {
+                borrado = false;
+            }
+
         } else {
-            borrado = false;
+            borrado = true;
         }
+
         return borrado;
+
     }
 
 }
