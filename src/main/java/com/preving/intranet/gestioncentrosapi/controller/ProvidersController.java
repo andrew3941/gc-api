@@ -2,8 +2,10 @@ package com.preving.intranet.gestioncentrosapi.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetail;
 import com.preving.intranet.gestioncentrosapi.model.services.ProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Type;
+import java.util.List;
 
 
 
@@ -103,6 +107,7 @@ public class ProvidersController {
     @RequestMapping(value = "{workCenterId}/providers/add", method = RequestMethod.POST)
     public ResponseEntity<?> saveProvider(
             @RequestParam("provider") String myProvider,
+            @RequestParam("specificData") String specificData,
             @PathVariable("workCenterId") int workCenterId,
             @RequestParam(value="attachedFile", required = false) MultipartFile attachedFile,
             HttpServletRequest request) {
@@ -110,6 +115,9 @@ public class ProvidersController {
         ResponseEntity<?> response=null;
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         Provider newProvider = gson.fromJson(myProvider, Provider.class);
+
+        Type listType = new TypeToken<List<ProviderDetail>>(){}.getType();
+        List<ProviderDetail> resourceTypes = gson.fromJson(specificData, listType);
 
         response = providerService.saveProvider(workCenterId,newProvider,attachedFile,request);
 
