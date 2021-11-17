@@ -165,6 +165,19 @@ public class ProvidersController {
         return ( providerService.downloadProviderDoc(request, workCenterId, providerId));
     }
 
+    @RequestMapping(value = "{providerTypeId}/specific-form", method = RequestMethod.GET)
+    public ResponseEntity<?> specificProviderForm(HttpServletRequest request,
+                                                  @PathVariable(value = "providerTypeId") int providerTypeId) {
+
+        try {
+            return new ResponseEntity<>(providerService.getSpecificProviderForm(providerTypeId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
     /**
      * Scheduled process to activate providers when the start date matches with the current date
      */

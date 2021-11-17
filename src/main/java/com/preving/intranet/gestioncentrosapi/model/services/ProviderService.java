@@ -1,6 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.*;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetailConf;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,5 +31,7 @@ public interface ProviderService {
     void desactivateProvider();
 
     void activateProvider();
+
+    List<ProviderDetailConf> getSpecificProviderForm(int providerTypeId);
 
 }

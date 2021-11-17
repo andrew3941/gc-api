@@ -5,6 +5,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersC
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.*;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetailConf;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.security.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,9 @@ public class ProviderManager implements ProviderService {
 
     @Autowired
     private ProvidersCommonDetailsRepository providersCommonDetailsRepository;
+
+    @Autowired
+    private ProviderDetailConfRepository providerDetailConfRepository;
 
     private static final int PROVIDER_DOCUMENTS = 2;
     private static final boolean ACTIVE = true;
@@ -237,6 +241,14 @@ public class ProviderManager implements ProviderService {
         }
 
         return myProvider;
+    }
+
+    @Override
+    public List<ProviderDetailConf> getSpecificProviderForm(int providerTypeId) {
+
+        ProviderTypes providerType = providerTypesRepository.getOne(providerTypeId);
+        return providerDetailConfRepository.findAllByProviderType(providerType);
+
     }
 
     @Override
