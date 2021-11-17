@@ -71,7 +71,7 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
             sql += " AND P.ACTIVO = :providerStatus ";
         }
 
-        sql += " ORDER BY P.NOMBRE ";
+        sql += " ORDER BY P.FECHA_INICIO_SERVICIO DESC";
 
         Query query = manager.createNativeQuery(sql, "ProviderMapping");
 

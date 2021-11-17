@@ -136,14 +136,14 @@ public class ProviderManager implements ProviderService {
         // Setting active or inactive provider
         activeInactiveProvider(newProvider);
 
-        boolean providerExist = this.providerCustomRepository.checkProviderCIf(newProvider.getCif());
+//        boolean providerExist = this.providerCustomRepository.checkProviderCIf(newProvider.getCif());
 
-        if (!providerExist) {
+//        if (!providerExist) {
             // Guardamos proveedor
             Provider provider = providerRepository.save(newProvider);
 
             try {
-                for(WorkCenter workCenter : newProvider.getWorkCenters()) {
+                for (WorkCenter workCenter : newProvider.getWorkCenters()) {
 
                     // Seteamos los valores del objeto
                     ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
@@ -190,12 +190,15 @@ public class ProviderManager implements ProviderService {
             }
 
             return new ResponseEntity<>(HttpStatus.OK);
-
-        } else {
-            // Devolver error y no guardar
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-    }
+
+//        } else {
+//            // Devolver error y no guardar
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        }
+//    }
+
+
 
     private void activeInactiveProvider(Provider provider) {
 
