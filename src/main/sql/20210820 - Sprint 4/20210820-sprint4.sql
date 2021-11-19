@@ -165,35 +165,52 @@ INCREMENT BY 1;
 
 -- GESTION_CENTROS.TM_PROVEEDORES_TIPOS
 insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
-values (1, 'LIMPIEZA', '', true, 2);
+values (6, 'AGUA Y ALCANTARILLADO', NULL, true, 1);
 
 insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
-values (2, 'MANTENIMIENTO', '', true, 3);
+values (13, 'ALQUILER LOCALES', NULL, true, 2);
 
 insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
-values (3, 'TELECOMUNICACIONES', '', true, 9);
+values (4, 'CORREOS', NULL, true, 3);
 
 insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
-values (4, 'TECNOLOGICO', '', true, 8);
+values (2, 'ELECTRICIDAD', NULL, true, 4);
 
 insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
-values (5, 'SUMINISTROS', '', true, 7);
+values (8, 'EPIS COVID-19', NULL, true, 5);
 
 insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
-values (6, 'ALQUILER CENTRO', '', true, 1);
+values (7, 'EPIS TÉCNICOS', NULL, true, 6);
 
 insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
-values (7, 'PARKING', '', true, 6);
+values (1, 'LIMPIEZA', NULL, true, 7);
 
 insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
-values (8, 'MATERIAL DE OFICINA', '', true, 4);
+values (3, 'MANTENIMIENTO FOTOCOPIADORAS', NULL, true, 8);
 
 insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
-values (9, 'MENSAJERÍA', '', true, 5);
+values (14, 'MANTENIMIENTO Y REPARACIÓN ELEMENTOS DE TRANSPORTE', NULL, true, 9);
 
 insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
-values (10, 'OTROS', '', true, 50);
+values (11, 'MATERIAL IMPRENTA', NULL, true, 10);
 
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
+values (10, 'MATERIAL OFICINA', NULL, true, 11);
+
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
+values (12, 'PARKING', NULL, true, 12);
+
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
+values (15, 'REPARACIÓN Y ELEMENTOS DE INSTALACIONES', NULL, true, 13);
+
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
+values (16, 'SEGUROS LOCALES', NULL, true, 14);
+
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
+values (9, 'TELEFONÍA MÓVIL', NULL, true, 15);
+
+insert into gestion_centros.tm_proveedores_tipos (id, denominacion, observaciones, activo, orden)
+values (5, 'VEHÍCULOS', NULL, true, 16);
 
 -- GESTION_CENTROS.TM_PROVEEDORES_AREAS
 insert into gestion_centros.tm_proveedores_areas (id, denominacion, observaciones, activo, orden)
