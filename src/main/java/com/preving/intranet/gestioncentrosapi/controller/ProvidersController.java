@@ -119,7 +119,7 @@ public class ProvidersController {
         Type listType = new TypeToken<List<ProviderDetail>>(){}.getType();
         List<ProviderDetail> resourceTypes = gson.fromJson(specificData, listType);
 
-        response = providerService.saveProvider(workCenterId,newProvider,attachedFile,request);
+        response = providerService.saveProvider(workCenterId, newProvider, resourceTypes, attachedFile, request);
 
         return response;
     }

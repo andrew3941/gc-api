@@ -26,17 +26,18 @@ public class ProviderDetail implements Serializable {
 
     @Id
     @Column(name = "ID", nullable = false)
+    @SequenceGenerator(name = "PROVEEDORES_DETALLES_SEQ", sequenceName = "PROVEEDORES_DETALLES_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROVEEDORES_DETALLES_SEQ")
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PROV_DEL_ID", referencedColumnName = "ID")
     public ProvidersByWorkCenters getProvidersByWorkCenters() { return providersByWorkCenters; }
     public void setProvidersByWorkCenters(ProvidersByWorkCenters providersByWorkCenters) { this.providersByWorkCenters = providersByWorkCenters; }
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CONF_PROV_DETALLE_ID", referencedColumnName = "ID")
-//    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     public ProviderDetailConf getProviderDetailConf() { return providerDetailConf; }
     public void setProviderDetailConf(ProviderDetailConf providerDetailConf) { this.providerDetailConf = providerDetailConf; }
 

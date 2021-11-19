@@ -5,6 +5,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersC
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCentersRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.*;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetail;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetailConf;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.security.JwtTokenUtil;
@@ -20,6 +21,7 @@ import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -64,6 +66,9 @@ public class ProviderManager implements ProviderService {
 
     @Autowired
     private ProviderDetailConfRepository providerDetailConfRepository;
+
+    @Autowired
+    private ProviderDetailsRepository providerDetailsRepository;
 
     private static final int PROVIDER_DOCUMENTS = 2;
     private static final boolean ACTIVE = true;
@@ -126,7 +131,7 @@ public class ProviderManager implements ProviderService {
     }
 
     @Transactional
-    public ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, MultipartFile attachedFile, HttpServletRequest request) {
+    public ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, List<ProviderDetail> specificData, MultipartFile attachedFile, HttpServletRequest request) {
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
@@ -136,67 +141,72 @@ public class ProviderManager implements ProviderService {
         // Setting active or inactive provider
         activeInactiveProvider(newProvider);
 
-//        boolean providerExist = this.providerCustomRepository.checkProviderCIf(newProvider.getCif());
+        // Guardamos proveedor
+        Provider provider = providerRepository.save(newProvider);
 
-//        if (!providerExist) {
-            // Guardamos proveedor
-            Provider provider = providerRepository.save(newProvider);
+        try {
+            for (WorkCenter workCenter : newProvider.getWorkCenters()) {
 
-            try {
-                for (WorkCenter workCenter : newProvider.getWorkCenters()) {
+                // Seteamos los valores del objeto
+                ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
+                providersByWorkCenters.getProvider().setId(provider.getId());
+                providersByWorkCenters.getWorkCenter().setId(workCenter.getId());
 
-                    // Seteamos los valores del objeto
-                    ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
-                    providersByWorkCenters.getProvider().setId(provider.getId());
-                    providersByWorkCenters.getWorkCenter().setId(workCenter.getId());
+                // Guardamos en proveedores_x_delegaciones
+                providersByWorkCentersRepository.save(providersByWorkCenters);
 
-                    // Guardamos en proveedores_x_delegaciones
-                    providersByWorkCentersRepository.save(providersByWorkCenters);
+                // Seteamos los valores para guardar los detalles
+                ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
+                providersCommonDetails.setCreated(new Date());
+                providersCommonDetails.getCreatedBy().setId(userId);
+                providersCommonDetails.getExpenditurePeriod().setId(provider.getProvidersCommonDetails().getExpenditurePeriod().getId());
+                providersCommonDetails.setProvDelegacionId(providersByWorkCenters.getId());
+                providersCommonDetails.setAnualSpending(provider.getProvidersCommonDetails().getAnualSpending());
+                providersCommonDetails.setSpending(provider.getProvidersCommonDetails().getSpending());
 
-                    // Seteamos los valores para guardar los detalles
-                    ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
-                    providersCommonDetails.setCreated(new Date());
-                    providersCommonDetails.getCreatedBy().setId(userId);
-                    providersCommonDetails.getExpenditurePeriod().setId(provider.getProvidersCommonDetails().getExpenditurePeriod().getId());
-                    providersCommonDetails.setProvDelegacionId(providersByWorkCenters.getId());
-                    providersCommonDetails.setAnualSpending(provider.getProvidersCommonDetails().getAnualSpending());
-                    providersCommonDetails.setSpending(provider.getProvidersCommonDetails().getSpending());
+                if (attachedFile != null) {
+                    providersCommonDetails.setDocUrl("doc_url");
+                    providersCommonDetails.setDocName(attachedFile.getOriginalFilename());
+                    providersCommonDetails.setDocContentType(attachedFile.getContentType());
+                }
 
-                    if (attachedFile != null) {
-                        providersCommonDetails.setDocUrl("doc_url");
-                        providersCommonDetails.setDocName(attachedFile.getOriginalFilename());
-                        providersCommonDetails.setDocContentType(attachedFile.getContentType());
-                    }
+                // Guardamos en proveedores_detalles_comun
+                ProvidersCommonDetails providersComDetails = this.providersCommonDetailsRepository.save(providersCommonDetails);
 
-                    // Guardamos en proveedores_detalles_comun
-                    ProvidersCommonDetails providersComDetails = this.providersCommonDetailsRepository.save(providersCommonDetails);
+                if (attachedFile != null) {
+                    String url = null;
 
-                    if (attachedFile != null) {
-                        String url = null;
+                    // Guardamos documento en el server
+                    url = commonService.saveDocumentServer(workCenter.getId(), provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
 
-                        // Guardamos documento en el server
-                        url = commonService.saveDocumentServer(workCenter.getId(), provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
-
-                        // Actualizamos la ruta del documento guardado
-                        if (url != null) {
-                            this.providersCommonDetailsRepository.updateProviderDocUrl(providersComDetails.getId(), url);
-                        }
+                    // Actualizamos la ruta del documento guardado
+                    if (url != null) {
+                        this.providersCommonDetailsRepository.updateProviderDocUrl(providersComDetails.getId(), url);
                     }
                 }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                // Guardamos los datos específicos por proveedor tipo
+                for (ProviderDetail spcData : specificData) {
+
+                    // Construimos el objeto proveedor detalles
+                    ProviderDetail providerDetails = new ProviderDetail();
+
+                    providerDetails.getProvidersByWorkCenters().setId(providersByWorkCenters.getId());
+                    providerDetails.getProviderDetailConf().setId(spcData.getProviderDetailConf().getId());
+                    providerDetails.setProviderDetailValue(spcData.getProviderDetailValue());
+
+                    // Guardamos en proveedores_detalles
+                    this.providerDetailsRepository.save(providerDetails);
+                }
             }
 
-            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-//        } else {
-//            // Devolver error y no guardar
-//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//        }
-//    }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 
@@ -235,6 +245,7 @@ public class ProviderManager implements ProviderService {
                 myProvider.setProvidersCommonDetails(details);
             }
 
+            // TODO adaptar para la lista de detalles
             if ((provByWorkCenters.getProvider().getId() == providerId) && (workCenterId == 0) ){
 
                 ProvidersCommonDetails details = providersCommonDetailsRepository.findAllByProvDelegacionId(provByWorkCenters.getId());
