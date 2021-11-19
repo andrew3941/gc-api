@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ProviderDetailConfRepository extends JpaRepository<ProviderDetailConf, Integer> {
 
-    List<ProviderDetailConf> findAllByProviderType(ProviderTypes providerType);
+    List<ProviderDetailConf> findAllByProviderTypeOrderByOrden(ProviderTypes providerType);
 
 }

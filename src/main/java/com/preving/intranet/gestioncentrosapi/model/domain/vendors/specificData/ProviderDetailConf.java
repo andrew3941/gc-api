@@ -15,14 +15,17 @@ public class ProviderDetailConf implements Serializable {
     private ProviderTypes providerType = new ProviderTypes();
     private ProviderAttributeType attributeType = new ProviderAttributeType();
     private String label;
+    private int orden;
 
     public ProviderDetailConf() { }
 
-    public ProviderDetailConf(int id, ProviderTypes providerType, ProviderAttributeType attributeType, String label) {
+    public ProviderDetailConf(int id, ProviderTypes providerType, ProviderAttributeType attributeType, String label,
+                              int orden) {
         this.id = id;
         this.providerType = providerType;
         this.attributeType = attributeType;
         this.label = label;
+        this.orden = orden;
     }
 
     @Id
@@ -46,6 +49,11 @@ public class ProviderDetailConf implements Serializable {
     public String getLabel() { return label; }
     public void setLabel(String label) { this.label = label; }
 
+    @Basic
+    @Column(name = "ORDEN")
+    public int getOrden() { return orden; }
+    public void setOrden(int orden) { this.orden = orden; }
+
     @Override
     public String toString() {
         return "ProviderDetailConf{" +
@@ -53,6 +61,7 @@ public class ProviderDetailConf implements Serializable {
                 ", providerType=" + providerType +
                 ", attributeType=" + attributeType +
                 ", label='" + label + '\'' +
+                ", orden=" + orden +
                 '}';
     }
 

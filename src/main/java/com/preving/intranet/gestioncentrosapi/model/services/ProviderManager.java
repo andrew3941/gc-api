@@ -250,7 +250,7 @@ public class ProviderManager implements ProviderService {
     public List<ProviderDetailConf> getSpecificProviderForm(int providerTypeId) {
 
         ProviderTypes providerType = providerTypesRepository.getOne(providerTypeId);
-        return providerDetailConfRepository.findAllByProviderType(providerType);
+        return providerDetailConfRepository.findAllByProviderTypeOrderByOrden(providerType);
 
     }
 
