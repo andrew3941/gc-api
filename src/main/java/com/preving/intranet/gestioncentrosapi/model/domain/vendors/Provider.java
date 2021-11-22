@@ -53,6 +53,7 @@ public class Provider implements Serializable {
     private ProviderArea providerArea = new ProviderArea();
     private ProviderEvaluationTypes evaluationTypes = new ProviderEvaluationTypes();
     private ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
+    private List<ProviderDetail> providerDetails = new ArrayList<>();
     private String email;
     private String address;
     private String contactPerson;
@@ -216,6 +217,10 @@ public class Provider implements Serializable {
     public void setProvidersCommonDetails(ProvidersCommonDetails providersCommonDetails) {
         this.providersCommonDetails = providersCommonDetails;
     }
+
+    @Transient
+    public List<ProviderDetail> getProviderDetails() { return providerDetails; }
+    public void setProviderDetails(List<ProviderDetail> providerDetails) { this.providerDetails = providerDetails; }
 
     @Basic
     @Column(name = "EMAIL")

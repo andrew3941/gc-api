@@ -191,7 +191,7 @@ public class ProviderManager implements ProviderService {
                     // Construimos el objeto proveedor detalles
                     ProviderDetail providerDetails = new ProviderDetail();
 
-                    providerDetails.getProvidersByWorkCenters().setId(providersByWorkCenters.getId());
+                    providerDetails.setProvidersByWorkCentersId(providersByWorkCenters.getId());
                     providerDetails.getProviderDetailConf().setId(spcData.getProviderDetailConf().getId());
                     providerDetails.setProviderDetailValue(spcData.getProviderDetailValue());
 
@@ -249,9 +249,14 @@ public class ProviderManager implements ProviderService {
             if ((provByWorkCenters.getProvider().getId() == providerId) && (workCenterId == 0) ){
 
                 ProvidersCommonDetails details = providersCommonDetailsRepository.findAllByProvDelegacionId(provByWorkCenters.getId());
-
                 myProvider.setProvidersCommonDetails(details);
+
+                // Setting specific details to the provider
+                List<ProviderDetail> specificDetails = providerDetailsRepository.findByProvidersByWorkCentersId(provByWorkCenters.getId());
+                myProvider.setProviderDetails(specificDetails);
+
             }
+
         }
 
         return myProvider;

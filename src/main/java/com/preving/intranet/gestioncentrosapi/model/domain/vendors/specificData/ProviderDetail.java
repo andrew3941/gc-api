@@ -1,7 +1,5 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData;
 
-import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProvidersByWorkCenters;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -10,16 +8,16 @@ import java.io.Serializable;
 public class ProviderDetail implements Serializable {
 
     private int id;
-    private ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
+    private int providersByWorkCentersId;
     private ProviderDetailConf providerDetailConf = new ProviderDetailConf();
     private String providerDetailValue;
 
     public ProviderDetail() { }
 
-    public ProviderDetail(int id, ProvidersByWorkCenters providersByWorkCenters, ProviderDetailConf providerDetailConf,
+    public ProviderDetail(int id, int providersByWorkCentersId, ProviderDetailConf providerDetailConf,
                           String providerDetailValue) {
         this.id = id;
-        this.providersByWorkCenters = providersByWorkCenters;
+        this.providersByWorkCentersId = providersByWorkCentersId;
         this.providerDetailConf = providerDetailConf;
         this.providerDetailValue = providerDetailValue;
     }
@@ -31,10 +29,10 @@ public class ProviderDetail implements Serializable {
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PROV_DEL_ID", referencedColumnName = "ID")
-    public ProvidersByWorkCenters getProvidersByWorkCenters() { return providersByWorkCenters; }
-    public void setProvidersByWorkCenters(ProvidersByWorkCenters providersByWorkCenters) { this.providersByWorkCenters = providersByWorkCenters; }
+    @Basic
+    @Column(name = "PROV_DEL_ID")
+    public int getProvidersByWorkCentersId() { return providersByWorkCentersId; }
+    public void setProvidersByWorkCentersId(int providersByWorkCentersId) { this.providersByWorkCentersId = providersByWorkCentersId; }
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CONF_PROV_DETALLE_ID", referencedColumnName = "ID")
@@ -50,7 +48,7 @@ public class ProviderDetail implements Serializable {
     public String toString() {
         return "ProviderDetail{" +
                 "id=" + id +
-                ", providersByWorkCenters=" + providersByWorkCenters +
+                ", providersByWorkCentersId=" + providersByWorkCentersId +
                 ", providerDetailConf=" + providerDetailConf +
                 ", providerDetailValue='" + providerDetailValue + '\'' +
                 '}';
