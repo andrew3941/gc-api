@@ -145,6 +145,7 @@ public class ProvidersController {
 
     @RequestMapping(value = "{workCenterId}/providers/{providerId}/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editProvider(@RequestParam("provider") String myProvider,
+                                          @RequestParam("specificData") String specificData,
                                           @PathVariable("workCenterId") int workCenterId,
                                           @PathVariable("providerId") int providerId,
                                           @RequestParam(value="attachedFile", required = false) MultipartFile attachedFile,
@@ -152,9 +153,13 @@ public class ProvidersController {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         Provider provider = gson.fromJson(myProvider, Provider.class);
+
+        Type listType = new TypeToken<List<ProviderDetail>>(){}.getType();
+        List<ProviderDetail> details = gson.fromJson(specificData, listType);
+
         ResponseEntity<?> response=null;
 
-        response = providerService.editProvider(workCenterId, providerId, provider, attachedFile, request);
+        response = providerService.editProvider(workCenterId, providerId, provider, details, attachedFile, request);
 
         return response;
 

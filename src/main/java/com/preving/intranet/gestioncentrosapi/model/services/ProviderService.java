@@ -21,9 +21,11 @@ public interface ProviderService {
 
     List<ExpenditurePeriod> getExpenditurePeriod(int workCenterId);
 
-    ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, List<ProviderDetail> specificData, MultipartFile attachedFile, HttpServletRequest request);
+    ResponseEntity<?> saveProvider(int workCenterId, Provider newProvider, List<ProviderDetail> specificData,
+                                   MultipartFile attachedFile, HttpServletRequest request);
 
-    ResponseEntity<?> editProvider(int workCenterId, int providerId, Provider provider, MultipartFile attachedFile, HttpServletRequest request);
+    ResponseEntity<?> editProvider(int workCenterId, int providerId, Provider provider, List<ProviderDetail> details,
+                                   MultipartFile attachedFile, HttpServletRequest request);
 
     Provider getProviderById(int workCenterId, int providerId);
 
