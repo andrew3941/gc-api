@@ -27,13 +27,12 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
         String sql = "" +
                 "SELECT DISTINCT P.ID, P.NOMBRE, P.CIF, " +
                 "P.DOC_NOMBRE, P.DOC_CONTENT_TYPE, P.ACTIVO, " +
-                "P.TIPO_ID, P.AREA_ID, P.LOCALIDAD_ID, L.LOC_NOMBRE,V.PRV_NOMBRE, " +
-                "PT.DENOMINACION AS PROVIDER_TYPE, PA.DENOMINACION AS PROVIDERAREA_TYPE, " +
+                "P.TIPO_ID, P.LOCALIDAD_ID, L.LOC_NOMBRE,V.PRV_NOMBRE, " +
+                "PT.DENOMINACION AS PROVIDER_TYPE, " +
                 "P.TIPO_EVALUACION_ID, PET.DENOMINACION AS PROVIDEREVALUATION_TYPE, " +
                 "P.FECHA_INICIO_SERVICIO " +
                 "FROM GESTION_CENTROS.PROVEEDORES P, " +
                 "GESTION_CENTROS.TM_PROVEEDORES_TIPOS PT, " +
-                "GESTION_CENTROS.TM_PROVEEDORES_AREAS PA, " +
                 "GESTION_CENTROS.TM_PERIODICIDAD_GASTO PG, " +
                 "GESTION_CENTROS.TM_PROVEEDORES_EVALUACION_TIPO PET, " +
                 "GESTION_CENTROS.PROVEEDORES_X_DELEGACIONES PW, " +
@@ -58,10 +57,6 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
 
         if(providerFilter != null && providerFilter.getProviderTypes().size() != 0){
             sql += "AND PT.ID =:providerTypes ";
-        }
-
-        if(providerFilter != null && providerFilter.getAreaTypes().size() != 0){
-            sql += "AND PA.ID =:areaTypes ";
         }
 
         if(providerFilter != null && providerFilter.getProvinces().size() != 0){
