@@ -1,8 +1,10 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.vendors;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.City;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetail;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 
 
@@ -28,12 +30,10 @@ import java.util.List;
                                 @ColumnResult(name = "DOC_CONTENT_TYPE", type = String.class),
                                 @ColumnResult(name = "ACTIVO", type = boolean.class),
                                 @ColumnResult(name = "TIPO_ID", type = Integer.class),
-                                @ColumnResult(name = "AREA_ID", type = Integer.class),
                                 @ColumnResult(name = "LOCALIDAD_ID", type = Integer.class),
                                 @ColumnResult(name = "LOC_NOMBRE", type = String.class),
                                 @ColumnResult(name = "PRV_NOMBRE", type = String.class),
                                 @ColumnResult(name = "PROVIDER_TYPE", type = String.class),
-                                @ColumnResult(name = "PROVIDERAREA_TYPE", type = String.class),
                                 @ColumnResult(name = "TIPO_EVALUACION_ID", type = Integer.class),
                                 @ColumnResult(name = "PROVIDEREVALUATION_TYPE", type = String.class),
                                 @ColumnResult(name = "FECHA_INICIO_SERVICIO", type = Date.class),
@@ -49,9 +49,9 @@ public class Provider implements Serializable {
     private String name;
     private String cif;
     private ProviderTypes providerTypes = new ProviderTypes();
-    private ProviderArea providerArea = new ProviderArea();
     private ProviderEvaluationTypes evaluationTypes = new ProviderEvaluationTypes();
     private ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
+    private List<ProviderDetail> providerDetails = new ArrayList<>();
     private String email;
     private String address;
     private String contactPerson;
@@ -73,18 +73,19 @@ public class Provider implements Serializable {
     private Date modified;
     private User modifiedBy;
     private boolean active = true;
+    private List<ProvidersByAreas> providerAreas = new ArrayList<>();
 
     public Provider() {
     }
 
-    public Provider(int id, List<WorkCenter> workCenters, String name, String cif, ProviderTypes providerTypes, ProviderArea providerArea, ProviderEvaluationTypes evaluationTypes, String email, String address, String contactPerson, String telephone, City city, String postalCode, String serviceDetails, String docUrl, String docName, String docContentType, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy, boolean active) {
+    public Provider(int id, List<WorkCenter> workCenters, String name, String cif, ProviderTypes providerTypes, ProviderEvaluationTypes evaluationTypes, ProvidersCommonDetails providersCommonDetails, String email, String address, String contactPerson, String telephone, City city, String postalCode, String serviceDetails, String docUrl, String docName, String docContentType, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy, boolean active, List<ProvidersByAreas> providerAreas) {
         this.id = id;
         this.workCenters = workCenters;
         this.name = name;
         this.cif = cif;
         this.providerTypes = providerTypes;
-        this.providerArea = providerArea;
         this.evaluationTypes = evaluationTypes;
+        this.providersCommonDetails = providersCommonDetails;
         this.email = email;
         this.address = address;
         this.contactPerson = contactPerson;
@@ -102,6 +103,7 @@ public class Provider implements Serializable {
         this.modified = modified;
         this.modifiedBy = modifiedBy;
         this.active = active;
+        this.providerAreas = providerAreas;
     }
 
     public Provider(
@@ -112,12 +114,10 @@ public class Provider implements Serializable {
             String docContentType,
             boolean providerStatus,
             Integer providerTypeId,
-            Integer providerAreaId,
             Integer localitiId,
             String localityName,
             String provinceName,
             String providerType ,
-            String providerAreaType,
             Integer evaluationTypeId,
             String evaluationTypeName,
             Date serviceStartDate) {
@@ -128,18 +128,14 @@ public class Provider implements Serializable {
         this.docContentType = docContentType;
         this.active = providerStatus;
         this.providerTypes.setId(providerTypeId);
-        this.providerArea.setId(providerAreaId);
         this.city.setId(localitiId);
         this.city.setName(localityName);
         this.city.getProvince().setName(provinceName);
         this.providerTypes.setName(providerType);
-        this.providerArea.setName(providerAreaType);
         this.evaluationTypes.setId(evaluationTypeId);
         this.evaluationTypes.setName(evaluationTypeName);
         this.getProviderTypes().setId(providerTypeId);
         this.getProviderTypes().setName(providerType);
-        this.getProviderArea().setId(providerAreaId);
-        this.getProviderArea().setName(providerAreaType);
         this.getEvaluationTypes().setId(evaluationTypeId);
         this.getEvaluationTypes().setName(evaluationTypeName);
         this.serviceStartDate = serviceStartDate;
@@ -190,13 +186,13 @@ public class Provider implements Serializable {
         this.providerTypes = providerTypes;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "AREA_ID", referencedColumnName = "ID")
-    public ProviderArea getProviderArea() {
-        return providerArea;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "provider", fetch = FetchType.LAZY)
+    public List<ProvidersByAreas> getProviderAreas() {
+        return providerAreas;
     }
-    public void setProviderArea(ProviderArea providerArea) {
-        this.providerArea = providerArea;
+    public void setProviderAreas(List<ProvidersByAreas> providerAreas) {
+        this.providerAreas = providerAreas;
     }
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -215,6 +211,10 @@ public class Provider implements Serializable {
     public void setProvidersCommonDetails(ProvidersCommonDetails providersCommonDetails) {
         this.providersCommonDetails = providersCommonDetails;
     }
+
+    @Transient
+    public List<ProviderDetail> getProviderDetails() { return providerDetails; }
+    public void setProviderDetails(List<ProviderDetail> providerDetails) { this.providerDetails = providerDetails; }
 
     @Basic
     @Column(name = "EMAIL")

@@ -2,6 +2,7 @@ package com.preving.intranet.gestioncentrosapi.model.dao.vendor;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
+import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -16,8 +17,12 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
     @PersistenceContext
     private EntityManager manager;
 
+    private final static String GC_ADMINISTRATOR_ROL_NAME = "44-25102";
+    private final static String GC_MANAGER_ROL_NAME = "44-25103";
+    private final static String GC_READING_ROL_NAME = "44-25104";
+
     @Override
-    public List<Provider> getProviders(Integer workCenterId, ProviderFilter providerFilter) {
+    public List<Provider> getProviders(Integer workCenterId, ProviderFilter providerFilter, UsuarioWithRoles user) {
 
         String sql = "" +
                 "SELECT DISTINCT P.ID, P.NOMBRE, P.CIF, " +
@@ -30,12 +35,21 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
                 "GESTION_CENTROS.TM_PROVEEDORES_TIPOS PT, " +
                 "GESTION_CENTROS.TM_PROVEEDORES_AREAS PA, " +
                 "GESTION_CENTROS.TM_PERIODICIDAD_GASTO PG, " +
-                "GESTION_CENTROS.TM_PROVEEDORES_EVALUACION_TIPO PET, "+
-                "GESTION_CENTROS.PROVEEDORES_X_DELEGACIONES PW, "+
-                "GESTION_CENTROS.PROVEEDORES_DETALLES_COMUN PDC, "+
+                "GESTION_CENTROS.TM_PROVEEDORES_EVALUACION_TIPO PET, " +
+                "GESTION_CENTROS.PROVEEDORES_X_DELEGACIONES PW, " +
+                "GESTION_CENTROS.PROVEEDORES_DETALLES_COMUN PDC, " +
                 "VIG_SALUD.LOCALIDADES L, "+
-                "VIG_SALUD.PROVINCIAS V "+
-                "WHERE P.TIPO_ID = PT.ID " +
+                "VIG_SALUD.PROVINCIAS V ";
+
+        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
+
+            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
+                sql += " , GESTION_CENTROS.PROVEEDORES_X_DELEGACIONES PXD, " +
+                        " GC2006_RELEASE.PC_DELEGACIONES DEL ";
+            }
+        }
+
+        sql +=  "WHERE P.TIPO_ID = PT.ID " +
                 "AND P.AREA_ID = PA.ID "+
                 "AND P.TIPO_EVALUACION_ID = PET.ID "+
                 "AND P.LOCALIDAD_ID = L.LOC_ID " +
@@ -71,7 +85,17 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
             sql += " AND P.ACTIVO = :providerStatus ";
         }
 
-        sql += " ORDER BY P.NOMBRE ";
+        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
+
+            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
+                sql += " AND P.ID = PXD.PROVEEDOR_ID " +
+                        " AND PXD.DELEGACION_ID = DEL.ID " +
+                        " AND DEL.RESPONSABLE = :userId ";
+            }
+
+        }
+
+        sql += " ORDER BY P.FECHA_INICIO_SERVICIO DESC";
 
         Query query = manager.createNativeQuery(sql, "ProviderMapping");
 
@@ -97,6 +121,12 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
 
         if(providerFilter != null && providerFilter.getProviderStatus() != 2) {
             query.setParameter("providerStatus", providerFilter.getProviderStatus() == 1);
+        }
+
+        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
+            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
+                query.setParameter("userId", user.getId());
+            }
         }
 
         List<Provider> providerResults = query.getResultList();

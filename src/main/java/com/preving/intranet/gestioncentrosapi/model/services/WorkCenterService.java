@@ -5,6 +5,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterTypes;
+import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +19,7 @@ public interface WorkCenterService {
 
     ResponseEntity<?> editWorkCenter(int workCenterId, WorkCenter newWorkCenter, HttpServletRequest request);
 
-    List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter);
+    List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter, UsuarioWithRoles user);
 
     WorkCenter getWorkCenterById(int workId);
 
@@ -30,7 +31,7 @@ public interface WorkCenterService {
 
     ResponseEntity<?> editWorkCenterDetails(int workCenterId, WorkCenterDetails workCenterDetails, HttpServletRequest request);
 
-    ResponseEntity<?> exportWorkCenters(WorkCenterFilter workCenterFilter, HttpServletResponse response);
+    ResponseEntity<?> exportWorkCenters(WorkCenterFilter workCenterFilter, HttpServletResponse response, UsuarioWithRoles user);
 
     WorkCenterDetails getWorkCenterDetails(int workCenterId);
 
@@ -62,7 +63,7 @@ public interface WorkCenterService {
 
     void activateWorkCenters();
 
-    List<WorkCenter>findByWorkCenters();
+    List<WorkCenter> findWorkCenters(UsuarioWithRoles user);
 
     List<WorkCenterTypes> getWorkCenterTypes();
 
