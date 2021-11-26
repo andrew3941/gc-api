@@ -25,7 +25,7 @@ public interface ProviderRepository extends JpaRepository<Provider, Integer> {
     @Transactional
     @Query("update Provider p set p.name=:#{#provider.name}, " +
             "p.docName=:#{#provider.docName}, p.docContentType=:#{#provider.docContentType}," +
-            "p.cif=:#{#provider.cif}, p.providerTypes=:#{#provider.providerTypes}, p.providerArea=:#{#provider.providerArea}, " +
+            "p.cif=:#{#provider.cif}, p.providerTypes=:#{#provider.providerTypes}, " +
             "p.evaluationTypes=:#{#provider.evaluationTypes}, p.city=:#{#provider.city},p.postalCode=:#{#provider.postalCode}," +
             "p.email=:#{#provider.email}, p.address=:#{#provider.address}, p.telephone=:#{#provider.telephone}, " +
             "p.serviceDetails=:#{#provider.serviceDetails}, " +

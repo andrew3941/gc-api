@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.model.dao.workCenters;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.services.ProviderManager;
+import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -23,8 +24,12 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
 
     private WorkCentersCustomizeRepository workCentersCustomizeRepository;
 
+    private final static String GC_ADMINISTRATOR_ROL_NAME = "44-25102";
+    private final static String GC_MANAGER_ROL_NAME = "44-25103";
+    private final static String GC_READING_ROL_NAME = "44-25104";
+
     @Override
-    public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
+    public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter, UsuarioWithRoles user) {
 
         String sql = "" +
                 "SELECT DISTINCT WC.ID, WC.LOCALIDAD_ID, WC.NOMBRE, WC.COD_IN_NAV, WC.DIRECCION, WC.C_POSTAL, WC.TFNO, WC.MAIL, " +
@@ -67,6 +72,13 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
             sql += " AND LOWER(TRANSLATE(WC.NOMBRE, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, '������������', 'aeiounAEIOUN')) ";
         }
 
+        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
+
+            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
+                sql += " AND WC.RESPONSABLE = :userId ";
+            }
+        }
+
         sql += "ORDER BY WC.NOMBRE";
 
         Query query = manager.createNativeQuery(sql, "WorkCenterMapping");
@@ -87,7 +99,11 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
             query.setParameter("workCenterTypes", workCenterFilter.getWorkCenterTypes());
         }
 
-
+        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
+            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
+                query.setParameter("userId", user.getId());
+            }
+        }
 
         List<WorkCenter>  allWorkCenters = query.getResultList();
 
@@ -109,14 +125,27 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
     }
 
     @Override
-    public List<WorkCenter> findAllByActive() {
+    public List<WorkCenter> findAllByActive(UsuarioWithRoles user) {
 
         String sql = "" +
                 "SELECT WC.ID, WC.NOMBRE, WC.TIPO_ID FROM GC2006_RELEASE.PC_DELEGACIONES WC " +
-                "WHERE WC.ACTIVO = 1 " +
-                "ORDER BY NOMBRE ";
+                "WHERE WC.ACTIVO = 1 ";
+
+        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
+            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
+                sql += " AND WC.RESPONSABLE = :userId ";
+            }
+        }
+
+                sql += "ORDER BY NOMBRE ";
 
         Query query = manager.createNativeQuery(sql);
+
+        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
+            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
+                query.setParameter("userId", user.getId());
+            }
+        }
 
         return mappingWorkCenters(query.getResultList());
     }

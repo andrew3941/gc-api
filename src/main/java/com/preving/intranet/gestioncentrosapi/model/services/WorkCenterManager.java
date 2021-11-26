@@ -19,6 +19,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.security.JwtTokenUtil;
+import com.preving.security.domain.UsuarioWithRoles;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -248,10 +249,10 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
-    public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter) {
+    public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter, UsuarioWithRoles user) {
 
         // Getting the work centers list by filter
-        List<WorkCenter> workCenters = this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter);
+        List<WorkCenter> workCenters = this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter, user);
 
         // Setting entities related with the work center
         for(WorkCenter workCenter : workCenters) {
@@ -349,7 +350,7 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
 
-    public ResponseEntity<?> exportWorkCenters(WorkCenterFilter workCenterFilter, HttpServletResponse response){
+    public ResponseEntity<?> exportWorkCenters(WorkCenterFilter workCenterFilter, HttpServletResponse response, UsuarioWithRoles user){
 
         byte[] content=null;
 
@@ -383,7 +384,7 @@ public class WorkCenterManager implements WorkCenterService{
         cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy hh:mm:ss"));
 
         // Obtenemos los datos
-        List<WorkCenter> workCenters = this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter);
+        List<WorkCenter> workCenters = this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter, user);
 
         // Setting entities related with the work center
         for(WorkCenter workCenter : workCenters) {
@@ -742,10 +743,9 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
-    public List<WorkCenter> findByWorkCenters() {
-        return workCentersCustomizeRepository.findAllByActive();
+    public List<WorkCenter> findWorkCenters(UsuarioWithRoles user) {
+        return workCentersCustomizeRepository.findAllByActive(user);
     }
-
 
     @Override
     public List<WorkCenterTypes> getWorkCenterTypes() {

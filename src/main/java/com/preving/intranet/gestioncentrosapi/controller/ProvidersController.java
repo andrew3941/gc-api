@@ -7,6 +7,8 @@ import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetail;
 import com.preving.intranet.gestioncentrosapi.model.services.ProviderService;
+import com.preving.security.JwtTokenUtil;
+import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,9 @@ public class ProvidersController {
 
     @Autowired
     public ProviderService providerService;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Value("${modo-debug}")
     private boolean modoDebug;
@@ -93,10 +98,13 @@ public class ProvidersController {
      */
 
     @RequestMapping(value = "{workCenterId}/providers/filter", method = RequestMethod.POST)
-    public ResponseEntity<?> findWorkCenterByFilter(@RequestBody ProviderFilter providerFilter,
+    public ResponseEntity<?> findWorkCenterByFilter(HttpServletRequest request,
+                                                    @RequestBody ProviderFilter providerFilter,
                                                     @PathVariable(value="workCenterId") int workCenterId) {
+
         try {
-            return new ResponseEntity<>(this.providerService.getProviders(workCenterId, providerFilter), HttpStatus.OK);
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            return new ResponseEntity<>(this.providerService.getProviders(workCenterId, providerFilter, user), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

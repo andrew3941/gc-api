@@ -8,7 +8,10 @@ import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
+import com.preving.intranet.gestioncentrosapi.model.services.SecurityService;
 import com.preving.intranet.gestioncentrosapi.model.services.WorkCenterService;
+import com.preving.security.JwtTokenUtil;
+import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
@@ -33,6 +36,12 @@ public class WorkCentersController {
     @Autowired
     private WorkCenterService workCenterService;
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private SecurityService securityService;
+
     @Value("${modo-debug}")
     private boolean modoDebug;
 
@@ -56,10 +65,12 @@ public class WorkCentersController {
      * @return
      */
     @RequestMapping(value = "filter", method = RequestMethod.POST)
-    public ResponseEntity<?> findWorkCenterByFilter(@RequestBody WorkCenterFilter workCenterFilter) {
+    public ResponseEntity<?> findWorkCenterByFilter(HttpServletRequest request,
+                                                    @RequestBody WorkCenterFilter workCenterFilter) {
 
         try {
-            return new ResponseEntity<>(this.workCenterService.getWorkCenters(workCenterFilter), HttpStatus.OK);
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            return new ResponseEntity<>(this.workCenterService.getWorkCenters(workCenterFilter, user), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -180,10 +191,17 @@ public class WorkCentersController {
      * @return
      */
     @RequestMapping(value = "{centerId}", method = RequestMethod.GET)
-    public ResponseEntity<?> findWorkCenterById(@PathVariable(value = "centerId") int centerId){
+    public ResponseEntity<?> findWorkCenterById(HttpServletRequest request,
+                                                @PathVariable(value = "centerId") int centerId){
 
         try {
-            return new ResponseEntity<>(workCenterService.getWorkCenterById(centerId), HttpStatus.OK);
+
+            if(securityService.hasAccessToWorkCenter(centerId, request)) {
+                return new ResponseEntity<>(workCenterService.getWorkCenterById(centerId), HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -233,7 +251,8 @@ public class WorkCentersController {
      * @return
      */
     @RequestMapping(value="exportWorkCenters", method = RequestMethod.POST)
-    public ResponseEntity<?> exportActions(HttpServletResponse response,
+    public ResponseEntity<?> exportActions(HttpServletRequest request,
+                                           HttpServletResponse response,
                                            @RequestParam ("workCentersList") String workCentersList) {
 
         ResponseEntity<?> resp = null;
@@ -241,7 +260,8 @@ public class WorkCentersController {
         WorkCenterFilter workCenterFilter = gson.fromJson(workCentersList, WorkCenterFilter.class);
 
         try {
-            return new ResponseEntity<>(workCenterService.exportWorkCenters(workCenterFilter, response), HttpStatus.OK);
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            return new ResponseEntity<>(workCenterService.exportWorkCenters(workCenterFilter, response, user), HttpStatus.OK);
         } catch (DataAccessException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -475,10 +495,11 @@ public class WorkCentersController {
      * @return
      */
     @RequestMapping(value = "list", method = RequestMethod.GET)
-    public ResponseEntity<?> findAllByActiveIsTrue() {
+    public ResponseEntity<?> findAllByActiveIsTrue(HttpServletRequest request) {
 
         try {
-            return new ResponseEntity<>(workCenterService.findByWorkCenters(), HttpStatus.OK);
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            return new ResponseEntity<>(workCenterService.findWorkCenters(user), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -9,6 +9,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetailConf;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.security.JwtTokenUtil;
+import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,15 +71,22 @@ public class ProviderManager implements ProviderService {
     @Autowired
     private ProviderDetailsRepository providerDetailsRepository;
 
+    @Autowired
+    private ProviderByAreasRepository providerByAreasRepository;
+
     private static final int PROVIDER_DOCUMENTS = 2;
     private static final boolean ACTIVE = true;
     private static final boolean INACTIVE = false;
 
     @Override
-    public List<Provider> getProviders(int workCenterId, ProviderFilter providerFilter) {
-        List<Provider> providers = this.providerCustomRepository.getProviders(workCenterId, providerFilter);
+    public List<Provider> getProviders(int workCenterId, ProviderFilter providerFilter, UsuarioWithRoles user) {
+        List<Provider> providers = this.providerCustomRepository.getProviders(workCenterId, providerFilter, user);
 
         for (Provider provider: providers) {
+            List<ProvidersByAreas> providersByAreas = providerByAreasRepository.findAllByProvider(provider);
+
+            provider.setProviderAreas(providersByAreas);
+
             // Buscar los centros por proveedorId
             List<ProvidersByWorkCenters> providersByWorkCenters = providersByWorkCentersRepository.findAllByProvider(provider);
 
@@ -88,7 +96,6 @@ public class ProviderManager implements ProviderService {
 
                 // Meter los centros en la lista de proveedores
                 provider.getWorkCenters().add(workCenter);
-
 
                 if (provByWorkCenters.getWorkCenter().getId() == workCenterId){
 
@@ -102,7 +109,6 @@ public class ProviderManager implements ProviderService {
                     // Fill the object inside provider
                     provider.setProvidersCommonDetails(details);
                 }
-
 
             }
         }
@@ -144,6 +150,13 @@ public class ProviderManager implements ProviderService {
 
         // Guardamos proveedor
         Provider provider = providerRepository.save(newProvider);
+
+        for (ProvidersByAreas providersByAreas : newProvider.getProviderAreas()) {
+
+            providersByAreas.getProvider().setId(provider.getId());
+
+            providerByAreasRepository.save(providersByAreas);
+        }
 
         try {
             for (WorkCenter workCenter : newProvider.getWorkCenters()) {
@@ -349,6 +362,13 @@ public class ProviderManager implements ProviderService {
 
         // Editamos el proveedor
         providerRepository.editProvider(provider);
+
+        for (ProvidersByAreas providersByAreas : provider.getProviderAreas()) {
+
+            providersByAreas.getProvider().setId(provider.getId());
+
+            providerByAreasRepository.save(providersByAreas);
+        }
 
         // Obtenemos todos los registros de detalles del proveedor
         List<ProvidersByWorkCenters> provByWorkCenters = providersByWorkCentersRepository.findAllByProvider(provider);

@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetail;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetailConf;
+import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 public interface ProviderService {
 
-    List<Provider> getProviders(int workCenterId, ProviderFilter providerFilter);
+    List<Provider> getProviders(int workCenterId, ProviderFilter providerFilter, UsuarioWithRoles user);
 
     List<ProviderTypes> getProviderTypes(int workCenterId);
 
