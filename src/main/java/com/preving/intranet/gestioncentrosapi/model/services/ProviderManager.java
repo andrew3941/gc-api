@@ -214,7 +214,7 @@ public class ProviderManager implements ProviderService {
 
                 }
 
-                // Guardamos los datos espec�ficos por proveedor tipo
+                // Guardamos los datos especï¿½ficos por proveedor tipo
                 for (ProviderDetail spcData : specificData) {
 
                     // Construimos el objeto proveedor detalles
@@ -403,29 +403,26 @@ public class ProviderManager implements ProviderService {
         }
 
         try {
-            if (workCenterId == 0){
+           if (workCenterId == 0){
 
-                // Obtenemos todos los registros de detalles del proveedor
-                List<ProvidersByWorkCenters> provByWorkCenters = providersByWorkCentersRepository.findAllByProvider(provider);
+               // Obtenemos todos los registros de detalles del proveedor
+               List<ProvidersByWorkCenters> provByWorkCenters = providersByWorkCentersRepository.findAllByProvider(provider);
 
-                for (ProvidersByWorkCenters provByWorkCenter: provByWorkCenters) {
+               for (ProvidersByWorkCenters provByWorkCenter: provByWorkCenters) {
+                   // Borramos los detalles comunes del proveedor
+                   providersCommonDetailsRepository.deleteAllByProvDelegacionId(provByWorkCenter.getId());
+                   // Borramos los detalles especï¿½ficos del proveedor
+                   providerDetailsRepository.deleteAllByProvidersByWorkCentersId(provByWorkCenter.getId());
+               }
 
-                    // Borramos los detalles comunes del proveedor
-                    providersCommonDetailsRepository.deleteAllByProvDelegacionId(provByWorkCenter.getId());
-
-                    // Borramos los detalles espec�ficos del proveedor
-                    providerDetailsRepository.deleteAllByProvidersByWorkCentersId(provByWorkCenter.getId());
-
-                }
-
-                // Borramos todas las delegaciones por proveedor con el id de proveedor
-                providersByWorkCentersRepository.deleteAllByProvider_Id(provider.getId());
+               // Borramos todas las delegaciones por proveedor con el id de proveedor
+               providersByWorkCentersRepository.deleteAllByProvider_Id(provider.getId());
 
                 for(WorkCenter workCenter : provider.getWorkCenters()) {
-                    // Seteamos los valores del objeto
-                    ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
-                    providersByWorkCenters.getProvider().setId(provider.getId());
-                    providersByWorkCenters.getWorkCenter().setId(workCenter.getId());
+                   // Seteamos los valores del objeto
+                   ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
+                   providersByWorkCenters.getProvider().setId(provider.getId());
+                   providersByWorkCenters.getWorkCenter().setId(workCenter.getId());
 
                     providersByWorkCentersRepository.save(providersByWorkCenters);
 
@@ -496,16 +493,16 @@ public class ProviderManager implements ProviderService {
                 // Borramos los detalles comunes del proveedor
                 providersCommonDetailsRepository.deleteAllByProvDelegacionId(provDelId);
 
-                // Borramos los detalles espec�ficos del proveedor
+                // Borramos los detalles especï¿½ficos del proveedor
                 providerDetailsRepository.deleteAllByProvidersByWorkCentersId(provDelId);
 
                 // Borramos todas las delegaciones por proveedor con el id de proveedor
                 providersByWorkCentersRepository.deleteById(provDelId);
 
                 // Seteamos los valores del objeto
-                ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
-                providersByWorkCenters.getProvider().setId(provider.getId());
-                providersByWorkCenters.getWorkCenter().setId(workCenterId);
+                   ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
+                   providersByWorkCenters.getProvider().setId(provider.getId());
+                   providersByWorkCenters.getWorkCenter().setId(workCenterId);
 
                 providersByWorkCentersRepository.save(providersByWorkCenters);
 
