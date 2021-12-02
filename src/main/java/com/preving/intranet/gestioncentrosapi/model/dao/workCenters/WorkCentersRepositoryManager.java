@@ -34,7 +34,7 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
         String sql = "" +
                 "SELECT DISTINCT WC.ID, WC.LOCALIDAD_ID, WC.NOMBRE, WC.COD_IN_NAV, WC.DIRECCION, WC.C_POSTAL, WC.TFNO, WC.MAIL, " +
                 "   WC.FECHA_ALTA, WC.FECHA_BAJA, WC.ACTIVO, WC.TIPO_ID, LOC.LOC_NOMBRE LOCALIDAD_NOMBRE, " +
-                "   LOC.LOC_PRV_COD PROVINCIA_COD, PRV.PRV_NOMBRE PROVINCIA_NOMBRE " +
+                "   LOC.LOC_PRV_COD PROVINCIA_COD, PRV.PRV_NOMBRE PROVINCIA_NOMBRE, (USU.NOMBRE || ' ' || USU.APELLIDOS ) AS RESPONSABLE " +
                 "FROM GC2006_RELEASE.PC_DELEGACIONES WC, ";
 
         if(workCenterFilter.getWorkCenterEntities().size() > 0) {
@@ -42,9 +42,11 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
         }
 
         sql +=  "   VIG_SALUD.LOCALIDADES LOC, " +
-                "   VIG_SALUD.PROVINCIAS PRV " +
+                "   VIG_SALUD.PROVINCIAS PRV," +
+                "   GC2006_RELEASE.PC_USUARIOS USU " +
                 "WHERE WC.LOCALIDAD_ID = LOC.LOC_ID " +
-                "   AND LOC.LOC_PRV_COD LIKE PRV.PRV_COD ";
+                "   AND LOC.LOC_PRV_COD LIKE PRV.PRV_COD " +
+                "   AND USU.ID = WC.RESPONSABLE ";
 
         if (workCenterFilter.isAllEntitiesSelected()) {
                 sql += "AND WC.ID = WCE.DELEGACION_ID ";
@@ -69,7 +71,7 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterName() != null && workCenterFilter.getWorkCenterName() != ""){
-            sql += " AND LOWER(TRANSLATE(WC.NOMBRE, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN')) ";
+            sql += " AND LOWER(TRANSLATE(WC.NOMBRE, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) ";
         }
 
         if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {

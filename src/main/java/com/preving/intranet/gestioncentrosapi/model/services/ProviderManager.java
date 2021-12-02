@@ -181,37 +181,34 @@ public class ProviderManager implements ProviderService {
                 providersByWorkCentersRepository.save(providersByWorkCenters);
 
                 // Seteamos los valores para guardar los detalles
-                for(ProvidersCommonDetails providersCommonDetails : newProvider.getProvidersCommonDetails()){
+                ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
 
-                  //  ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
-                    providersCommonDetails.setCreated(new Date());
-                    providersCommonDetails.getCreatedBy().setId(userId);
-                    providersCommonDetails.getExpenditurePeriod().setId(providersCommonDetails.getExpenditurePeriod().getId());
-                    providersCommonDetails.setProvDelegacionId(providersByWorkCenters.getId());
-                    providersCommonDetails.setAnualSpending(providersCommonDetails.getAnualSpending());
-                    providersCommonDetails.setSpending(providersCommonDetails.getSpending());
+                providersCommonDetails.setCreated(new Date());
+                providersCommonDetails.getCreatedBy().setId(userId);
+                providersCommonDetails.getExpenditurePeriod().setId(newProvider.getProvidersCommonDetails().get(0).getExpenditurePeriod().getId());
+                providersCommonDetails.setProvDelegacionId(providersByWorkCenters.getId());
+                providersCommonDetails.setAnualSpending(newProvider.getProvidersCommonDetails().get(0).getAnualSpending());
+                providersCommonDetails.setSpending(newProvider.getProvidersCommonDetails().get(0).getSpending());
 
-                    if (attachedFile != null) {
-                        providersCommonDetails.setDocUrl("doc_url");
-                        providersCommonDetails.setDocName(attachedFile.getOriginalFilename());
-                        providersCommonDetails.setDocContentType(attachedFile.getContentType());
+                if (attachedFile != null) {
+                    providersCommonDetails.setDocUrl("doc_url");
+                    providersCommonDetails.setDocName(attachedFile.getOriginalFilename());
+                    providersCommonDetails.setDocContentType(attachedFile.getContentType());
+                }
+
+                // Guardamos en proveedores_detalles_comun
+                ProvidersCommonDetails providersComDetails = this.providersCommonDetailsRepository.save(providersCommonDetails);
+
+                if (attachedFile != null) {
+                    String url = null;
+
+                    // Guardamos documento en el server
+                    url = commonService.saveDocumentServer(workCenter.getId(), provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
+
+                    // Actualizamos la ruta del documento guardado
+                    if (url != null) {
+                        this.providersCommonDetailsRepository.updateProviderDocUrl(providersComDetails.getId(), url);
                     }
-
-                    // Guardamos en proveedores_detalles_comun
-                    ProvidersCommonDetails providersComDetails = this.providersCommonDetailsRepository.save(providersCommonDetails);
-
-                    if (attachedFile != null) {
-                        String url = null;
-
-                        // Guardamos documento en el server
-                        url = commonService.saveDocumentServer(workCenter.getId(), provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
-
-                        // Actualizamos la ruta del documento guardado
-                        if (url != null) {
-                            this.providersCommonDetailsRepository.updateProviderDocUrl(providersComDetails.getId(), url);
-                        }
-                    }
-
                 }
 
                 // Guardamos los datos especï¿½ficos por proveedor tipo

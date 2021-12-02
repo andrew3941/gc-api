@@ -33,11 +33,8 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
                 "P.FECHA_INICIO_SERVICIO " +
                 "FROM GESTION_CENTROS.PROVEEDORES P, " +
                 "GESTION_CENTROS.TM_PROVEEDORES_TIPOS PT, " +
-                "GESTION_CENTROS.TM_PROVEEDORES_AREAS PA, " +
-                "GESTION_CENTROS.TM_PERIODICIDAD_GASTO PG, " +
                 "GESTION_CENTROS.TM_PROVEEDORES_EVALUACION_TIPO PET, " +
                 "GESTION_CENTROS.PROVEEDORES_X_DELEGACIONES PW, " +
-                "GESTION_CENTROS.PROVEEDORES_DETALLES_COMUN PDC, " +
                 "VIG_SALUD.LOCALIDADES L, "+
                 "VIG_SALUD.PROVINCIAS V ";
 
@@ -50,8 +47,7 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
         }
 
         sql +=  "WHERE P.TIPO_ID = PT.ID " +
-                "AND P.AREA_ID = PA.ID "+
-                "AND P.TIPO_EVALUACION_ID = PET.ID "+
+                "AND P.TIPO_EVALUACION_ID = PET.ID " +
                 "AND P.LOCALIDAD_ID = L.LOC_ID " +
                 "AND L.LOC_PRV_COD = V.PRV_COD " +
                 "AND P.ID = PW.PROVEEDOR_ID ";
@@ -74,8 +70,9 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
         }
 
         if(providerFilter != null && providerFilter.getProviderName() != null && providerFilter.getProviderName() != ""){
-            sql += " AND LOWER(TRANSLATE(P.NOMBRE, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:providerName, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN')) OR LOWER(TRANSLATE(P.CIF, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:providerName, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN'))";
-      }
+            sql += " AND (LOWER(TRANSLATE(P.NOMBRE, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:providerName, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) " +
+                    " OR LOWER(TRANSLATE(P.CIF, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:providerName, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')))";
+        }
 
         if(providerFilter != null && providerFilter.getProviderStatus() != 2) {
             sql += " AND P.ACTIVO = :providerStatus ";

@@ -40,7 +40,8 @@ import java.util.List;
                                 @ColumnResult(name = "TIPO_ID", type = Integer.class),
                                 @ColumnResult(name = "LOCALIDAD_NOMBRE", type = String.class),
                                 @ColumnResult(name = "PROVINCIA_COD", type = String.class),
-                                @ColumnResult(name = "PROVINCIA_NOMBRE", type = String.class)
+                                @ColumnResult(name = "PROVINCIA_NOMBRE", type = String.class),
+                                @ColumnResult(name = "RESPONSABLE", type = String.class)
                         }
                 )
         }
@@ -56,7 +57,7 @@ public class WorkCenter implements Serializable {
     private String postalCode;
     private String phoneNumber;
     private String email;
-    private User headPerson;
+    private User headPerson = new User();
     private int employee;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date startDate = new Date();
@@ -77,12 +78,13 @@ public class WorkCenter implements Serializable {
     private List<Room> rooms = new ArrayList<>();
     private List<ProvidersByWorkCenters> providers = new ArrayList<>();
 
+
     public WorkCenter() {
     }
 
     public WorkCenter(int id, Integer localityId, String name, String navisionCode, String address, String postalCode,
                       String phoneNumber, String email, Date startDate, Date endDate, int active, int workCenterTypesStatusId, String localityName,
-                      String prvCod, String prvName)  {
+                      String prvCod, String prvName, String headPersonName)  {
         this.id = id;
         this.city.setId(localityId) ;
         this.name = name;
@@ -98,6 +100,7 @@ public class WorkCenter implements Serializable {
         this.getCity().setName(localityName);
         this.getCity().getProvince().setCod(prvCod);
         this.getCity().getProvince().setName(prvName);
+        this.getHeadPerson().setCompleteName(headPersonName);
     }
 
     public WorkCenter(int id, String name, City city, String navisionCode, DimNavision dimNavision, String address, String postalCode, String phoneNumber, String email, User headPerson, int employee, Date startDate, Date endDate, Zona zona, int active, int visible, WorkCenterTypes workCenterTypes, Date created, User createdBy, Date modified, User modifiedBy, List<WorkCentersByEntity> workCentersByEntities, List<Drawing> drawings, List<Room> rooms, List<ProvidersByWorkCenters> providers) {
