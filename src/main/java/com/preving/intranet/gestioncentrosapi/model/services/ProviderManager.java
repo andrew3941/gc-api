@@ -423,6 +423,11 @@ public class ProviderManager implements ProviderService {
 
                     providersByWorkCentersRepository.save(providersByWorkCenters);
 
+                    //replicate provider serviceEnd Date for each workcenter
+                    if (provider.getServiceEndDate()!= null){
+                        workCentersRepository.updateWorkCenterEndDate(workCenter.getId(), provider.getServiceEndDate());
+                    }
+
                     ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
 
                 if (attachedFile != null) {
@@ -484,6 +489,16 @@ public class ProviderManager implements ProviderService {
 
 
             if (workCenterId != 0) {
+
+                if (provider.getServiceEndDate()!=null){
+
+                    for(WorkCenter workCenter : provider.getWorkCenters()) {
+                        //replicate provider serviceEnd Date for each workcenter
+                        workCentersRepository.updateWorkCenterEndDate(workCenter.getId(), provider.getServiceEndDate());
+                    }
+
+                }
+
 
                 int provDelId = providersByWorkCentersRepository.findByProvider_IdAndWorkCenter_Id(providerId, workCenterId).getId();
 
