@@ -4,15 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
-import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
-import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderTypes;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProvidersByWorkCenters;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;

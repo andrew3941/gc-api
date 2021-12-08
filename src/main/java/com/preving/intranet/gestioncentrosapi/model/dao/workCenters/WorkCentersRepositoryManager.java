@@ -34,8 +34,8 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
         String sql = "" +
                 "SELECT DISTINCT WC.ID, WC.LOCALIDAD_ID, WC.NOMBRE, WC.COD_IN_NAV, WC.DIRECCION, WC.C_POSTAL, WC.TFNO, WC.MAIL, " +
                 "   WC.FECHA_ALTA, WC.FECHA_BAJA, WC.ACTIVO, WC.TIPO_ID, LOC.LOC_NOMBRE LOCALIDAD_NOMBRE, " +
-                "   LOC.LOC_PRV_COD PROVINCIA_COD, PRV.PRV_NOMBRE PROVINCIA_NOMBRE, (USU.NOMBRE || ' ' || USU.APELLIDOS ) AS RESPONSABLE " +
-                "FROM GC2006_RELEASE.PC_DELEGACIONES WC, ";
+                "   LOC.LOC_PRV_COD PROVINCIA_COD, PRV.PRV_NOMBRE PROVINCIA_NOMBRE,(USU.NOMBRE || ' ' || USU.APELLIDOS ) AS RESPONSABLE " +
+                " FROM GC2006_RELEASE.PC_DELEGACIONES WC ";
 
         if(workCenterFilter.getWorkCenterEntities().size() > 0) {
             sql += "GESTION_CENTROS.PC_DELEGACIONES_X_ENTIDADES WCE, ";
@@ -60,6 +60,10 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getCod() != null){
             sql += "AND LOC.LOC_PRV_COD = :workCenterProvince ";
+        }
+
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterHeadPerson().size() > 0){
+            sql += "AND WC.RESPONSABLE = :workCenterHeadPerson ";
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterStatus() != 2){
@@ -91,6 +95,10 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getCod() != null){
             query.setParameter("workCenterProvince", workCenterFilter.getWorkCenterProvince().getCod());
+        }
+
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterHeadPerson().size() > 0 ){
+            query.setParameter("workCenterHeadPerson", workCenterFilter.getWorkCenterHeadPerson());
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterStatus() != 2){
