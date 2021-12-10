@@ -31,57 +31,82 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
     @Override
     public List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter, UsuarioWithRoles user) {
 
+        int conditions = 0;
+
         String sql = "" +
                 "SELECT DISTINCT WC.ID, WC.LOCALIDAD_ID, WC.NOMBRE, WC.COD_IN_NAV, WC.DIRECCION, WC.C_POSTAL, WC.TFNO, WC.MAIL, " +
                 "   WC.FECHA_ALTA, WC.FECHA_BAJA, WC.ACTIVO, WC.TIPO_ID, LOC.LOC_NOMBRE LOCALIDAD_NOMBRE, " +
                 "   LOC.LOC_PRV_COD PROVINCIA_COD, PRV.PRV_NOMBRE PROVINCIA_NOMBRE,(USU.NOMBRE || ' ' || USU.APELLIDOS ) AS RESPONSABLE " +
                 " FROM GC2006_RELEASE.PC_DELEGACIONES WC ";
 
-        if(workCenterFilter.getWorkCenterEntities().size() > 0) {
-            sql += "GESTION_CENTROS.PC_DELEGACIONES_X_ENTIDADES WCE, ";
-        }
+        sql +=  "   INNER JOIN VIG_SALUD.LOCALIDADES LOC ON LOC.LOC_ID = WC.LOCALIDAD_ID " +
+                "   INNER JOIN VIG_SALUD.PROVINCIAS PRV ON PRV.PRV_COD = LOC.LOC_PRV_COD " +
+                "   LEFT JOIN GC2006_RELEASE.PC_USUARIOS USU ON USU.ID = WC.RESPONSABLE ";
 
-        sql +=  "   VIG_SALUD.LOCALIDADES LOC, " +
-                "   VIG_SALUD.PROVINCIAS PRV," +
-                "   GC2006_RELEASE.PC_USUARIOS USU " +
-                "WHERE WC.LOCALIDAD_ID = LOC.LOC_ID " +
-                "   AND LOC.LOC_PRV_COD LIKE PRV.PRV_COD " +
-                "   AND USU.ID = WC.RESPONSABLE ";
-
-        if (workCenterFilter.isAllEntitiesSelected()) {
-                sql += "AND WC.ID = WCE.DELEGACION_ID ";
-        } else {
-            if(workCenterFilter.getWorkCenterEntities().size() > 0) {
-                String entities = workCenterFilter.getWorkCenterEntities().stream().map(wce -> String.valueOf(wce.getId())).collect(Collectors.joining(","));
-                sql += "AND WC.ID = WCE.DELEGACION_ID " +
-                        "AND WCE.ENTIDAD_ID IN (" + entities + ")";
-            }
-        }
-
-        if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getCod() != null){
-            sql += "AND LOC.LOC_PRV_COD = :workCenterProvince ";
-        }
-
-        if(workCenterFilter != null && workCenterFilter.getWorkCenterHeadPerson().size() > 0){
-            sql += "AND WC.RESPONSABLE = :workCenterHeadPerson ";
+        if(workCenterFilter.isAllEntitiesSelected() || workCenterFilter.getWorkCenterEntities().size() > 0) {
+            sql += " INNER JOIN GESTION_CENTROS.PC_DELEGACIONES_X_ENTIDADES WCE ON WCE.DELEGACION_ID = WC.ID ";
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterStatus() != 2){
-            sql += " AND WC.ACTIVO = :workCenterStatus ";
+            sql += " WHERE WC.ACTIVO = :workCenterStatus ";
+            conditions += 1;
+        }
+
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterProvince().getCod() != null){
+            if (conditions != 0) {
+                sql += " AND LOC.LOC_PRV_COD = :workCenterProvince ";
+            } else {
+                sql += " WHERE LOC.LOC_PRV_COD = :workCenterProvince ";
+            }
+            conditions += 1;
+        }
+
+        if(workCenterFilter != null && workCenterFilter.getWorkCenterHeadPerson().size() > 0){
+            if (conditions != 0) {
+                sql += " AND WC.RESPONSABLE = :workCenterHeadPerson ";
+            } else {
+                sql += " WHERE WC.RESPONSABLE = :workCenterHeadPerson ";
+            }
+            conditions += 1;
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterTypes().size() > 0){
-            sql += " AND WC.TIPO_ID = :workCenterTypes ";
+            if (conditions != 0) {
+                sql += " AND WC.TIPO_ID = :workCenterTypes ";
+            } else {
+                sql += " WHERE WC.TIPO_ID = :workCenterTypes ";
+            }
+            conditions += 1;
         }
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterName() != null && workCenterFilter.getWorkCenterName() != ""){
-            sql += " AND LOWER(TRANSLATE(WC.NOMBRE, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) ";
+            if (conditions != 0) {
+                sql += " AND LOWER(TRANSLATE(WC.NOMBRE, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) ";
+            } else {
+                sql += " WHERE LOWER(TRANSLATE(WC.NOMBRE, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) ";
+            }
+            conditions += 1;
+        }
+
+        if(workCenterFilter.getWorkCenterEntities().size() > 0) {
+            String entities = workCenterFilter.getWorkCenterEntities().stream().map(wce -> String.valueOf(wce.getId())).collect(Collectors.joining(","));
+            if (conditions != 0) {
+                sql += " AND WCE.ENTIDAD_ID IN (" + entities + ")";
+            } else {
+                sql += " WHERE WCE.ENTIDAD_ID IN (" + entities + ")";
+            }
+            conditions += 1;
         }
 
         if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
 
             if(user.hasRole(GC_MANAGER_ROL_NAME)) {
-                sql += " AND WC.RESPONSABLE = :userId ";
+                if (conditions != 0) {
+                    sql += " AND WC.RESPONSABLE = :userId ";
+                } else {
+                    sql += " WHERE WC.RESPONSABLE = :userId ";
+                }
+                conditions += 1;
             }
         }
 
