@@ -50,7 +50,7 @@ public class Provider implements Serializable {
     private String cif;
     private ProviderTypes providerTypes = new ProviderTypes();
     private ProviderEvaluationTypes evaluationTypes = new ProviderEvaluationTypes();
-    private ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
+    private List<ProvidersCommonDetails> providersCommonDetails = new ArrayList<>();
     private List<ProviderDetail> providerDetails = new ArrayList<>();
     private String email;
     private String address;
@@ -78,7 +78,7 @@ public class Provider implements Serializable {
     public Provider() {
     }
 
-    public Provider(int id, List<WorkCenter> workCenters, String name, String cif, ProviderTypes providerTypes, ProviderEvaluationTypes evaluationTypes, ProvidersCommonDetails providersCommonDetails, String email, String address, String contactPerson, String telephone, City city, String postalCode, String serviceDetails, String docUrl, String docName, String docContentType, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy, boolean active, List<ProvidersByAreas> providerAreas) {
+    public Provider(int id, List<WorkCenter> workCenters, String name, String cif, ProviderTypes providerTypes, ProviderEvaluationTypes evaluationTypes, List<ProvidersCommonDetails> providersCommonDetails, String email, String address, String contactPerson, String telephone, City city, String postalCode, String serviceDetails, String docUrl, String docName, String docContentType, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy, boolean active, List<ProvidersByAreas> providerAreas) {
         this.id = id;
         this.workCenters = workCenters;
         this.name = name;
@@ -205,10 +205,10 @@ public class Provider implements Serializable {
     }
 
     @Transient
-    public ProvidersCommonDetails getProvidersCommonDetails() {
+    public List<ProvidersCommonDetails> getProvidersCommonDetails() {
         return providersCommonDetails;
     }
-    public void setProvidersCommonDetails(ProvidersCommonDetails providersCommonDetails) {
+    public void setProvidersCommonDetails(List<ProvidersCommonDetails> providersCommonDetails) {
         this.providersCommonDetails = providersCommonDetails;
     }
 

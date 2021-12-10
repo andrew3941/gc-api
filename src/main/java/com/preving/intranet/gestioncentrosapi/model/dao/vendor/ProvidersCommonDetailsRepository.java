@@ -1,5 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.dao.vendor;
 
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProvidersCommonDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -8,12 +9,19 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public interface ProvidersCommonDetailsRepository extends JpaRepository<ProvidersCommonDetails, Integer> {
 
     ProvidersCommonDetails findAllByProvDelegacionId(int provDelegacionId);
+
+    List<ProvidersCommonDetails> commonDetails = new ArrayList<ProvidersCommonDetails>();
+
+    List<ProvidersCommonDetails> findAllByProvDelegacionId (Provider provider);
+
+
 
     @Modifying
     @Transactional
@@ -35,4 +43,6 @@ public interface ProvidersCommonDetailsRepository extends JpaRepository<Provider
             "pcd.modified=CURRENT_TIMESTAMP, pcd.modifiedBy=:#{#providersCommonDetails.modifiedBy} " +
             "where pcd.id=:#{#providersCommonDetails.id}")
     void editProviderCommonDetails(@Param("providersCommonDetails") ProvidersCommonDetails providersCommonDetails);
+
+
 }

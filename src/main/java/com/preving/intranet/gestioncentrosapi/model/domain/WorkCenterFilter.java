@@ -13,8 +13,19 @@ public class WorkCenterFilter {
     private List<WorkCenterTypes> workCenterTypes = new ArrayList<>();
     private boolean allEntitiesSelected;
     private List<Entity> workCenterEntities = new ArrayList<>();
+    private List<User> workCenterHeadPerson = new ArrayList<>();
 
     public WorkCenterFilter() {
+    }
+
+    public WorkCenterFilter(String workCenterName, Province workCenterProvince, int workCenterStatus, List<WorkCenterTypes> workCenterTypes, boolean allEntitiesSelected, List<Entity> workCenterEntities,List<User> workCenterHeadPerson) {
+        this.workCenterName = workCenterName;
+        this.workCenterProvince = workCenterProvince;
+        this.workCenterStatus = workCenterStatus;
+        this.workCenterTypes = workCenterTypes;
+        this.allEntitiesSelected = allEntitiesSelected;
+        this.workCenterEntities = workCenterEntities;
+        this.workCenterHeadPerson = workCenterHeadPerson;
     }
 
     public WorkCenterFilter(String workCenterName, Province workCenterProvince, int workCenterStatus, List<WorkCenterTypes> workCenterTypes, boolean allEntitiesSelected, List<Entity> workCenterEntities) {
@@ -26,6 +37,7 @@ public class WorkCenterFilter {
         this.workCenterEntities = workCenterEntities;
     }
 
+
     public String getWorkCenterName() {
         return workCenterName;
     }
@@ -33,12 +45,15 @@ public class WorkCenterFilter {
         this.workCenterName = workCenterName;
     }
 
-    public Province getWorkCenterProvince() {
-        return workCenterProvince;
-    }
+    public Province getWorkCenterProvince() { return workCenterProvince; }
     public void setWorkCenterProvince(Province workCenterProvince) {
         this.workCenterProvince = workCenterProvince;
     }
+
+
+    public List<User> getWorkCenterHeadPerson() { return workCenterHeadPerson; }
+    public void setWorkCenterHeadPerson(List<User> workCenterHeadPerson) {
+        this.workCenterHeadPerson = workCenterHeadPerson; }
 
     public int getWorkCenterStatus() {
         return workCenterStatus;
