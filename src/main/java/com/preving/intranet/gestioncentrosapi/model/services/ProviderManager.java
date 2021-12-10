@@ -443,8 +443,10 @@ public class ProviderManager implements ProviderService {
                             }
                         }
 
-                        // Editing specific provider data by type
-                        for (ProviderDetail det : details) {
+                    }
+
+                    // Editing specific provider data by type
+                    for (ProviderDetail det : details) {
 
                             // Construimos el objeto proveedor detalles
                             ProviderDetail providerDetails = new ProviderDetail();
@@ -456,11 +458,12 @@ public class ProviderManager implements ProviderService {
                             // Guardamos en proveedores_detalles
                             this.providerDetailsRepository.save(providerDetails);
 
-                        }
-                    }}
+                    }
+
+                }
+
             }
 
-            // WorkCenter's provider
             if (workCenterId != 0) {
 
                 if (provider.getServiceEndDate() != null){
@@ -523,21 +526,23 @@ public class ProviderManager implements ProviderService {
                         }
                     }
 
-                    // Editing specific provider data by type
-                    for (ProviderDetail det : details) {
-
-                        // Construimos el objeto proveedor detalles
-                        ProviderDetail providerDetails = new ProviderDetail();
-
-                        providerDetails.setProvidersByWorkCentersId(providersByWorkCenters.getId());
-                        providerDetails.getProviderDetailConf().setId(det.getProviderDetailConf().getId());
-                        providerDetails.setProviderDetailValue(det.getProviderDetailValue());
-
-                        // Guardamos en proveedores_detalles
-                        this.providerDetailsRepository.save(providerDetails);
-
-                    }
                 }
+
+                // Editing specific provider data by type
+                for (ProviderDetail det : details) {
+
+                    // Construimos el objeto proveedor detalles
+                    ProviderDetail providerDetails = new ProviderDetail();
+
+                    providerDetails.setProvidersByWorkCentersId(providersByWorkCenters.getId());
+                    providerDetails.getProviderDetailConf().setId(det.getProviderDetailConf().getId());
+                    providerDetails.setProviderDetailValue(det.getProviderDetailValue());
+
+                    // Guardamos en proveedores_detalles
+                    this.providerDetailsRepository.save(providerDetails);
+
+                }
+
             }
 
         } catch (Exception e) {
