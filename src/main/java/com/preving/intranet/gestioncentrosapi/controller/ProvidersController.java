@@ -11,6 +11,7 @@ import com.preving.security.JwtTokenUtil;
 import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -172,6 +174,48 @@ public class ProvidersController {
         return response;
 
     }
+
+    /**
+     * Exportación de actuaciones por filtro de fechas
+     * @param
+     * @return
+     */
+    @RequestMapping(value="exportProvider", method = RequestMethod.POST)
+    public ResponseEntity<?> exportActions(HttpServletRequest request,
+                                           HttpServletResponse response,
+                                           @RequestParam ("filterProviderList") String providerList) {
+
+        ResponseEntity<?> resp = null;
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        ProviderFilter providerFilter = gson.fromJson(providerList, ProviderFilter.class);
+
+        try {
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            return new ResponseEntity<>(providerService.exportProvider(providerFilter, response, user), HttpStatus.OK);
+        } catch (DataAccessException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+
+//    @RequestMapping(value="exportProvider", method = RequestMethod.POST)
+//    public ResponseEntity<?> exportActions(HttpServletRequest request,
+//                                           HttpServletResponse response,
+//                                           @RequestParam ("providerList") String providerList) {
+//
+//        ResponseEntity<?> resp = null;
+//        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+//        ProviderFilter providerFilter = gson.fromJson(providerList, ProviderFilter.class);
+//
+//        try {
+//            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+//            return new ResponseEntity<>(providerService.exportProvider(providerFilter, response, user), HttpStatus.OK);
+//        } catch (DataAccessException e) {
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//
+//    }
 
     /**
      * Descargamos el fichero de un servicio de

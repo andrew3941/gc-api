@@ -10,6 +10,13 @@ import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.security.JwtTokenUtil;
 import com.preving.security.domain.UsuarioWithRoles;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +24,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -73,6 +83,14 @@ public class ProviderManager implements ProviderService {
 
     @Autowired
     private ProviderByAreasRepository providerByAreasRepository;
+
+    private static final String EXPORT_TITLE_1 = "Centro";
+    private static final String EXPORT_TITLE_2 = "Provincia";
+    private static final String EXPORT_TITLE_3 = "Localidad";
+    private static final String EXPORT_TITLE_4 = "Direccion";
+    private static final String EXPORT_TITLE_5 = "Telefono";
+    private static final String EXPORT_TITLE_6 = "Estado";
+    private static final String EXPORT_TITLE_7 = "Entidades";
 
     private static final int PROVIDER_DOCUMENTS = 2;
     private static final boolean ACTIVE = true;
@@ -214,8 +232,6 @@ public class ProviderManager implements ProviderService {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
 
     private void activeInactiveProvider(Provider provider) {
 
@@ -552,29 +568,112 @@ public class ProviderManager implements ProviderService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<?> downloadProviderDoc(HttpServletRequest request, int workCenterId, int providerId) {
-
-        Provider provider = null;
-        File file = null;
+//  @Override
+    public ResponseEntity<?> exportProvider(ProviderFilter providerFilter, HttpServletResponse response, UsuarioWithRoles user) {
         byte[] content=null;
+//
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet hoja = workbook.createSheet();
+        workbook.setSheetName(0, "Actuaciones");
+        // Creamos estilo para el encabezado
+        CellStyle cellStyleHeaders = workbook.createCellStyle();
+        CellStyle dateCell = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        // TODO colorear el fondo de las cabeceras
+        font.setBold(true);
+        cellStyleHeaders.setFont(font);
+        // Creamos estilo para formato fecha
+        CellStyle cellStyleData = workbook.createCellStyle();
+        CreationHelper createHelper = workbook.getCreationHelper();
+        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy hh:mm:ss"));
 
-        try {
-            String docUrl = this.providerCustomRepository.findDocUrlByProviderId(providerId, workCenterId);
+       // Obtenemos los datos
+        List<Provider> providers = this.providerCustomRepository.getProviders(1,providerFilter, user);
 
-            file = new File(docUrl);
-            if (file.exists()) {
-                content = Files.readAllBytes(file.toPath());
-            }else{
-                return new ResponseEntity<>("File not found",HttpStatus.NOT_FOUND);
-            }
+       // Setting entities related with the work center
+//        for(Provider provider : providers) {
+//           provider.setProviderDetails(this.providerCustomRepository.getProviders(1,providerFilter,user));
+//        }
+            String[] titulos = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4,
+                    EXPORT_TITLE_5, EXPORT_TITLE_6, EXPORT_TITLE_7};
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ResponseEntity<>("Unknown error",HttpStatus.INTERNAL_SERVER_ERROR);
+       // Creamos una fila en la hoja en la posicion 0 para los headers
+        HSSFRow headerRow = hoja.createRow(0);
+
+        // Creamos los headers
+            for (int i = 0; i < titulos.length; i++) {
+                HSSFCell celda = headerRow.createCell(i);
+                celda.setCellValue(titulos[i]);
+                celda.setCellStyle(cellStyleHeaders);
         }
 
-        return new ResponseEntity<byte[]>(content, HttpStatus.OK);
-    }
+                // Creamos las filas
+                for (int i = 0; i < providers.size(); i++) {
+                    HSSFRow dataRow = hoja.createRow(1 + i);
 
-   }
+                    // Centro
+                    HSSFCell center = dataRow.createCell(0);
+                    center.setCellValue(providers.get(i).getName());
+
+                    // Provincia
+
+                    HSSFCell province = dataRow.createCell(1);
+                    province.setCellValue(providers.get(i).getCity().getProvince().getName());
+
+                   // Localidad
+                    HSSFCell locality = dataRow.createCell(2);
+                    locality.setCellValue(providers.get(i).getCity().getName());
+
+                    // DirecciÃ³n
+                    HSSFCell address = dataRow.createCell(3);
+                    address.setCellValue(providers.get(i).getAddress());
+        }
+//                  Ajustamos columnas
+                    for (int i = 0; i < titulos.length; i++) {
+                        hoja.autoSizeColumn(i);
+                    }
+
+                    try {
+                        String nombreFichero = "reporte-actuaciones";
+                        response.setContentType("application/vnd.ms-excel");
+                        response.setHeader("Content-Disposition", "inline; filename=\"" +
+                                java.net.URLEncoder.encode(nombreFichero, "UTF-8")
+                                + "\"");
+
+                        ServletOutputStream out = response.getOutputStream();
+                        workbook.write(out);
+                        out.flush();
+
+                    } catch (IOException ex) {
+                        return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
+                    return new ResponseEntity<byte[]>(content, HttpStatus.OK);
+                }
+
+                @Override
+                public ResponseEntity<?> downloadProviderDoc (HttpServletRequest request,int workCenterId,
+                int providerId){
+
+                    Provider provider = null;
+                    File file = null;
+                    byte[] content = null;
+
+                    try {
+                        String docUrl = this.providerCustomRepository.findDocUrlByProviderId(providerId, workCenterId);
+
+                        file = new File(docUrl);
+                        if (file.exists()) {
+                            content = Files.readAllBytes(file.toPath());
+                        } else {
+                            return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
+                        }
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        return new ResponseEntity<>("Unknown error", HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
+
+                    return new ResponseEntity<byte[]>(content, HttpStatus.OK);
+                }
+            }
+

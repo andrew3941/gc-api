@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public interface ProviderService {
@@ -27,6 +28,8 @@ public interface ProviderService {
 
     ResponseEntity<?> editProvider(int workCenterId, int providerId, Provider provider, List<ProviderDetail> details,
                                    MultipartFile attachedFile, HttpServletRequest request);
+
+    ResponseEntity<?> exportProvider(ProviderFilter providerFilter, HttpServletResponse response, UsuarioWithRoles user);
 
     Provider getProviderById(int workCenterId, int providerId);
 
