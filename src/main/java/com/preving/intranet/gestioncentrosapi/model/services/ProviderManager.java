@@ -414,11 +414,6 @@ public class ProviderManager implements ProviderService {
 
                     providersByWorkCentersRepository.save(providersByWorkCenters);
 
-                    // TODO revisar
-                    // Replicate provider serviceEnd Date for each workcenter
-                    if (provider.getServiceEndDate() != null){
-                        workCentersRepository.updateWorkCenterEndDate(workCenter.getId(), provider.getServiceEndDate());
-                    }
 
                     ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
 
@@ -433,7 +428,12 @@ public class ProviderManager implements ProviderService {
                         providersCommonDetails.getCreatedBy().setId(userId);
                         providersCommonDetails.setServiceDetails(providersCommonDetails1.getServiceDetails());
                         providersCommonDetails.setServiceStartDate(providersCommonDetails1.getServiceStartDate());
-                        providersCommonDetails.setServiceEndDate(providersCommonDetails1.getServiceEndDate());
+
+                        if (provider.getServiceEndDate() != null){
+                            providersCommonDetails.setServiceEndDate(provider.getServiceEndDate());
+                        }else {
+                            providersCommonDetails.setServiceEndDate(providersCommonDetails1.getServiceEndDate());
+                        }
                         providersCommonDetails.getExpenditurePeriod().setId(providersCommonDetails1.getExpenditurePeriod().getId());
                         providersCommonDetails.setProvDelegacionId(providersByWorkCenters.getId());
                         providersCommonDetails.setAnualSpending(providersCommonDetails1.getAnualSpending());
@@ -482,16 +482,9 @@ public class ProviderManager implements ProviderService {
 
             if (workCenterId != 0) {
 
-                if (provider.getServiceEndDate() != null){
-                    for(WorkCenter workCenter : provider.getWorkCenters()) {
-                        //replicate provider serviceEnd Date for each workcenter
-                        workCentersRepository.updateWorkCenterEndDate(workCenter.getId(), provider.getServiceEndDate());
-                    }
-                }
-
                 int provDelId = providersByWorkCentersRepository.findByProvider_IdAndWorkCenter_Id(providerId, workCenterId).getId();
 
-                // Borramos los detalles comunes del proveedor
+                // Borramos los detalles comune s del proveedor
                 providersCommonDetailsRepository.deleteAllByProvDelegacionId(provDelId);
 
                 // Borramos los detalles especï¿½ficos del proveedor
@@ -520,7 +513,13 @@ public class ProviderManager implements ProviderService {
                     commonDetails.setDocName(commonDetails.getDocName());
                     commonDetails.setServiceDetails(commonDetails.getServiceDetails());
                     commonDetails.setServiceStartDate(commonDetails.getServiceStartDate());
-                    commonDetails.setServiceEndDate(commonDetails.getServiceEndDate());
+
+                    if (provider.getServiceEndDate() != null){
+                        commonDetails.setServiceEndDate(provider.getServiceEndDate());
+                    }else {
+                        commonDetails.setServiceEndDate(commonDetails.getServiceEndDate());
+                    }
+
                     commonDetails.getExpenditurePeriod().setId(commonDetails.getExpenditurePeriod().getId());
                     commonDetails.setProvDelegacionId(providersByWorkCenters.getId());
                     commonDetails.setAnualSpending(commonDetails.getAnualSpending());
