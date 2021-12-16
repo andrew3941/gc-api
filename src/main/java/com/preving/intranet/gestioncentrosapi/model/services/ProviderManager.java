@@ -90,7 +90,7 @@ public class ProviderManager implements ProviderService {
     private static final String EXPORT_TITLE_4 = "Direccion";
     private static final String EXPORT_TITLE_5 = "Telefono";
     private static final String EXPORT_TITLE_6 = "Estado";
-    private static final String EXPORT_TITLE_7 = "Entidades";
+
 
     private static final int PROVIDER_DOCUMENTS = 2;
     private static final boolean ACTIVE = true;
@@ -567,10 +567,10 @@ public class ProviderManager implements ProviderService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//  @Override
+  @Override
     public ResponseEntity<?> exportProvider(ProviderFilter providerFilter, HttpServletResponse response, UsuarioWithRoles user) {
         byte[] content=null;
-//
+
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet hoja = workbook.createSheet();
         workbook.setSheetName(0, "Actuaciones");
@@ -587,14 +587,9 @@ public class ProviderManager implements ProviderService {
         cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy hh:mm:ss"));
 
        // Obtenemos los datos
-        List<Provider> providers = this.providerCustomRepository.getProviders(1,providerFilter, user);
+        List<Provider> providers = this.providerCustomRepository.getProviders(0,providerFilter, user);
 
-       // Setting entities related with the work center
-//        for(Provider provider : providers) {
-//           provider.setProviderDetails(this.providerCustomRepository.getProviders(1,providerFilter,user));
-//        }
-            String[] titulos = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4,
-                    EXPORT_TITLE_5, EXPORT_TITLE_6, EXPORT_TITLE_7};
+        String[] titulos = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4, EXPORT_TITLE_5, EXPORT_TITLE_6};
 
        // Creamos una fila en la hoja en la posicion 0 para los headers
         HSSFRow headerRow = hoja.createRow(0);
