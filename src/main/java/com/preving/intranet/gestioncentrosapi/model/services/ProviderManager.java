@@ -84,12 +84,14 @@ public class ProviderManager implements ProviderService {
     @Autowired
     private ProviderByAreasRepository providerByAreasRepository;
 
-    private static final String EXPORT_TITLE_1 = "Centro";
-    private static final String EXPORT_TITLE_2 = "Provincia";
-    private static final String EXPORT_TITLE_3 = "Localidad";
-    private static final String EXPORT_TITLE_4 = "Direccion";
-    private static final String EXPORT_TITLE_5 = "Telefono";
-    private static final String EXPORT_TITLE_6 = "Estado";
+    private static final String EXPORT_TITLE_1 = "Proveedor";
+    private static final String EXPORT_TITLE_2 = "CIF/NIF";
+    private static final String EXPORT_TITLE_3 = "Tipo";
+    private static final String EXPORT_TITLE_4 = "Area Asociada";
+    private static final String EXPORT_TITLE_5 = "Centros de trabajo";
+    private static final String EXPORT_TITLE_6 = "Provincia";
+    private static final String EXPORT_TITLE_7 = "Fecha inicio";
+    private static final String EXPORT_TITLE_8 = "Fecha fin";
 
 
     private static final int PROVIDER_DOCUMENTS = 2;
@@ -99,7 +101,6 @@ public class ProviderManager implements ProviderService {
     @Override
     public List<Provider> getProviders(int workCenterId, ProviderFilter providerFilter, UsuarioWithRoles user) {
         List<Provider> providers = this.providerCustomRepository.getProviders(workCenterId, providerFilter, user);
-        List<ProvidersCommonDetails> commonDetails = new ArrayList<ProvidersCommonDetails>();
 
         for (Provider provider : providers) {
             List<ProvidersByAreas> providersByAreas = providerByAreasRepository.findAllByProvider(provider);
@@ -118,7 +119,8 @@ public class ProviderManager implements ProviderService {
                 // Obtenemos los detalles del centro
                 ProvidersCommonDetails details = providersCommonDetailsRepository.findAllByProvDelegacionId(provByWorkCenters.getId());
 
-                commonDetails.add(details);
+                details.setWorkCenterName(workCenter.getName());
+
                 provider.getProvidersCommonDetails().add(details);
             }
         }
@@ -280,11 +282,10 @@ public class ProviderManager implements ProviderService {
             if ((provByWorkCenters.getProvider().getId() == providerId) && (workCenterId == 0) ){
 
                 ProvidersCommonDetails details = providersCommonDetailsRepository.findAllByProvDelegacionId(provByWorkCenters.getId());
-                List<ProvidersCommonDetails> commonDetails = new ArrayList<ProvidersCommonDetails>();
 
-                commonDetails.add(details);
+                details.setWorkCenterName(workCenter.getName());
 
-                myProvider.setProvidersCommonDetails(commonDetails);
+                myProvider.getProvidersCommonDetails().add(details);
 
                 // Setting specific details to the provider
                 List<ProviderDetail> specificDetails = providerDetailsRepository.findByProvidersByWorkCentersId(provByWorkCenters.getId());
@@ -414,7 +415,6 @@ public class ProviderManager implements ProviderService {
 
                     providersByWorkCentersRepository.save(providersByWorkCenters);
 
-
                     ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
 
                     if (attachedFile != null) {
@@ -422,7 +422,7 @@ public class ProviderManager implements ProviderService {
                         providersCommonDetails.setDocContentType(attachedFile.getContentType());
                     }
 
-                    for(ProvidersCommonDetails providersCommonDetails1 : provider.getProvidersCommonDetails()){
+                    for(ProvidersCommonDetails providersCommonDetails1 : provider.getProvidersCommonDetails()) {
 
                         providersCommonDetails.setCreated(new Date());
                         providersCommonDetails.getCreatedBy().setId(userId);
@@ -442,44 +442,42 @@ public class ProviderManager implements ProviderService {
                         providersCommonDetails.setDocUrl(providersCommonDetails1.getDocUrl());
                         providersCommonDetails.setDocContentType(providersCommonDetails1.getDocContentType());
 
-                        ProvidersCommonDetails providersComDetails = this.providersCommonDetailsRepository.save(providersCommonDetails);
+                        this.providersCommonDetailsRepository.save(providersCommonDetails);
+                    }
 
-                        if (attachedFile != null) {
-                            //Borramos el documento anterior del servidor
-                            commonService.deleteDocumentServer(workCenter.getId(), providersComDetails.getId(), PROVIDER_DOCUMENTS);
+                    if (attachedFile != null) {
+                        //Borramos el documento anterior del servidor
+                        commonService.deleteDocumentServer(workCenter.getId(), providersCommonDetails.getId(), PROVIDER_DOCUMENTS);
 
-                            String url = null;
+                        String url = null;
 
-                            // Guardamos documento en el server
-                            url = commonService.saveDocumentServer(workCenter.getId(), providerId, attachedFile, PROVIDER_DOCUMENTS);
+                        // Guardamos documento en el server
+                        url = commonService.saveDocumentServer(workCenter.getId(), providerId, attachedFile, PROVIDER_DOCUMENTS);
 
-                            // Actualizamos la ruta del documento guardado
-                            if (url != null) {
-                                this.providersCommonDetailsRepository.updateProviderDocUrl(providersComDetails.getId(), url);
-                            }
+                        // Actualizamos la ruta del documento guardado
+                        if (url != null) {
+                            this.providersCommonDetailsRepository.updateProviderDocUrl(providersCommonDetails.getId(), url);
                         }
-
                     }
 
                     // Editing specific provider data by type
                     for (ProviderDetail det : details) {
 
-                            // Construimos el objeto proveedor detalles
-                            ProviderDetail providerDetails = new ProviderDetail();
+                        // Construimos el objeto proveedor detalles
+                        ProviderDetail providerDetails = new ProviderDetail();
 
-                            providerDetails.setProvidersByWorkCentersId(providersByWorkCenters.getId());
-                            providerDetails.getProviderDetailConf().setId(det.getProviderDetailConf().getId());
-                            providerDetails.setProviderDetailValue(det.getProviderDetailValue());
+                        providerDetails.setProvidersByWorkCentersId(providersByWorkCenters.getId());
+                        providerDetails.getProviderDetailConf().setId(det.getProviderDetailConf().getId());
+                        providerDetails.setProviderDetailValue(det.getProviderDetailValue());
 
-                            // Guardamos en proveedores_detalles
-                            this.providerDetailsRepository.save(providerDetails);
+                        // Guardamos en proveedores_detalles
+                        this.providerDetailsRepository.save(providerDetails);
 
                     }
-
                 }
-
             }
 
+            // Provider's inside workCenter
             if (workCenterId != 0) {
 
                 int provDelId = providersByWorkCentersRepository.findByProvider_IdAndWorkCenter_Id(providerId, workCenterId).getId();
@@ -509,21 +507,11 @@ public class ProviderManager implements ProviderService {
 
                     commonDetails.setCreated(new Date());
                     commonDetails.getCreatedBy().setId(userId);
-                    commonDetails.setDocUrl(commonDetails.getDocUrl());
-                    commonDetails.setDocName(commonDetails.getDocName());
-                    commonDetails.setServiceDetails(commonDetails.getServiceDetails());
-                    commonDetails.setServiceStartDate(commonDetails.getServiceStartDate());
+                    commonDetails.setProvDelegacionId(providersByWorkCenters.getId());
 
                     if (provider.getServiceEndDate() != null){
                         commonDetails.setServiceEndDate(provider.getServiceEndDate());
-                    }else {
-                        commonDetails.setServiceEndDate(commonDetails.getServiceEndDate());
                     }
-
-                    commonDetails.getExpenditurePeriod().setId(commonDetails.getExpenditurePeriod().getId());
-                    commonDetails.setProvDelegacionId(providersByWorkCenters.getId());
-                    commonDetails.setAnualSpending(commonDetails.getAnualSpending());
-                    commonDetails.setSpending(commonDetails.getSpending());
 
                     ProvidersCommonDetails providersComDetails = this.providersCommonDetailsRepository.save(commonDetails);
 
@@ -567,7 +555,7 @@ public class ProviderManager implements ProviderService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-  @Override
+    @Override
     public ResponseEntity<?> exportProvider(ProviderFilter providerFilter, HttpServletResponse response, UsuarioWithRoles user) {
         byte[] content=null;
 
@@ -584,65 +572,90 @@ public class ProviderManager implements ProviderService {
         // Creamos estilo para formato fecha
         CellStyle cellStyleData = workbook.createCellStyle();
         CreationHelper createHelper = workbook.getCreationHelper();
-        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy hh:mm:ss"));
+        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy"));
 
        // Obtenemos los datos
-        List<Provider> providers = this.providerCustomRepository.getProviders(0,providerFilter, user);
+        List<Provider> providers = getProviders(0,providerFilter, user);
 
-        String[] titulos = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4, EXPORT_TITLE_5, EXPORT_TITLE_6};
+        String[] titulos = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4, EXPORT_TITLE_5, EXPORT_TITLE_6, EXPORT_TITLE_7, EXPORT_TITLE_8};
 
        // Creamos una fila en la hoja en la posicion 0 para los headers
         HSSFRow headerRow = hoja.createRow(0);
 
         // Creamos los headers
-            for (int i = 0; i < titulos.length; i++) {
-                HSSFCell celda = headerRow.createCell(i);
-                celda.setCellValue(titulos[i]);
-                celda.setCellStyle(cellStyleHeaders);
+        for (int i = 0; i < titulos.length; i++) {
+            HSSFCell celda = headerRow.createCell(i);
+            celda.setCellValue(titulos[i]);
+            celda.setCellStyle(cellStyleHeaders);
         }
 
-                // Creamos las filas
-                for (int i = 0; i < providers.size(); i++) {
-                    HSSFRow dataRow = hoja.createRow(1 + i);
+        // Creamos las filas
+        for (int i = 0; i < providers.size(); i++) {
+            HSSFRow dataRow = hoja.createRow(1 + i);
 
-                    // Centro
-                    HSSFCell center = dataRow.createCell(0);
-                    center.setCellValue(providers.get(i).getName());
+            // Proveedor
+            HSSFCell center = dataRow.createCell(0);
+            center.setCellValue(providers.get(i).getName());
 
-                    // Provincia
+            // CIF/NIF
+            HSSFCell nif = dataRow.createCell(1);
+            nif.setCellValue(providers.get(i).getCif());
 
-                    HSSFCell province = dataRow.createCell(1);
-                    province.setCellValue(providers.get(i).getCity().getProvince().getName());
+            // Tipo
+            HSSFCell type = dataRow.createCell(2);
+            type.setCellValue(providers.get(i).getProviderTypes().getName());
 
-                   // Localidad
-                    HSSFCell locality = dataRow.createCell(2);
-                    locality.setCellValue(providers.get(i).getCity().getName());
+            // Areas
+            HSSFCell areasCell = dataRow.createCell(3);
+            for (ProvidersByAreas area : providers.get(i).getProviderAreas()) {
+                areasCell.setCellValue(areasCell + area.getProviderArea().getName() + ", ");
+            }
 
-                    // DirecciÃ³n
-                    HSSFCell address = dataRow.createCell(3);
-                    address.setCellValue(providers.get(i).getAddress());
+            // Centros
+            HSSFCell centers = dataRow.createCell(4);
+            for (WorkCenter workCenter : providers.get(i).getWorkCenters()) {
+                centers.setCellValue(centers + workCenter.getName() + ", ");
+            }
+
+            // Province
+            HSSFCell province = dataRow.createCell(5);
+            province.setCellValue(providers.get(i).getCity().getProvince().getName());
+
+            // Start date
+            HSSFCell startDate = dataRow.createCell(6);
+            startDate.setCellValue(providers.get(i).getServiceStartDate());
+            startDate.setCellStyle(cellStyleData);
+
+            // Status
+            HSSFCell status = dataRow.createCell(7);
+            if (providers.get(i).getActive()) {
+                status.setCellValue("Activo");
+            } else {
+                status.setCellValue("Inactivo");
+            }
         }
-//                  Ajustamos columnas
-                    for (int i = 0; i < titulos.length; i++) {
-                        hoja.autoSizeColumn(i);
-                    }
 
-                    try {
-                        String nombreFichero = "reporte-actuaciones";
-                        response.setContentType("application/vnd.ms-excel");
-                        response.setHeader("Content-Disposition", "inline; filename=\"" +
-                                java.net.URLEncoder.encode(nombreFichero, "UTF-8")
-                                + "\"");
+        // Ajustamos columnas
+        for (int i = 0; i < titulos.length; i++) {
+            hoja.autoSizeColumn(i);
+        }
 
-                        ServletOutputStream out = response.getOutputStream();
-                        workbook.write(out);
-                        out.flush();
+        try {
+            String nombreFichero = "reporte-actuaciones";
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-Disposition", "inline; filename=\"" +
+                    java.net.URLEncoder.encode(nombreFichero, "UTF-8")
+                    + "\"");
 
-                    } catch (IOException ex) {
-                        return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
-                    }
-                    return new ResponseEntity<byte[]>(content, HttpStatus.OK);
-                }
+            ServletOutputStream out = response.getOutputStream();
+            workbook.write(out);
+            out.flush();
+
+        } catch (IOException ex) {
+            return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<byte[]>(content, HttpStatus.OK);
+    }
 
                 @Override
                 public ResponseEntity<?> downloadProviderDoc (HttpServletRequest request,int workCenterId,

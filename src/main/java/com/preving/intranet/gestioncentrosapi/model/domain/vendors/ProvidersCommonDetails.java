@@ -29,6 +29,7 @@ public class ProvidersCommonDetails implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date modified;
     private User modifiedBy;
+    private String workCenterName;
 
 
     public ProvidersCommonDetails() {}
@@ -176,4 +177,11 @@ public class ProvidersCommonDetails implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
+    @Transient
+    public String getWorkCenterName() {
+        return workCenterName;
+    }
+    public void setWorkCenterName(String workCenterName) {
+        this.workCenterName = workCenterName;
+    }
 }
