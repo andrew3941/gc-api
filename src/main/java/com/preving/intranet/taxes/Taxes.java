@@ -2,6 +2,8 @@ package com.preving.intranet.taxes;
 
 import javax.persistence.*;
 
+@Entity
+@Table(schema = "GESTION_CENTROS", name="TM_IMPUESTOS")
 public class Taxes {
     private int id;
     private String denomination;

@@ -757,7 +757,8 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public List<GeneralDocumentation> getGenerlDocumentationListByWorkCenter(int workCenterId) {
-        return generalDocumentationRepository.findGeneralDocumentationBy(workCenterId);
+//        return generalDocumentationRepository.findGeneralDocumentationBy(workCenterId);
+    return null;
     }
 }
 

@@ -2,6 +2,8 @@ package com.preving.intranet.documentGeneralTypes;
 
 import javax.persistence.*;
 
+@Entity
+@Table(schema = "GESTION_CENTROS", name="TM_DOC_GENERAL_TIPOS")
 public class DocumentTypes {
 
     private int id;
