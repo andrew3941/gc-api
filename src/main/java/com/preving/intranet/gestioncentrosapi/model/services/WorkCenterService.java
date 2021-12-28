@@ -67,5 +67,5 @@ public interface WorkCenterService {
 
     List<WorkCenterTypes> getWorkCenterTypes();
 
-
+    List<GeneralDocumentation> getGenerlDocumentationListByWorkCenter(int workCenterId);
 }

@@ -18,7 +18,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -555,4 +554,15 @@ public class WorkCentersController {
 
     }
 
+    @RequestMapping(value = "generalDocumentation", method = RequestMethod.GET)
+    public ResponseEntity<?> getGenerlDocumentationListByWorkCenter(){
+
+        try {
+            return new ResponseEntity<>(workCenterService.getGenerlDocumentationListByWorkCenter(1), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 }

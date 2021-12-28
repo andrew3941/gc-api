@@ -1,26 +1,26 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
+import com.preving.intranet.gestioncentrosapi.model.dao.cities.CitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.department.DepartmentRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.dimNavision.DimNavisionRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.room.RoomByTypesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.room.RoomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.room.RoomTypesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.*;
-import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.WorkCenterDetailsRepository;
-import com.preving.intranet.gestioncentrosapi.model.dao.cities.CitiesRepository;
-import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
-import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.zona.ZonaRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
-import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.*;
-import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.security.JwtTokenUtil;
 import com.preving.security.domain.UsuarioWithRoles;
-import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
@@ -105,6 +105,9 @@ public class WorkCenterManager implements WorkCenterService{
     private RoomByTypesRepository roomByTypesRepository;
 
     @Autowired WorkCenterTypesRepository workCenterTypesRepository;
+
+    @Autowired
+    private GeneralDocumentationRepository generalDocumentationRepository;
 
     @PersistenceContext
     private EntityManager manager;
@@ -752,5 +755,9 @@ public class WorkCenterManager implements WorkCenterService{
         return workCenterTypesRepository.findAll();
     }
 
+    @Override
+    public List<GeneralDocumentation> getGenerlDocumentationListByWorkCenter(int workCenterId) {
+        return generalDocumentationRepository.findGeneralDocumentationBy(workCenterId);
+    }
 }
 
