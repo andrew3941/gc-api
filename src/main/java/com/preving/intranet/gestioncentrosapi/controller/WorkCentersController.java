@@ -446,8 +446,8 @@ public class WorkCentersController {
      */
     @RequestMapping(value = "{workCenterId}/rooms/{roomId}/delete", method = RequestMethod.POST)
     public ResponseEntity<?> deleteRoom (HttpServletRequest request,
-                                            @PathVariable(value = "workCenterId") int workCenterId,
-                                            @PathVariable(value = "roomId") int roomId) {
+                                         @PathVariable(value = "workCenterId") int workCenterId,
+                                         @PathVariable(value = "roomId") int roomId) {
 
 
         return workCenterService.deleteRoom(request,workCenterId,roomId);
@@ -554,15 +554,15 @@ public class WorkCentersController {
 
     }
 
-    @RequestMapping(value = "generalDocumentation", method = RequestMethod.GET)
-    public ResponseEntity<?> getGenerlDocumentationListByWorkCenter(){
-
-        try {
-            return new ResponseEntity<>(workCenterService.getGenerlDocumentationListByWorkCenter(1), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
+//    @RequestMapping(value = "generalDocumentation", method = RequestMethod.GET)
+//    public ResponseEntity<?> getGenerlDocumentationListByWorkCenter(){
+//
+//        try {
+//            return new ResponseEntity<>(workCenterService.getGenerlDocumentationListByWorkCenter(1), HttpStatus.OK);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//
+//    }
 }

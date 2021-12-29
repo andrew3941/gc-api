@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GeneralDocumentationRepository extends JpaRepository<GeneralDocumentation,Integer> {
 
-//    List<GeneralDocumentation> findGeneralDocumentationBy(int workCenterId);
+//List<GeneralDocumentation> getGeneralDocumentation(Integer workCenterId);
 
 }

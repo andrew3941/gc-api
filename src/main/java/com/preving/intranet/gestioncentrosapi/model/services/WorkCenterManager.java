@@ -475,7 +475,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public List<Drawing> getDrawingByWorkCenter(int workCenterId) {
-      return this.drawingRepository.findAllByWorkCenterIdAndDeletedIsNullOrderByCreatedDesc(workCenterId);
+        return this.drawingRepository.findAllByWorkCenterIdAndDeletedIsNullOrderByCreatedDesc(workCenterId);
     }
 
     @Override
@@ -755,10 +755,5 @@ public class WorkCenterManager implements WorkCenterService{
         return workCenterTypesRepository.findAll();
     }
 
-    @Override
-    public List<GeneralDocumentation> getGenerlDocumentationListByWorkCenter(int workCenterId) {
-//        return generalDocumentationRepository.findGeneralDocumentationBy(workCenterId);
-    return null;
-    }
 }
 
