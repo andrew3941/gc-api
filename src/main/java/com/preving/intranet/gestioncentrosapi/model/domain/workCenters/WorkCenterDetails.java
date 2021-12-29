@@ -24,6 +24,9 @@ public class WorkCenterDetails implements Serializable {
     private Integer parkingPlace;
     private String description;
     private boolean allDepartment;
+    private Integer communityAmount;
+    private boolean stealingAlarm;
+    private boolean fireAlarm;
     private List<WorkCenterDetailsByDepart> departments;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
@@ -35,7 +38,7 @@ public class WorkCenterDetails implements Serializable {
     public WorkCenterDetails() {}
 
     public WorkCenterDetails(int id, WorkCenter workCenter, Double totalArea, Integer jobAvailable, boolean accesibility,
-                             boolean parking, int parkingPlace, String description, boolean allDepartment,
+                             boolean parking, int parkingPlace, String description, boolean allDepartment, int communityAmount, boolean stealingAlarm, boolean fireAlarm,
                              List<WorkCenterDetailsByDepart> departments, Date created, User createdBy, Date modified,
                              User modifiedBy) {
         this.id = id;
@@ -48,6 +51,9 @@ public class WorkCenterDetails implements Serializable {
         this.description = description;
         this.allDepartment = allDepartment;
         this.departments = departments;
+        this.communityAmount = communityAmount;
+        this.stealingAlarm = stealingAlarm;
+        this.fireAlarm = fireAlarm;
         this.created = created;
         this.createdBy = createdBy;
         this.modified = modified;
@@ -118,6 +124,31 @@ public class WorkCenterDetails implements Serializable {
     public void setAllDepartment(boolean allDepartment) {
         this.allDepartment = allDepartment;
     }
+
+    @Basic
+    @Column(name = "GASTO_COMUNIDAD")
+    public Integer getCommunityAmount() { return communityAmount; }
+    public void setCommunityAmount(Integer communityAmount) { this.communityAmount = communityAmount; }
+
+    @Basic
+    @Column(name = "ALARMA_ROBO")
+    public boolean isStealingAlarm() {
+        return stealingAlarm;
+    }
+    public void setStealingAlarm(boolean stealingAlarm) {
+        this.stealingAlarm = stealingAlarm;
+    }
+
+
+    @Basic
+    @Column(name = "ALARMA_INCENDIO")
+    public boolean isFireAlarm() {
+        return fireAlarm;
+    }
+    public void setFireAlarm(boolean fireAlarm) {
+        this.fireAlarm = fireAlarm;
+    }
+
 
     @JsonManagedReference
     @OneToMany(mappedBy = "workCenterDetails")
