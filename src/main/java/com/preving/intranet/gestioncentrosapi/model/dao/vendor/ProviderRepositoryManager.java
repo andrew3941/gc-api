@@ -70,8 +70,8 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
         }
 
         if(providerFilter != null && providerFilter.getProviderName() != null && providerFilter.getProviderName() != ""){
-            sql += " AND (LOWER(TRANSLATE(P.NOMBRE, 'АИМСЗЯаимсзя', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:providerName, 'АИМСЗЯаимсзя', 'aeiounAEIOUN')) " +
-                    " OR LOWER(TRANSLATE(P.CIF, 'АИМСЗЯаимсзя', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:providerName, 'АИМСЗЯаимсзя', 'aeiounAEIOUN')))";
+            sql += " AND (LOWER(TRANSLATE(P.NOMBRE, 'О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:providerName, 'О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫', 'aeiounAEIOUN')) " +
+                    " OR LOWER(TRANSLATE(P.CIF, 'О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:providerName, 'О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫О©╫', 'aeiounAEIOUN')))";
         }
 
         if(providerFilter != null && providerFilter.getProviderStatus() != 2) {

@@ -120,6 +120,7 @@ public class ProviderManager implements ProviderService {
                 ProvidersCommonDetails details = providersCommonDetailsRepository.findAllByProvDelegacionId(provByWorkCenters.getId());
 
                 details.setWorkCenterName(workCenter.getName());
+                details.setWorkCenterId(workCenter.getId());
 
                 provider.getProvidersCommonDetails().add(details);
             }
@@ -284,6 +285,7 @@ public class ProviderManager implements ProviderService {
                 ProvidersCommonDetails details = providersCommonDetailsRepository.findAllByProvDelegacionId(provByWorkCenters.getId());
 
                 details.setWorkCenterName(workCenter.getName());
+                details.setWorkCenterId(workCenter.getId());
 
                 myProvider.getProvidersCommonDetails().add(details);
 
@@ -667,8 +669,7 @@ public class ProviderManager implements ProviderService {
     }
 
                 @Override
-                public ResponseEntity<?> downloadProviderDoc (HttpServletRequest request,int workCenterId,
-                int providerId){
+                public ResponseEntity<?> downloadProviderDoc (HttpServletRequest request,int workCenterId, int providerId){
 
                     Provider provider = null;
                     File file = null;

@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.model.domain.vendors;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -30,6 +31,7 @@ public class ProvidersCommonDetails implements Serializable {
     private Date modified;
     private User modifiedBy;
     private String workCenterName;
+    private int workCenterId;
 
 
     public ProvidersCommonDetails() {}
@@ -184,4 +186,8 @@ public class ProvidersCommonDetails implements Serializable {
     public void setWorkCenterName(String workCenterName) {
         this.workCenterName = workCenterName;
     }
+
+    @Transient
+    public int getWorkCenterId() { return workCenterId; }
+    public void setWorkCenterId(int workCenterId) { this.workCenterId = workCenterId; }
 }
