@@ -431,9 +431,12 @@ public class ProviderManager implements ProviderService {
 
                         if (provider.getServiceEndDate() != null){
                             providersCommonDetails.setServiceEndDate(provider.getServiceEndDate());
-                        }else {
+                        }
+
+                        else {
                             providersCommonDetails.setServiceEndDate(providersCommonDetails1.getServiceEndDate());
                         }
+
                         providersCommonDetails.getExpenditurePeriod().setId(providersCommonDetails1.getExpenditurePeriod().getId());
                         providersCommonDetails.setProvDelegacionId(providersByWorkCenters.getId());
                         providersCommonDetails.setAnualSpending(providersCommonDetails1.getAnualSpending());
@@ -444,6 +447,8 @@ public class ProviderManager implements ProviderService {
 
                         this.providersCommonDetailsRepository.save(providersCommonDetails);
                     }
+
+
 
                     if (attachedFile != null) {
                         //Borramos el documento anterior del servidor
@@ -473,6 +478,10 @@ public class ProviderManager implements ProviderService {
                         // Guardamos en proveedores_detalles
                         this.providerDetailsRepository.save(providerDetails);
 
+                    }
+
+                    if (provider.getWorkCenters().size()==1){
+                        break;
                     }
                 }
             }
