@@ -318,7 +318,8 @@ public class WorkCenter implements Serializable {
     }
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "workCenter", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "workCenter", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Fetch(value = FetchMode.SELECT)
     public List<WorkCentersByEntity> getWorkCentersByEntities() { return workCentersByEntities; }
     public void setWorkCentersByEntities(List<WorkCentersByEntity> workCentersByEntities) { this.workCentersByEntities = workCentersByEntities; }
 

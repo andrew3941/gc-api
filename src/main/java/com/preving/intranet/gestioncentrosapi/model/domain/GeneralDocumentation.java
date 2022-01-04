@@ -1,9 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.preving.intranet.certificate.Certificate;
-import com.preving.intranet.documentGeneralTypes.DocumentTypes;
-import com.preving.intranet.taxes.Taxes;
 
 import javax.persistence.Entity;
 import javax.persistence.*;
@@ -42,7 +39,7 @@ public class GeneralDocumentation implements Serializable {
     private GeneralDocumentation(){
     }
 
-    public GeneralDocumentation(int id, DocumentTypes documentTypes, String documentName, String documentimport,  Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telepnone, String email, int annualImport, int periodicityExpenditureId, int deposit, Certificate certificate, Taxes taxes, Date created, User createdBy, Date modified, User modifiedBy) {
+    public GeneralDocumentation(int id, DocumentTypes documentTypes, String documentName, String documentimport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telepnone, String email, int annualImport, int periodicityExpenditureId, int deposit, Certificate certificate, Taxes taxes, Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
         this.documentTypes = documentTypes;
         this.documentName = documentName;

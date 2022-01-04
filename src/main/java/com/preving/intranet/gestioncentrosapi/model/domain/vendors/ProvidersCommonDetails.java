@@ -3,7 +3,6 @@ package com.preving.intranet.gestioncentrosapi.model.domain.vendors;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;

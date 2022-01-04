@@ -1,19 +1,21 @@
-package com.preving.intranet.taxes;
+package com.preving.intranet.gestioncentrosapi.model.domain;
+
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 
 @Entity
-@Table(schema = "GESTION_CENTROS", name="TM_IMPUESTOS")
-public class Taxes {
+@Table(schema = "GESTION_CENTROS", name="TM_CERTIFICADOS")
+public class Certificate {
     private int id;
     private String denomination;
     private String observations;
     private boolean active;
 
-    public Taxes() {
+    public Certificate() {
     }
 
-    public Taxes(int id, String denomination, String observations, boolean active) {
+    public Certificate(int id, String denomination, String observations, boolean active) {
         this.id = id;
         this.denomination = denomination;
         this.observations = observations;

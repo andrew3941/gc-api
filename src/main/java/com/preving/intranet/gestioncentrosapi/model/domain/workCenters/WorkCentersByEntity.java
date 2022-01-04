@@ -1,6 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.workCenters;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.preving.intranet.gestioncentrosapi.model.domain.Entity;
 
 import javax.persistence.*;

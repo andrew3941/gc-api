@@ -1,6 +1,7 @@
-package com.preving.intranet.documentGeneralTypes;
+package com.preving.intranet.gestioncentrosapi.model.domain;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 
 @Entity
 @Table(schema = "GESTION_CENTROS", name="TM_DOC_GENERAL_TIPOS")
