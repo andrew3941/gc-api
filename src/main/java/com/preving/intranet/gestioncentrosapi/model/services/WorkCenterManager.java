@@ -5,6 +5,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.department.DepartmentRep
 import com.preving.intranet.gestioncentrosapi.model.dao.dimNavision.DimNavisionRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.GeneralDocumentationRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.room.RoomByTypesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.room.RoomRepository;

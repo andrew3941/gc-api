@@ -8,6 +8,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
+import com.preving.intranet.gestioncentrosapi.model.services.GeneralDocumentationService;
 import com.preving.intranet.gestioncentrosapi.model.services.SecurityService;
 import com.preving.intranet.gestioncentrosapi.model.services.WorkCenterService;
 import com.preving.security.JwtTokenUtil;
@@ -40,6 +41,9 @@ public class WorkCentersController {
 
     @Autowired
     private SecurityService securityService;
+
+    @Autowired
+    private GeneralDocumentationService generalDocumentationService;
 
     @Value("${modo-debug}")
     private boolean modoDebug;
@@ -565,4 +569,17 @@ public class WorkCentersController {
 //        }
 //
 //    }
+
+
+    @RequestMapping(value = "generalDocumentation/types", method = RequestMethod.GET)
+    public ResponseEntity<?> getGeneralDocTypes(){
+
+        try {
+            return new ResponseEntity<>(generalDocumentationService.getGeneralDocTypes(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 }

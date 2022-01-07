@@ -1,22 +1,20 @@
-package com.preving.intranet.gestioncentrosapi.model.domain;
+package com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
 
 @Entity
-@Table(schema = "GESTION_CENTROS", name="TM_DOC_GENERAL_TIPOS")
-public class DocumentTypes {
-
+@Table(schema = "GESTION_CENTROS", name="TM_IMPUESTOS_TIPOS")
+public class TaxesTypes {
     private int id;
     private String denomination;
     private String observations;
     private boolean active;
 
-
-    public DocumentTypes() {
+    public TaxesTypes() {
     }
 
-    public DocumentTypes(int id, String denomination, String observations, boolean active) {
+    public TaxesTypes(int id, String denomination, String observations, boolean active) {
         this.id = id;
         this.denomination = denomination;
         this.observations = observations;
@@ -43,4 +41,3 @@ public class DocumentTypes {
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 }
-

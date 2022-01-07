@@ -1,6 +1,7 @@
-package com.preving.intranet.gestioncentrosapi.model.domain;
+package com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.preving.intranet.gestioncentrosapi.model.domain.User;
 
 import javax.persistence.Entity;
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.util.Date;
 @Table(schema = "GESTION_CENTROS", name="PC_DELEGACIONES_X_DOC_GENERAL")
 public class GeneralDocumentation implements Serializable {
     private int id;
-    private DocumentTypes documentTypes = new DocumentTypes();
+    private GeneralDocumentationTypes generalDocTypes = new GeneralDocumentationTypes();
     private String documentName;
     private String documentimport;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
@@ -27,8 +28,8 @@ public class GeneralDocumentation implements Serializable {
     private int annualImport;
     private int periodicityExpenditureId;
     private int deposit;
-    private Certificate certificate = new Certificate();
-    private Taxes taxes = new Taxes();
+    private CertificateTypes certificateTypes = new CertificateTypes();
+    private TaxesTypes taxesTypes = new TaxesTypes();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
     private User createdBy = new User();
@@ -39,9 +40,9 @@ public class GeneralDocumentation implements Serializable {
     private GeneralDocumentation(){
     }
 
-    public GeneralDocumentation(int id, DocumentTypes documentTypes, String documentName, String documentimport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telepnone, String email, int annualImport, int periodicityExpenditureId, int deposit, Certificate certificate, Taxes taxes, Date created, User createdBy, Date modified, User modifiedBy) {
+    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, String documentimport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telepnone, String email, int annualImport, int periodicityExpenditureId, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
-        this.documentTypes = documentTypes;
+        this.generalDocTypes = generalDocTypes;
         this.documentName = documentName;
         this.documentimport = documentimport;
         this.documentStartDate = documentStartDate;
@@ -55,8 +56,8 @@ public class GeneralDocumentation implements Serializable {
         this.annualImport = annualImport;
         this.periodicityExpenditureId = periodicityExpenditureId;
         this.deposit = deposit;
-        this.certificate = certificate;
-        this.taxes = taxes;
+        this.certificateTypes = certificateTypes;
+        this.taxesTypes = taxesTypes;
         this.created = created;
         this.createdBy = createdBy;
         this.modified = modified;
@@ -72,8 +73,8 @@ public class GeneralDocumentation implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TIPO_DOCUMENTO_ID", referencedColumnName = "ID")
-    public DocumentTypes getDocumentTypes() { return documentTypes; }
-    public void setDocumentTypes(DocumentTypes documentTypes) { this.documentTypes = documentTypes; }
+    public GeneralDocumentationTypes getGeneralDocTypes() { return generalDocTypes; }
+    public void setGeneralDocTypes(GeneralDocumentationTypes generalDocTypes) { this.generalDocTypes = generalDocTypes; }
 
     @Basic
     @Column(name = "NOMBRE")
@@ -142,13 +143,13 @@ public class GeneralDocumentation implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CERTIFICADO_ID", referencedColumnName = "ID")
-    public Certificate getCertificate() { return certificate; }
-    public void setCertificate(Certificate certificate) { this.certificate = certificate; }
+    public CertificateTypes getCertificateTypes() { return certificateTypes; }
+    public void setCertificateTypes(CertificateTypes certificateTypes) { this.certificateTypes = certificateTypes; }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "IMPUESTO_ID", referencedColumnName = "ID")
-    public Taxes getTaxes() { return taxes; }
-    public void setTaxes(Taxes taxes) { this.taxes = taxes; }
+    public TaxesTypes getTaxesTypes() { return taxesTypes; }
+    public void setTaxesTypes(TaxesTypes taxesTypes) { this.taxesTypes = taxesTypes; }
 
 
     @Basic
