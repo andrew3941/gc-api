@@ -5,7 +5,7 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 
 @Entity
-@Table(schema = "GESTION_CENTROS", name="TM_CERTIFICADOS_TIPOS")
+@Table(schema = "GESTION_CENTROS", name="TM_CERTIFICADOS")
 public class CertificateTypes {
     private int id;
     private String denomination;

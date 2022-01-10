@@ -4,7 +4,7 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 
 @Entity
-@Table(schema = "GESTION_CENTROS", name="TM_IMPUESTOS_TIPOS")
+@Table(schema = "GESTION_CENTROS", name="TM_IMPUESTOS")
 public class TaxesTypes {
     private int id;
     private String denomination;

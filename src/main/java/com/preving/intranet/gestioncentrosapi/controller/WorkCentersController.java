@@ -582,4 +582,29 @@ public class WorkCentersController {
         }
 
     }
+
+
+    @RequestMapping(value = "generalDocumentation/certificatesTypes", method = RequestMethod.GET)
+    public ResponseEntity<?> getCertificateTypes(){
+
+        try {
+            return new ResponseEntity<>(generalDocumentationService.getCertificateTypes(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @RequestMapping(value = "generalDocumentation/taxesTypes", method = RequestMethod.GET)
+    public ResponseEntity<?> getTaxesTypes(){
+
+        try {
+            return new ResponseEntity<>(generalDocumentationService.getTaxesTypes(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 }
