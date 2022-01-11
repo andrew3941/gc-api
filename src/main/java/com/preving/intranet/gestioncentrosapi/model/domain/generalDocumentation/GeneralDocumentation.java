@@ -2,8 +2,8 @@ package com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 
-import javax.persistence.Entity;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -14,7 +14,7 @@ public class GeneralDocumentation implements Serializable {
     private int id;
     private GeneralDocumentationTypes generalDocTypes = new GeneralDocumentationTypes();
     private String documentName;
-    private String documentimport;
+    private String documentImport;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date documentStartDate = new Date();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
@@ -23,7 +23,7 @@ public class GeneralDocumentation implements Serializable {
     private String insurerName;
     private String policeNumber;
     private String mediator;
-    private String telepnone;
+    private String telephone;
     private String email;
     private int annualImport;
     private int periodicityExpenditureId;
@@ -36,22 +36,24 @@ public class GeneralDocumentation implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date modified;
     private User modifiedBy;
+    private WorkCenter workCenter = new WorkCenter();
+
 
     private GeneralDocumentation(){
     }
 
-    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, String documentimport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telepnone, String email, int annualImport, int periodicityExpenditureId, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy) {
+    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, String documentImport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, int periodicityExpenditureId, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter) {
         this.id = id;
         this.generalDocTypes = generalDocTypes;
         this.documentName = documentName;
-        this.documentimport = documentimport;
+        this.documentImport = documentImport;
         this.documentStartDate = documentStartDate;
         this.documentEndDate = documentEndDate;
         this.observations = observations;
         this.insurerName = insurerName;
         this.policeNumber = policeNumber;
         this.mediator = mediator;
-        this.telepnone = telepnone;
+        this.telephone = telephone;
         this.email = email;
         this.annualImport = annualImport;
         this.periodicityExpenditureId = periodicityExpenditureId;
@@ -62,6 +64,7 @@ public class GeneralDocumentation implements Serializable {
         this.createdBy = createdBy;
         this.modified = modified;
         this.modifiedBy = modifiedBy;
+        this.workCenter = workCenter;
     }
 
     @Id
@@ -83,8 +86,8 @@ public class GeneralDocumentation implements Serializable {
 
     @Basic
     @Column(name = "IMPORTE")
-    public String getDocumentimport() { return documentimport; }
-    public void setDocumentimport(String documentimport) { this.documentimport = documentimport; }
+    public String getdocumentImport() { return documentImport; }
+    public void setdocumentImport(String documentImport) { this.documentImport = documentImport; }
 
     @Basic
     @Column(name = "FECHA_INICIO")
@@ -92,12 +95,12 @@ public class GeneralDocumentation implements Serializable {
     public void setDocumentStartDate(Date documentStartDate) { this.documentStartDate = documentStartDate; }
 
     @Basic
-    @Column(name = "FECHA_IN")
+    @Column(name = "FECHA_FIN")
     public Date getDocumentEndDate() { return documentEndDate; }
     public void setDocumentEndDate(Date documentEndDate) { this.documentEndDate = documentEndDate; }
 
     @Basic
-    @Column(name = "OBSERVACONES")
+    @Column(name = "OBSERVACIONES")
     public String getObservations() { return observations; }
     public void setObservations(String observations) { this.observations = observations; }
 
@@ -117,9 +120,9 @@ public class GeneralDocumentation implements Serializable {
     public void setMediator(String mediator) { this.mediator = mediator; }
 
     @Basic
-    @Column(name = "TELEFONE")
-    public String getTelepnone() { return telepnone; }
-    public void setTelepnone(String telepnone) { this.telepnone = telepnone; }
+    @Column(name = "TELEFONO")
+    public String gettelephone() { return telephone; }
+    public void settelephone(String telephone) { this.telephone = telephone; }
 
     @Basic
     @Column(name = "EMAIL")
@@ -172,4 +175,10 @@ public class GeneralDocumentation implements Serializable {
     public User getModifiedBy() { return modifiedBy; }
     public void setModifiedBy(User modifiedBy) { this.modifiedBy = modifiedBy; }
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
+    public WorkCenter getWorkCenter() { return workCenter; }
+    public void setWorkCenter(WorkCenter workCenter) { this.workCenter = workCenter; }
 }
+
+

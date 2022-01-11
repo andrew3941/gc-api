@@ -271,7 +271,6 @@ public class WorkCentersController {
 
     }
 
-
     // TODO mover a otro controller todos los métodos desde aquí
     /**
      * Obtiene listado de planos de un centro de trabajo por Id
@@ -558,19 +557,6 @@ public class WorkCentersController {
 
     }
 
-//    @RequestMapping(value = "generalDocumentation", method = RequestMethod.GET)
-//    public ResponseEntity<?> getGenerlDocumentationListByWorkCenter(){
-//
-//        try {
-//            return new ResponseEntity<>(workCenterService.getGenerlDocumentationListByWorkCenter(1), HttpStatus.OK);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//
-//    }
-
-
     @RequestMapping(value = "generalDocumentation/types", method = RequestMethod.GET)
     public ResponseEntity<?> getGeneralDocTypes(){
 
@@ -582,7 +568,6 @@ public class WorkCentersController {
         }
 
     }
-
 
     @RequestMapping(value = "generalDocumentation/certificatesTypes", method = RequestMethod.GET)
     public ResponseEntity<?> getCertificateTypes(){
@@ -606,5 +591,20 @@ public class WorkCentersController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+  /**
+     * Obtener listado de documentación general en un centro de trabajo por DNI
+     * @regreso
+ */
+    @RequestMapping(value = "{workCenterId}/generalDoc", method = RequestMethod.GET)
+    public ResponseEntity<?> getGeneralDocumentation(@PathVariable(value = "workCenterId") int workCenterId){
+
+        try {
+            return new ResponseEntity<>(generalDocumentationService.getGeneralDocumentationListByWorkCenter(workCenterId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -28,17 +28,10 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
     @Autowired
     private TaxesTypesRepository taxesTypesRepository;
 
-
-
     @Override
-    public List<GeneralDocumentation>  getGeneralDocumentation(int workCenterId) {
-
-//        List<GeneralDocumentation> generalDocumentations = this.generalDocumentationRepository.getGeneralDocumentation(workCenterId);
-
-//        return generalDocumentations;
-         return null;
+    public List<GeneralDocumentation> getGeneralDocumentationListByWorkCenter(int workCenterId) {
+        return generalDocumentationRepository.findGeneralDocumentationsByWorkCenterId(workCenterId);
     }
-
 
     @Override
     public List<GeneralDocumentationTypes> getGeneralDocTypes() {
@@ -54,6 +47,5 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
     public List<TaxesTypes> getTaxesTypes() {
         return taxesTypesRepository.findAll();
     }
-
 
 }

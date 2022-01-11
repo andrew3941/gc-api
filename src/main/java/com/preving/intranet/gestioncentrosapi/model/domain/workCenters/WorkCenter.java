@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
+import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProvidersByWorkCenters;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -75,6 +76,7 @@ public class WorkCenter implements Serializable {
     private List<Drawing> drawings = new ArrayList<>();
     private List<Room> rooms = new ArrayList<>();
     private List<ProvidersByWorkCenters> providers = new ArrayList<>();
+    private List<GeneralDocumentation> generalDocumentations = new ArrayList<>();
 
 
     public WorkCenter() {
@@ -101,7 +103,7 @@ public class WorkCenter implements Serializable {
         this.getHeadPerson().setCompleteName(headPersonName);
     }
 
-    public WorkCenter(int id, String name, City city, String navisionCode, DimNavision dimNavision, String address, String postalCode, String phoneNumber, String email, User headPerson, int employee, Date startDate, Date endDate, Zona zona, int active, int visible, WorkCenterTypes workCenterTypes, Date created, User createdBy, Date modified, User modifiedBy, List<WorkCentersByEntity> workCentersByEntities, List<Drawing> drawings, List<Room> rooms, List<ProvidersByWorkCenters> providers) {
+    public WorkCenter(int id, String name, City city, String navisionCode, DimNavision dimNavision, String address, String postalCode, String phoneNumber, String email, User headPerson, int employee, Date startDate, Date endDate, Zona zona, int active, int visible, WorkCenterTypes workCenterTypes, Date created, User createdBy, Date modified, User modifiedBy, List<WorkCentersByEntity> workCentersByEntities, List<Drawing> drawings, List<Room> rooms, List<ProvidersByWorkCenters> providers, List<GeneralDocumentation> generalDocumentations) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -127,6 +129,7 @@ public class WorkCenter implements Serializable {
         this.drawings = drawings;
         this.rooms = rooms;
         this.providers = providers;
+        this.generalDocumentations = generalDocumentations;
     }
 
     public WorkCenter(int id, String name) {
@@ -353,6 +356,13 @@ public class WorkCenter implements Serializable {
     public void setProviders(List<ProvidersByWorkCenters> providers) {
         this.providers = providers;
     }
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "workCenter", fetch = FetchType.LAZY)
+    @Fetch(value = FetchMode.SELECT)
+    public List<GeneralDocumentation> getGeneralDocumentations() { return generalDocumentations; }
+    public void setGeneralDocumentations(List<GeneralDocumentation> generalDocumentations) { this.generalDocumentations = generalDocumentations; }
+
 }
 
 

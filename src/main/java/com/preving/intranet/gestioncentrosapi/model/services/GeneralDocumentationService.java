@@ -9,10 +9,12 @@ import java.util.List;
 
 public interface GeneralDocumentationService {
 
-    List<GeneralDocumentation> getGeneralDocumentation(int workCenterId);
-    List<GeneralDocumentationTypes> getGeneralDocTypes();
-    List<CertificateTypes> getCertificateTypes();
-    List<TaxesTypes> getTaxesTypes();
+    List<GeneralDocumentation> getGeneralDocumentationListByWorkCenter(int workCenterId);
 
+    List<GeneralDocumentationTypes> getGeneralDocTypes();
+
+    List<CertificateTypes> getCertificateTypes();
+
+    List<TaxesTypes> getTaxesTypes();
 
 }
