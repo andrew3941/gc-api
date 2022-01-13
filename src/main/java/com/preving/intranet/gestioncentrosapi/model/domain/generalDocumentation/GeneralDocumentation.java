@@ -1,5 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
@@ -175,6 +176,7 @@ public class GeneralDocumentation implements Serializable {
     public User getModifiedBy() { return modifiedBy; }
     public void setModifiedBy(User modifiedBy) { this.modifiedBy = modifiedBy; }
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
     public WorkCenter getWorkCenter() { return workCenter; }

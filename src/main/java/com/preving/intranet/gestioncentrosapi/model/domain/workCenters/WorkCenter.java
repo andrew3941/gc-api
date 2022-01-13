@@ -358,7 +358,7 @@ public class WorkCenter implements Serializable {
     }
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "workCenter", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Fetch(value = FetchMode.SELECT)
     public List<GeneralDocumentation> getGeneralDocumentations() { return generalDocumentations; }
     public void setGeneralDocumentations(List<GeneralDocumentation> generalDocumentations) { this.generalDocumentations = generalDocumentations; }
