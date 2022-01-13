@@ -15,7 +15,7 @@ public class GeneralDocumentation implements Serializable {
     private int id;
     private GeneralDocumentationTypes generalDocTypes = new GeneralDocumentationTypes();
     private String documentName;
-    private String documentImport;
+    private int documentImport;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date documentStartDate = new Date();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
@@ -43,7 +43,7 @@ public class GeneralDocumentation implements Serializable {
     private GeneralDocumentation(){
     }
 
-    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, String documentImport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, int periodicityExpenditureId, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter) {
+    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, int periodicityExpenditureId, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter) {
         this.id = id;
         this.generalDocTypes = generalDocTypes;
         this.documentName = documentName;
@@ -70,8 +70,8 @@ public class GeneralDocumentation implements Serializable {
 
     @Id
     @Column(name = "ID", nullable = false)
-    @SequenceGenerator(name = "PC_DELEGACIONES_X_DOC_GENERAL", sequenceName = "PC_DELEGACIONES_X_DOC_GENERAL", schema = "GESTION_CENTROS", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PC_DELEGACIONES_X_DOC_GENERAL")
+    @SequenceGenerator(name = "PC_DELEGACIONES_X_DOC_GENERAL_SEQ", sequenceName = "PC_DELEGACIONES_X_DOC_GENERAL_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PC_DELEGACIONES_X_DOC_GENERAL_SEQ")
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -87,8 +87,8 @@ public class GeneralDocumentation implements Serializable {
 
     @Basic
     @Column(name = "IMPORTE")
-    public String getdocumentImport() { return documentImport; }
-    public void setdocumentImport(String documentImport) { this.documentImport = documentImport; }
+    public int getdocumentImport() { return documentImport; }
+    public void setdocumentImport(int documentImport) { this.documentImport = documentImport; }
 
     @Basic
     @Column(name = "FECHA_INICIO")

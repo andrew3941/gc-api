@@ -4,7 +4,10 @@ import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentationTypes;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.TaxesTypes;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface GeneralDocumentationService {
@@ -16,5 +19,8 @@ public interface GeneralDocumentationService {
     List<CertificateTypes> getCertificateTypes();
 
     List<TaxesTypes> getTaxesTypes();
+
+    ResponseEntity<?> saveGeneralDocumentation(int workCenterId, GeneralDocumentation newGeneralDoc, MultipartFile attachedFile, HttpServletRequest request);
+
 
 }

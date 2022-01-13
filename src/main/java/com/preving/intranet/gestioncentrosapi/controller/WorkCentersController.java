@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.Room;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
+import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
@@ -586,6 +587,27 @@ public class WorkCentersController {
 
         try {
             return new ResponseEntity<>(generalDocumentationService.getTaxesTypes(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+
+    @RequestMapping(value = "{workCenterId}/generalDocumentation/add", method = RequestMethod.POST)
+    public ResponseEntity<?> saveGeneralDocumentation(
+            @RequestParam("generalDocumentation") String generalDocumentation,
+            @PathVariable("workCenterId") int workCenterId,
+            @RequestParam("attachedFile") MultipartFile attachedFile,
+            HttpServletRequest request) {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        GeneralDocumentation newGeneralDoc= gson.fromJson(generalDocumentation, GeneralDocumentation.class);
+
+        try {
+            generalDocumentationService.saveGeneralDocumentation(workCenterId, newGeneralDoc, attachedFile, request);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
