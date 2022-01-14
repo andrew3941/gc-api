@@ -38,12 +38,14 @@ public class GeneralDocumentation implements Serializable {
     private Date modified;
     private User modifiedBy;
     private WorkCenter workCenter = new WorkCenter();
+    private Date deleted;
+    private User deletedBy;
 
 
     private GeneralDocumentation(){
     }
 
-    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, int periodicityExpenditureId, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter) {
+    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, int periodicityExpenditureId, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter, Date deleted, User deletedBy) {
         this.id = id;
         this.generalDocTypes = generalDocTypes;
         this.documentName = documentName;
@@ -66,6 +68,8 @@ public class GeneralDocumentation implements Serializable {
         this.modified = modified;
         this.modifiedBy = modifiedBy;
         this.workCenter = workCenter;
+        this.deleted = deleted;
+        this.deletedBy = deletedBy;
     }
 
     @Id
@@ -181,6 +185,16 @@ public class GeneralDocumentation implements Serializable {
     @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
     public WorkCenter getWorkCenter() { return workCenter; }
     public void setWorkCenter(WorkCenter workCenter) { this.workCenter = workCenter; }
+
+    @Basic
+    @Column(name = "BORRADO")
+    public Date getDeleted() { return deleted; }
+    public void setDeleted(Date deleted) { this.deleted = deleted; }
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "BORRADO_POR", referencedColumnName = "ID")
+    public User getDeletedBy() { return deletedBy; }
+    public void setDeletedBy(User deletedBy) { this.deletedBy = deletedBy; }
 }
 
 
