@@ -367,6 +367,16 @@ public class WorkCentersController {
 
     }
 
+    @RequestMapping(value = "{workCenterId}/generalDocList/{generalDocId}/delete", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteGeneralDoc (HttpServletRequest request,
+                                            @PathVariable(value = "workCenterId") int workCenterId,
+                                            @PathVariable(value = "generalDocId") int generalDocId) {
+
+
+        return workCenterService.deleteGeneralDoc(request,workCenterId,generalDocId);
+
+    }
+
     /**
      * Agregamos un plano al centro de trabajo
      * @param workCenterDrawing

@@ -40,7 +40,7 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 
     @Override
     public List<GeneralDocumentation> getGeneralDocumentationListByWorkCenter(int workCenterId) {
-        return generalDocumentationRepository.findGeneralDocumentationsByWorkCenterId(workCenterId);
+        return generalDocumentationRepository.findGeneralDocumentationsByWorkCenterIdAndDeletedIsNullOrderByCreatedDesc(workCenterId);
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.users.UserRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.*;
 import com.preving.intranet.gestioncentrosapi.model.dao.zona.ZonaRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
+import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.*;
 import com.preving.security.JwtTokenUtil;
 import com.preving.security.domain.UsuarioWithRoles;
@@ -496,6 +497,25 @@ public class WorkCenterManager implements WorkCenterService{
             ex.printStackTrace();
         }
 
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteGeneralDoc(HttpServletRequest request, int workCenterId, int generalDocId){
+
+        long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        GeneralDocumentation generalDocumentation = this.generalDocumentationRepository.findGeneralDocumentationById(generalDocId);
+
+        if (generalDocumentation==null){
+            return new ResponseEntity <>(HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            this.generalDocumentationRepository.generalDocLogicDelete((int) uId, generalDocumentation.getId(), workCenterId);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

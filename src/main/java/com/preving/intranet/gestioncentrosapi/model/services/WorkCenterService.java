@@ -1,8 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
-import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
-import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterTypes;
@@ -43,6 +41,8 @@ public interface WorkCenterService {
     List<Room> getRoomListByWorkCenter(int workCenterId);
 
     ResponseEntity<?> deleteDrawing(HttpServletRequest request,int workCenterId, int drawingId);
+
+    ResponseEntity<?> deleteGeneralDoc(HttpServletRequest request,int workCenterId, int generalDocId);
 
     ResponseEntity<?> addWorkCenterDrawing(int workCenterId, Drawing newWorkCenterDrawing, MultipartFile attachedFile, HttpServletRequest request);
 
