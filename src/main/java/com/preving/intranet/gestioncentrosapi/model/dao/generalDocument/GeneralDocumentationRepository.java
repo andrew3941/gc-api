@@ -37,4 +37,21 @@ public interface GeneralDocumentationRepository extends JpaRepository<GeneralDoc
 //    @Query("update GeneralDocumentation g set g.annualImport=:annualImport where g.id=:generalDocId")
 //    void  updateDrawingDocUrl(@Param("generalDocId") int generalDocId, @Param("annualImport")String annualImport);
 
+    GeneralDocumentation findGeneralDocumentationById(int generalDocId);
+
+    @Modifying
+    @Transactional
+    @Query("update GeneralDocumentation gDoc set gDoc.generalDocTypes=:#{#generalDoc.generalDocTypes}, " +
+            "gDoc.documentName=:#{#generalDoc.documentName}, gDoc.documentImport=:#{#generalDoc.documentImport}, " +
+            "gDoc.documentStartDate=:#{#generalDoc.documentStartDate}, gDoc.documentEndDate=:#{#generalDoc.documentEndDate}, " +
+            "gDoc.observations=:#{#generalDoc.observations}, gDoc.insurerName=:#{#generalDoc.insurerName}, gDoc.policeNumber=:#{#generalDoc.policeNumber}, "+
+            "gDoc.mediator=:#{#generalDoc.mediator}, gDoc.telephone=:#{#generalDoc.telephone}, gDoc.email=:#{#generalDoc.email}, "+
+            "gDoc.annualImport=:#{#generalDoc.annualImport}, gDoc.periodicity=:#{#generalDoc.periodicity}, gDoc.deposit=:#{#generalDoc.deposit}, "+
+            "gDoc.certificateTypes=:#{#generalDoc.certificateTypes}, gDoc.taxesTypes=:#{#generalDoc.taxesTypes}, gDoc.created=:#{#generalDoc.created}, "+
+            "gDoc.modified=CURRENT_TIMESTAMP, gDoc.modifiedBy=:#{#generalDoc.modifiedBy}, gDoc.workCenter=:#{#generalDoc.workCenter} " +
+            "where gDoc.id=:#{#generalDoc.id}")
+    void  editGeneralDoc(@Param("generalDoc") GeneralDocumentation generalDoc);
+
+
+
 }

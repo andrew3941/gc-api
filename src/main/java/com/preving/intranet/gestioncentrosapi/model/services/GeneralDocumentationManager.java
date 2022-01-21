@@ -4,6 +4,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.Certific
 import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.GeneralDocTypesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.GeneralDocumentationRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.TaxesTypesRepository;
+import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.CertificateTypes;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentationTypes;
@@ -78,5 +79,25 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @Override
+    public ResponseEntity<?> editGeneralDoc(int workCenterId, GeneralDocumentation generalDoc, MultipartFile attachedFile, HttpServletRequest request) {
+
+        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        generalDoc.setModifiedBy(new User());
+        generalDoc.getModifiedBy().setId(userId);
+        generalDoc.getWorkCenter().setId(workCenterId);
+
+       generalDocumentationRepository.editGeneralDoc(generalDoc);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    public GeneralDocumentation getGeneralDocById(int generalDocId) {
+        return generalDocumentationRepository.findGeneralDocumentationById(generalDocId);
+    }
+
 
 }

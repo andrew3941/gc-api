@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ExpenditurePeriod;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 
 import javax.persistence.*;
@@ -27,7 +28,7 @@ public class GeneralDocumentation implements Serializable {
     private String telephone;
     private String email;
     private int annualImport;
-    private int periodicityExpenditureId;
+    private ExpenditurePeriod periodicity;
     private int deposit;
     private CertificateTypes certificateTypes = new CertificateTypes();
     private TaxesTypes taxesTypes = new TaxesTypes();
@@ -45,7 +46,7 @@ public class GeneralDocumentation implements Serializable {
     private GeneralDocumentation(){
     }
 
-    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, int periodicityExpenditureId, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter, Date deleted, User deletedBy) {
+    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, ExpenditurePeriod periodicity, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter, Date deleted, User deletedBy) {
         this.id = id;
         this.generalDocTypes = generalDocTypes;
         this.documentName = documentName;
@@ -59,7 +60,7 @@ public class GeneralDocumentation implements Serializable {
         this.telephone = telephone;
         this.email = email;
         this.annualImport = annualImport;
-        this.periodicityExpenditureId = periodicityExpenditureId;
+        this.periodicity = periodicity;
         this.deposit = deposit;
         this.certificateTypes = certificateTypes;
         this.taxesTypes = taxesTypes;
@@ -91,8 +92,12 @@ public class GeneralDocumentation implements Serializable {
 
     @Basic
     @Column(name = "IMPORTE")
-    public int getdocumentImport() { return documentImport; }
-    public void setdocumentImport(int documentImport) { this.documentImport = documentImport; }
+    public int getDocumentImport() {
+        return documentImport;
+    }
+    public void setDocumentImport(int documentImport) {
+        this.documentImport = documentImport;
+    }
 
     @Basic
     @Column(name = "FECHA_INICIO")
@@ -126,8 +131,12 @@ public class GeneralDocumentation implements Serializable {
 
     @Basic
     @Column(name = "TELEFONO")
-    public String gettelephone() { return telephone; }
-    public void settelephone(String telephone) { this.telephone = telephone; }
+    public String getTelephone() {
+        return telephone;
+    }
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
 
     @Basic
     @Column(name = "EMAIL")
@@ -139,10 +148,14 @@ public class GeneralDocumentation implements Serializable {
     public int getAnnualImport() { return annualImport; }
     public void setAnnualImport(int annualImport) { this.annualImport = annualImport; }
 
-    @Basic
-    @Column(name = "PERIODICIDAD_GASTO_ID")
-    public int getPeriodicityExpenditureId() { return periodicityExpenditureId; }
-    public void setPeriodicityExpenditureId(int periodicityExpenditureId) { this.periodicityExpenditureId = periodicityExpenditureId; }
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "PERIODICIDAD_GASTO_ID", referencedColumnName = "ID")
+    public ExpenditurePeriod getPeriodicity() {
+        return periodicity;
+    }
+    public void setPeriodicity(ExpenditurePeriod periodicity) {
+        this.periodicity = periodicity;
+    }
 
     @Basic
     @Column(name = "DEPOSITO")

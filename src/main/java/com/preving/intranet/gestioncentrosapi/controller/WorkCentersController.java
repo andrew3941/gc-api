@@ -639,4 +639,37 @@ public class WorkCentersController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @RequestMapping(value = "{workCenterId}/generalDocumentation/edit", method = RequestMethod.POST)
+    public ResponseEntity<?> editGeneralDoc(
+            @RequestParam("generalDocumentation") String generalDocumentation,
+            @PathVariable("workCenterId") int workCenterId,
+             MultipartFile attachedFile,
+            HttpServletRequest request) {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        GeneralDocumentation newGeneralDoc= gson.fromJson(generalDocumentation, GeneralDocumentation.class);
+
+        try {
+            generalDocumentationService.editGeneralDoc(workCenterId, newGeneralDoc, attachedFile, request);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @RequestMapping(value = "generalDocumentation/{generalDocId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getGeneralDocById(@PathVariable(value = "generalDocId") int generalDocId){
+
+        try {
+            return new ResponseEntity<>(generalDocumentationService.getGeneralDocById(generalDocId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 }
