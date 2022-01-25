@@ -41,12 +41,13 @@ public class GeneralDocumentation implements Serializable {
     private WorkCenter workCenter = new WorkCenter();
     private Date deleted;
     private User deletedBy;
+    private GeneralDocumentationAttached generalDocumentationAttached = new GeneralDocumentationAttached();
 
 
     private GeneralDocumentation(){
     }
 
-    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, ExpenditurePeriod periodicity, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter, Date deleted, User deletedBy) {
+    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, ExpenditurePeriod periodicity, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter, Date deleted, User deletedBy, GeneralDocumentationAttached generalDocumentationAttached) {
         this.id = id;
         this.generalDocTypes = generalDocTypes;
         this.documentName = documentName;
@@ -71,6 +72,8 @@ public class GeneralDocumentation implements Serializable {
         this.workCenter = workCenter;
         this.deleted = deleted;
         this.deletedBy = deletedBy;
+        this.generalDocumentationAttached = generalDocumentationAttached;
+
     }
 
     @Id
@@ -208,6 +211,11 @@ public class GeneralDocumentation implements Serializable {
     @JoinColumn(name = "BORRADO_POR", referencedColumnName = "ID")
     public User getDeletedBy() { return deletedBy; }
     public void setDeletedBy(User deletedBy) { this.deletedBy = deletedBy; }
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "DOC_GENERAL_ID", referencedColumnName = "ID")
+    public GeneralDocumentationAttached getGeneralDocumentationAttached() { return generalDocumentationAttached; }
+    public void setGeneralDocumentationAttached(GeneralDocumentationAttached generalDocumentationAttached) { this.generalDocumentationAttached = generalDocumentationAttached; }
 }
 
 

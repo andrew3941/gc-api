@@ -15,29 +15,28 @@ import java.util.List;
 public interface GeneralDocumentationRepository extends JpaRepository<GeneralDocumentation, Integer> {
 
     List<GeneralDocumentation>findGeneralDocumentationsByWorkCenterIdAndDeletedIsNullOrderByCreatedDesc(int workCenterId);
+
     GeneralDocumentation findGeneralDocumentationById(int generalDocId);
 
     @Modifying
     @Transactional
-    @Query("update GeneralDocumentation d set  borrado=CURRENT_TIMESTAMP, borrado_por=:deleted_by where id=:generalDoc_id and delegacion_id=:workCenterId")
+    @Query("update GeneralDocumentation gDoc set  borrado=CURRENT_TIMESTAMP, borrado_por=:deleted_by where id=:generalDoc_id and delegacion_id=:workCenterId")
     void generalDocLogicDelete(@Param("deleted_by") int deleted_by, @Param("generalDoc_id") int generalDoc_id, @Param("workCenterId") int workCenterId);
 
     void deleteByWorkCenter(WorkCenter workCenter);
 
     @Modifying
     @Transactional
-    @Query("update GeneralDocumentation g set g.documentName=:#{#generalDocumentation.documentName}, " +
-            "g.generalDocTypes=:#{#generalDocumentation.generalDocTypes}, " +
-            "g.modified=CURRENT_TIMESTAMP, g.modifiedBy=:#{#generalDocumentation.modifiedBy} " +
-            "where g.id=:#{#generalDocumentation.id} ")
+    @Query("update GeneralDocumentation gDoc set gDoc.documentName=:#{#generalDocumentation.documentName}, " +
+            "gDoc.generalDocTypes=:#{#generalDocumentation.generalDocTypes}, " +
+            "gDoc.modified=CURRENT_TIMESTAMP, gDoc.modifiedBy=:#{#generalDocumentation.modifiedBy} " +
+            "where gDoc.id=:#{#generalDocumentation.id} ")
     void  editWorkCenterDrawing(@Param("generalDocumentation") GeneralDocumentation generalDocumentation);
 
 //    @Modifying
 //    @Transactional
 //    @Query("update GeneralDocumentation g set g.annualImport=:annualImport where g.id=:generalDocId")
 //    void  updateDrawingDocUrl(@Param("generalDocId") int generalDocId, @Param("annualImport")String annualImport);
-
-    GeneralDocumentation findGeneralDocumentationById(int generalDocId);
 
     @Modifying
     @Transactional

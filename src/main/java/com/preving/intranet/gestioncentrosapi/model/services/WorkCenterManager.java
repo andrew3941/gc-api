@@ -667,6 +667,29 @@ public class WorkCenterManager implements WorkCenterService{
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<?> downloadDocumentationList(HttpServletRequest request, int generalDocId) {
+        GeneralDocumentation dra = null;
+        File file = null;
+        byte[] content=null;
+
+        try {
+            dra = this.generalDocumentationRepository.findGeneralDocumentationById(generalDocId);
+            file = new File(dra.getDocumentName());
+            if (file.exists()) {
+                content = Files.readAllBytes(file.toPath());
+            }else{
+                return new ResponseEntity<>("File not found",HttpStatus.NOT_FOUND);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<>("Uknown error",HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<byte[]>(content, HttpStatus.OK);
+    }
+
     @Transactional
     public ResponseEntity<?> addWorkCenterRoom(int workCenterId, Room newWorkCenterRoom, HttpServletRequest request) {
 

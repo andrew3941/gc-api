@@ -112,7 +112,6 @@ public class WorkCentersController {
 
     }
 
-
     /**
      * Agregamos un centro de trabajo
      * @RequestBody WorkCenter
@@ -187,7 +186,6 @@ public class WorkCentersController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     /**
      * Obtiene un centro de trabajo por Id
@@ -404,7 +402,6 @@ public class WorkCentersController {
 
     }
 
-
     /**
      * Editamos un plano de un centro de trabajo
      * @param workCenterDrawing
@@ -453,7 +450,6 @@ public class WorkCentersController {
         }
     }
 
-
     /**
      * Borramos una sala de reuniones de un centro de trabajo por Id
      * @return
@@ -468,7 +464,6 @@ public class WorkCentersController {
 
     }
 
-
     /**
      * Descargamos el fichero de un plano
      * @param drawingId
@@ -479,6 +474,18 @@ public class WorkCentersController {
     public ResponseEntity<?> downloadDrawingDoc(HttpServletRequest request, @PathVariable(value = "drawingId") int drawingId) {
 
         return ( workCenterService.downloadDrawingDoc(request,drawingId));
+    }
+
+    /**
+     * Descargamos el archivo de generalDoc
+     * @param generalDocId
+     * Solicitud @param
+     * @regreso
+     */
+    @RequestMapping(value = "{generalDocId}/download", method = RequestMethod.GET)
+    public ResponseEntity<?> downloadDocumentationList(HttpServletRequest request, @PathVariable(value = "generalDocId") int generalDocId) {
+
+        return ( workCenterService.downloadDocumentationList(request,generalDocId));
     }
 
     /**
@@ -669,7 +676,5 @@ public class WorkCentersController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
-
 }
