@@ -482,7 +482,8 @@ public class WorkCentersController {
      * Solicitud @param
      * @regreso
      */
-    @RequestMapping(value = "{generalDocId}/download", method = RequestMethod.GET)
+//    workCenters/generalDocumentation
+    @RequestMapping(value = "{workCenters}/generalDocumentation", method = RequestMethod.GET)
     public ResponseEntity<?> downloadDocumentationList(HttpServletRequest request, @PathVariable(value = "generalDocId") int generalDocId) {
 
         return ( workCenterService.downloadDocumentationList(request,generalDocId));
@@ -509,6 +510,7 @@ public class WorkCentersController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     /**
      * Obtención listado de workCenters
@@ -685,4 +687,5 @@ public class WorkCentersController {
 
         return ( generalDocumentationService.downloadGeneralDoc(request,generalDocAttachId));
     }
+
 }

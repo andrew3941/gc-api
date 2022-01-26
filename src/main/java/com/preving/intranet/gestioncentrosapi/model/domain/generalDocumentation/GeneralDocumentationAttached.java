@@ -26,8 +26,6 @@ public class GeneralDocumentationAttached {
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-//    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "DOC_GENERAL_ID", referencedColumnName = "ID")
     @Basic
     @Column(name = "DOC_GENERAL_ID")
     public int getGeneralDocId() { return generalDocId; }

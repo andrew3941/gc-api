@@ -1,9 +1,9 @@
 server:
   port: 8443
-#  ssl:
-#    key-store: classpath:ssl/tomcat.keystore
-#    key-store-password: preving
-#    key-password: preving
+  #  ssl:
+  #    key-store: classpath:ssl/tomcat.keystore
+  #    key-store-password: preving
+  #    key-password: preving
 
   servlet:
     context-path: /gestion-centros-api

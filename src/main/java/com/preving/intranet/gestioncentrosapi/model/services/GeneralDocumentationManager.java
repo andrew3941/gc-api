@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -62,7 +61,7 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 //        }
 //   return generalD;
 
-       return generalDocumentationRepository.findGeneralDocumentationsByWorkCenterIdAndDeletedIsNullOrderByCreatedDesc(workCenterId);
+        return generalDocumentationRepository.findGeneralDocumentationsByWorkCenterIdAndDeletedIsNullOrderByCreatedDesc(workCenterId);
 
     }
 
@@ -106,7 +105,7 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 
         try{
 
-          GeneralDocumentation savedGeneralDoc = this.generalDocumentationRepository.save(newGeneralDoc);
+            GeneralDocumentation savedGeneralDoc = this.generalDocumentationRepository.save(newGeneralDoc);
 
 
             if (attachedFile != null) {
@@ -118,7 +117,7 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
                 generalDocByAttachment.setAttachedName(attachedFile.getOriginalFilename());
                 generalDocByAttachment.setAttachedContentType(attachedFile.getContentType());
 
-                 this.generalDocByAttachmentRepository.save(generalDocByAttachment);
+                this.generalDocByAttachmentRepository.save(generalDocByAttachment);
 
                 String url = null;
 
@@ -165,7 +164,7 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
         generalDoc.setTaxesTypes(taxes);
 
         try {
-           generalDocumentationRepository.editGeneralDoc(generalDoc);
+            generalDocumentationRepository.editGeneralDoc(generalDoc);
 
             if (attachedFile != null) {
 
@@ -179,7 +178,7 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
                 // Borramos el documento anterior del servidor
                 commonService.deleteDocumentServer(workCenterId, generalDoc.getId(), GENERAL_DOCUMENTS);
 
-                GeneralDocByAttachment generalDocByAttach = this.generalDocByAttachmentRepository.save(newGeneralDocByAttach);
+                 GeneralDocByAttachment generalDocByAttach = this.generalDocByAttachmentRepository.save(newGeneralDocByAttach);
 
                 String url = null;
                 // Guardamos documento en el server
