@@ -86,6 +86,7 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
+        //TODO remove this code after getting the real data from the front
         //=========================================================
         // Temporal value if Certificate Types is null
         CertificateTypes certType = new CertificateTypes();
@@ -99,7 +100,7 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
         newGeneralDoc.getCreatedBy().setId(userId);
         newGeneralDoc.getWorkCenter().setId(workCenterId);
 
-        newGeneralDoc.setCertificateTypes(certType);
+        //TODO accepting real data coming from the front
         newGeneralDoc.setCertificateTypes(certType);
         newGeneralDoc.setTaxesTypes(taxes);
 
@@ -144,16 +145,31 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
+        //TODO remove this code after getting the real data from the front
+        //=========================================================
+        // Temporal value if Certificate Types is null
+        CertificateTypes certType = new CertificateTypes();
+        certType.setId(1);
+        // Temporal value if TaxesTypes is null
+        TaxesTypes taxes = new TaxesTypes();
+        taxes.setId(2);
+        //=========================================================
+
+
         generalDoc.setModifiedBy(new User());
         generalDoc.getModifiedBy().setId(userId);
         generalDoc.getWorkCenter().setId(workCenterId);
+
+        //TODO accepting real data coming from the front
+        generalDoc.setCertificateTypes(certType);
+        generalDoc.setTaxesTypes(taxes);
 
         try {
            generalDocumentationRepository.editGeneralDoc(generalDoc);
 
             if (attachedFile != null) {
 
-                GeneralDocByAttachment newGeneralDocByAttach = new GeneralDocByAttachment();
+                GeneralDocByAttachment newGeneralDocByAttach = generalDocByAttachmentRepository.findByGeneralDocId(generalDoc.getId());
 
                 newGeneralDocByAttach.setGeneralDoc(generalDoc);
                 newGeneralDocByAttach.setAttachedUrl("Doc_Url");
@@ -163,9 +179,7 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
                 // Borramos el documento anterior del servidor
                 commonService.deleteDocumentServer(workCenterId, generalDoc.getId(), GENERAL_DOCUMENTS);
 
-               // GeneralDocByAttachment generalDocByAttach = this.generalDocByAttachmentRepository.save(newGeneralDocByAttach);
-
-                GeneralDocByAttachment generalDocByAttach = this.generalDocByAttachmentRepository.findByGeneralDocId(generalDoc.getId());
+                GeneralDocByAttachment generalDocByAttach = this.generalDocByAttachmentRepository.save(newGeneralDocByAttach);
 
                 String url = null;
                 // Guardamos documento en el server
