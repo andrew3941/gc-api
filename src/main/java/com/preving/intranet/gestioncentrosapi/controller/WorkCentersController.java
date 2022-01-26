@@ -616,7 +616,7 @@ public class WorkCentersController {
     public ResponseEntity<?> saveGeneralDocumentation(
             @RequestParam("generalDocumentation") String generalDocumentation,
             @PathVariable("workCenterId") int workCenterId,
-            @RequestParam("attachedFile") MultipartFile attachedFile,
+            @RequestParam(value="attachedFile", required = false) MultipartFile attachedFile,
             HttpServletRequest request) {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -651,6 +651,7 @@ public class WorkCentersController {
     public ResponseEntity<?> editGeneralDoc(
             @RequestParam("generalDocumentation") String generalDocumentation,
             @PathVariable("workCenterId") int workCenterId,
+            @RequestParam(value="attachedFile", required = false)
              MultipartFile attachedFile,
             HttpServletRequest request) {
 
@@ -676,5 +677,12 @@ public class WorkCentersController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    @RequestMapping(value = "generalDocumentation/{generalDocAttachId}/download", method = RequestMethod.GET)
+    public ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request, @PathVariable(value = "generalDocAttachId") int generalDocAttachId) {
+
+        return ( generalDocumentationService.downloadGeneralDoc(request,generalDocAttachId));
     }
 }

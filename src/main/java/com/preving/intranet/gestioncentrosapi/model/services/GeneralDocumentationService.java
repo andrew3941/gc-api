@@ -25,4 +25,7 @@ public interface GeneralDocumentationService {
     ResponseEntity<?> editGeneralDoc(int workCenterId,  GeneralDocumentation generalDoc, MultipartFile attachedFile, HttpServletRequest request);
 
     GeneralDocumentation getGeneralDocById(int generalDocId);
+
+    ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request, int generalDocAttachId);
+
 }

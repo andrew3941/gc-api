@@ -104,6 +104,7 @@ api-comunicacion:
 
 url-documentos-planos: C:/home/preving/app/recursos/gestion_centros
 url-documentos-proveedor: C:/home/preving/app/recursos/gestion_centros
+url-documentos-generalDocument: C:/home/preving/app/recursos/gestion_centros
 urlSeguridad: http://localhost:8444/seguridad-api2
 modo-debug: true
 

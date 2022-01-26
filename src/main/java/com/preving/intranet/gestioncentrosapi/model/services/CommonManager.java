@@ -2,6 +2,7 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.GeneralDocByAttachmentRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderRepository;
@@ -9,6 +10,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProvidersCommonDe
 import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.Entity;
 import com.preving.intranet.gestioncentrosapi.model.domain.Province;
+import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProvidersCommonDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +42,17 @@ public class CommonManager implements CommonService {
 
     @Autowired
     private ProvidersCommonDetailsRepository providersCommonDetailsRepository;
-
+    @Autowired
+    private GeneralDocByAttachmentRepository generalDocByAttachmentRepository;
 
     @Value("${url-documentos-planos}")
     private String urlDrawingDocuments;
 
     @Value("${url-documentos-proveedor}")
     private String urlProviderDocuments;
+
+    @Value("${url-documentos-generalDocument}")
+    private String urlGeneralDocuments;
 
     private static final String CONTENT_TYPE_PDF = "application/pdf";
     private static final String CONTENT_TYPE_ZIP = "application/x-zip-compressed";
@@ -63,6 +69,7 @@ public class CommonManager implements CommonService {
 
     private static final int DRAWINGS = 1;
     private static final int PROVIDERS = 2;
+    private static final int GENERAL_DOCUMENTS = 3;
 
 
     @Override
@@ -130,9 +137,12 @@ public class CommonManager implements CommonService {
         if (tipoDoc == DRAWINGS) {
             path = urlDrawingDocuments + "/" + workCenterId + "/planos/" + itemId;
             url = urlDrawingDocuments + "/" + workCenterId + "/planos/" + itemId + "/" + attachedFile.getOriginalFilename();
-        } else {
+        } else if(tipoDoc ==PROVIDERS) {
             path = urlProviderDocuments + "/" + workCenterId + "/proveedores/" + itemId;
             url = urlProviderDocuments + "/" + workCenterId + "/proveedores/" + itemId +"/" + attachedFile.getOriginalFilename();
+        }else {
+            path = urlGeneralDocuments + "/" + workCenterId + "/generalDocuments/" + itemId;
+            url = urlGeneralDocuments + "/" + workCenterId + "/generalDocuments/" + itemId +"/" + attachedFile.getOriginalFilename();
         }
 
         File file = new File(url);
@@ -170,6 +180,11 @@ public class CommonManager implements CommonService {
             // Obtenemos la URL del documento del proveedor para borrarlo del servidor
             ProvidersCommonDetails pCommonDetails =  providersCommonDetailsRepository.findProvidersCommonDetailsById(itemId);
             docUrl = pCommonDetails.getDocUrl();
+
+        }else if (tipoDoc == GENERAL_DOCUMENTS){
+            //Obtain General Document URL
+            GeneralDocByAttachment gDocAttachment = generalDocByAttachmentRepository.findByGeneralDocId(itemId);
+            docUrl = gDocAttachment.getAttachedUrl();
         }
 
         if (docUrl != null){

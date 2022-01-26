@@ -27,19 +27,6 @@ public interface GeneralDocumentationRepository extends JpaRepository<GeneralDoc
 
     @Modifying
     @Transactional
-    @Query("update GeneralDocumentation gDoc set gDoc.documentName=:#{#generalDocumentation.documentName}, " +
-            "gDoc.generalDocTypes=:#{#generalDocumentation.generalDocTypes}, " +
-            "gDoc.modified=CURRENT_TIMESTAMP, gDoc.modifiedBy=:#{#generalDocumentation.modifiedBy} " +
-            "where gDoc.id=:#{#generalDocumentation.id} ")
-    void  editWorkCenterDrawing(@Param("generalDocumentation") GeneralDocumentation generalDocumentation);
-
-//    @Modifying
-//    @Transactional
-//    @Query("update GeneralDocumentation g set g.annualImport=:annualImport where g.id=:generalDocId")
-//    void  updateDrawingDocUrl(@Param("generalDocId") int generalDocId, @Param("annualImport")String annualImport);
-
-    @Modifying
-    @Transactional
     @Query("update GeneralDocumentation gDoc set gDoc.generalDocTypes=:#{#generalDoc.generalDocTypes}, " +
             "gDoc.documentName=:#{#generalDoc.documentName}, gDoc.documentImport=:#{#generalDoc.documentImport}, " +
             "gDoc.documentStartDate=:#{#generalDoc.documentStartDate}, gDoc.documentEndDate=:#{#generalDoc.documentEndDate}, " +
