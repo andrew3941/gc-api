@@ -44,9 +44,9 @@ public interface WorkCenterService {
 
     ResponseEntity<?> deleteGeneralDoc(HttpServletRequest request,int workCenterId, int generalDocId);
 
-    ResponseEntity<?> addWorkCenterDrawing(int workCenterId, Drawing newWorkCenterDrawing, MultipartFile attachedFile, HttpServletRequest request);
+    ResponseEntity<?> addWorkCenterDrawing(int workCenterId, Drawing newWorkCenterDrawing, MultipartFile[] attachedFile, HttpServletRequest request) throws Exception;
 
-    ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int WorkCenterDrawingId, Drawing drawing, MultipartFile attachedFile, HttpServletRequest request);
+    ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int drawingId, Drawing drawing, MultipartFile[] attachedFile, HttpServletRequest request);
 
     void editWorkCenterRoom(Room room, HttpServletRequest request);
 
@@ -69,6 +69,8 @@ public interface WorkCenterService {
     List<WorkCenter> findWorkCenters(UsuarioWithRoles user);
 
     List<WorkCenterTypes> getWorkCenterTypes();
+
+    ResponseEntity<?> findAttachmentsByDrawing(int workCenterId);
 
 
 }

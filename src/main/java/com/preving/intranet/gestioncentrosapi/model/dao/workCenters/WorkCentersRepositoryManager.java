@@ -34,10 +34,10 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
         int conditions = 0;
 
         String sql = "" +
-                "SELECT DISTINCT WC.ID, WC.LOCALIDAD_ID, WC.NOMBRE, WC.COD_IN_NAV, WC.DIRECCION, WC.C_POSTAL, WC.TFNO, WC.MAIL, " +
+                "SELECT DISTINCT  WC.ID, WC.LOCALIDAD_ID, WC.NOMBRE, WC.COD_IN_NAV, WC.DIRECCION, WC.C_POSTAL, WC.TFNO, WC.MAIL, " +
                 "   WC.FECHA_ALTA, WC.FECHA_BAJA, WC.ACTIVO, WC.TIPO_ID, LOC.LOC_NOMBRE LOCALIDAD_NOMBRE, " +
                 "   LOC.LOC_PRV_COD PROVINCIA_COD, PRV.PRV_NOMBRE PROVINCIA_NOMBRE,(USU.NOMBRE || ' ' || USU.APELLIDOS ) AS RESPONSABLE " +
-                " FROM GC2006_RELEASE.PC_DELEGACIONES WC ";
+                "  FROM GC2006_RELEASE.PC_DELEGACIONES WC ";
 
         sql +=  "   INNER JOIN VIG_SALUD.LOCALIDADES LOC ON LOC.LOC_ID = WC.LOCALIDAD_ID " +
                 "   INNER JOIN VIG_SALUD.PROVINCIAS PRV ON PRV.PRV_COD = LOC.LOC_PRV_COD " +
@@ -81,9 +81,9 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterName() != null && workCenterFilter.getWorkCenterName() != ""){
             if (conditions != 0) {
-                sql += " AND LOWER(TRANSLATE(WC.NOMBRE, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) ";
+                sql += " AND LOWER(TRANSLATE(WC.NOMBRE, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN')) ";
             } else {
-                sql += " WHERE LOWER(TRANSLATE(WC.NOMBRE, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) ";
+                sql += " WHERE LOWER(TRANSLATE(WC.NOMBRE, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:workCenterName, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN')) ";
             }
             conditions += 1;
         }

@@ -4,6 +4,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.cities.CitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.department.DepartmentRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.dimNavision.DimNavisionRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.drawingByAttachments.DrawingByAttachmentsRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.GeneralDocumentationRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
@@ -27,6 +28,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -43,11 +45,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
-public class WorkCenterManager implements WorkCenterService{
+public class WorkCenterManager implements WorkCenterService {
 
     @Autowired
     private ProvincesRepository provincesRepository;
@@ -106,13 +110,23 @@ public class WorkCenterManager implements WorkCenterService{
     @Autowired
     private RoomByTypesRepository roomByTypesRepository;
 
-    @Autowired WorkCenterTypesRepository workCenterTypesRepository;
+    @Autowired
+    WorkCenterTypesRepository workCenterTypesRepository;
+
+    @Autowired
+    private DrawingByAttachmentsRepository drawingByAttachmentsRepository;
 
     @Autowired
     private GeneralDocumentationRepository generalDocumentationRepository;
 
+    @Autowired
+    private CommonManager commonManager;
+
     @PersistenceContext
     private EntityManager manager;
+
+    @Value("${url-documentos-planos}")
+    private String urlDrawingDocuments;
 
     private static final String EXPORT_TITLE_1 = "Centro";
     private static final String EXPORT_TITLE_2 = "Provincia";
@@ -131,7 +145,7 @@ public class WorkCenterManager implements WorkCenterService{
     public ResponseEntity<?> addWorkCenter(WorkCenter newWorkCenter, HttpServletRequest request) {
 
         // Obtenemos el usuario creador mediante el token
-        long userId =  this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
         // Construimos el objeto zona
         seteamosZona(newWorkCenter);
@@ -187,7 +201,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     private void saveWorkCenterForEntity(List<WorkCentersByEntity> entities) {
 
-        for(WorkCentersByEntity workCentersByEntity : entities) {
+        for (WorkCentersByEntity workCentersByEntity : entities) {
             workCentersByEntitiesRepository.save(workCentersByEntity);
         }
 
@@ -195,7 +209,7 @@ public class WorkCenterManager implements WorkCenterService{
 
     private void saveRoomByTypes(int roomId, List<RoomByTypes> types) {
 
-        for(RoomByTypes type : types) {
+        for (RoomByTypes type : types) {
             // Seteamos el id de la sala relacionada
             type.getRoom().setId(roomId);
 
@@ -233,7 +247,7 @@ public class WorkCenterManager implements WorkCenterService{
         workCentersByEntitiesRepository.deleteByWorkCenter(newWorkCenter);
 
         // Guardamos la nueva relaciÃ³n de entidades
-        for(WorkCentersByEntity workCentersByEntity : newWorkCenter.getWorkCentersByEntities()) {
+        for (WorkCentersByEntity workCentersByEntity : newWorkCenter.getWorkCentersByEntities()) {
             workCentersByEntitiesRepository.save(workCentersByEntity);
         }
 
@@ -260,7 +274,7 @@ public class WorkCenterManager implements WorkCenterService{
         List<WorkCenter> workCenters = this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter, user);
 
         // Setting entities related with the work center
-        for(WorkCenter workCenter : workCenters) {
+        for (WorkCenter workCenter : workCenters) {
             workCenter.setWorkCentersByEntities(this.workCentersByEntitiesRepository.findByWorkCenter(workCenter));
         }
 
@@ -301,7 +315,7 @@ public class WorkCenterManager implements WorkCenterService{
     @Transactional
     public ResponseEntity<?> editWorkCenterDetails(int workCenterId, WorkCenterDetails workCenterDetails, HttpServletRequest request) {
 
-        long userId =  this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
         List<WorkCenterDetailsByDepart> departments = workCenterDetails.getDepartments();
 
@@ -333,7 +347,7 @@ public class WorkCenterManager implements WorkCenterService{
         workCenterDetailsByDepartRepository.deleteByWorkCenterDetailsId(workCenterDetails.getId());
 
         // Saving the new departments related with the work center
-        for(WorkCenterDetailsByDepart department: departments) {
+        for (WorkCenterDetailsByDepart department : departments) {
             workCenterDetailsByDepartRepository.save(department);
         }
 
@@ -345,7 +359,7 @@ public class WorkCenterManager implements WorkCenterService{
         WorkCenter workCenter = workCentersRepository.getOne(workCenterId);
         WorkCenterDetails workCenterDetails = workCenterDetailsRepository.findWorkCenterDetailsByWorkCenter(workCenter);
 
-        if(workCenterDetails == null) {
+        if (workCenterDetails == null) {
             workCenterDetails = new WorkCenterDetails();
             workCenterDetails.setWorkCenter(workCenter);
         }
@@ -355,9 +369,9 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
 
-    public ResponseEntity<?> exportWorkCenters(WorkCenterFilter workCenterFilter, HttpServletResponse response, UsuarioWithRoles user){
+    public ResponseEntity<?> exportWorkCenters(WorkCenterFilter workCenterFilter, HttpServletResponse response, UsuarioWithRoles user) {
 
-        byte[] content=null;
+        byte[] content = null;
 
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet hoja = workbook.createSheet();
@@ -392,7 +406,7 @@ public class WorkCenterManager implements WorkCenterService{
         List<WorkCenter> workCenters = this.workCentersCustomizeRepository.getWorkCenters(workCenterFilter, user);
 
         // Setting entities related with the work center
-        for(WorkCenter workCenter : workCenters) {
+        for (WorkCenter workCenter : workCenters) {
             workCenter.setWorkCentersByEntities(this.workCentersByEntitiesRepository.findByWorkCenter(workCenter));
         }
 
@@ -444,7 +458,7 @@ public class WorkCenterManager implements WorkCenterService{
 
             // Entidades
             HSSFCell entities = dataRow.createCell(6);
-            for (WorkCentersByEntity workCenterByEntity: workCenters.get(i).getWorkCentersByEntities()) {
+            for (WorkCentersByEntity workCenterByEntity : workCenters.get(i).getWorkCentersByEntities()) {
                 entities.setCellValue(entities + workCenterByEntity.getEntity().getName() + ", ");
             }
 
@@ -459,7 +473,7 @@ public class WorkCenterManager implements WorkCenterService{
         try {
             String nombreFichero = "reporte-actuaciones";
             response.setContentType("application/vnd.ms-excel");
-            response.setHeader ("Content-Disposition", "inline; filename=\"" +
+            response.setHeader("Content-Disposition", "inline; filename=\"" +
                     java.net.URLEncoder.encode(nombreFichero, "UTF-8")
                     + "\"");
 
@@ -487,8 +501,8 @@ public class WorkCenterManager implements WorkCenterService{
 
         Drawing drawing = this.drawingRepository.findDrawingById(drawingId);
 
-        if (drawing==null) {
-            return new ResponseEntity <>(HttpStatus.NOT_FOUND);
+        if (drawing == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         try {
@@ -520,66 +534,53 @@ public class WorkCenterManager implements WorkCenterService{
     }
 
     @Override
-    public ResponseEntity<?> addWorkCenterDrawing(int workCenterId, Drawing newWorkCenterDrawing, MultipartFile attachedFile, HttpServletRequest request) {
-
+    public ResponseEntity<?> addWorkCenterDrawing(int workCenterId, Drawing newWorkCenterDrawing, MultipartFile[] attachedFile, HttpServletRequest request) throws Exception {
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
         newWorkCenterDrawing.getWorkCenter().setId(workCenterId);
         newWorkCenterDrawing.setCreated(new Date());
         newWorkCenterDrawing.getCreatedBy().setId(userId);
 
-        newWorkCenterDrawing.setDocUrl("doc_url");
-        newWorkCenterDrawing.setDocName(attachedFile.getOriginalFilename());
-        newWorkCenterDrawing.setDocContentType(attachedFile.getContentType());
+                drawingRepository.save(newWorkCenterDrawing);
 
-        try {
-            String url = null;
+                drawingAttachmentsCombo(workCenterId, newWorkCenterDrawing, newWorkCenterDrawing.getDrawingsByAttachments(), attachedFile);
 
-            Drawing drawing = drawingRepository.save(newWorkCenterDrawing);
+                return new ResponseEntity<>(HttpStatus.OK);
 
-            url = commonService.saveDocumentServer(workCenterId, drawing.getId(), attachedFile, DRAWINGS_DOCUMENTS);
-
-            if(url != null){
-                this.drawingRepository.updateDrawingDocUrl(drawing.getId(), url);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int workCenterDrawingId, Drawing drawing, MultipartFile attachedFile, HttpServletRequest request) {
+    public ResponseEntity<?> editWorkCenterDrawing(int workCenterId, int drawingId, Drawing newWorkCenterDrawing, MultipartFile[] attachedFile, HttpServletRequest request) {
 
         long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
-        if (attachedFile != null) {
-            drawing.setDocUrl("doc_url");
-            drawing.setDocName(attachedFile.getOriginalFilename());
-            drawing.setDocContentType(attachedFile.getContentType());
-        }
+        newWorkCenterDrawing.setModifiedBy(new User());
+        newWorkCenterDrawing.getModifiedBy().setId(uId);
 
-        drawing.setModifiedBy(new User());
-        drawing.getModifiedBy().setId(uId);
-
-        drawingRepository.editWorkCenterDrawing(drawing);
+        drawingRepository.editWorkCenterDrawing(newWorkCenterDrawing);
 
         try {
-            if (attachedFile != null) {
-                // Borramos el documento anterior del servidor
-                commonService.deleteDocumentServer(workCenterId, drawing.getId(), DRAWINGS_DOCUMENTS);
 
-                String url = null;
+            String url = null;
 
-                // Guardamos el nuevo documento adjunto
-                url = commonService.saveDocumentServer(workCenterId, drawing.getId(), attachedFile, DRAWINGS_DOCUMENTS);
+            // Borramos el documento anterior del servidor
+            commonService.deleteDocumentServer(workCenterId, newWorkCenterDrawing.getId(), DRAWINGS_DOCUMENTS);
 
-                // Actualizamos la URL del documento
-                if(url != null){
-                    this.drawingRepository.updateDrawingDocUrl(drawing.getId(), url);
+            for (MultipartFile mpf : attachedFile) {
+                DrawingsByAttachment drawingsByAttach = new DrawingsByAttachment();
+                drawingsByAttach.setAttachedName(mpf.getOriginalFilename());
+                drawingsByAttach.setAttachedContentType(mpf.getContentType());
+                drawingsByAttach.setAttachedUrl("doc_url");
+                drawingsByAttach.setDrawing(newWorkCenterDrawing);
+
+                this.drawingByAttachmentsRepository.save(drawingsByAttach);
+
+                url = commonManager.saveDocumentServer(workCenterId, newWorkCenterDrawing.getId(), mpf, DRAWINGS_DOCUMENTS);
+
+                if (url != null) {
+                    this.drawingByAttachmentsRepository.updateAttachedUrl(url, drawingsByAttach.getId());
                 }
+
             }
 
         } catch (Exception e) {
@@ -588,6 +589,30 @@ public class WorkCenterManager implements WorkCenterService{
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    private void drawingAttachmentsCombo(int workCenterId, Drawing newWorkCenterDrawing, List<DrawingsByAttachment> attachments, MultipartFile[] attachedFile) throws Exception {
+
+               String url= null;
+
+            // Se almacenan los ficheros físicos en el servidor
+            for (MultipartFile mpf : attachedFile) {
+                DrawingsByAttachment drawingsByAttach = new DrawingsByAttachment();
+                drawingsByAttach.setAttachedName(mpf.getOriginalFilename());
+                drawingsByAttach.setAttachedContentType(mpf.getContentType());
+                drawingsByAttach.setAttachedUrl("doc_url");
+                drawingsByAttach.setDrawing(newWorkCenterDrawing);
+
+                this.drawingByAttachmentsRepository.save(drawingsByAttach);
+
+                url = commonManager.saveDocumentServer(workCenterId, newWorkCenterDrawing.getId(), mpf, DRAWINGS_DOCUMENTS);
+
+                if (url != null) {
+                    this.drawingByAttachmentsRepository.updateAttachedUrl(url, drawingsByAttach.getId());
+                }
+
+            }
 
     }
 
@@ -644,15 +669,14 @@ public class WorkCenterManager implements WorkCenterService{
 
     @Override
     public ResponseEntity<?> downloadDrawingDoc(HttpServletRequest request, int drawingId) {
-
-        Drawing dra = null;
+         DrawingsByAttachment dba = null;
         File file = null;
         byte[] content=null;
 
         try {
-            dra = this.drawingRepository.findDrawingById(drawingId);
+            dba = this.drawingByAttachmentsRepository.findById(drawingId);
 
-            file = new File(dra.getDocUrl());
+            file = new File(dba.getAttachedUrl());
             if (file.exists()) {
                 content = Files.readAllBytes(file.toPath());
             }else{
@@ -797,6 +821,13 @@ public class WorkCenterManager implements WorkCenterService{
     @Override
     public List<WorkCenterTypes> getWorkCenterTypes() {
         return workCenterTypesRepository.findAll();
+    }
+
+    @Override
+    public ResponseEntity<?> findAttachmentsByDrawing(int workCenterId) {
+        List<DrawingsByAttachment> drawingByAttachment= this.drawingByAttachmentsRepository.findAllByDrawing_Id(workCenterId);
+
+        return new ResponseEntity<List<DrawingsByAttachment>>(drawingByAttachment, HttpStatus.OK);
     }
 
 

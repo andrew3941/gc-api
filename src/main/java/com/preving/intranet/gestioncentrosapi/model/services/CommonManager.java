@@ -1,6 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.drawingByAttachments.DrawingByAttachmentsRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.GeneralDocByAttachmentRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
@@ -8,6 +9,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderCustomRep
 import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProvidersCommonDetailsRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
+import com.preving.intranet.gestioncentrosapi.model.domain.DrawingsByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.Entity;
 import com.preving.intranet.gestioncentrosapi.model.domain.Province;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocByAttachment;
@@ -44,6 +46,10 @@ public class CommonManager implements CommonService {
     private ProvidersCommonDetailsRepository providersCommonDetailsRepository;
     @Autowired
     private GeneralDocByAttachmentRepository generalDocByAttachmentRepository;
+
+    @Autowired
+    private DrawingByAttachmentsRepository drawingByAttachmentsRepository;
+
 
     @Value("${url-documentos-planos}")
     private String urlDrawingDocuments;
@@ -135,8 +141,10 @@ public class CommonManager implements CommonService {
         String url = null;
 
         if (tipoDoc == DRAWINGS) {
-            path = urlDrawingDocuments + "/" + workCenterId + "/planos/" + itemId;
-            url = urlDrawingDocuments + "/" + workCenterId + "/planos/" + itemId + "/" + attachedFile.getOriginalFilename();
+
+            path = urlDrawingDocuments + "/" + workCenterId + "/Drawings/" +itemId;
+            url = urlDrawingDocuments + "/"  + workCenterId +  "/Drawings/" +itemId+ "/" + attachedFile.getOriginalFilename();
+
         } else if(tipoDoc ==PROVIDERS) {
             path = urlProviderDocuments + "/" + workCenterId + "/proveedores/" + itemId;
             url = urlProviderDocuments + "/" + workCenterId + "/proveedores/" + itemId +"/" + attachedFile.getOriginalFilename();
@@ -174,7 +182,7 @@ public class CommonManager implements CommonService {
             // Obtenemos la URL del plano para borrarlo del servidor
             Drawing drawing = drawingRepository.findDrawingById(itemId);
 
-            docUrl = drawing.getDocUrl();
+//            docUrl = drawing.getDocUrl();
 
         } else if (tipoDoc == PROVIDERS){
             // Obtenemos la URL del documento del proveedor para borrarlo del servidor

@@ -28,16 +28,14 @@ public interface DrawingRepository extends JpaRepository<Drawing, Integer> {
     @Modifying
     @Transactional
     @Query("update Drawing d set d.name=:#{#drawing.name}, " +
-            "d.docName=:#{#drawing.docName}, " +
-            "d.docContentType=:#{#drawing.docContentType}, " +
             "d.modified=CURRENT_TIMESTAMP, d.modifiedBy=:#{#drawing.modifiedBy} " +
             "where d.id=:#{#drawing.id} ")
     void  editWorkCenterDrawing(@Param("drawing") Drawing drawing);
 
 
-    @Modifying
-    @Transactional
-    @Query("update Drawing d set d.docUrl=:drawingDocUrl where d.id=:drawingId")
-    void  updateDrawingDocUrl(@Param("drawingId") int drawingId, @Param("drawingDocUrl")String drawingDocUrl);
+//    @Modifying
+//    @Transactional
+//    @Query("update Drawing d set d.docUrl=:drawingDocUrl where d.id=:drawingId")
+//    void  updateDrawingDocUrl(@Param("drawingId") int drawingId, @Param("drawingDocUrl")String drawingDocUrl);
 
 }

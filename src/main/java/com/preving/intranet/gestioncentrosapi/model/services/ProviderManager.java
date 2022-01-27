@@ -371,8 +371,10 @@ public class ProviderManager implements ProviderService {
     }
 
     @Transactional
+
     public ResponseEntity<?> editProvider(int workCenterId, int providerId, Provider provider, List<ProviderDetail> details,
-                                          MultipartFile attachedFile, HttpServletRequest request) {
+
+       MultipartFile attachedFile, HttpServletRequest request) {
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
@@ -547,6 +549,7 @@ public class ProviderManager implements ProviderService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
     @Override
     public ResponseEntity<?> exportProvider(ProviderFilter providerFilter, HttpServletResponse response, UsuarioWithRoles user) {
         byte[] content=null;
@@ -649,29 +652,29 @@ public class ProviderManager implements ProviderService {
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
-                @Override
-                public ResponseEntity<?> downloadProviderDoc (HttpServletRequest request,int workCenterId, int providerId){
+    @Override
+    public ResponseEntity<?> downloadProviderDoc (HttpServletRequest request,int workCenterId, int providerId){
 
-                    Provider provider = null;
-                    File file = null;
-                    byte[] content = null;
+        Provider provider = null;
+        File file = null;
+        byte[] content = null;
 
-                    try {
-                        String docUrl = this.providerCustomRepository.findDocUrlByProviderId(providerId, workCenterId);
+        try {
+            String docUrl = this.providerCustomRepository.findDocUrlByProviderId(providerId, workCenterId);
 
-                        file = new File(docUrl);
-                        if (file.exists()) {
-                            content = Files.readAllBytes(file.toPath());
-                        } else {
-                            return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
-                        }
-
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        return new ResponseEntity<>("Unknown error", HttpStatus.INTERNAL_SERVER_ERROR);
-                    }
-
-                    return new ResponseEntity<byte[]>(content, HttpStatus.OK);
-                }
+            file = new File(docUrl);
+            if (file.exists()) {
+                content = Files.readAllBytes(file.toPath());
+            } else {
+                return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
             }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity<>("Unknown error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<byte[]>(content, HttpStatus.OK);
+    }
+}
 

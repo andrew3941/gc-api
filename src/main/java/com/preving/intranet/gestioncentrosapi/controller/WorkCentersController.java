@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
@@ -288,6 +289,16 @@ public class WorkCentersController {
     }
 
     /**
+     * Obtenci�n listado adjuntos
+     * @param workCenterId
+     * @return
+     */
+    @RequestMapping(value = "{workCenterId}/attachments", method = RequestMethod.GET)
+    public ResponseEntity<?> findAllAttachments(@PathVariable(value="workCenterId")int workCenterId) {
+        return this.workCenterService.findAttachmentsByDrawing(workCenterId);
+    }
+
+    /**
      * Obtiene los detalles de un plano de un centro de trabajo por Id
      * @return
      */
@@ -382,11 +393,11 @@ public class WorkCentersController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "{workCenterId}/drawings/add", method = RequestMethod.POST)
+    @RequestMapping(value = "{workCenterId}/drawings/add", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> saveWorkCenterDrawing(
             @RequestParam("workCenterDrawing") String workCenterDrawing,
             @PathVariable("workCenterId") int workCenterId,
-            @RequestParam("attachedFile") MultipartFile attachedFile,
+            @RequestParam("attachedFile") MultipartFile[] attachedFile,
             HttpServletRequest request) {
 
         Gson gson = new GsonBuilder().create();
@@ -411,7 +422,7 @@ public class WorkCentersController {
      */
     @RequestMapping(value = "{workCenterId}/drawings/{workCenterDrawingId}/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editWorkCenterDrawing(@RequestParam("workCenterDrawing") String workCenterDrawing,
-                                                   @RequestParam(value="attachedFile", required = false) MultipartFile attachedFile,
+                                                   @RequestParam(value="attachedFile", required = false) MultipartFile[] attachedFile,
                                                    @PathVariable("workCenterId") int workCenterId,
                                                    @PathVariable("workCenterDrawingId") int workCenterDrawingId, HttpServletRequest request) {
 
@@ -470,7 +481,7 @@ public class WorkCentersController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "{drawingId}/download", method = RequestMethod.GET)
+    @RequestMapping(value = "drawing/{drawingId}/download", method = RequestMethod.GET)
     public ResponseEntity<?> downloadDrawingDoc(HttpServletRequest request, @PathVariable(value = "drawingId") int drawingId) {
 
         return ( workCenterService.downloadDrawingDoc(request,drawingId));
