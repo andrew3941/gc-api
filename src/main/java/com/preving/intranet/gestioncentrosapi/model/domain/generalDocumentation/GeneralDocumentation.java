@@ -2,6 +2,7 @@ package com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ExpenditurePeriod;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
@@ -9,6 +10,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCente
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(schema = "GESTION_CENTROS", name="PC_DELEGACIONES_X_DOC_GENERAL")
@@ -41,42 +43,13 @@ public class GeneralDocumentation implements Serializable {
     private WorkCenter workCenter = new WorkCenter();
     private Date deleted;
     private User deletedBy;
-    private GeneralDocByAttachment generalDocByAttachment;
-
-    //  private List<GeneralDocByAttachment> generalDocByAttachments;
+    private List<GeneralDocByAttachment> generalDocByAttachments;
 
     public GeneralDocumentation(){
     }
 
-//    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, ExpenditurePeriod periodicity, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter, Date deleted, User deletedBy) {
-//        this.id = id;
-//        this.generalDocTypes = generalDocTypes;
-//        this.documentName = documentName;
-//        this.documentImport = documentImport;
-//        this.documentStartDate = documentStartDate;
-//        this.documentEndDate = documentEndDate;
-//        this.observations = observations;
-//        this.insurerName = insurerName;
-//        this.policeNumber = policeNumber;
-//        this.mediator = mediator;
-//        this.telephone = telephone;
-//        this.email = email;
-//        this.annualImport = annualImport;
-//        this.periodicity = periodicity;
-//        this.deposit = deposit;
-//        this.certificateTypes = certificateTypes;
-//        this.taxesTypes = taxesTypes;
-//        this.created = created;
-//        this.createdBy = createdBy;
-//        this.modified = modified;
-//        this.modifiedBy = modifiedBy;
-//        this.workCenter = workCenter;
-//        this.deleted = deleted;
-//        this.deletedBy = deletedBy;
-//    }
 
-
-    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, ExpenditurePeriod periodicity, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter, Date deleted, User deletedBy, GeneralDocByAttachment generalDocByAttachment) {
+    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, ExpenditurePeriod periodicity, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter, Date deleted, User deletedBy, List<GeneralDocByAttachment> generalDocByAttachments) {
         this.id = id;
         this.generalDocTypes = generalDocTypes;
         this.documentName = documentName;
@@ -101,7 +74,7 @@ public class GeneralDocumentation implements Serializable {
         this.workCenter = workCenter;
         this.deleted = deleted;
         this.deletedBy = deletedBy;
-        this.generalDocByAttachment = generalDocByAttachment;
+        this.generalDocByAttachments = generalDocByAttachments;
     }
 
     @Id
@@ -240,25 +213,15 @@ public class GeneralDocumentation implements Serializable {
     public User getDeletedBy() { return deletedBy; }
     public void setDeletedBy(User deletedBy) { this.deletedBy = deletedBy; }
 
-
-    @OneToOne(mappedBy = "generalDoc", fetch = FetchType.EAGER)
-    public GeneralDocByAttachment getGeneralDocByAttachment() {
-        return generalDocByAttachment;
+    // multiple files belong to general document
+    @JsonManagedReference
+    @OneToMany(mappedBy = "generalDoc",  fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
+    public List<GeneralDocByAttachment> getGeneralDocByAttachments() {
+        return generalDocByAttachments;
     }
-    public void setGeneralDocByAttachment(GeneralDocByAttachment generalDocByAttachment) {
-        this.generalDocByAttachment = generalDocByAttachment;
+    public void setGeneralDocByAttachments(List<GeneralDocByAttachment> generalDocByAttachments) {
+        this.generalDocByAttachments = generalDocByAttachments;
     }
-
-//    // multiple files belong to general document
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "generalDoc",  fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
-//    public List<GeneralDocByAttachment> getGeneralDocByAttachments() {
-//        return generalDocByAttachments;
-//    }
-//    public void setGeneralDocByAttachments(List<GeneralDocByAttachment> generalDocByAttachments) {
-//        this.generalDocByAttachments = generalDocByAttachments;
-//    }
-
 }
 
 

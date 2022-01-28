@@ -629,7 +629,7 @@ public class WorkCentersController {
     public ResponseEntity<?> saveGeneralDocumentation(
             @RequestParam("generalDocumentation") String generalDocumentation,
             @PathVariable("workCenterId") int workCenterId,
-            @RequestParam(value="attachedFile", required = false) MultipartFile attachedFile,
+            @RequestParam(value="attachedFile") MultipartFile[] attachedFile,
             HttpServletRequest request) {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -664,8 +664,7 @@ public class WorkCentersController {
     public ResponseEntity<?> editGeneralDoc(
             @RequestParam("generalDocumentation") String generalDocumentation,
             @PathVariable("workCenterId") int workCenterId,
-            @RequestParam(value="attachedFile", required = false)
-             MultipartFile attachedFile,
+            @RequestParam(value="attachedFile") MultipartFile[] attachedFile,
             HttpServletRequest request) {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();

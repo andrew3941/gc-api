@@ -20,11 +20,11 @@ public interface GeneralDocumentationService {
 
     List<TaxesTypes> getTaxesTypes();
 
-    ResponseEntity<?> saveGeneralDocumentation(int workCenterId, GeneralDocumentation newGeneralDoc, MultipartFile attachedFile, HttpServletRequest request);
+    ResponseEntity<?> saveGeneralDocumentation(int workCenterId, GeneralDocumentation newGeneralDoc, MultipartFile[] attachedFile, HttpServletRequest request);
 
-    ResponseEntity<?> editGeneralDoc(int workCenterId,  GeneralDocumentation generalDoc, MultipartFile attachedFile, HttpServletRequest request);
+    ResponseEntity<?> editGeneralDoc(int workCenterId,  GeneralDocumentation generalDoc, MultipartFile[] attachedFile, HttpServletRequest request);
 
-    GeneralDocumentation getGeneralDocById(int generalDocId);
+    ResponseEntity<?> getGeneralDocById(int generalDocId);
 
     ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request, int generalDocAttachId);
 

@@ -45,23 +45,7 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
     @Override
     public List<GeneralDocumentation> getGeneralDocumentationListByWorkCenter(int workCenterId) {
 
-//        List<GeneralDocumentation> generalDocumentations = generalDocumentationRepository.findGeneralDocumentationsByWorkCenterIdAndDeletedIsNullOrderByCreatedDesc(workCenterId);
-//        List<GeneralDocumentation> generalD = new ArrayList<GeneralDocumentation>();
-//        for (GeneralDocumentation gDoc: generalDocumentations){
-//
-//            GeneralDocByAttachment gDA = this.generalDocByAttachmentRepository.findByGeneralDocId(gDoc.getId());
-//            // gDoc.setGeneralDocByAttachment(gDA);
-//            gDoc.getGeneralDocByAttachment().setId(gDA.getId());
-//            gDoc.getGeneralDocByAttachment().setAttachedName(gDA.getAttachedName());
-//            gDoc.getGeneralDocByAttachment().setAttachedUrl(gDA.getAttachedUrl());
-//            gDoc.getGeneralDocByAttachment().setAttachedContentType(gDA.getAttachedContentType());
-//
-//
-//            generalD.add(gDoc);
-//        }
-//   return generalD;
-
-        return generalDocumentationRepository.findGeneralDocumentationsByWorkCenterIdAndDeletedIsNullOrderByCreatedDesc(workCenterId);
+       return generalDocumentationRepository.findGeneralDocumentationsByWorkCenterIdAndDeletedIsNullOrderByCreatedDesc(workCenterId);
 
     }
 
@@ -81,53 +65,46 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
     }
 
     @Override
-    public ResponseEntity<?> saveGeneralDocumentation(int workCenterId, GeneralDocumentation newGeneralDoc, MultipartFile attachedFile, HttpServletRequest request) {
+    public ResponseEntity<?> saveGeneralDocumentation(int workCenterId, GeneralDocumentation newGeneralDoc, MultipartFile[] attachedFile, HttpServletRequest request) {
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
-
-        //TODO remove this code after getting the real data from the front
-        //=========================================================
-        // Temporal value if Certificate Types is null
-        CertificateTypes certType = new CertificateTypes();
-        certType.setId(1);
-        // Temporal value if TaxesTypes is null
-        TaxesTypes taxes = new TaxesTypes();
-        taxes.setId(2);
-        //=========================================================
 
         newGeneralDoc.setCreated(new Date());
         newGeneralDoc.getCreatedBy().setId(userId);
         newGeneralDoc.getWorkCenter().setId(workCenterId);
-
-        //TODO accepting real data coming from the front
-        newGeneralDoc.setCertificateTypes(certType);
-        newGeneralDoc.setTaxesTypes(taxes);
 
         try{
 
             GeneralDocumentation savedGeneralDoc = this.generalDocumentationRepository.save(newGeneralDoc);
 
 
-            if (attachedFile != null) {
+            if (attachedFile.length > 0) {
 
-                GeneralDocByAttachment generalDocByAttachment = new GeneralDocByAttachment();
+                for (MultipartFile mpFile : attachedFile) {
 
-                generalDocByAttachment.setGeneralDoc(savedGeneralDoc);
-                generalDocByAttachment.setAttachedUrl("Doc_Url");
-                generalDocByAttachment.setAttachedName(attachedFile.getOriginalFilename());
-                generalDocByAttachment.setAttachedContentType(attachedFile.getContentType());
+                    GeneralDocByAttachment generalDocByAttachment = new GeneralDocByAttachment();
 
-                this.generalDocByAttachmentRepository.save(generalDocByAttachment);
+                    generalDocByAttachment.setGeneralDoc(savedGeneralDoc);
+                    generalDocByAttachment.setAttachedUrl("Doc_Url");
+                    generalDocByAttachment.setAttachedName(mpFile.getOriginalFilename());
+                    generalDocByAttachment.setAttachedContentType(mpFile.getContentType());
 
-                String url = null;
+                    this.generalDocByAttachmentRepository.save(generalDocByAttachment);
 
-                // Guardamos documento en el server
-                url = commonService.saveDocumentServer(workCenterId, savedGeneralDoc.getId(), attachedFile, GENERAL_DOCUMENTS);
+                    String url = null;
 
-                // Actualizamos la ruta del documento guardado
-                if (url != null) {
-                    this.generalDocByAttachmentRepository.updateGeneralDocByAttachmentUrl(generalDocByAttachment.getId(), url);
+                    // Guardamos documento en el server
+                    url = commonService.saveDocumentServer(workCenterId, savedGeneralDoc.getId(), mpFile, GENERAL_DOCUMENTS);
+
+                    // Actualizamos la ruta del documento guardado
+                    if (url != null) {
+                        this.generalDocByAttachmentRepository.updateGeneralDocByAttachmentUrl(generalDocByAttachment.getId(), url);
+                    }
+
+
                 }
+
+
             }
 
 
@@ -140,53 +117,47 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
     }
 
     @Override
-    public ResponseEntity<?> editGeneralDoc(int workCenterId, GeneralDocumentation generalDoc, MultipartFile attachedFile, HttpServletRequest request) {
+    public ResponseEntity<?> editGeneralDoc(int workCenterId, GeneralDocumentation generalDoc, MultipartFile[] attachedFile, HttpServletRequest request) {
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
-
-        //TODO remove this code after getting the real data from the front
-        //=========================================================
-        // Temporal value if Certificate Types is null
-        CertificateTypes certType = new CertificateTypes();
-        certType.setId(1);
-        // Temporal value if TaxesTypes is null
-        TaxesTypes taxes = new TaxesTypes();
-        taxes.setId(2);
-        //=========================================================
-
 
         generalDoc.setModifiedBy(new User());
         generalDoc.getModifiedBy().setId(userId);
         generalDoc.getWorkCenter().setId(workCenterId);
 
-        //TODO accepting real data coming from the front
-        generalDoc.setCertificateTypes(certType);
-        generalDoc.setTaxesTypes(taxes);
-
         try {
+
             generalDocumentationRepository.editGeneralDoc(generalDoc);
 
-            if (attachedFile != null) {
-
-                GeneralDocByAttachment newGeneralDocByAttach = generalDocByAttachmentRepository.findByGeneralDocId(generalDoc.getId());
-
-                newGeneralDocByAttach.setGeneralDoc(generalDoc);
-                newGeneralDocByAttach.setAttachedUrl("Doc_Url");
-                newGeneralDocByAttach.setAttachedName(attachedFile.getOriginalFilename());
-                newGeneralDocByAttach.setAttachedContentType(attachedFile.getContentType());
-
+            for (GeneralDocByAttachment gda : generalDoc.getGeneralDocByAttachments()){
                 // Borramos el documento anterior del servidor
-                commonService.deleteDocumentServer(workCenterId, generalDoc.getId(), GENERAL_DOCUMENTS);
+                commonService.deleteDocumentServer(workCenterId, gda.getId(), GENERAL_DOCUMENTS);
 
-                 GeneralDocByAttachment generalDocByAttach = this.generalDocByAttachmentRepository.save(newGeneralDocByAttach);
+                generalDocByAttachmentRepository.deleteById(gda.getId());
+            }
 
-                String url = null;
-                // Guardamos documento en el server
-                url = commonService.saveDocumentServer(workCenterId, generalDoc.getId(), attachedFile, GENERAL_DOCUMENTS);
+            if (attachedFile.length > 0) {
 
-                // Actualizamos la ruta del documento guardado
-                if (url != null) {
-                    this.generalDocByAttachmentRepository.updateGeneralDocByAttachmentUrl(generalDocByAttach.getId(), url);
+                for (MultipartFile mpFile : attachedFile){
+
+                    GeneralDocByAttachment newGeneralDocByAttach = generalDocByAttachmentRepository.findByGeneralDocId(generalDoc.getId());
+
+                    newGeneralDocByAttach.setGeneralDoc(generalDoc);
+                    newGeneralDocByAttach.setAttachedUrl("Doc_Url");
+                    newGeneralDocByAttach.setAttachedName(mpFile.getOriginalFilename());
+                    newGeneralDocByAttach.setAttachedContentType(mpFile.getContentType());
+
+                    GeneralDocByAttachment generalDocByAttach = this.generalDocByAttachmentRepository.save(newGeneralDocByAttach);
+
+                    String url = null;
+                    // Guardamos documento en el server
+                    url = commonService.saveDocumentServer(workCenterId, generalDoc.getId(), mpFile, GENERAL_DOCUMENTS);
+
+                    // Actualizamos la ruta del documento guardado
+                    if (url != null) {
+                        this.generalDocByAttachmentRepository.updateGeneralDocByAttachmentUrl(generalDocByAttach.getId(), url);
+                    }
+
                 }
             }
 
@@ -199,8 +170,15 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
     }
 
     @Override
-    public GeneralDocumentation getGeneralDocById(int generalDocId) {
-        return generalDocumentationRepository.findGeneralDocumentationById(generalDocId);
+    public ResponseEntity<?> getGeneralDocById(int generalDocId) {
+
+           GeneralDocumentation generalDoc = generalDocumentationRepository.findGeneralDocumentationById(generalDocId);
+
+           List<GeneralDocByAttachment>  gAttachDocuments = generalDocByAttachmentRepository.findAllByGeneralDoc(generalDoc);
+
+           generalDoc.setGeneralDocByAttachments(gAttachDocuments);
+
+        return new ResponseEntity<GeneralDocumentation>(generalDoc, HttpStatus.OK);
     }
 
     @Override
@@ -212,9 +190,8 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
         byte[] content=null;
 
         try {
-
-            //TODO this method neet to be change
-            gda = this.generalDocByAttachmentRepository.findByGeneralDocId(generalDocAttachId);
+            
+            gda = this.generalDocByAttachmentRepository.findById(generalDocAttachId);
 
             file = new File(gda.getAttachedUrl());
             if (file.exists()) {

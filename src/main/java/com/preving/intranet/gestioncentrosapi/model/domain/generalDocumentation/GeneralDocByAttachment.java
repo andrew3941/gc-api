@@ -41,8 +41,7 @@ public class GeneralDocByAttachment {
     }
 
     @JsonBackReference
-    @OneToOne(fetch = FetchType.EAGER)
-    //@ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="DOC_GENERAL_ID", referencedColumnName="id")
     public GeneralDocumentation getGeneralDoc() {
         return generalDoc;

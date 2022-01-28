@@ -191,7 +191,7 @@ public class CommonManager implements CommonService {
 
         }else if (tipoDoc == GENERAL_DOCUMENTS){
             //Obtain General Document URL
-            GeneralDocByAttachment gDocAttachment = generalDocByAttachmentRepository.findByGeneralDocId(itemId);
+            GeneralDocByAttachment gDocAttachment = generalDocByAttachmentRepository.findById(itemId);
             docUrl = gDocAttachment.getAttachedUrl();
         }
 
