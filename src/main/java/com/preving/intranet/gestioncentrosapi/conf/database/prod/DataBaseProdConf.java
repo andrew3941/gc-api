@@ -26,7 +26,7 @@ import javax.sql.DataSource;
 @EnableJpaRepositories(
         entityManagerFactoryRef = "entityManagerFactory",
         transactionManagerRef = "transactionManager",
-        basePackages = {"com.preving.restapi.personasapi.dao"})
+        basePackages = {"com.preving.intranet.gestioncentrosapi.model.dao"})
 public class DataBaseProdConf {
 
     @Value("${datasource.db-rrhh.jndi-name}")
