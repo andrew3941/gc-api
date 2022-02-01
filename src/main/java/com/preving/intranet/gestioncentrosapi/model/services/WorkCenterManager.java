@@ -15,6 +15,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.users.UserCustomReposito
 import com.preving.intranet.gestioncentrosapi.model.dao.users.UserRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.*;
 import com.preving.intranet.gestioncentrosapi.model.dao.zona.ZonaRepository;
+import com.preving.intranet.gestioncentrosapi.model.daoOracle.workCenters.WorkCentersOracleRepositoryManager;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.*;
@@ -58,6 +59,9 @@ public class WorkCenterManager implements WorkCenterService {
 
     @Autowired
     private WorkCentersRepository workCentersRepository;
+
+    @Autowired
+    private WorkCentersOracleRepositoryManager workCentersOracleRepositoryManager;
 
     @Autowired
     private WorkCentersCustomizeRepository workCentersCustomizeRepository;
@@ -162,6 +166,9 @@ public class WorkCenterManager implements WorkCenterService {
 
         // Insertamos delegación en GC2006_RELEASE.PC_DELEGACIONES
         workCentersRepository.save(newWorkCenter);
+        workCentersOracleRepositoryManager.saveWorkCenter(newWorkCenter);
+        workCentersOracleRepositoryManager.saveZone(newWorkCenter.getZone());
+        workCentersOracleRepositoryManager.saveDimNavision(newWorkCenter.getDimNavision());
 
         // Insertamos valores por defecto para detalles de centro
         // TODO: 27/08/2021 - Meter en el save de work-center
@@ -226,6 +233,7 @@ public class WorkCenterManager implements WorkCenterService {
 
         // Editamos la delegación en la tabla MP2.ZONA
         zonaRepository.editWorkCenter(newWorkCenter.getZone());
+        workCentersOracleRepositoryManager.editZone(newWorkCenter.getZone());
 
         if (newWorkCenter.getDimNavision() != null && newWorkCenter.getDimNavision().getId() > 0) {
 
@@ -234,6 +242,7 @@ public class WorkCenterManager implements WorkCenterService {
 
             // Insertamos delegación en RRHH.TM_DIM_NAVISION
             dimNavisionRepository.editWorkCenter(newWorkCenter.getDimNavision());
+            workCentersOracleRepositoryManager.editDimNavision(newWorkCenter.getDimNavision());
 
         }
 
@@ -242,6 +251,7 @@ public class WorkCenterManager implements WorkCenterService {
 
         // Editamos la delegación en la tabla GC2006_RELEASE.PC_DELEGACIONES
         workCentersRepository.editWorkCenter(workCenterId, newWorkCenter, this.jwtTokenUtil.getUserWithRolesFromToken(request).getId());
+        workCentersOracleRepositoryManager.editWorkCenter(workCenterId, newWorkCenter, this.jwtTokenUtil.getUserWithRolesFromToken(request).getId());
 
         // Eliminamos las entidades asociadas al centro
         workCentersByEntitiesRepository.deleteByWorkCenter(newWorkCenter);

@@ -55,7 +55,7 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-jdbc")
 
 	// Driver oracle
-//	runtime group: 'com.oracle', name: 'ojdbc6', version: '11.2.0'
+	runtime group: 'com.oracle', name: 'ojdbc6', version: '11.2.0'
 
 	// Driver postgresql
 	compile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'

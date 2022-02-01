@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -18,11 +17,13 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 @EnableJpaRepositories(
         basePackages = {"com.preving.intranet.gestioncentrosapi.model.dao"})
-public class PostgreDataBaseDemoConf {
+public class DataBaseDemoConf {
 
-    @Value("${datasource.db-postgre.jndi-name}")
+    @Value("${datasource.gc-postgresql.jndi-name}")
     private String postgreJndiName;
 
+    @Value("${datasource.gc-oracle.jndi-name}")
+    private String oracleJndiName;
 
     @Bean(name = "postgresqlDataSource", destroyMethod = "")
     public DataSource postgresqlDataSource() throws Exception {
@@ -30,13 +31,14 @@ public class PostgreDataBaseDemoConf {
         return dataSourceLookup.getDataSource(this.postgreJndiName);
     }
 
-    @Bean(name = "jdbcTemplatePostgresql")
-    public JdbcTemplate jdbcTemplateApp(@Qualifier("postgresqlDataSource") DataSource dsApp) {
-        return new JdbcTemplate(dsApp);
+    @Bean(name = "oracleDataSource", destroyMethod = "")
+    public DataSource oracleDataSource() throws Exception {
+        JndiDataSourceLookup dataSourceLookup = new JndiDataSourceLookup();
+        return dataSourceLookup.getDataSource(this.oracleJndiName);
     }
 
-    @Bean(name = "namedTemplatePostgresql")
-    public NamedParameterJdbcTemplate namedTemplateApp(@Qualifier("postgresqlDataSource") DataSource dsApp) {
+    @Bean(name = "oracleNamedTemplate")
+    public NamedParameterJdbcTemplate oracleNamedTemplate(@Qualifier("oracleDataSource") DataSource dsApp) {
         return new NamedParameterJdbcTemplate(dsApp);
     }
 

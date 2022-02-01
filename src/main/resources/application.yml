@@ -86,12 +86,20 @@ spring:
   # ===============================
   # Set here configurations for the database connection
 
-postgresql:
-  datasource:
+datasource:
+  gc-postgresql:
     jdbcUrl: jdbc:postgresql://155.155.16.5:5432/gestion_centros
     username: gestion_centros
     password: LTdeQVLE_ks7yJzWs
     driver-class-name: org.postgresql.Driver
+    minimum-idle: 1
+    maximum-pool-size: 1
+
+  gc-oracle:
+    jdbcUrl: jdbc:oracle:thin:@155.155.15.228:1521/pre
+    username: mp2
+    password: 6DPtc36z1111_
+    driver-class-name: oracle.jdbc.driver.OracleDriver
     minimum-idle: 1
     maximum-pool-size: 1
 
@@ -123,9 +131,11 @@ spring:
 
 datasource:
 
-  db-postgre:
+  gc-postgresql:
     jndi-name: java:comp/env/jdbc/gestion_centros_postgresql
 
+  gc-oracle:
+    jndi-name: java:comp/env/jdbc/mp2
 
 api-comunicacion:
   url: https://demointranet.preving.com/communication-api2/
@@ -151,9 +161,11 @@ spring:
 
 datasource:
 
-  db-postgre:
+  gc-postgre:
     jndi-name: java:comp/env/jdbc/ssgg_postgresql
 
+  gc-oracle:
+    jndi-name: java:comp/env/jdbc/mp2
 
 api-comunicacion:
   url: https://intranet.preving.com/communication-api/
