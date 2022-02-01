@@ -62,7 +62,7 @@ public class WorkCenter implements Serializable {
     private Date startDate = new Date();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date endDate = null;
-    private Zona zona = new Zona();
+    private Zona zone = new Zona();
     private int active;
     private int visible;
     private WorkCenterTypes workCenterTypes = new WorkCenterTypes();
@@ -103,7 +103,7 @@ public class WorkCenter implements Serializable {
         this.getHeadPerson().setCompleteName(headPersonName);
     }
 
-    public WorkCenter(int id, String name, City city, String navisionCode, DimNavision dimNavision, String address, String postalCode, String phoneNumber, String email, User headPerson, int employee, Date startDate, Date endDate, Zona zona, int active, int visible, WorkCenterTypes workCenterTypes, Date created, User createdBy, Date modified, User modifiedBy, List<WorkCentersByEntity> workCentersByEntities, List<Drawing> drawings, List<Room> rooms, List<ProvidersByWorkCenters> providers, List<GeneralDocumentation> generalDocumentations) {
+    public WorkCenter(int id, String name, City city, String navisionCode, DimNavision dimNavision, String address, String postalCode, String phoneNumber, String email, User headPerson, int employee, Date startDate, Date endDate, Zona zone, int active, int visible, WorkCenterTypes workCenterTypes, Date created, User createdBy, Date modified, User modifiedBy, List<WorkCentersByEntity> workCentersByEntities, List<Drawing> drawings, List<Room> rooms, List<ProvidersByWorkCenters> providers, List<GeneralDocumentation> generalDocumentations) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -117,7 +117,7 @@ public class WorkCenter implements Serializable {
         this.employee = employee;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.zona = zona;
+        this.zone = zone;
         this.active = active;
         this.visible = visible;
         this.workCenterTypes = workCenterTypes;
@@ -247,8 +247,8 @@ public class WorkCenter implements Serializable {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_IN_MP2", referencedColumnName = "COD_ZONA")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    public Zona getZona() { return zona; }
-    public void setZona(Zona zona) { this.zona = zona; }
+    public Zona getZone() { return zone; }
+    public void setZone(Zona zone) { this.zone = zone; }
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "LINEA_ID", referencedColumnName = "ID")

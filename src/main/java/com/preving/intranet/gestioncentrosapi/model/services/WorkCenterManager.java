@@ -179,13 +179,13 @@ public class WorkCenterManager implements WorkCenterService {
 
     private void seteamosZona(WorkCenter newWorkCenter) {
 
-        newWorkCenter.getZona().setDenomination(newWorkCenter.getName());
-        newWorkCenter.getZona().setName(newWorkCenter.getName());
-        newWorkCenter.getZona().setTelephone(newWorkCenter.getPhoneNumber());
-        newWorkCenter.getZona().setEmail(newWorkCenter.getEmail());
-        newWorkCenter.getZona().setAddress(newWorkCenter.getAddress());
-        newWorkCenter.getZona().setCodPostal(newWorkCenter.getPostalCode());
-        newWorkCenter.getZona().setPoblacion(newWorkCenter.getCity().getName());
+        newWorkCenter.getZone().setDenomination(newWorkCenter.getName());
+        newWorkCenter.getZone().setName(newWorkCenter.getName());
+        newWorkCenter.getZone().setTelephone(newWorkCenter.getPhoneNumber());
+        newWorkCenter.getZone().setEmail(newWorkCenter.getEmail());
+        newWorkCenter.getZone().setAddress(newWorkCenter.getAddress());
+        newWorkCenter.getZone().setCodPostal(newWorkCenter.getPostalCode());
+        newWorkCenter.getZone().setPoblacion(newWorkCenter.getCity().getName());
 
     }
 
@@ -225,7 +225,7 @@ public class WorkCenterManager implements WorkCenterService {
         seteamosZona(newWorkCenter);
 
         // Editamos la delegación en la tabla MP2.ZONA
-        zonaRepository.editWorkCenter(newWorkCenter.getZona());
+        zonaRepository.editWorkCenter(newWorkCenter.getZone());
 
         if (newWorkCenter.getDimNavision() != null && newWorkCenter.getDimNavision().getId() > 0) {
 

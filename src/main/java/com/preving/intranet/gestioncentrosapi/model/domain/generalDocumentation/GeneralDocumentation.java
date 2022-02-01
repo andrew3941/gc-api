@@ -23,6 +23,8 @@ public class GeneralDocumentation implements Serializable {
     private Date documentStartDate = new Date();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date documentEndDate = new  Date();
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
+    private Date documentAlarmDate = new  Date();
     private String observations;
     private String insurerName;
     private String policeNumber;
@@ -49,13 +51,14 @@ public class GeneralDocumentation implements Serializable {
     }
 
 
-    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, ExpenditurePeriod periodicity, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter, Date deleted, User deletedBy, List<GeneralDocByAttachment> generalDocByAttachments) {
+    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate, Date documentAlarmDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, ExpenditurePeriod periodicity, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter, Date deleted, User deletedBy, List<GeneralDocByAttachment> generalDocByAttachments) {
         this.id = id;
         this.generalDocTypes = generalDocTypes;
         this.documentName = documentName;
         this.documentImport = documentImport;
         this.documentStartDate = documentStartDate;
         this.documentEndDate = documentEndDate;
+        this.documentAlarmDate = documentAlarmDate;
         this.observations = observations;
         this.insurerName = insurerName;
         this.policeNumber = policeNumber;
@@ -112,6 +115,15 @@ public class GeneralDocumentation implements Serializable {
     @Column(name = "FECHA_FIN")
     public Date getDocumentEndDate() { return documentEndDate; }
     public void setDocumentEndDate(Date documentEndDate) { this.documentEndDate = documentEndDate; }
+
+    @Basic
+    @Column(name = "FECHA_PREAVISO")
+    public Date getDocumentAlarmDate() {
+        return documentAlarmDate;
+    }
+    public void setDocumentAlarmDate(Date documentAlarmDate) {
+        this.documentAlarmDate = documentAlarmDate;
+    }
 
     @Basic
     @Column(name = "OBSERVACIONES")
