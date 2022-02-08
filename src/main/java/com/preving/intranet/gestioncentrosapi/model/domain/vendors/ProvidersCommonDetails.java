@@ -53,6 +53,22 @@ public class ProvidersCommonDetails implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
+
+    public ProvidersCommonDetails(int id, int provDelegacionId, String serviceDetails, int spending, int anualSpending, ExpenditurePeriod expenditurePeriod, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy) {
+        this.id = id;
+        this.provDelegacionId = provDelegacionId;
+        this.serviceDetails = serviceDetails;
+        this.spending = spending;
+        this.anualSpending = anualSpending;
+        this.expenditurePeriod = expenditurePeriod;
+        this.serviceStartDate = serviceStartDate;
+        this.serviceEndDate = serviceEndDate;
+        this.created = created;
+        this.createdBy = createdBy;
+        this.modified = modified;
+        this.modifiedBy = modifiedBy;
+    }
+
     @Id
     @Column(name = "ID", nullable = false, precision = 0)
     @SequenceGenerator(name = "PROVEEDORES_DETALLES_COMUN_SEQ", sequenceName = "PROVEEDORES_DETALLES_COMUN_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)

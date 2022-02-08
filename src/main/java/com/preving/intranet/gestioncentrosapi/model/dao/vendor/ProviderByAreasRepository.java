@@ -11,4 +11,6 @@ import java.util.List;
 public interface ProviderByAreasRepository extends JpaRepository<ProvidersByAreas, Integer> {
 
     List<ProvidersByAreas> findAllByProvider (Provider provider);
+
+    void deleteAllByProvider(Provider provider);
 }

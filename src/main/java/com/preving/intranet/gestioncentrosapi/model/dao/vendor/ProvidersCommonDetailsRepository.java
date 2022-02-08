@@ -17,11 +17,7 @@ public interface ProvidersCommonDetailsRepository extends JpaRepository<Provider
 
     ProvidersCommonDetails findAllByProvDelegacionId(int provDelegacionId);
 
-    List<ProvidersCommonDetails> commonDetails = new ArrayList<ProvidersCommonDetails>();
-
-    List<ProvidersCommonDetails> findAllByProvDelegacionId (Provider provider);
-
-
+//    List<ProvidersCommonDetails> findByProvDelegacionId(int provDelegacionId);
 
     @Modifying
     @Transactional

@@ -36,7 +36,7 @@ public class WorkCentersOracleRepositoryManager {
         params.addValue("direccion", workCenter.getAddress());
         params.addValue("tfno", workCenter.getPhoneNumber());
         params.addValue("mail", workCenter.getEmail());
-        params.addValue("idInMp2", workCenter.getZona().getCodZona());
+        params.addValue("idInMp2", workCenter.getZone().getCodZona());
         params.addValue("codInNav", workCenter.getNavisionCode());
         params.addValue("activo", workCenter.getActive());
         params.addValue("visible", workCenter.getVisible());
