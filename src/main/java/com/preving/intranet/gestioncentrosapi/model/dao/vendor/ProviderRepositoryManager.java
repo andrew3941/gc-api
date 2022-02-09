@@ -82,10 +82,12 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
                     " OR LOWER(TRANSLATE(P.CIF, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:providerName, '������������', 'aeiounAEIOUN')))";
         }
 
-        if(providerFilter != null && providerFilter.getProviderStatus() == 1) {
-            sql += " AND PDC.FECHA_FIN_SERVICIO > CURRENT_DATE ";
-        } else if (providerFilter.getProviderStatus() == 0) {
-            sql += " AND PDC.FECHA_FIN_SERVICIO < CURRENT_DATE ";
+        if (workCenterId != 0) {
+            if(providerFilter != null && providerFilter.getProviderStatus() == 1) {
+                sql += " AND (PDC.FECHA_FIN_SERVICIO > CURRENT_DATE OR PDC.FECHA_FIN_SERVICIO IS NULL) ";
+            } else if (providerFilter.getProviderStatus() == 0) {
+                sql += " AND (PDC.FECHA_FIN_SERVICIO < CURRENT_DATE OR PDC.FECHA_FIN_SERVICIO IS NULL) ";
+            }
         }
 
         if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
