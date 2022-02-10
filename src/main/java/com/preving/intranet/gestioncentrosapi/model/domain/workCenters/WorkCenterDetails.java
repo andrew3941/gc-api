@@ -28,6 +28,9 @@ public class WorkCenterDetails implements Serializable {
     private boolean stealingAlarm;
     private boolean fireAlarm;
     private List<WorkCenterDetailsByDepart> departments;
+    private String cadastralRef;
+    private String latitude;
+    private String longitude;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
     private User createdBy = new User();
@@ -39,8 +42,8 @@ public class WorkCenterDetails implements Serializable {
 
     public WorkCenterDetails(int id, WorkCenter workCenter, Double totalArea, Integer jobAvailable, boolean accesibility,
                              boolean parking, int parkingPlace, String description, boolean allDepartment, int communityAmount, boolean stealingAlarm, boolean fireAlarm,
-                             List<WorkCenterDetailsByDepart> departments, Date created, User createdBy, Date modified,
-                             User modifiedBy) {
+                             List<WorkCenterDetailsByDepart> departments, String cadastralRef, String latitude, String longitude,
+                             Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
         this.workCenter = workCenter;
         this.totalArea = totalArea;
@@ -54,6 +57,9 @@ public class WorkCenterDetails implements Serializable {
         this.communityAmount = communityAmount;
         this.stealingAlarm = stealingAlarm;
         this.fireAlarm = fireAlarm;
+        this.cadastralRef = cadastralRef;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.created = created;
         this.createdBy = createdBy;
         this.modified = modified;
@@ -139,7 +145,6 @@ public class WorkCenterDetails implements Serializable {
         this.stealingAlarm = stealingAlarm;
     }
 
-
     @Basic
     @Column(name = "ALARMA_INCENDIO")
     public boolean isFireAlarm() {
@@ -149,11 +154,25 @@ public class WorkCenterDetails implements Serializable {
         this.fireAlarm = fireAlarm;
     }
 
-
     @JsonManagedReference
     @OneToMany(mappedBy = "workCenterDetails")
     public List<WorkCenterDetailsByDepart> getDepartments() { return departments; }
     public void setDepartments(List<WorkCenterDetailsByDepart> departments) { this.departments = departments; }
+
+    @Basic
+    @Column(name = "REF_CATASTRAL")
+    public String getCadastralRef() { return cadastralRef; }
+    public void setCadastralRef(String cadastralRef) { this.cadastralRef = cadastralRef; }
+
+    @Basic
+    @Column(name = "LATITUD")
+    public String getLatitude() { return latitude; }
+    public void setLatitude(String latitude) { this.latitude = latitude; }
+
+    @Basic
+    @Column(name = "LONGITUD")
+    public String getLongitude() { return longitude; }
+    public void setLongitude(String longitude) { this.longitude = longitude; }
 
     @Basic
     @Column(name = "CREADO")
