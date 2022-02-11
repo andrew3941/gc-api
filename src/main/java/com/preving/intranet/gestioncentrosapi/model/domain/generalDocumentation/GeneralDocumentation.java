@@ -22,9 +22,9 @@ public class GeneralDocumentation implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date documentStartDate = new Date();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
-    private Date documentEndDate = new  Date();
+    private Date documentEndDate = null;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
-    private Date documentAlarmDate = new  Date();
+    private Date documentAlarmDate = null;
     private String observations;
     private String insurerName;
     private String policeNumber;
@@ -34,8 +34,8 @@ public class GeneralDocumentation implements Serializable {
     private int annualImport;
     private ExpenditurePeriod periodicity;
     private int deposit;
-    private CertificateTypes certificateTypes = new CertificateTypes();
-    private TaxesTypes taxesTypes = new TaxesTypes();
+    private CertificateTypes certificateTypes = null;
+    private TaxesTypes taxesTypes = null;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
     private User createdBy = new User();

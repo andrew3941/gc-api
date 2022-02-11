@@ -16,7 +16,7 @@ public interface GeneralDocByAttachmentRepository extends JpaRepository<GeneralD
 
     GeneralDocByAttachment findByGeneralDocId(int generalDocId);
 
-    GeneralDocByAttachment findById(int attachDocId);
+    GeneralDocByAttachment findByGeneralDoc_Id(int attachDocId);
 
     List<GeneralDocByAttachment> findAllByGeneralDoc(GeneralDocumentation generalDocumentation);
 

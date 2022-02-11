@@ -1,9 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
-import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.CertificateTypes;
-import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
-import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentationTypes;
-import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.TaxesTypes;
+import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +21,7 @@ public interface GeneralDocumentationService {
 
     ResponseEntity<?> editGeneralDoc(int workCenterId,  GeneralDocumentation generalDoc, MultipartFile[] attachedFile, HttpServletRequest request);
 
-    ResponseEntity<?> getGeneralDocById(int generalDocId);
+    GeneralDocumentation getGeneralDocById(int generalDocId);
 
     ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request, int generalDocAttachId);
 

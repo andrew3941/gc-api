@@ -635,13 +635,7 @@ public class WorkCentersController {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         GeneralDocumentation newGeneralDoc= gson.fromJson(generalDocumentation, GeneralDocumentation.class);
 
-        try {
-            generalDocumentationService.saveGeneralDocumentation(workCenterId, newGeneralDoc, attachedFile, request);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return generalDocumentationService.saveGeneralDocumentation(workCenterId, newGeneralDoc, attachedFile, request);
 
     }
 

@@ -77,7 +77,6 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 
             GeneralDocumentation savedGeneralDoc = this.generalDocumentationRepository.save(newGeneralDoc);
 
-
             if (attachedFile.length > 0) {
 
                 for (MultipartFile mpFile : attachedFile) {
@@ -100,15 +99,10 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
                     if (url != null) {
                         this.generalDocByAttachmentRepository.updateGeneralDocByAttachmentUrl(generalDocByAttachment.getId(), url);
                     }
-
-
                 }
-
-
             }
 
-
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -170,15 +164,15 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
     }
 
     @Override
-    public ResponseEntity<?> getGeneralDocById(int generalDocId) {
+    public GeneralDocumentation getGeneralDocById(int generalDocId) {
 
-           GeneralDocumentation generalDoc = generalDocumentationRepository.findGeneralDocumentationById(generalDocId);
+        GeneralDocumentation generalDoc = generalDocumentationRepository.findGeneralDocumentationById(generalDocId);
 
-           List<GeneralDocByAttachment>  gAttachDocuments = generalDocByAttachmentRepository.findAllByGeneralDoc(generalDoc);
+        List<GeneralDocByAttachment>  gAttachDocuments = generalDocByAttachmentRepository.findAllByGeneralDoc(generalDoc);
 
-           generalDoc.setGeneralDocByAttachments(gAttachDocuments);
+        generalDoc.setGeneralDocByAttachments(gAttachDocuments);
 
-        return new ResponseEntity<GeneralDocumentation>(generalDoc, HttpStatus.OK);
+        return generalDoc;
     }
 
     @Override
@@ -187,11 +181,11 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
         GeneralDocByAttachment gda = null;
 
         File file = null;
-        byte[] content=null;
+        byte[] content = null;
 
         try {
             
-            gda = this.generalDocByAttachmentRepository.findById(generalDocAttachId);
+            gda = this.generalDocByAttachmentRepository.findByGeneralDoc_Id(generalDocAttachId);
 
             file = new File(gda.getAttachedUrl());
             if (file.exists()) {
@@ -203,8 +197,6 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
             ex.printStackTrace();
             return new ResponseEntity<>("Uknown error",HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-
 
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }

@@ -551,11 +551,11 @@ public class WorkCenterManager implements WorkCenterService {
         newWorkCenterDrawing.setCreated(new Date());
         newWorkCenterDrawing.getCreatedBy().setId(userId);
 
-                drawingRepository.save(newWorkCenterDrawing);
+        drawingRepository.save(newWorkCenterDrawing);
 
-                drawingAttachmentsCombo(workCenterId, newWorkCenterDrawing, newWorkCenterDrawing.getDrawingsByAttachments(), attachedFile);
+        drawingAttachmentsCombo(workCenterId, newWorkCenterDrawing, newWorkCenterDrawing.getDrawingsByAttachments(), attachedFile);
 
-                return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
 
     }
 
