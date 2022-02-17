@@ -17,6 +17,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
+import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -332,6 +333,10 @@ public class ProviderManager implements ProviderService {
                 workCenter.setId(provByWorkCenters.getWorkCenter().getId());
                 workCenter.setName(provByWorkCenters.getWorkCenter().getName());
 
+                // Metemos los detalles del centro en details
+                details.setWorkCenterName(workCenter.getName());
+                details.setWorkCenterId(workCenter.getId());
+
                 // Si fecha fin es superior a la fecha de hoy
                 if (details.getServiceEndDate() != null) {
                     if (details.getServiceEndDate().after(new Date())) {
@@ -457,8 +462,7 @@ public class ProviderManager implements ProviderService {
 
     @Transactional
     public ResponseEntity<?> editProvider(int workCenterId, int providerId, Provider provider, List<ProviderDetail> details,
-
-       MultipartFile attachedFile, HttpServletRequest request) {
+                                          MultipartFile attachedFile, HttpServletRequest request) {
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
@@ -486,71 +490,59 @@ public class ProviderManager implements ProviderService {
             // Provider management
             if (workCenterId == 0) {
 
-                // TODO faltaría comprobar si es un solo centro y se han tocado los detalles
-
                 // Obtenemos las delegaciones del proveedor
                 List<ProvidersByWorkCenters> provByWorkCenters = providersByWorkCentersRepository.findAllByProvider(provider);
 
+                    // Comprobar si trae centros nuevos y replicar los detalles del centro existente
+                    if (provider.getWorkCenters() != null) {
+                        // Recorremos los centros nuevos que vengan informados
+                        for (WorkCenter workCenter : provider.getWorkCenters()) {
+                            // Seteamos los valores del objeto
+                            ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
+                            providersByWorkCenters.getProvider().setId(provider.getId());
+                            providersByWorkCenters.getWorkCenter().setId(workCenter.getId());
 
-                // Comprobamos si viene un número menor de centros ya guardados
-                if (provider.getWorkCenters().size() < provByWorkCenters.size()) {
-                    // Si el objecto trae menos centros de los guardados en bbdd devolvemos error
-                    return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
-                }
+                            // Guardamos en proveedores_x_delegaciones
+                            providersByWorkCentersRepository.save(providersByWorkCenters);
 
+                            // Seteamos los valores para guardar los detalles
+                            ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
 
-                // Creamos los arrays de los centros
-                List<WorkCenter> wcBack = new ArrayList<WorkCenter>();
-                List<WorkCenter> wcAdd = new ArrayList<WorkCenter>();
+                            providersCommonDetails.setCreated(new Date());
+                            providersCommonDetails.getCreatedBy().setId(userId);
+                            providersCommonDetails.setProvDelegacionId(providersByWorkCenters.getId());
 
+                            // Si solo tiene un centro cogemos esos detalles comunes para guardar en los nuevos centros
+                            if (provByWorkCenters.size() <= 1) {
+                                providersCommonDetails.getExpenditurePeriod().setId(provider.getProvidersCommonDetails().get(0).getExpenditurePeriod().getId());
+                                providersCommonDetails.setAnualSpending(provider.getProvidersCommonDetails().get(0).getAnualSpending());
+                                providersCommonDetails.setSpending(provider.getProvidersCommonDetails().get(0).getSpending());
+                            }
 
-                // Añadimos los centros recuperados desde bbdd en un array de centros
-                for (ProvidersByWorkCenters prov: provByWorkCenters) {
-                    wcBack.add(prov.getWorkCenter());
-                }
+                            // TODO revisar si es necesario ya que no editamos nunca el fichero desde provider management
+//                            if (attachedFile != null) {
+//                                providersCommonDetails.setDocUrl("doc_url");
+//                                providersCommonDeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYWJsb19wbGFzZW5jaWEiLCJ1X2lkIjoxMDU0NjcsInVfZW1haWwiOiJwLnBsYXNlbmNpYUBwcmV2aW5nLmNvbSIsImNyZWF0ZWQiOjE2NDUxMTA3MjAyMzUsInVfYXBlbGxpZG9zIjoiUExBU0VOQ0lBIFJPRFJJR1VFWiAiLCJyb2xlcyI6WyJnYy0yMDA1IiwiZ2MtMjUwMDAiLCJnYy02IiwiZ2MtMjAwMSIsIjItMjUwMDIiLCIyLTI1MDAxIiwiMy0yNjAwNCIsImJhLTI3MDAwIiwiYmEtMjcwMDMiLCJiYS0yNzAwMiIsIjUtMjgwMDAiLCI1LTI4MDIwIiwiNi0yOTAyMCIsIjEwLTMzMjAwIiwiOC0zMTMwMCIsIjktMzIzMDAiLCI5LTMyMjAwIiwiOS0zMjEwMCIsIjEyLTM1MTAwIiwiMjYtMjYxMDAwIiwiMzItMzIxMDAwIiwiMjEtNDQzMDAiLCIyOC0yODAxMDAiLCIyOS0yOTAxMDAiLCIxNy00MDU1MCIsIjE3LTQwMTAwIiwiMjAtNDMxMDAiLCIyMy00NjEwMCIsIjM1LTM4MjEwMCIsIjM1LTM4MjAwMCIsIjEzLTM2MTAwIiwiMTYtMzkxMDAiLCIyMi00NTkwMCIsIjM2LTM2MDIwMSIsIjM5LTM5MTAwMCIsIjQzLTI1MDg0IiwiNDQtMjUxMDIiLCI0MC00MTAwMDAiXSwiZXhwIjoxNjQ1MTI4NzIwLCJ1X25vbWJyZSI6IlBBQkxPIn0.PumD3xsxLS3FCVZdBxHuQA0H72IcGABqwOST1R-R7zzawFNmlHekYU3D-Q_SXBcPE_kJqKfJqMELMK7kRl1kvQetails.setDocName(attachedFile.getOriginalFilename());
+//                                providersCommonDetails.setDocContentType(attachedFile.getContentType());
+//                            }
 
-//                if (!Objects.equals(wcBack, provider.getWorkCenters())) {
-//                    System.out.println("no son iguales");
-//                }
+                            // Guardamos en proveedores_detalles_comun
+                            ProvidersCommonDetails providersComDetails = this.providersCommonDetailsRepository.save(providersCommonDetails);
 
-                // Recorremos los centros que vienen desde angular
-                for (WorkCenter workCenter: provider.getWorkCenters()) {
-                    // TODO comprobar si está o no el centro en el array
-                    // Insertamos los centros agregados en angular a nuevo array de centros
-                    if (!wcBack.contains(workCenter)) {
-                        wcAdd.add(workCenter);
+                            // TODO revisar si es necesario ya que no editamos nunca el fichero desde provider management
+//                            if (attachedFile != null) {
+//                                String url = null;
+//
+//                                // Guardamos documento en el server
+//                                url = commonService.saveDocumentServer(workCenter.getId(), provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
+//
+//                                // Actualizamos la ruta del documento guardado
+//                                if (url != null) {
+//                                    this.providersCommonDetailsRepository.updateProviderDocUrl(providersComDetails.getId(), url);
+//                                }
+//                            }
+                        }
                     }
-
-//                    if (!Objects.equals(wcBack, workCenter.getId())) {
-//                        System.out.println("no son iguales");
-//                    }
-
-                }
-
-
-                // Si existen nuevos centros los insertamos en las tablas PROVEEDORES_X_DELEGACIONES y PROVEEDORES_DETALLES
-                if (wcAdd.size() > 0) {
-                    // Recorremos el array de los centros nuevos para guardarlos
-                    for(WorkCenter workCenter: wcAdd) {
-
-                        // Seteamos los valores del objeto
-                        ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
-                        providersByWorkCenters.getProvider().setId(provider.getId());
-                        providersByWorkCenters.getWorkCenter().setId(workCenter.getId());
-
-                        // Guardamos la delegación por proveedor
-                        providersByWorkCentersRepository.save(providersByWorkCenters);
-
-                        // Seteamos los valores por defecto de los detalles comunes
-                        ProvidersCommonDetails commonDetails = new ProvidersCommonDetails();
-                        commonDetails.setCreated(new Date());
-                        commonDetails.getCreatedBy().setId(userId);
-                        commonDetails.setProvDelegacionId(providersByWorkCenters.getId());
-
-                        // Guardamos los detalles comunes del centro
-                        providersCommonDetailsRepository.save(commonDetails);
-                    }
-                }
             }
 
             // Provider's inside workCenter
@@ -585,6 +577,7 @@ public class ProviderManager implements ProviderService {
                     commonDetails.getCreatedBy().setId(userId);
                     commonDetails.setProvDelegacionId(providersByWorkCenters.getId());
 
+                    // TODO comprobar esto
                     if (provider.getServiceEndDate() != null){
                         commonDetails.setServiceEndDate(provider.getServiceEndDate());
                     }

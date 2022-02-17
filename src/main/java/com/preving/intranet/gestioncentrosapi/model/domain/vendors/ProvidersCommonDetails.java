@@ -18,7 +18,7 @@ public class ProvidersCommonDetails implements Serializable {
     private String serviceDetails;
     private int spending;
     private int anualSpending;
-    private ExpenditurePeriod expenditurePeriod = new ExpenditurePeriod();
+    private ExpenditurePeriod expenditurePeriod;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date serviceStartDate = new Date();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
