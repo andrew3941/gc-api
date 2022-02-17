@@ -22,8 +22,7 @@ public interface WorkCenterDetailsRepository extends JpaRepository<WorkCenterDet
             "wcd.accesibility=:#{#wcd.accesibility}, wcd.parking=:#{#wcd.parking}, wcd.parkingPlace=:#{#wcd.parkingPlace}, " +
             "wcd.description=:#{#wcd.description}, wcd.communityAmount=:#{#wcd.communityAmount}, wcd.stealingAlarm=:#{#wcd.stealingAlarm}," +
             "wcd.fireAlarm=:#{#wcd.fireAlarm}, wcd.allDepartment=:#{#wcd.allDepartment}, wcd.cadastralRef=:#{#wcd.cadastralRef}, " +
-            "wcd.latitude=:#{#wcd.latitude}, wcd.longitude=:#{#wcd.longitude}, wcd.modified = CURRENT_TIMESTAMP, " +
-            "wcd.modifiedBy=:#{#wcd.modifiedBy} WHERE wcd.id=:#{#wcd.id}")
+            "wcd.modified = CURRENT_TIMESTAMP, wcd.modifiedBy=:#{#wcd.modifiedBy} WHERE wcd.id=:#{#wcd.id}")
     void updateWorkCenterDetails(@Param("wcd") WorkCenterDetails wcd);
 
 }

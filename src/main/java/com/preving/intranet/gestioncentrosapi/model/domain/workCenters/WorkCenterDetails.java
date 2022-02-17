@@ -29,8 +29,6 @@ public class WorkCenterDetails implements Serializable {
     private boolean fireAlarm;
     private List<WorkCenterDetailsByDepart> departments;
     private String cadastralRef;
-    private String latitude;
-    private String longitude;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
     private User createdBy = new User();
@@ -58,8 +56,6 @@ public class WorkCenterDetails implements Serializable {
         this.stealingAlarm = stealingAlarm;
         this.fireAlarm = fireAlarm;
         this.cadastralRef = cadastralRef;
-        this.latitude = latitude;
-        this.longitude = longitude;
         this.created = created;
         this.createdBy = createdBy;
         this.modified = modified;
@@ -163,16 +159,6 @@ public class WorkCenterDetails implements Serializable {
     @Column(name = "REF_CATASTRAL")
     public String getCadastralRef() { return cadastralRef; }
     public void setCadastralRef(String cadastralRef) { this.cadastralRef = cadastralRef; }
-
-    @Basic
-    @Column(name = "LATITUD")
-    public String getLatitude() { return latitude; }
-    public void setLatitude(String latitude) { this.latitude = latitude; }
-
-    @Basic
-    @Column(name = "LONGITUD")
-    public String getLongitude() { return longitude; }
-    public void setLongitude(String longitude) { this.longitude = longitude; }
 
     @Basic
     @Column(name = "CREADO")

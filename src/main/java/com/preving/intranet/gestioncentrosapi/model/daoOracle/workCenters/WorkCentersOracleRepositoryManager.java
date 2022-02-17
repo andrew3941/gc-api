@@ -166,4 +166,16 @@ public class WorkCentersOracleRepositoryManager {
 
     }
 
+    public void updateWorkCenterLocation(WorkCenter workCenter) {
+
+        String sql = "UPDATE GC2006_RELEASE.PC_DELEGACIONES SET LAT = :latitude, LNG = :longitude WHERE ID = :id";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("latitude", workCenter.getLatitude());
+        params.addValue("longitude", workCenter.getLongitude());
+        params.addValue("id", workCenter.getId());
+
+        namedParameterJdbcTemplate.update(sql, params);
+
+    }
 }

@@ -38,6 +38,12 @@ public interface WorkCentersRepository extends JpaRepository<WorkCenter, Integer
 
     @Modifying
     @Transactional
+    @Query("update WorkCenter w set w.latitude=:#{#workCenter.latitude}, w.longitude=:#{#workCenter.longitude} " +
+            "where w.id=:#{#workCenter.id}")
+    void updateWorkCenterLocation(@Param("workCenter") WorkCenter workCenter);
+
+    @Modifying
+    @Transactional
     @Query("update WorkCenter w set w.active=0 " +
             "where w.id=:workCenterId ")
     void setInactiveWorkCenter(@Param("workCenterId") int workCenterId);

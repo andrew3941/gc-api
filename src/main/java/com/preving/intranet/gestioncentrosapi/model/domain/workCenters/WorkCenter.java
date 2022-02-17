@@ -66,6 +66,8 @@ public class WorkCenter implements Serializable {
     private int active;
     private int visible;
     private WorkCenterTypes workCenterTypes = new WorkCenterTypes();
+    private Float latitude;
+    private Float longitude;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
     private User createdBy = new User();
@@ -283,6 +285,16 @@ public class WorkCenter implements Serializable {
     public void setWorkCenterTypes(WorkCenterTypes workCenterTypes) {
         this.workCenterTypes = workCenterTypes;
     }
+
+    @Basic
+    @Column(name = "LAT")
+    public Float getLatitude() { return latitude; }
+    public void setLatitude(Float latitude) { this.latitude = latitude; }
+
+    @Basic
+    @Column(name = "LNG")
+    public Float getLongitude() { return longitude; }
+    public void setLongitude(Float longitude) { this.longitude = longitude; }
 
     @Basic
     @Column(name = "CREADO")

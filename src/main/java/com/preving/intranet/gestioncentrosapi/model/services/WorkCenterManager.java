@@ -348,6 +348,10 @@ public class WorkCenterManager implements WorkCenterService {
 
         this.saveDelegationDepartment(departments, workCenterDetails);
 
+        // Editing work center location -6.99303
+        workCentersRepository.updateWorkCenterLocation(workCenterDetails.getWorkCenter());
+        workCentersOracleRepositoryManager.updateWorkCenterLocation(workCenterDetails.getWorkCenter());
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
