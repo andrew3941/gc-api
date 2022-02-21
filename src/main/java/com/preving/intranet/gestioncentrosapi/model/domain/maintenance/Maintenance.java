@@ -1,4 +1,4 @@
-package com.preving.intranet.gestioncentrosapi.model.domain.workCenters;
+package com.preving.intranet.gestioncentrosapi.model.domain.maintenance;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ExpenditurePeriod;
@@ -12,7 +12,7 @@ import java.util.Date;
 
 
 @Entity
-@Table(schema = "", name = "")
+@Table(schema = "GESTION_CENTROS", name = "MANTENIMIENTOS")
 public class Maintenance implements Serializable {
 
 
@@ -56,35 +56,45 @@ public class Maintenance implements Serializable {
 
     @Id
     @Column(name = "ID", nullable = false)
-    @SequenceGenerator(name = " ", sequenceName = "", schema = "", allocationSize = 0)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "")
+    @SequenceGenerator(name = "MANTENIMIENTOS_SEQ", sequenceName = "MANTENIMIENTOS_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MANTENIMIENTOS_SEQ")
 
     public int getId() {return id;}
     public void setId(int id) {this.id = id;}
 
+    @ManyToOne
+    @JoinColumn(name = "TIPO_ID")
     public MaintenanceTypes getMaintenanceTypes() {return maintenanceTypes;}
     public void setMaintenanceTypes(MaintenanceTypes maintenanceTypes) {
         this.maintenanceTypes = maintenanceTypes;}
 
     @ManyToOne
-    @JoinColumn(name = "provider_id")
+    @JoinColumn(name = "PROVEEDOR_ID", referencedColumnName = "ID")
     public Provider getProvider() {return provider;}
     public void setProvider(Provider provider) {this.provider = provider;}
 
+    @Basic
+    @Column(name = "REF_FACTURA")
     public String getBillNumber() {return billNumber;}
     public void setBillNumber(String billNumber) {this.billNumber = billNumber;}
 
     @ManyToOne
-    @JoinColumn(name = "expenditure_period_id")
+    @JoinColumn(name = "PERIODICIDAD_ID", referencedColumnName = "ID")
     public ExpenditurePeriod getExpenditurePeriod() {return expenditurePeriod;}
     public void setExpenditurePeriod(ExpenditurePeriod expenditurePeriod) {this.expenditurePeriod = expenditurePeriod;}
 
+    @Basic
+    @Column(name = "CUANTIA")
     public int getAmount() {return amount;}
     public void setAmount(int amount) {this.amount = amount;}
 
+    @Basic
+    @Column(name = "FECHA")
     public Date getDate() {return date;}
     public void setDate(Date date) {this.date = date;}
 
+    @Basic
+    @Column(name = "OBSERVACIONES")
     public String getObservations() {return observations;}
     public void setObservations(String observations) {this.observations = observations;}
 

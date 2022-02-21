@@ -8,10 +8,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
-import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
-import com.preving.intranet.gestioncentrosapi.model.services.GeneralDocumentationService;
-import com.preving.intranet.gestioncentrosapi.model.services.SecurityService;
-import com.preving.intranet.gestioncentrosapi.model.services.WorkCenterService;
+import com.preving.intranet.gestioncentrosapi.model.services.*;
 import com.preving.security.JwtTokenUtil;
 import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +43,12 @@ public class WorkCentersController {
 
     @Autowired
     private GeneralDocumentationService generalDocumentationService;
+
+
+    @Autowired
+    private MaintenanceService maintenanceService;
+
+
 
     @Value("${modo-debug}")
     private boolean modoDebug;
@@ -691,5 +694,20 @@ public class WorkCentersController {
 
         return ( generalDocumentationService.downloadGeneralDoc(request,generalDocAttachId));
     }
+
+
+
+
+
+////    METHOD FOR FINDING ALL MAINTENANCE LIST
+//@RequestMapping(value = "maintenance", method = RequestMethod.GET)
+//public ResponseEntity<?> findAllMaintenance() {
+//    try{
+//        return new ResponseEntity<>(this.maintenanceService.findAllMaintenance(), HttpStatus.OK);
+//    } catch (Exception e){
+//        e.printStackTrace();
+//        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
+//}
 
 }
