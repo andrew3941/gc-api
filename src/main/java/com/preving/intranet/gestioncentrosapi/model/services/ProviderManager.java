@@ -315,10 +315,19 @@ public class ProviderManager implements ProviderService {
         // Buscamos el proveedor por id
         Provider myProvider =  this.providerRepository.findProviderById(providerId);
 
+        List<ProvidersByWorkCenters> providersByWorkCenters = new ArrayList<>();
+
         // Obtenemos los detalles de todos los centros del proveedor
         if (workCenterId == 0) {
             // Buscar las delegaciones por proveedorId
-            List<ProvidersByWorkCenters> providersByWorkCenters = providersByWorkCentersRepository.findAllByProvider(myProvider);
+            providersByWorkCenters = providersByWorkCentersRepository.findAllByProvider(myProvider);
+
+        } else {
+            // Buscar las delegaciones por proveedorId
+            ProvidersByWorkCenters providerByWorkCenter = providersByWorkCentersRepository.findByProvider_IdAndWorkCenter_Id(providerId, workCenterId);
+
+            providersByWorkCenters.add(providerByWorkCenter);
+        }
 
             for (ProvidersByWorkCenters provByWorkCenters : providersByWorkCenters) {
 
@@ -337,53 +346,15 @@ public class ProviderManager implements ProviderService {
                 details.setWorkCenterName(workCenter.getName());
                 details.setWorkCenterId(workCenter.getId());
 
-                // Si fecha fin es superior a la fecha de hoy
-                if (details.getServiceEndDate() != null) {
-                    if (details.getServiceEndDate().after(new Date())) {
-                        // Detalles comunes
-                        myProvider.getProvidersCommonDetails().add(details);
+                // Detalles comunes
+                myProvider.getProvidersCommonDetails().add(details);
 
-                        // Detalles específicos
-                        myProvider.setProviderDetails(specificDetails);
+                // Detalles específicos
+                myProvider.setProviderDetails(specificDetails);
 
-                        // Delegaciones
-                        myProvider.getWorkCenters().add(workCenter);
-                    }
-                } else {
-                    // Detalles comunes
-                    myProvider.getProvidersCommonDetails().add(details);
-
-                    // Detalles específicos
-                    myProvider.setProviderDetails(specificDetails);
-
-                    // Delegaciones
-                    myProvider.getWorkCenters().add(workCenter);
-                }
+                // Delegaciones
+                myProvider.getWorkCenters().add(workCenter);
             }
-        } else { // Obtenemos los detalles de un centro específico
-            // Buscar las delegaciones por proveedorId
-            ProvidersByWorkCenters providerByWorkCenter = providersByWorkCentersRepository.findByProvider_IdAndWorkCenter_Id(providerId, workCenterId);
-
-            // Obtenemos los detalles comunes
-            ProvidersCommonDetails details = providersCommonDetailsRepository.findAllByProvDelegacionId(providerByWorkCenter.getId());
-
-            // Obtenemos los detalles especificos
-            List<ProviderDetail> specificDetails = providerDetailsRepository.findByProvidersByWorkCentersId(providerByWorkCenter.getId());
-
-            WorkCenter workCenter = new WorkCenter();
-
-            workCenter.setId(providerByWorkCenter.getWorkCenter().getId());
-            workCenter.setName(providerByWorkCenter.getWorkCenter().getName());
-
-            // Detalles comunes
-            myProvider.getProvidersCommonDetails().add(details);
-
-            // Detalles específicos
-            myProvider.setProviderDetails(specificDetails);
-
-            // Delegaciones
-            myProvider.getWorkCenters().add(workCenter);
-        }
 
         return myProvider;
     }
@@ -519,28 +490,8 @@ public class ProviderManager implements ProviderService {
                                 providersCommonDetails.setSpending(provider.getProvidersCommonDetails().get(0).getSpending());
                             }
 
-                            // TODO revisar si es necesario ya que no editamos nunca el fichero desde provider management
-//                            if (attachedFile != null) {
-//                                providersCommonDetails.setDocUrl("doc_url");
-//                                providersCommonDeyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYWJsb19wbGFzZW5jaWEiLCJ1X2lkIjoxMDU0NjcsInVfZW1haWwiOiJwLnBsYXNlbmNpYUBwcmV2aW5nLmNvbSIsImNyZWF0ZWQiOjE2NDUxMTA3MjAyMzUsInVfYXBlbGxpZG9zIjoiUExBU0VOQ0lBIFJPRFJJR1VFWiAiLCJyb2xlcyI6WyJnYy0yMDA1IiwiZ2MtMjUwMDAiLCJnYy02IiwiZ2MtMjAwMSIsIjItMjUwMDIiLCIyLTI1MDAxIiwiMy0yNjAwNCIsImJhLTI3MDAwIiwiYmEtMjcwMDMiLCJiYS0yNzAwMiIsIjUtMjgwMDAiLCI1LTI4MDIwIiwiNi0yOTAyMCIsIjEwLTMzMjAwIiwiOC0zMTMwMCIsIjktMzIzMDAiLCI5LTMyMjAwIiwiOS0zMjEwMCIsIjEyLTM1MTAwIiwiMjYtMjYxMDAwIiwiMzItMzIxMDAwIiwiMjEtNDQzMDAiLCIyOC0yODAxMDAiLCIyOS0yOTAxMDAiLCIxNy00MDU1MCIsIjE3LTQwMTAwIiwiMjAtNDMxMDAiLCIyMy00NjEwMCIsIjM1LTM4MjEwMCIsIjM1LTM4MjAwMCIsIjEzLTM2MTAwIiwiMTYtMzkxMDAiLCIyMi00NTkwMCIsIjM2LTM2MDIwMSIsIjM5LTM5MTAwMCIsIjQzLTI1MDg0IiwiNDQtMjUxMDIiLCI0MC00MTAwMDAiXSwiZXhwIjoxNjQ1MTI4NzIwLCJ1X25vbWJyZSI6IlBBQkxPIn0.PumD3xsxLS3FCVZdBxHuQA0H72IcGABqwOST1R-R7zzawFNmlHekYU3D-Q_SXBcPE_kJqKfJqMELMK7kRl1kvQetails.setDocName(attachedFile.getOriginalFilename());
-//                                providersCommonDetails.setDocContentType(attachedFile.getContentType());
-//                            }
-
                             // Guardamos en proveedores_detalles_comun
-                            ProvidersCommonDetails providersComDetails = this.providersCommonDetailsRepository.save(providersCommonDetails);
-
-                            // TODO revisar si es necesario ya que no editamos nunca el fichero desde provider management
-//                            if (attachedFile != null) {
-//                                String url = null;
-//
-//                                // Guardamos documento en el server
-//                                url = commonService.saveDocumentServer(workCenter.getId(), provider.getId(), attachedFile, PROVIDER_DOCUMENTS);
-//
-//                                // Actualizamos la ruta del documento guardado
-//                                if (url != null) {
-//                                    this.providersCommonDetailsRepository.updateProviderDocUrl(providersComDetails.getId(), url);
-//                                }
-//                            }
+                            this.providersCommonDetailsRepository.save(providersCommonDetails);
                         }
                     }
             }
