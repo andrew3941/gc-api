@@ -34,6 +34,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
@@ -549,8 +550,10 @@ public class WorkCenterManager implements WorkCenterService {
 
     @Override
     public ResponseEntity<?> addWorkCenterDrawing(int workCenterId, Drawing newWorkCenterDrawing, MultipartFile[] attachedFile, HttpServletRequest request) throws Exception {
+
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
+        try {
         newWorkCenterDrawing.getWorkCenter().setId(workCenterId);
         newWorkCenterDrawing.setCreated(new Date());
         newWorkCenterDrawing.getCreatedBy().setId(userId);
@@ -558,6 +561,12 @@ public class WorkCenterManager implements WorkCenterService {
         drawingRepository.save(newWorkCenterDrawing);
 
         drawingAttachmentsCombo(workCenterId, newWorkCenterDrawing, newWorkCenterDrawing.getDrawingsByAttachments(), attachedFile);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         return new ResponseEntity<>(HttpStatus.OK);
 
@@ -699,7 +708,7 @@ public class WorkCenterManager implements WorkCenterService {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>("Uknown error",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Unknown error",HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
@@ -722,7 +731,7 @@ public class WorkCenterManager implements WorkCenterService {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            return new ResponseEntity<>("Uknown error",HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Unknown error",HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);

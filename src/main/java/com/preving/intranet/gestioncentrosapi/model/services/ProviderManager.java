@@ -175,15 +175,17 @@ public class ProviderManager implements ProviderService {
                         }
                     }
                 } else {
-                    // Metemos los centros en la lista de proveedores
-                    provider.getWorkCenters().add(workCenter);
+                    if (workCenterId == workCenter.getId()) {
+                        // Metemos los centros en la lista de proveedores
+                        provider.getWorkCenters().add(workCenter);
 
-                    // Metemos los detalles del centro en details
-                    details.setWorkCenterName(workCenter.getName());
-                    details.setWorkCenterId(workCenter.getId());
+                        // Metemos los detalles del centro en details
+                        details.setWorkCenterName(workCenter.getName());
+                        details.setWorkCenterId(workCenter.getId());
 
-                    // Metemos los detalles en el proveedor
-                    provider.getProvidersCommonDetails().add(details);
+                        // Metemos los detalles en el proveedor
+                        provider.getProvidersCommonDetails().add(details);
+                    }
                 }
             }
         }
@@ -485,6 +487,7 @@ public class ProviderManager implements ProviderService {
 
                             // Si solo tiene un centro cogemos esos detalles comunes para guardar en los nuevos centros
                             if (provByWorkCenters.size() <= 1) {
+                                providersCommonDetails.setExpenditurePeriod(new ExpenditurePeriod());
                                 providersCommonDetails.getExpenditurePeriod().setId(provider.getProvidersCommonDetails().get(0).getExpenditurePeriod().getId());
                                 providersCommonDetails.setAnualSpending(provider.getProvidersCommonDetails().get(0).getAnualSpending());
                                 providersCommonDetails.setSpending(provider.getProvidersCommonDetails().get(0).getSpending());

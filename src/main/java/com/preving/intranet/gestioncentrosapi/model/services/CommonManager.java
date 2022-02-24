@@ -178,7 +178,6 @@ public class CommonManager implements CommonService {
         String docUrl = "";
         Boolean borrado = null;
 
-        // TODO PROBAR TODO
         if (tipoDoc == DRAWINGS) {
             // Obtenemos la URL del plano para borrarlo del servidor
             DrawingsByAttachment drawingsByAttachment = drawingByAttachmentsRepository.findByDrawingId(itemId);
@@ -189,7 +188,6 @@ public class CommonManager implements CommonService {
             ProvidersCommonDetails pCommonDetails =  providersCommonDetailsRepository.findProvidersCommonDetailsById(itemId);
             docUrl = pCommonDetails.getDocUrl();
 
-            // TODO probar
         } else if (tipoDoc == GENERAL_DOCUMENTS){
             //Obtain General Document URL
             GeneralDocByAttachment gDocAttachment = generalDocByAttachmentRepository.findByGeneralDoc_Id(itemId);
