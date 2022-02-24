@@ -548,22 +548,22 @@ public class WorkCenterManager implements WorkCenterService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @Override
+    @Transactional
     public ResponseEntity<?> addWorkCenterDrawing(int workCenterId, Drawing newWorkCenterDrawing, MultipartFile[] attachedFile, HttpServletRequest request) throws Exception {
 
-        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
-
         try {
-        newWorkCenterDrawing.getWorkCenter().setId(workCenterId);
-        newWorkCenterDrawing.setCreated(new Date());
-        newWorkCenterDrawing.getCreatedBy().setId(userId);
+            long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
-        drawingRepository.save(newWorkCenterDrawing);
+            newWorkCenterDrawing.getWorkCenter().setId(workCenterId);
+            newWorkCenterDrawing.setCreated(new Date());
+            newWorkCenterDrawing.getCreatedBy().setId(userId);
 
-        drawingAttachmentsCombo(workCenterId, newWorkCenterDrawing, newWorkCenterDrawing.getDrawingsByAttachments(), attachedFile);
+            drawingRepository.save(newWorkCenterDrawing);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
+            drawingAttachmentsCombo(workCenterId, newWorkCenterDrawing, newWorkCenterDrawing.getDrawingsByAttachments(), attachedFile);
+
+        } catch (Exception e) {
+            e.printStackTrace();
 
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -587,7 +587,7 @@ public class WorkCenterManager implements WorkCenterService {
             String url = null;
 
             // Borramos el documento anterior del servidor
-            commonService.deleteDocumentServer(workCenterId, newWorkCenterDrawing.getId(), DRAWINGS_DOCUMENTS);
+//            commonService.deleteDocumentServer(workCenterId, newWorkCenterDrawing.getId(), DRAWINGS_DOCUMENTS);
 
             // Delete DocumentAllAttached by DrawingId
             this.drawingByAttachmentsRepository.deleteAllByDrawing_Id(drawingId);

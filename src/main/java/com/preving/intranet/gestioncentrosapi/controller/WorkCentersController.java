@@ -398,18 +398,12 @@ public class WorkCentersController {
             @RequestParam("workCenterDrawing") String workCenterDrawing,
             @PathVariable("workCenterId") int workCenterId,
             @RequestParam("attachedFile") MultipartFile[] attachedFile,
-            HttpServletRequest request) {
+            HttpServletRequest request) throws Exception {
 
         Gson gson = new GsonBuilder().create();
         Drawing newWCDrawing= gson.fromJson(workCenterDrawing, Drawing.class);
 
-        try {
-            workCenterService.addWorkCenterDrawing(workCenterId, newWCDrawing, attachedFile, request);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return this.workCenterService.addWorkCenterDrawing(workCenterId, newWCDrawing, attachedFile, request);
 
     }
 
