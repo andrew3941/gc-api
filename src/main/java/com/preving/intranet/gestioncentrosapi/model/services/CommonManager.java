@@ -180,7 +180,7 @@ public class CommonManager implements CommonService {
 
         if (tipoDoc == DRAWINGS) {
             // Obtenemos la URL del plano para borrarlo del servidor
-            DrawingsByAttachment drawingsByAttachment = drawingByAttachmentsRepository.findByDrawingId(itemId);
+             DrawingsByAttachment drawingsByAttachment = drawingByAttachmentsRepository.findByDrawingId(itemId);
              docUrl = drawingsByAttachment.getAttachedUrl();
 
         } else if (tipoDoc == PROVIDERS){

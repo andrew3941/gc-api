@@ -21,7 +21,9 @@ public interface DrawingByAttachmentsRepository extends JpaRepository<DrawingsBy
 
     DrawingsByAttachment findByDrawing(int attachmentId);
 
-//    void deleteByDrawing(Drawing drawing);
+    void deleteByDrawing(Drawing drawing);
+
+    void deleteAllByDrawing_Id(int drawingId);
 
     @Modifying
     @Transactional

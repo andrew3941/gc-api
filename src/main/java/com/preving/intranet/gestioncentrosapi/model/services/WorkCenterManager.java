@@ -589,6 +589,9 @@ public class WorkCenterManager implements WorkCenterService {
             // Borramos el documento anterior del servidor
             commonService.deleteDocumentServer(workCenterId, newWorkCenterDrawing.getId(), DRAWINGS_DOCUMENTS);
 
+            // Delete DocumentAllAttached by DrawingId
+            this.drawingByAttachmentsRepository.deleteAllByDrawing_Id(drawingId);
+
             for (MultipartFile mpf : attachedFile) {
                 DrawingsByAttachment drawingsByAttach = new DrawingsByAttachment();
                 drawingsByAttach.setAttachedName(mpf.getOriginalFilename());
