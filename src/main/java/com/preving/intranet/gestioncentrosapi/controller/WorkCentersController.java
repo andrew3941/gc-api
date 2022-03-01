@@ -7,6 +7,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.Room;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
+import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
@@ -724,6 +725,22 @@ public class WorkCentersController {
         return ( generalDocumentationService.downloadGeneralDoc(request,generalDocAttachId));
     }
 
+    //creating a get mapping that retrieves the detail of a specific maintenance
+    @GetMapping(value = "maintenance/{maintenanceId}")
+    private Maintenance getMaintenance(@PathVariable(value = "maintenanceId") int maintenanceId)
+    {
+        return maintenanceService.getMaintenanceById(maintenanceId);
+    }
+    //creating put mapping that updates/edit the maintenance detail
+    @PutMapping(value = "{workCenterId}/maintenance/edit")
+    private Maintenance update(@RequestBody Maintenance maintenance,
+                               @PathVariable("workCenterId") int workCenterId,
+                               @RequestParam(value="attachedFile") MultipartFile[] attachedFile,
+                               HttpServletRequest request)
+    {
+        maintenanceService.saveOrUpdate(maintenance);
+        return maintenance;
+    }
 
 
 //METHOD FOR RETRIEVING MAINTENANCE LIST

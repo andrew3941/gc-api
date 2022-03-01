@@ -8,35 +8,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpServletRequest;
-
-import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
-import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
-import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.nio.file.Files;
-
-
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
+import java.io.File;
 
 
 
 
 @Service
 public class MaintenanceManager implements MaintenanceService {
-    private MaintenanceManager maintenanceCustomRepository;
-
-    // autowired the maintenance repo
+    private static final int MAINTENANCE = 3;
     @Autowired
-    private MaintenanceRepository maintenanceRepository;
-
-    @Autowired
+   private MaintenanceRepository maintenanceRepository;
     private JwtTokenUtil jwtTokenUtil;
+    private MaintenanceManager maintenanceCustomRepository;
+    @Override
+    public ResponseEntity<?> saveMaintenance(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
+        return null;
+    }
 
     @Autowired
     private MaintenanceByAttachmentRepository maintenanceByAttachmentRepository;
@@ -65,34 +57,29 @@ public class MaintenanceManager implements MaintenanceService {
         File file = null;
         byte[] content = null;
 
-//        try {
-//
-//            mba = this.maintenanceByAttachmentRepository.findByGeneralMainId(generalMaintenanceId);
-//
-//            file = new File(mba.getDocumentUrl());
-//            if (file.exists()) {
-//                content = Files.readAllBytes(file.toPath());
-//            }else{
-//                return new ResponseEntity<>("File not found",HttpStatus.NOT_FOUND);
-//            }
-//        }catch (Exception ex) {
-//            ex.printStackTrace();
-//            return new ResponseEntity<>("Uknown error",HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-
       return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
+    @Override
+    public Maintenance getMaintenanceById(int maintenanceId){
+        Maintenance maintenance = maintenanceRepository.findMaintenanceById(maintenanceId);
+        return maintenance;
+    }
 
-//    @Autowired
-//    private MaintenanceRepository maintenanceRepository;
-//
-//
-//
-//    @Override
-//    public List<Maintenance> findAllMaintenance() {
-//        return maintenanceRepository.findAllMaintenance();
-//    }
+    @Override
+    public ResponseEntity<?> editMaintenance(int workCenterId, Maintenance maintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
+        return null;
+    }
+
+    @Override
+    public List<Maintenance> getAllMaintenance() {
+        return null;
+    }
+
+    @Override
+    public void saveOrUpdate(Maintenance maintenance) {
+        maintenanceRepository.save(maintenance);
+    }
 
 
     @Autowired
@@ -104,7 +91,6 @@ public class MaintenanceManager implements MaintenanceService {
     public List<Maintenance> findAllMaintenance(){
         return maintenanceRepository.findAll();
     }
-
 
 
     @Override

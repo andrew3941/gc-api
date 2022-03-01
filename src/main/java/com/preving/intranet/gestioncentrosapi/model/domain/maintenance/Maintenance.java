@@ -1,6 +1,9 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.maintenance;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.MaintenanceByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
+import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ExpenditurePeriod;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 
@@ -9,6 +12,7 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -31,7 +35,8 @@ public class Maintenance implements Serializable {
     private User modifiedBy;
     private Date deleted;
     private User deletedBy;
-
+private MaintenanceByAttachment  maintenanceByAttachment;
+    private List<MaintenanceByAttachment> getMaintenanceByAttachment;
 
     public Maintenance() {
     }
@@ -129,3 +134,4 @@ public class Maintenance implements Serializable {
     public void setDeletedBy(User deletedBy) {this.deletedBy = deletedBy;}
 
 }
+

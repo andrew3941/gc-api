@@ -56,4 +56,15 @@ public class MaintenanceByAttachement implements Serializable {
     public void setDocumentContentType(String documentContentType) {this.documentContentType = documentContentType;
     }
 
+    public void setMaintenance(Maintenance maintenance) {
+    }
+
+    public void setAttachedUrl(String maint_url) {
+    }
+
+    public void setAttachedName(String originalFilename) {
+    }
+
+    public void setAttachedContentType(String contentType) {
+    }
 }
