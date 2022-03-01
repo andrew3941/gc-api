@@ -6,6 +6,9 @@ import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.Room;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
+import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
+import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.services.*;
@@ -173,6 +176,25 @@ public class WorkCentersController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    /**
+     *  filter based on maintenanceFilter Class
+     */
+
+    @RequestMapping(value = "{workCenterId}/maintenance-filter", method = RequestMethod.POST)
+    public ResponseEntity<?> findWorkCenterByFilter(HttpServletRequest request,
+                                                    @PathVariable(value = "workCenterId") int workCenterId,
+                                                    @RequestBody MaintenanceFilter maintenanceFilter) {
+
+        try {
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            return new ResponseEntity<>(this.maintenanceService.getMaintenance(workCenterId, maintenanceFilter, user), HttpStatus.OK);
+        } catch (Exception e) {e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     /**

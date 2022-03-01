@@ -56,7 +56,7 @@ dependencies {
 
 	// Driver oracle
 	runtime group: 'com.oracle', name: 'ojdbc6', version: '11.2.0'
-
+	implementation group: 'com.oracle.database.jdbc', name: 'ojdbc6', version: '11.2.0.4'
 	// Driver postgresql
 	compile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
 

@@ -22,6 +22,10 @@ public class MaintenanceTypes implements Serializable {
         this.active = active;
     }
 
+    public static boolean hasRole(String gcManagerRolName) {
+        return false;
+    }
+
 
     @Id
     @Column(name = "ID", nullable = false)
