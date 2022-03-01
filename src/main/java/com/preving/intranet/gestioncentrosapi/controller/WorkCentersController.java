@@ -9,6 +9,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
+import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.services.*;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @RestController
 @RequestMapping(path= "/workCenters")
@@ -720,16 +722,14 @@ public class WorkCentersController {
 
 
 
+//METHOD FOR RETRIEVING MAINTENANCE LIST
+    @RequestMapping(value = "maintenance", method = RequestMethod.GET)
+    public ResponseEntity<List<Maintenance>> getAllMaintenance(){
 
-////    METHOD FOR FINDING ALL MAINTENANCE LIST
-//@RequestMapping(value = "maintenance", method = RequestMethod.GET)
-//public ResponseEntity<?> findAllMaintenance() {
-//    try{
-//        return new ResponseEntity<>(this.maintenanceService.findAllMaintenance(), HttpStatus.OK);
-//    } catch (Exception e){
-//        e.printStackTrace();
-//        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
-//}
+        List<Maintenance> maintenance = maintenanceService.findAllMaintenance();
+        return new ResponseEntity<>(maintenance, HttpStatus.OK);
+    }
+
+
 
 }
