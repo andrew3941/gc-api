@@ -132,13 +132,13 @@ public class WorkCenterManager implements WorkCenterService {
     @Value("${url-documentos-planos}")
     private String urlDrawingDocuments;
 
-    private static final String EXPORT_TITLE_1 = "Centro";
+    static final String EXPORT_TITLE_1 = "Centro";
     private static final String EXPORT_TITLE_2 = "Provincia";
-    private static final String EXPORT_TITLE_3 = "Localidad";
-    private static final String EXPORT_TITLE_4 = "Direccion";
-    private static final String EXPORT_TITLE_5 = "Telefono";
-    private static final String EXPORT_TITLE_6 = "Estado";
-    private static final String EXPORT_TITLE_7 = "Entidades";
+    static final String EXPORT_TITLE_3 = "Localidad";
+    static final String EXPORT_TITLE_4 = "Direccion";
+    static final String EXPORT_TITLE_5 = "Telefono";
+    static final String EXPORT_TITLE_6 = "Estado";
+    static final String EXPORT_TITLE_7 = "Entidades";
 
     private static final int ACTIVE = 1;
     private static final int INACTIVE = 0;
