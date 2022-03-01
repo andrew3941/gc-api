@@ -1,5 +1,10 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.maintenance;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -15,7 +20,8 @@ public class MaintenanceByAttachement implements Serializable {
     public MaintenanceByAttachement() {
     }
 
-    public MaintenanceByAttachement(int id, int maintenanceID, String documentUrl, String docName, String documentContentType) {
+
+    public MaintenanceByAttachement  (int id, int maintenanceID, String documentUrl, String docName, String documentContentType) {
         this.id = id;
         this.maintenanceID = maintenanceID;
         this.documentUrl = documentUrl;
@@ -59,12 +65,19 @@ public class MaintenanceByAttachement implements Serializable {
     public void setMaintenance(Maintenance maintenance) {
     }
 
-    public void setAttachedUrl(String maint_url) {
+    public void setMaintenance(int maintenanceId) {
+        this.maintenanceID= maintenanceId;
+    }
+
+    public void setAttachedUrl(String attach_url) {
+        this.documentUrl = attach_url;
     }
 
     public void setAttachedName(String originalFilename) {
+        this.docName = originalFilename;
     }
 
     public void setAttachedContentType(String contentType) {
+        this.documentContentType = contentType;
     }
 }

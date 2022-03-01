@@ -12,7 +12,6 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
@@ -21,6 +20,7 @@ import com.preving.security.domain.UsuarioWithRoles;
 
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Service
@@ -44,4 +44,6 @@ public interface MaintenanceService {
 
 // edit/update maintenance
     void saveOrUpdate(Maintenance maintenance);
+    //Logic to Save New Maintenance
+    ResponseEntity<?> saveNewMaintenance(int maintenanceId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request);
 }

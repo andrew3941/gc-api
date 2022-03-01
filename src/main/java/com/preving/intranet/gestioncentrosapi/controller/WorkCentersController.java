@@ -765,10 +765,7 @@ public class WorkCentersController {
     public ResponseEntity<?> deleteMaintenance (HttpServletRequest request,
                                          @PathVariable(value = "workCenterId") int workCenterId,
                                          @PathVariable(value = "maintenanceId") int maintenanceId) {
-
-
-        return maintenanceService.deleteMaintenance(request,workCenterId,maintenanceId);
-
+        return maintenanceService.deleteMaintenance(request, workCenterId, maintenanceId);
     }
     //end request mapping for delete
 
@@ -794,5 +791,18 @@ public class WorkCentersController {
 
     }
 
+    //Method to Save New Maintenance
+    @RequestMapping(value = "{workCenterId}/maintenance/add", method = RequestMethod.POST)
+    public ResponseEntity<?> saveMaintenance(
+            @RequestParam("maintenance") String maintenance,
+            @PathVariable("workCenterId") int workCenterId,
+            @RequestParam(value="attachedFile") MultipartFile[] attachedFile,
+            HttpServletRequest request) {
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        Maintenance newMaintenance= gson.fromJson(maintenance, Maintenance.class);
+
+        return maintenanceService.saveNewMaintenance(workCenterId, newMaintenance, attachedFile, request);
+    }
+    //end save new maintenance
 
 }

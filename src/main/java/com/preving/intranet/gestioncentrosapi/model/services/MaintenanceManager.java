@@ -20,10 +20,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
-import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
 import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.stereotype.Service;
@@ -53,13 +49,22 @@ public class MaintenanceManager implements MaintenanceService {
    private MaintenanceRepository maintenanceRepository;
     private JwtTokenUtil jwtTokenUtil;
     private MaintenanceCustomRepository maintenanceCustomRepository;
+
     @Override
     public ResponseEntity<?> saveMaintenance(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
         return null;
     }
 
-    @Autowired
+
+   @Autowired
     private MaintenanceByAttachmentRepository maintenanceByAttachmentRepository;
+
+    @Autowired
+    private CommonService commonService;
+
+
+    private static final int NEW_MAINTENANCE = 3;
+
 
     @Override
     public ResponseEntity<?> deleteMaintenance(HttpServletRequest request, int workCenterId, int maintenanceId) {
@@ -212,6 +217,59 @@ public class MaintenanceManager implements MaintenanceService {
 
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
+
+    /**
+     * Guardar mantenimiento
+     *
+     * @Override
+     */
+//Logic to Save New Maintenance
+    @Override
+    public ResponseEntity<?> saveNewMaintenance(int maintenanceId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
+
+        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+
+        newMaintenance.setCreated(new Date());
+        newMaintenance.getCreatedBy().setId(userId);
+        newMaintenance.getMaintenanceTypes().setId(maintenanceId);
+
+        try {
+
+            Maintenance saveMaintenance = this.maintenanceRepository.save(newMaintenance);
+
+            if (attachedFile.length > 0) {
+
+                for (MultipartFile mpFile : attachedFile) {
+
+                    MaintenanceByAttachement maintenanceByAttachement = new MaintenanceByAttachement();
+                    maintenanceByAttachement.setMaintenance(maintenanceId);
+                    maintenanceByAttachement.setAttachedUrl("Attach_URL");
+                    maintenanceByAttachement.setAttachedName(mpFile.getOriginalFilename());
+                    maintenanceByAttachement.setAttachedContentType(mpFile.getContentType());
+                    this.maintenanceByAttachmentRepository.save(maintenanceByAttachement);
+
+                    String url = null;
+
+                    // Guardamos documento en el server
+                    url = commonService.saveDocumentServer(maintenanceId, saveMaintenance.getId(), mpFile, NEW_MAINTENANCE);
+
+                    // Actualizamos la ruta del documento guardado
+                    if (url != null) {
+                        this.maintenanceByAttachmentRepository.updateNewMaintenanceByAttachmentUrl(maintenanceByAttachement.getId(), url);
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    //End Logic to Save New Maintenance
 
 }
 
