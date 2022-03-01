@@ -53,8 +53,6 @@ public class WorkCentersController {
     @Autowired
     private MaintenanceService maintenanceService;
 
-
-
     @Value("${modo-debug}")
     private boolean modoDebug;
 
@@ -514,6 +512,13 @@ public class WorkCentersController {
         return ( workCenterService.downloadDrawingDoc(request,drawingId));
     }
 
+//    @RequestMapping(value = "drawing/{drawingId}/download", method = RequestMethod.GET)
+//    public ResponseEntity<?> downloadMaintenanceDoc(HttpServletRequest request, @PathVariable(value = "maintenanceDocId") int maintenanceDocId) {
+//
+//        return ( maintenanceService.downloadMaintenanceDoc(request,maintenanceDocId));
+//    }
+
+
     /**
      * Descargamos el archivo de generalDoc
      * @param generalDocId
@@ -721,7 +726,6 @@ public class WorkCentersController {
 
 
 
-
 //METHOD FOR RETRIEVING MAINTENANCE LIST
     @RequestMapping(value = "maintenance", method = RequestMethod.GET)
     public ResponseEntity<List<Maintenance>> getAllMaintenance(){
@@ -729,6 +733,27 @@ public class WorkCentersController {
         List<Maintenance> maintenance = maintenanceService.findAllMaintenance();
         return new ResponseEntity<>(maintenance, HttpStatus.OK);
     }
+
+
+   //start request mapping for download
+   @RequestMapping(value = "maintenance/{generalMaintenanceId}/download", method = RequestMethod.GET)
+   public ResponseEntity<?> downloadMaintenance(HttpServletRequest request, @PathVariable(value = "generalMaintenanceId") int generalMaintenanceId) {
+
+       return ( maintenanceService.downloadMaintenanceDoc(request,generalMaintenanceId));
+   }
+    //end request mapping for download
+
+    // start request mapping for delete
+    @RequestMapping(value = "{workCenterId}/maintenance/{maintenanceId}/delete", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteMaintenance (HttpServletRequest request,
+                                         @PathVariable(value = "workCenterId") int workCenterId,
+                                         @PathVariable(value = "maintenanceId") int maintenanceId) {
+
+
+        return maintenanceService.deleteMaintenance(request,workCenterId,maintenanceId);
+
+    }
+    //end request mapping for delete
 
 
 

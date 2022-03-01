@@ -39,7 +39,9 @@ public class MaintenanceByAttachement implements Serializable {
 
     @Basic
     @Column(name = "DOC_URL")
-    public String getDocumentUrl() {return documentUrl;}
+    public String getDocumentUrl() {
+        return documentUrl;
+    }
     public void setDocumentUrl(String documentUrl) {this.documentUrl = documentUrl;
     }
 
