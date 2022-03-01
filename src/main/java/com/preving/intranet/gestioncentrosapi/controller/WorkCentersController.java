@@ -772,6 +772,27 @@ public class WorkCentersController {
     }
     //end request mapping for delete
 
+    //export
+    @RequestMapping(value="exportMainatenance", method = RequestMethod.POST)
+    public ResponseEntity<?> exportMainatenance(HttpServletRequest request,
+                                                HttpServletResponse response,
+                                                @RequestParam ("MainatenanceList")
+                                                        String MainatenanceList) {
+
+        ResponseEntity<?> resp = null;
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        MaintenanceFilter maintenanceFilter = gson.fromJson(MainatenanceList,
+                MaintenanceFilter.class);
+
+        try {
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            return new ResponseEntity<>(maintenanceService.exportMaintenance
+                    (maintenanceFilter, response), HttpStatus.OK);
+        } catch (DataAccessException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 
 
 }

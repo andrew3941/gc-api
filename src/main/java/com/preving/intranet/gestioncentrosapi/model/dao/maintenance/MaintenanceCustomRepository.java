@@ -16,4 +16,6 @@ public interface MaintenanceCustomRepository {
     boolean checkProviderCIf(String providerCif);
 
     List<Maintenance> getMaintenance(Integer workCenterId, ProviderFilter providerFilter, UsuarioWithRoles user);
+
+    List<MaintenanceFilter> getMaintenance(MaintenanceFilter maintenanceFilter);
 }
