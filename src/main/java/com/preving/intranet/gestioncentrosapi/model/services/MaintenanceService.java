@@ -46,5 +46,8 @@ public interface MaintenanceService {
 // edit/update maintenance
     void saveOrUpdate(Maintenance maintenance);
     //Logic to Save New Maintenance
-    ResponseEntity<?> saveNewMaintenance(int maintenanceId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request);
+    ResponseEntity<?> saveNewMaintenance(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request);
+
+   // String saveMaintenanceServer(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request);
+
 }

@@ -5,7 +5,9 @@ import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenan
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
 import com.preving.security.domain.UsuarioWithRoles;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface MaintenanceCustomRepository {
@@ -18,4 +20,5 @@ public interface MaintenanceCustomRepository {
     List<Maintenance> getMaintenance(Integer workCenterId, ProviderFilter providerFilter, UsuarioWithRoles user);
 
     List<MaintenanceFilter> getMaintenance(MaintenanceFilter maintenanceFilter);
+
 }

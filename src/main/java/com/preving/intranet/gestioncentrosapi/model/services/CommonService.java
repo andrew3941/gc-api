@@ -18,5 +18,4 @@ public interface CommonService {
 
     boolean deleteDocumentServer(int workCenterId, int drawingId, int tipoDoc) throws IOException;
 
-
 }

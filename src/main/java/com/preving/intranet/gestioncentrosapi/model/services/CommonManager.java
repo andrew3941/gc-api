@@ -60,6 +60,9 @@ public class CommonManager implements CommonService {
     @Value("${url-documentos-generalDocument}")
     private String urlGeneralDocuments;
 
+    @Value("${url-documentos-generalDocument}")
+    private String urlNewMaintenance;
+
     private static final String CONTENT_TYPE_PDF = "application/pdf";
     private static final String CONTENT_TYPE_ZIP = "application/x-zip-compressed";
     private static final String CONTENT_TYPE_DOC = "application/msword";
@@ -76,6 +79,7 @@ public class CommonManager implements CommonService {
     private static final int DRAWINGS = 1;
     private static final int PROVIDERS = 2;
     private static final int GENERAL_DOCUMENTS = 3;
+    private static final int MAINTENANCE = 4;
 
 
     @Override
@@ -148,9 +152,14 @@ public class CommonManager implements CommonService {
         } else if(tipoDoc ==PROVIDERS) {
             path = urlProviderDocuments + "/" + workCenterId + "/proveedores/" + itemId;
             url = urlProviderDocuments + "/" + workCenterId + "/proveedores/" + itemId +"/" + attachedFile.getOriginalFilename();
-        }else {
+
+        }else if(tipoDoc ==GENERAL_DOCUMENTS){
             path = urlGeneralDocuments + "/" + workCenterId + "/generalDocuments/" + itemId;
             url = urlGeneralDocuments + "/" + workCenterId + "/generalDocuments/" + itemId +"/" + attachedFile.getOriginalFilename();
+
+        }else  if (tipoDoc == MAINTENANCE){
+            path = urlNewMaintenance + "/" + workCenterId + "/maintenance/" + itemId;
+            url = urlNewMaintenance + "/" + workCenterId + "/maintenance/" + itemId +"/" + attachedFile.getOriginalFilename();
         }
 
         File file = new File(url);
