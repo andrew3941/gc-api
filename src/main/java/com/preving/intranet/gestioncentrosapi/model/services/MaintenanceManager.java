@@ -70,13 +70,13 @@ public class MaintenanceManager implements MaintenanceService {
 
     @Override
     public ResponseEntity<?> deleteMaintenance(HttpServletRequest request, int workCenterId, int maintenanceId) {
-        long uId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+        long mId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
         Maintenance maintenance = this.maintenanceRepository.findMaintenanceById(maintenanceId);
         if (maintenance==null) {
             return new ResponseEntity <>(HttpStatus.NOT_FOUND);
         }
         try {
-            this.maintenanceRepository.maintenanceLogicDelete((int) uId,maintenance.getId(), workCenterId);
+            this.maintenanceRepository.maintenanceLogicDelete((int) mId,maintenance.getId());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -25,7 +25,7 @@ import java.util.List;
 
 @Service
 public interface MaintenanceService {
-    ResponseEntity<?> saveMaintenance(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request);
+      ResponseEntity<?> saveMaintenance(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request);
     //getting a specific record by using the method getMaintenanceById() of maintenanceRepository
     Maintenance getMaintenanceById(int maintenanceId);
 
@@ -38,7 +38,7 @@ public interface MaintenanceService {
     ResponseEntity<?> deleteMaintenance(HttpServletRequest request,int workCenterId, int maintenanceId);
       ResponseEntity<?> downloadMaintenanceDoc(HttpServletRequest request, int generalMaintenanceId);
 
-//METHOD FROM THE WORK CENTERS CONTROLLER
+    //METHOD FROM THE WORK CENTERS CONTROLLER
     List<Maintenance> findAllMaintenance();
 
     List<Maintenance> getAllMaintenance();

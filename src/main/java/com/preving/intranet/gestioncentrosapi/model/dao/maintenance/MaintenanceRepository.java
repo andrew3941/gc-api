@@ -28,7 +28,7 @@ public interface MaintenanceRepository extends JpaRepository<Maintenance, Intege
 //    void editMaintenance(Maintenance maintenance);
     @Modifying
     @Transactional
-    @Query("update Maintenance d set  borrado=CURRENT_TIMESTAMP, borrado_por=:deleted_by where id=:maintenance_id and delegacion_id=:workCenterId")
-    void maintenanceLogicDelete(@Param("deleted_by") int deleted_by, @Param("maintenance_id") int maintenance_id, @Param("workCenterId") int workCenterId);
-   // void deleteByWorkCenter(WorkCenter workCenter);
+    @Query("update Maintenance m set  m.deleted=CURRENT_TIMESTAMP, m.deletedBy=:deleted_by where m.id=:maintenance_id ")
+    void maintenanceLogicDelete(@Param("deleted_by") int deleted_by, @Param("maintenance_id") int maintenance_id);
+
 }
