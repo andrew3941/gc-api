@@ -744,8 +744,10 @@ public class WorkCentersController {
 
 
 //METHOD FOR RETRIEVING MAINTENANCE LIST
-    @RequestMapping(value = "maintenance", method = RequestMethod.GET)
-    public ResponseEntity<List<Maintenance>> getAllMaintenance(){
+    @RequestMapping(value = "{workCenterId}/maintenance", method = RequestMethod.GET)
+    public ResponseEntity<List<Maintenance>> getAllMaintenance(
+            @PathVariable(value = "workCenterId") int workCenterId
+    ){
 
         List<Maintenance> maintenance = maintenanceService.findAllMaintenance();
         return new ResponseEntity<>(maintenance, HttpStatus.OK);
@@ -784,7 +786,7 @@ public class WorkCentersController {
         try {
             UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
             return new ResponseEntity<>(maintenanceService.exportMaintenance
-                    (maintenanceFilter, response), HttpStatus.OK);
+                    (maintenanceFilter, response,user), HttpStatus.OK);
         } catch (DataAccessException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -83,7 +83,7 @@ public class ProviderManager implements ProviderService {
     private ProviderByAreasRepository providerByAreasRepository;
 
     private static final String EXPORT_TITLE_1 = "Proveedor";
-    private static final String EXPORT_TITLE_2 = "CIF/NIF";
+    static final String EXPORT_TITLE_2 = "CIF/NIF";
     private static final String EXPORT_TITLE_3 = "Tipo";
     private static final String EXPORT_TITLE_4 = "Area Asociada";
     private static final String EXPORT_TITLE_5 = "Centros de trabajo";

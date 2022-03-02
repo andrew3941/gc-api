@@ -124,7 +124,9 @@ public class MaintenanceManager implements MaintenanceService {
 
     @Override
     public List<Maintenance> findAllMaintenance(){
-        return maintenanceRepository.findAll();
+
+        return maintenanceRepository.findMaintenanceByDeletedIsNullOrderByCreatedDesc();
+//        return maintenanceRepository.findAll();
     }
 
 

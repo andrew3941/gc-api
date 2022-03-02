@@ -1,9 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.maintenance;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.MaintenanceByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
-import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ExpenditurePeriod;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 
@@ -21,7 +18,7 @@ public class Maintenance implements Serializable {
 
 
     private int id;
-    private MaintenanceTypes maintenanceTypes =   new MaintenanceTypes();
+    private MaintenanceTypes maintenanceTypes = new MaintenanceTypes();
     private Provider provider = new Provider();
     private String billNumber;
     private ExpenditurePeriod expenditurePeriod = new ExpenditurePeriod();
@@ -29,14 +26,16 @@ public class Maintenance implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date date;
     private String observations;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
     private User createdBy = new User();
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date modified;
     private User modifiedBy;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date deleted;
     private User deletedBy;
-private MaintenanceByAttachment  maintenanceByAttachment;
-    private List<MaintenanceByAttachment> getMaintenanceByAttachment;
+    private List<MaintenanceByAttachement> maintenanceByAttachments;
 
     public Maintenance() {
     }
@@ -64,74 +63,143 @@ private MaintenanceByAttachment  maintenanceByAttachment;
     @SequenceGenerator(name = "MANTENIMIENTOS_SEQ", sequenceName = "MANTENIMIENTOS_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MANTENIMIENTOS_SEQ")
 
-    public int getId() {return id;}
-    public void setId(int id) {this.id = id;}
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     @ManyToOne
     @JoinColumn(name = "TIPO_ID")
-    public MaintenanceTypes getMaintenanceTypes() {return maintenanceTypes;}
+    public MaintenanceTypes getMaintenanceTypes() {
+        return maintenanceTypes;
+    }
+
     public void setMaintenanceTypes(MaintenanceTypes maintenanceTypes) {
-        this.maintenanceTypes = maintenanceTypes;}
+        this.maintenanceTypes = maintenanceTypes;
+    }
 
     @ManyToOne
     @JoinColumn(name = "PROVEEDOR_ID", referencedColumnName = "ID")
-    public Provider getProvider() {return provider;}
-    public void setProvider(Provider provider) {this.provider = provider;}
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
 
     @Basic
     @Column(name = "REF_FACTURA")
-    public String getBillNumber() {return billNumber;}
-    public void setBillNumber(String billNumber) {this.billNumber = billNumber;}
+    public String getBillNumber() {
+        return billNumber;
+    }
+
+    public void setBillNumber(String billNumber) {
+        this.billNumber = billNumber;
+    }
 
     @ManyToOne
     @JoinColumn(name = "PERIODICIDAD_ID", referencedColumnName = "ID")
-    public ExpenditurePeriod getExpenditurePeriod() {return expenditurePeriod;}
-    public void setExpenditurePeriod(ExpenditurePeriod expenditurePeriod) {this.expenditurePeriod = expenditurePeriod;}
+    public ExpenditurePeriod getExpenditurePeriod() {
+        return expenditurePeriod;
+    }
+
+    public void setExpenditurePeriod(ExpenditurePeriod expenditurePeriod) {
+        this.expenditurePeriod = expenditurePeriod;
+    }
 
     @Basic
     @Column(name = "CUANTIA")
-    public int getAmount() {return amount;}
-    public void setAmount(int amount) {this.amount = amount;}
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
 
     @Basic
     @Column(name = "FECHA")
-    public Date getDate() {return date;}
-    public void setDate(Date date) {this.date = date;}
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
     @Basic
     @Column(name = "OBSERVACIONES")
-    public String getObservations() {return observations;}
-    public void setObservations(String observations) {this.observations = observations;}
+    public String getObservations() {
+        return observations;
+    }
+
+    public void setObservations(String observations) {
+        this.observations = observations;
+    }
 
     @Basic
     @Column(name = "CREADO")
-    public Date getCreated() {return created;}
-    public void setCreated(Date created) {this.created = created;}
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CREADO_POR", referencedColumnName = "ID")
-    public User getCreatedBy() {return createdBy;}
-    public void setCreatedBy(User createdBy) {this.createdBy = createdBy;}
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
 
     @Basic
     @Column(name = "MODIFICADO")
-    public Date getModified() {return modified;}
-    public void setModified(Date modified) {this.modified = modified;}
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "MODIFICADO_POR", referencedColumnName = "ID")
-    public User getModifiedBy() {return modifiedBy;}
-    public void setModifiedBy(User modifiedBy) {this.modifiedBy = modifiedBy;}
+    public User getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(User modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
 
     @Basic
     @Column(name = "BORRADO")
-    public Date getDeleted() {return deleted;}
-    public void setDeleted(Date deleted) {this.deleted = deleted;}
+    public Date getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Date deleted) {
+        this.deleted = deleted;
+    }
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "BORRADO_POR", referencedColumnName = "ID")
-    public User getDeletedBy() {return deletedBy;}
-    public void setDeletedBy(User deletedBy) {this.deletedBy = deletedBy;}
+    public User getDeletedBy() {
+        return deletedBy;
+    }
+
+    public void setDeletedBy(User deletedBy) {
+        this.deletedBy = deletedBy;
+    }
 
 }
 
