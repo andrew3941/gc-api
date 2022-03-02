@@ -1,5 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.maintenance;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ExpenditurePeriod;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
@@ -153,52 +154,38 @@ public class Maintenance implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CREADO_POR", referencedColumnName = "ID")
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
-    }
+    public User getCreatedBy() {return createdBy;}
+    public void setCreatedBy(User createdBy) {this.createdBy = createdBy;}
 
     @Basic
     @Column(name = "MODIFICADO")
-    public Date getModified() {
-        return modified;
-    }
-
-    public void setModified(Date modified) {
-        this.modified = modified;
-    }
+    public Date getModified() {return modified;}
+    public void setModified(Date modified) {this.modified = modified;}
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "MODIFICADO_POR", referencedColumnName = "ID")
-    public User getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(User modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
+    public User getModifiedBy() {return modifiedBy;}
+    public void setModifiedBy(User modifiedBy) {this.modifiedBy = modifiedBy;}
 
     @Basic
     @Column(name = "BORRADO")
-    public Date getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Date deleted) {
-        this.deleted = deleted;
-    }
+    public Date getDeleted() {return deleted;}
+    public void setDeleted(Date deleted) {this.deleted = deleted;}
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "BORRADO_POR", referencedColumnName = "ID")
-    public User getDeletedBy() {
-        return deletedBy;
+    public User getDeletedBy() {return deletedBy;}
+    public void setDeletedBy(User deletedBy) {this.deletedBy = deletedBy;}
+
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "maintenance", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
+    public List<MaintenanceByAttachement> getMaintenanceByAttachments() {
+        return maintenanceByAttachments;
     }
 
-    public void setDeletedBy(User deletedBy) {
-        this.deletedBy = deletedBy;
+    public void setMaintenanceByAttachments(List<MaintenanceByAttachement> maintenanceByAttachments) {
+        this.maintenanceByAttachments = maintenanceByAttachments;
     }
 
 }

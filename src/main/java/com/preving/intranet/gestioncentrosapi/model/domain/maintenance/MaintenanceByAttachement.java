@@ -1,5 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.maintenance;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +13,7 @@ import java.io.Serializable;
 @Table(schema = "GESTION_CENTROS", name = "MANTENIMIENTOS_X_ADJUNTOS")
 public class MaintenanceByAttachement implements Serializable {
     private int id;
-    private int maintenanceID;
+    private Maintenance maintenance;
     private String documentUrl;
     private String docName;
     private String documentContentType;
@@ -21,14 +22,13 @@ public class MaintenanceByAttachement implements Serializable {
     }
 
 
-    public MaintenanceByAttachement  (int id, int maintenanceID, String documentUrl, String docName, String documentContentType) {
+    public MaintenanceByAttachement(int id, Maintenance maintenance, String documentUrl, String docName, String documentContentType) {
         this.id = id;
-        this.maintenanceID = maintenanceID;
+        this.maintenance = maintenance;
         this.documentUrl = documentUrl;
         this.docName = docName;
         this.documentContentType = documentContentType;
     }
-
 
     @Id
     @Column(name = "ID", nullable = false)
@@ -37,11 +37,6 @@ public class MaintenanceByAttachement implements Serializable {
     public int getId() {return id;}
     public void setId(int id) {this.id = id;}
 
-    @Basic
-    @Column(name = "MANTENIMIENTO_ID")
-    public int getMaintenanceID() {return maintenanceID;}
-    public void setMaintenanceID(int maintenanceID) {this.maintenanceID = maintenanceID;
-    }
 
     @Basic
     @Column(name = "DOC_URL")
@@ -62,26 +57,14 @@ public class MaintenanceByAttachement implements Serializable {
     public void setDocumentContentType(String documentContentType) {this.documentContentType = documentContentType;
     }
 
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="MANTENIMIENTO_ID", referencedColumnName="id")
+    public Maintenance getMaintenance() {
+        return maintenance;
+    }
+
     public void setMaintenance(Maintenance maintenance) {
+        this.maintenance = maintenance;
     }
-
-    public void setMaintenance(int maintenanceId) {
-        this.maintenanceID= maintenanceId;
-    }
-
-    public void setAttachedUrl(String attach_url) {
-        this.documentUrl = attach_url;
-    }
-
-    public void setAttachedName(String originalFilename) {
-        this.docName = originalFilename;
-    }
-
-    public void setAttachedContentType(String contentType) {
-        this.documentContentType = contentType;
-    }
-
-
-
-
 }
