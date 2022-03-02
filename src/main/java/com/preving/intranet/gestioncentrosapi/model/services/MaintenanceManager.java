@@ -27,21 +27,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+
 
 
 import java.util.Date;
 import java.util.List;
-import java.io.File;
 
-import static com.preving.intranet.gestioncentrosapi.model.services.ProviderManager.EXPORT_TITLE_2;
-import static com.preving.intranet.gestioncentrosapi.model.services.WorkCenterManager.*;
-import static com.preving.intranet.gestioncentrosapi.model.services.WorkCenterManager.EXPORT_TITLE_7;
+
 
 
 @Service
 public class MaintenanceManager implements MaintenanceService {
     private static final int MAINTENANCE = 3;
+//    export
+    static final String EXPORT_TITLE_1 = "maintenanceProvider";
+    private static final String EXPORT_TITLE_2 = "maintenanceType";
+    static final String EXPORT_TITLE_3 = "maintenanceStartDate";
+    static final String EXPORT_TITLE_4 = "maintenanceEndDate";
 
 
     // autowired the maintenance repo
@@ -132,7 +134,7 @@ public class MaintenanceManager implements MaintenanceService {
     }
 
     @Override
-    public ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response) {
+    public ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response,UsuarioWithRoles user) {
 
         byte[] content = null;
 
@@ -154,7 +156,7 @@ public class MaintenanceManager implements MaintenanceService {
         cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy hh:mm:ss"));
 
         // Obtenemos los datos
-        List<MaintenanceFilter> maintenanceFilters = this.maintenanceCustomRepository.getMaintenance(maintenanceFilter);
+        List<Maintenance> maintenanceFilters = this.maintenanceCustomRepository.getMaintenance(0,maintenanceFilter, user);
 
 
         String[] titulos = {
@@ -162,7 +164,7 @@ public class MaintenanceManager implements MaintenanceService {
                 EXPORT_TITLE_2,
                 EXPORT_TITLE_3,
                 EXPORT_TITLE_4,
-                EXPORT_TITLE_5, EXPORT_TITLE_6, EXPORT_TITLE_7};
+         };
 
         // Creamos una fila en la hoja en la posicion 0 para los headers
         HSSFRow headerRow = hoja.createRow(0);
