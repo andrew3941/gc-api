@@ -117,75 +117,26 @@ public class ProviderManager implements ProviderService {
                 ProvidersCommonDetails details = providersCommonDetailsRepository.findAllByProvDelegacionId(provByWorkCenters.getId());
 
                 if (workCenterId == 0) {
-                    if (providerFilter.getProviderStatus() != 0) {
-                        // Comprobamos si tiene fecha fin de servicio
-                        if (details.getServiceEndDate() != null) {
+                    // Metemos los centros en la lista de proveedores
+                    provider.getWorkCenters().add(workCenter);
 
-                            if (providerFilter.getProviderStatus() != 2) {
-                                // Comprobamos si la fecha fin es anterior a hoy
-                                if (details.getServiceEndDate().after(new Date())) {
-                                    // Metemos los centros en la lista de proveedores
-                                    provider.getWorkCenters().add(workCenter);
+                    // Metemos los detalles del centro en details
+                    details.setWorkCenterName(workCenter.getName());
+                    details.setWorkCenterId(workCenter.getId());
 
-                                    // Metemos los detalles del centro en details
-                                    details.setWorkCenterName(workCenter.getName());
-                                    details.setWorkCenterId(workCenter.getId());
+                    // Metemos los detalles en el proveedor
+                    provider.getProvidersCommonDetails().add(details);
 
-                                    // Metemos los detalles en el proveedor
-                                    provider.getProvidersCommonDetails().add(details);
-                                }
-                            } else {
-                                // Metemos los centros en la lista de proveedores
-                                provider.getWorkCenters().add(workCenter);
+                } else if (workCenterId == workCenter.getId()) {
+                    // Metemos los centros en la lista de proveedores
+                    provider.getWorkCenters().add(workCenter);
 
-                                // Metemos los detalles del centro en details
-                                details.setWorkCenterName(workCenter.getName());
-                                details.setWorkCenterId(workCenter.getId());
+                    // Metemos los detalles del centro en details
+                    details.setWorkCenterName(workCenter.getName());
+                    details.setWorkCenterId(workCenter.getId());
 
-                                // Metemos los detalles en el proveedor
-                                provider.getProvidersCommonDetails().add(details);
-                            }
-
-                        } else {
-                            // Metemos los centros en la lista de proveedores
-                            provider.getWorkCenters().add(workCenter);
-
-                            // Metemos los detalles del centro en details
-                            details.setWorkCenterName(workCenter.getName());
-                            details.setWorkCenterId(workCenter.getId());
-
-                            // Metemos los detalles en el proveedor
-                            provider.getProvidersCommonDetails().add(details);
-                        }
-                    } else {
-                        // Comprobamos si tiene fecha fin de servicio
-                        if (details.getServiceEndDate() != null) {
-                            // Comprobamos si la fecha fin es posterior a hoy
-                            if (details.getServiceEndDate().before(new Date())) {
-                                // Metemos los centros en la lista de proveedores
-                                provider.getWorkCenters().add(workCenter);
-
-                                // Metemos los detalles del centro en details
-                                details.setWorkCenterName(workCenter.getName());
-                                details.setWorkCenterId(workCenter.getId());
-
-                                // Metemos los detalles en el proveedor
-                                provider.getProvidersCommonDetails().add(details);
-                            }
-                        }
-                    }
-                } else {
-                    if (workCenterId == workCenter.getId()) {
-                        // Metemos los centros en la lista de proveedores
-                        provider.getWorkCenters().add(workCenter);
-
-                        // Metemos los detalles del centro en details
-                        details.setWorkCenterName(workCenter.getName());
-                        details.setWorkCenterId(workCenter.getId());
-
-                        // Metemos los detalles en el proveedor
-                        provider.getProvidersCommonDetails().add(details);
-                    }
+                    // Metemos los detalles en el proveedor
+                    provider.getProvidersCommonDetails().add(details);
                 }
             }
         }

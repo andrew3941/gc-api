@@ -20,7 +20,7 @@ public interface WorkCenterService {
 
     List<WorkCenter> getWorkCenters(WorkCenterFilter workCenterFilter, UsuarioWithRoles user);
 
-    WorkCenter getWorkCenterById(int workId);
+    WorkCenter getWorkCenterById(int workCenterId);
 
     List<Department> getDepartments();
 

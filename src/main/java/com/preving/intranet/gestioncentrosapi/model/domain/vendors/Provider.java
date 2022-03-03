@@ -37,7 +37,7 @@ import java.util.List;
                                 @ColumnResult(name = "TIPO_EVALUACION_ID", type = Integer.class),
                                 @ColumnResult(name = "PROVIDEREVALUATION_TYPE", type = String.class),
                                 @ColumnResult(name = "FECHA_INICIO_SERVICIO", type = Date.class),
-
+                                @ColumnResult(name = "FECHA_FIN_SERVICIO", type = Date.class),
                         }
                 )
         }
@@ -120,7 +120,8 @@ public class Provider implements Serializable {
             String providerType ,
             Integer evaluationTypeId,
             String evaluationTypeName,
-            Date serviceStartDate) {
+            Date serviceStartDate,
+            Date serviceEndDate) {
         this.id = id;
         this.name = name;
         this.cif = cif;
@@ -139,6 +140,7 @@ public class Provider implements Serializable {
         this.getEvaluationTypes().setId(evaluationTypeId);
         this.getEvaluationTypes().setName(evaluationTypeName);
         this.serviceStartDate = serviceStartDate;
+        this.serviceEndDate = serviceEndDate;
     }
 
 

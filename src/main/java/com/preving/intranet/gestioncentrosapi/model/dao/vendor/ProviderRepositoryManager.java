@@ -30,7 +30,7 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
                 "P.TIPO_ID, P.LOCALIDAD_ID, L.LOC_NOMBRE,V.PRV_NOMBRE, " +
                 "PT.DENOMINACION AS PROVIDER_TYPE, " +
                 "P.TIPO_EVALUACION_ID, PET.DENOMINACION AS PROVIDEREVALUATION_TYPE, " +
-                "P.FECHA_INICIO_SERVICIO " +
+                "P.FECHA_INICIO_SERVICIO, P.FECHA_FIN_SERVICIO " +
                 "FROM GESTION_CENTROS.PROVEEDORES P, " +
                 "GESTION_CENTROS.TM_PROVEEDORES_TIPOS PT, " +
                 "GESTION_CENTROS.PROVEEDORES_X_AREA PA, " +
@@ -83,9 +83,9 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
         }
 
         if(providerFilter != null && providerFilter.getProviderStatus() == 1) {
-            sql += " AND (PDC.FECHA_FIN_SERVICIO > CURRENT_DATE OR PDC.FECHA_FIN_SERVICIO IS NULL) ";
+            sql += " AND P.FECHA_FIN_SERVICIO IS NULL ";
         } else if (providerFilter.getProviderStatus() == 0) {
-            sql += " AND (PDC.FECHA_FIN_SERVICIO < CURRENT_DATE OR PDC.FECHA_FIN_SERVICIO IS NOT NULL) ";
+            sql += " AND P.FECHA_FIN_SERVICIO IS NOT NULL ";
         }
 
         if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {

@@ -190,17 +190,17 @@ public class WorkCentersController {
 
     /**
      * Obtiene un centro de trabajo por Id
-     * @param centerId
+     * @param workCenterId
      * @return
      */
     @RequestMapping(value = "{centerId}", method = RequestMethod.GET)
     public ResponseEntity<?> findWorkCenterById(HttpServletRequest request,
-                                                @PathVariable(value = "centerId") int centerId){
+                                                @PathVariable(value = "workCenterId") int workCenterId){
 
         try {
 
-            if(securityService.hasAccessToWorkCenter(centerId, request)) {
-                return new ResponseEntity<>(workCenterService.getWorkCenterById(centerId), HttpStatus.OK);
+            if(securityService.hasAccessToWorkCenter(workCenterId, request)) {
+                return new ResponseEntity<>(workCenterService.getWorkCenterById(workCenterId), HttpStatus.OK);
             }else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
