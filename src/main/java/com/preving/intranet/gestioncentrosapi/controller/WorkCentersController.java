@@ -193,7 +193,7 @@ public class WorkCentersController {
      * @param workCenterId
      * @return
      */
-    @RequestMapping(value = "{centerId}", method = RequestMethod.GET)
+    @RequestMapping(value = "{workCenterId}", method = RequestMethod.GET)
     public ResponseEntity<?> findWorkCenterById(HttpServletRequest request,
                                                 @PathVariable(value = "workCenterId") int workCenterId){
 
