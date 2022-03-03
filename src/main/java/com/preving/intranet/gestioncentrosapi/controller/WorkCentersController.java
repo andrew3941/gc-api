@@ -772,21 +772,21 @@ public class WorkCentersController {
     //end request mapping for delete
 
     //export
-    @RequestMapping(value="exportMainatenance", method = RequestMethod.POST)
-    public ResponseEntity<?> exportMainatenance(HttpServletRequest request,
+    @RequestMapping(value="exportMaintenance", method = RequestMethod.POST)
+    public ResponseEntity<?> exportMaintenance(HttpServletRequest request,
                                                 HttpServletResponse response,
-                                                @RequestParam ("MainatenanceList")
-                                                        String MainatenanceList) {
+                                                @RequestParam ("maintenanceFilterList")
+                                                        String MaintenanceList) {
 
         ResponseEntity<?> resp = null;
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        MaintenanceFilter maintenanceFilter = gson.fromJson(MainatenanceList,
+        MaintenanceFilter maintenanceFilter = gson.fromJson(MaintenanceList,
                 MaintenanceFilter.class);
 
         try {
             UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
             return new ResponseEntity<>(maintenanceService.exportMaintenance
-                    (maintenanceFilter, response,user), HttpStatus.OK);
+                    (maintenanceFilter, response, user), HttpStatus.OK);
         } catch (DataAccessException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

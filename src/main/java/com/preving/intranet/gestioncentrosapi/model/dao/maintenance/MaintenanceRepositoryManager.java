@@ -115,16 +115,6 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
         return false;
     }
 
-    @Override
-    public List<Maintenance> getMaintenance(Integer workCenterId, ProviderFilter providerFilter, UsuarioWithRoles user) {
-        return null;
-    }
-
-        @Override
-    public List<MaintenanceFilter> getMaintenance(MaintenanceFilter maintenanceFilter) {
-        return null;
-    }
-
 
 }
 
