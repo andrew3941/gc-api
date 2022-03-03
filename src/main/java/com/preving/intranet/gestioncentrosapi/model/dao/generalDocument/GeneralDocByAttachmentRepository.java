@@ -1,5 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.dao.generalDocument;
 
+import com.preving.intranet.gestioncentrosapi.model.domain.DrawingsByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,9 +17,13 @@ public interface GeneralDocByAttachmentRepository extends JpaRepository<GeneralD
 
     GeneralDocByAttachment findByGeneralDocId(int generalDocId);
 
+    GeneralDocByAttachment findById(int id);
+
     GeneralDocByAttachment findByGeneralDoc_Id(int attachDocId);
 
     List<GeneralDocByAttachment> findAllByGeneralDoc(GeneralDocumentation generalDocumentation);
+
+    List<GeneralDocByAttachment> findAllByGeneralDocId(int generalDocId);
 
     void deleteAllByGeneralDoc(GeneralDocumentation generalDocumentation);
     void deleteById(int attachId);

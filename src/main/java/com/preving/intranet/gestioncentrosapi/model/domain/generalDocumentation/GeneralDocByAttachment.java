@@ -18,16 +18,6 @@ public class GeneralDocByAttachment {
 
     private String attachedContentType;
 
-    public GeneralDocByAttachment() {
-    }
-
-    public GeneralDocByAttachment(int id, GeneralDocumentation generalDoc, String attachedUrl, String attachedName, String attachedContentType) {
-        this.id = id;
-        this.generalDoc = generalDoc;
-        this.attachedUrl = attachedUrl;
-        this.attachedName = attachedName;
-        this.attachedContentType = attachedContentType;
-    }
 
     @Id
     @Column(name = "ID", nullable = false)

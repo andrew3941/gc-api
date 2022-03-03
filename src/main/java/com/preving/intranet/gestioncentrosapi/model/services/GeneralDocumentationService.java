@@ -19,7 +19,7 @@ public interface GeneralDocumentationService {
 
     ResponseEntity<?> saveGeneralDocumentation(int workCenterId, GeneralDocumentation newGeneralDoc, MultipartFile[] attachedFile, HttpServletRequest request);
 
-    ResponseEntity<?> editGeneralDoc(int workCenterId,  GeneralDocumentation generalDoc, MultipartFile[] attachedFile, HttpServletRequest request);
+    ResponseEntity<?> editGeneralDoc(int workCenterId, int generalDocId,  GeneralDocumentation generalDoc, MultipartFile[] attachedFile, HttpServletRequest request);
 
     GeneralDocumentation getGeneralDocById(int generalDocId);
 

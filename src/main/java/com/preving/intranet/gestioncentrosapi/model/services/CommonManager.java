@@ -180,7 +180,7 @@ public class CommonManager implements CommonService {
 
         if (tipoDoc == DRAWINGS) {
             // Obtenemos la URL del plano para borrarlo del servidor
-             DrawingsByAttachment drawingsByAttachment = drawingByAttachmentsRepository.findByDrawingId(itemId);
+             DrawingsByAttachment drawingsByAttachment = drawingByAttachmentsRepository.findById(itemId);
              docUrl = drawingsByAttachment.getAttachedUrl();
 
         } else if (tipoDoc == PROVIDERS){
@@ -190,7 +190,7 @@ public class CommonManager implements CommonService {
 
         } else if (tipoDoc == GENERAL_DOCUMENTS){
             //Obtain General Document URL
-            GeneralDocByAttachment gDocAttachment = generalDocByAttachmentRepository.findByGeneralDoc_Id(itemId);
+            GeneralDocByAttachment gDocAttachment = generalDocByAttachmentRepository.findById(itemId);
             docUrl = gDocAttachment.getAttachedUrl();
         }
 

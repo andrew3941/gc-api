@@ -1,6 +1,8 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.*;
+import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
+import com.preving.intranet.gestioncentrosapi.model.domain.DrawingsByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.*;
 import com.preving.security.JwtTokenUtil;
@@ -13,9 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class GeneralDocumentationManager implements GeneralDocumentationService {
@@ -40,6 +45,9 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private CommonManager commonManager;
 
     private static final int GENERAL_DOCUMENTS = 3;
 
@@ -112,49 +120,86 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
     }
 
     @Override
-    public ResponseEntity<?> editGeneralDoc(int workCenterId, GeneralDocumentation generalDoc, MultipartFile[] attachedFile, HttpServletRequest request) {
+    public ResponseEntity<?> editGeneralDoc(int workCenterId, int generalDocId, GeneralDocumentation generalDoc, MultipartFile[] attachedFile, HttpServletRequest request) {
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
         generalDoc.setModifiedBy(new User());
         generalDoc.getModifiedBy().setId(userId);
         generalDoc.getWorkCenter().setId(workCenterId);
+        String url= null;
 
         try {
 
             generalDocumentationRepository.editGeneralDoc(generalDoc);
+//
+//            for (GeneralDocByAttachment gda : generalDoc.getGeneralDocByAttachments()){
+//                // Borramos el documento anterior del servidor
+//                commonService.deleteDocumentServer(workCenterId, gda.getId(), GENERAL_DOCUMENTS);
+//
+//                generalDocByAttachmentRepository.deleteById(gda.getId());
+//            }
+//
+//            if (attachedFile.length > 0) {
+//
+//                for (MultipartFile mpFile : attachedFile){
+//
+//                    GeneralDocByAttachment newGeneralDocByAttach = generalDocByAttachmentRepository.findByGeneralDocId(generalDoc.getId());
+//
+//                    newGeneralDocByAttach.setGeneralDoc(generalDoc);
+//                    newGeneralDocByAttach.setAttachedUrl("Doc_Url");
+//                    newGeneralDocByAttach.setAttachedName(mpFile.getOriginalFilename());
+//                    newGeneralDocByAttach.setAttachedContentType(mpFile.getContentType());
+//
+//                    GeneralDocByAttachment generalDocByAttach = this.generalDocByAttachmentRepository.save(newGeneralDocByAttach);
+//
+//                    String url = null;
+//                    // Guardamos documento en el server
+//                    url = commonService.saveDocumentServer(workCenterId, generalDoc.getId(), mpFile, GENERAL_DOCUMENTS);
+//
+//                    // Actualizamos la ruta del documento guardado
+//                    if (url != null) {
+//                        this.generalDocByAttachmentRepository.updateGeneralDocByAttachmentUrl(generalDocByAttach.getId(), url);
+//                    }
+//
+//                }
+//            }
 
-            for (GeneralDocByAttachment gda : generalDoc.getGeneralDocByAttachments()){
-                // Borramos el documento anterior del servidor
-                commonService.deleteDocumentServer(workCenterId, gda.getId(), GENERAL_DOCUMENTS);
+            List<GeneralDocByAttachment> auxToDelete = new ArrayList<>();
+            List<GeneralDocByAttachment> gda = this.generalDocByAttachmentRepository.findAllByGeneralDocId(generalDocId);
+            List <GeneralDocByAttachment> formAttachedFiles = generalDoc.getGeneralDocByAttachments();
 
-                generalDocByAttachmentRepository.deleteById(gda.getId());
-            }
+            gda.forEach(item -> {
+                AtomicBoolean exists = new AtomicBoolean(false);
 
-            if (attachedFile.length > 0) {
+                formAttachedFiles.forEach(item2 -> {
+                    if(item.getId() == item2.getId()) exists.set(true);
+                });
 
-                for (MultipartFile mpFile : attachedFile){
+                if(!exists.get()){
 
-                    GeneralDocByAttachment newGeneralDocByAttach = generalDocByAttachmentRepository.findByGeneralDocId(generalDoc.getId());
+                    auxToDelete.add(item);
 
-                    newGeneralDocByAttach.setGeneralDoc(generalDoc);
-                    newGeneralDocByAttach.setAttachedUrl("Doc_Url");
-                    newGeneralDocByAttach.setAttachedName(mpFile.getOriginalFilename());
-                    newGeneralDocByAttach.setAttachedContentType(mpFile.getContentType());
-
-                    GeneralDocByAttachment generalDocByAttach = this.generalDocByAttachmentRepository.save(newGeneralDocByAttach);
-
-                    String url = null;
-                    // Guardamos documento en el server
-                    url = commonService.saveDocumentServer(workCenterId, generalDoc.getId(), mpFile, GENERAL_DOCUMENTS);
-
-                    // Actualizamos la ruta del documento guardado
-                    if (url != null) {
-                        this.generalDocByAttachmentRepository.updateGeneralDocByAttachmentUrl(generalDocByAttach.getId(), url);
-                    }
-
+                } else {
+                    List<GeneralDocByAttachment> ignoreAttachments = new ArrayList<>();
+                    formAttachedFiles.stream().filter(i -> i.getId() == item.getId()).forEach(ignoreAttachments::add);
+                    formAttachedFiles.removeAll(ignoreAttachments);
                 }
-            }
+            });
+
+            auxToDelete.forEach(item ->{
+                //  Borramos el documento anterior del servidor
+
+                try {
+                    this.commonManager.deleteDocumentServer(workCenterId, item.getId(), GENERAL_DOCUMENTS);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                // Delete DocumentAllAttached by DrawingId
+                this.generalDocumentationRepository.deleteById(item.getId());
+            });
+
+            generalDocAttachmentsCombo(workCenterId, generalDoc, generalDoc.getGeneralDocByAttachments(), attachedFile );
 
         }catch (Exception e){
             e.printStackTrace();
@@ -162,6 +207,28 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private void generalDocAttachmentsCombo(int workCenterId, GeneralDocumentation newGeneralDoc, List<GeneralDocByAttachment> attachments, MultipartFile[] attachedFile) throws Exception {
+
+        String url= null;
+
+        for (MultipartFile mpf : attachedFile) {
+            GeneralDocByAttachment generalDocByAttachment = new GeneralDocByAttachment();
+            generalDocByAttachment.setAttachedName(mpf.getOriginalFilename());
+            generalDocByAttachment.setAttachedContentType(mpf.getContentType());
+            generalDocByAttachment.setAttachedUrl("doc_url");
+            generalDocByAttachment.setGeneralDoc(newGeneralDoc);
+
+            this.generalDocByAttachmentRepository.save(generalDocByAttachment);
+
+            url = commonManager.saveDocumentServer(workCenterId, newGeneralDoc.getId(), mpf, GENERAL_DOCUMENTS);
+
+            if (url != null) {
+                this.generalDocByAttachmentRepository.updateGeneralDocByAttachmentUrl(generalDocByAttachment.getId(), url);
+            }
+
+        }
     }
 
     @Override
