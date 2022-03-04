@@ -136,7 +136,12 @@ public class MaintenanceManager implements MaintenanceService {
     }
 
     @Override
-    public ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response,UsuarioWithRoles user) {
+    public ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user) {
 
         byte[] content = null;
 

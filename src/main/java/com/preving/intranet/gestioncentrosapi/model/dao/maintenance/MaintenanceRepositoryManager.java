@@ -2,9 +2,6 @@ package com.preving.intranet.gestioncentrosapi.model.dao.maintenance;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
-import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes;
-import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
-import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
 import com.preving.security.domain.UsuarioWithRoles;
 
 
@@ -33,6 +30,13 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
                 "GESTION_CENTROS.TM_MANTENIMIENTOS_TIPOS MT, " +
                 "GESTION_CENTROS.PROVEEDORES P, " +
                 "GESTION_CENTROS.TM_PERIODICIDAD_GASTO, ";
+
+        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
+            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
+                sql += " , GESTION_CENTROS.TM_MANTENIMIENTOS_TIPOS PXD, " +
+                        " GC2006_RELEASE.TM_PERIODICIDAD_GASTO DEL ";
+            }
+        }
 
 
         //TODO
@@ -63,6 +67,21 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
 
         if (workCenterId != 0) {
             sql += "AND PW.DELEGACION_ID =:workCenterId ";
+        }
+
+        if(maintenanceFilter != null && maintenanceFilter.getMaintenanceTypes() != null && maintenanceFilter.getMaintenanceTypes().size() != 0){
+            sql += " AND (LOWER(TRANSLATE(M.CUANTIA, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:maintenanceType, '������������', 'aeiounAEIOUN')) " +
+                    " OR LOWER(TRANSLATE(P.CIF, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:maintenanceType, '������������', 'aeiounAEIOUN')))";
+        }
+
+        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
+
+            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
+                sql += " AND M.ID = M.PROVEEDOR_ID " +
+                        " AND PXD.DELEGACION_ID = DEL.ID " +
+                        " AND DEL.RESPONSABLE = :userId ";
+            }
+
         }
 
 
@@ -111,9 +130,27 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
     }
 
     @Override
-    public boolean checkProviderCIf(String providerCif) {
-        return false;
+    public boolean checkProviderCIf(String maintenanceCif) {
+        String sql = "" +
+                "SELECT COUNT(*)  " +
+                "FROM GESTION_CENTROS.PROVEEDORES " +
+                "       WHERE LOWER(cif) = LOWER(:maintenanceCif) ";
+
+        Query query = manager.createNativeQuery(sql)
+                .setParameter("maintenanceCif", maintenanceCif);
+
+        boolean maintenanceExist = Integer.parseInt(query.getSingleResult().toString()) > 0;
+
+        return maintenanceExist;
+
+
+
     }
+
+
+
+
+
 
 
 }

@@ -1,9 +1,5 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.maintenance;
 
-import com.preving.intranet.gestioncentrosapi.model.domain.Province;
-import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderArea;
-import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderTypes;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +14,7 @@ public class MaintenanceFilter {
 
     public MaintenanceFilter(String maintenanceProvider, List<com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes> maintenanceTypes, String maintenanceStartDate, String maintenanceEndDateDate) {
         this.maintenanceProvider = maintenanceProvider;
-        MaintenanceTypes = maintenanceTypes;
+        this.MaintenanceTypes = maintenanceTypes;
         this.maintenanceStartDate = maintenanceStartDate;
         this.maintenanceEndDate = maintenanceEndDateDate;
     }

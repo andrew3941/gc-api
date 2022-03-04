@@ -34,7 +34,10 @@ public interface MaintenanceService {
     ResponseEntity<?>  editMaintenance(int workCenterId, Maintenance maintenance, MultipartFile[] attachedFile, HttpServletRequest request);
 
     List<Maintenance>getMaintenance(int workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user);
-    ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response,UsuarioWithRoles user);
+
+    ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response);
+
+    ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user);
     ResponseEntity<?> deleteMaintenance(HttpServletRequest request,int workCenterId, int maintenanceId);
       ResponseEntity<?> downloadMaintenanceDoc(HttpServletRequest request, int generalMaintenanceId);
 
@@ -45,6 +48,7 @@ public interface MaintenanceService {
 
 // edit/update maintenance
     void saveOrUpdate(Maintenance maintenance);
+
     //Logic to Save New Maintenance
     ResponseEntity<?> saveNewMaintenance(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request);
 

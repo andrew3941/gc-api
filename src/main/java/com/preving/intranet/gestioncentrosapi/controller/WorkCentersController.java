@@ -184,7 +184,7 @@ public class WorkCentersController {
      *  filter based on maintenanceFilter Class
      */
 
-    @RequestMapping(value = "{workCenterId}/maintenance-filter", method = RequestMethod.POST)
+    @RequestMapping(value = "{workCenterId}/maintenance-Filter", method = RequestMethod.POST)
     public ResponseEntity<?> findWorkCenterByFilter(HttpServletRequest request,
                                                     @PathVariable(value = "workCenterId") int workCenterId,
                                                     @RequestBody MaintenanceFilter maintenanceFilter) {
