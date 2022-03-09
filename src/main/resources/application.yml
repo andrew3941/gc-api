@@ -1,9 +1,9 @@
 server:
   port: 8443
-  #  ssl:
-  #    key-store: classpath:ssl/tomcat.keystore
-  #    key-store-password: preving
-  #    key-password: preving
+#      ssl:
+#        key-store: classpath:ssl/tomcat.keystore
+#        key-store-password: preving
+#        key-password: preving
 
   servlet:
     context-path: /gestion-centros-api
@@ -113,6 +113,7 @@ api-comunicacion:
 url-documentos-planos: C:/home/preving/app/recursos/gestion_centros
 url-documentos-proveedor: C:/home/preving/app/recursos/gestion_centros
 url-documentos-generalDocument: C:/home/preving/app/recursos/gestion_centros
+url-documentos-mantenimiento: C:/home/preving/app/recursos/gestion_centros
 urlSeguridad: http://localhost:8444/seguridad-api2
 modo-debug: true
 
@@ -147,6 +148,7 @@ api-comunicacion:
 
 url-documentos-planos: /home/preving/app/recursos/gestion_centros
 url-documentos-proveedor: /home/preving/app/recursos/gestion_centros
+url-documentos-mantenimiento: /home/preving/app/recursos/gestion_centros
 urlSeguridad: https://demointranet.preving.com/seguridad-api2
 modo-debug: false
 
@@ -177,7 +179,6 @@ api-comunicacion:
 
 url-documentos-planos: /home/preving/app/recursos/gestion_centros
 url-documentos-proveedor: /home/preving/app/recursos/gestion_centros
+url-documentos-mantenimiento: /home/preving/app/recursos/gestion_centros
 urlSeguridad: https://intranet.preving.com/seguridad-api
 modo-debug: false
-
-

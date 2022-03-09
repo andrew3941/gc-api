@@ -52,12 +52,6 @@ public class MaintenanceManager implements MaintenanceService {
     private JwtTokenUtil jwtTokenUtil;
     private MaintenanceCustomRepository maintenanceCustomRepository;
 
-    @Override
-    public ResponseEntity<?> saveMaintenance(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
-        return null;
-    }
-
-
    @Autowired
     private MaintenanceByAttachmentRepository maintenanceByAttachmentRepository;
 
@@ -252,8 +246,9 @@ public class MaintenanceManager implements MaintenanceService {
                 for (MultipartFile mpFile : attachedFile) {
 
                     MaintenanceByAttachement maintenanceByAttachement = new MaintenanceByAttachement();
+
                     maintenanceByAttachement.setMaintenance(newMaintenance);
-                    maintenanceByAttachement.setDocumentUrl("Attach_URL");
+                    maintenanceByAttachement.setDocumentUrl("DOC_URL");
                     maintenanceByAttachement.setDocName(mpFile.getOriginalFilename());
                     maintenanceByAttachement.setDocumentContentType(mpFile.getContentType());
                     this.maintenanceByAttachmentRepository.save(maintenanceByAttachement);

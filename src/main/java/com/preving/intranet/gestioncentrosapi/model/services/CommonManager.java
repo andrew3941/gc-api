@@ -60,7 +60,7 @@ public class CommonManager implements CommonService {
     @Value("${url-documentos-generalDocument}")
     private String urlGeneralDocuments;
 
-    @Value("${url-documentos-generalDocument}")
+    @Value("${url-documentos-mantenimiento}")
     private String urlNewMaintenance;
 
     private static final String CONTENT_TYPE_PDF = "application/pdf";
@@ -69,7 +69,7 @@ public class CommonManager implements CommonService {
     private static final String CONTENT_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     private static final String CONTENT_TYPE_ODT = "application/vnd.oasis.opendocument.text";
     private static final String CONTENT_TYPE_XLS = "application/vnd.ms-excel";
-    private static final String CONTENT_TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+     private static final String CONTENT_TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     private static final String CONTENT_TYPE_ODS = "application/vnd.oasis.opendocument.spreadsheet";
     private static final String CONTENT_TYPE_JPG = "image/jpg";
     private static final String CONTENT_TYPE_JPEG = "image/jpeg";

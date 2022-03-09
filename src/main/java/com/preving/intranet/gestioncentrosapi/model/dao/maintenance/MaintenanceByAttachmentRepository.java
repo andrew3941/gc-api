@@ -14,7 +14,7 @@ public interface MaintenanceByAttachmentRepository extends JpaRepository<Mainten
     @Modifying
     @Transactional
     @Query("update MaintenanceByAttachement ma set ma.documentUrl=:attachmentUrl where ma.id=:attachmentId")
-    void updateNewMaintenanceByAttachmentUrl(@Param("attachmentId") int id, @Param("attachmentUrl")String attachedUrl);
+    void updateNewMaintenanceByAttachmentUrl(@Param("attachmentId") int id, @Param("attachmentUrl")String attachmentUrl);
 
 
 
