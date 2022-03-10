@@ -44,7 +44,7 @@ public interface MaintenanceService {
     //METHOD FROM THE WORK CENTERS CONTROLLER
     List<Maintenance> findAllMaintenance();
 
-    List<Maintenance> getAllMaintenance();
+//    List<Maintenance> getAllMaintenance();
 
 // edit/update maintenance
     void saveOrUpdate(Maintenance maintenance);

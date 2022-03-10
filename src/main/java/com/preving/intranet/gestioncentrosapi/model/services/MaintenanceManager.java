@@ -38,7 +38,7 @@ import java.util.List;
 
 @Service
 public class MaintenanceManager implements MaintenanceService {
-    private static final int MAINTENANCE_DOCUMENT = 4;
+    private static final int MAINTENANCE = 3;
 //    export
     static final String EXPORT_TITLE_1 = "maintenanceProvider";
     private static final String EXPORT_TITLE_2 = "maintenanceType";
@@ -100,10 +100,10 @@ public class MaintenanceManager implements MaintenanceService {
         return null;
     }
 
-    @Override
-    public List<Maintenance> getAllMaintenance() {
-        return null;
-    }
+//    @Override
+//    public List<Maintenance> getAllMaintenance() {
+//        return null;
+//    }
 
     @Override
     public void saveOrUpdate(Maintenance maintenance) {
@@ -228,14 +228,14 @@ public class MaintenanceManager implements MaintenanceService {
      */
 //Logic to Save New Maintenance
     @Override
-    public ResponseEntity<?> saveNewMaintenance(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
+    public ResponseEntity<?> saveNewMaintenance(int maintenanceId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
 
         newMaintenance.setCreated(new Date());
         newMaintenance.getCreatedBy().setId(userId);
-        newMaintenance.getMaintenanceTypes().setId(workCenterId);
+        newMaintenance.getMaintenanceTypes().setId(maintenanceId);
 
         try {
 
@@ -256,7 +256,7 @@ public class MaintenanceManager implements MaintenanceService {
                     String url = null;
 
                     // Guardamos documento en el server
-                    url = commonService.saveDocumentServer(workCenterId, saveMaintenance.getId(), mpFile, MAINTENANCE_DOCUMENT);
+                    url = commonService.saveDocumentServer(maintenanceId, saveMaintenance.getId(), mpFile, NEW_MAINTENANCE);
 
                     // Actualizamos la ruta del documento guardado
                     if (url != null) {
