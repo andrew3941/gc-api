@@ -1,9 +1,11 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.maintenance;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ExpenditurePeriod;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 
 
 import javax.persistence.*;
@@ -41,8 +43,7 @@ public class Maintenance implements Serializable {
     public Maintenance() {
     }
 
-
-    public Maintenance(int id, MaintenanceTypes maintenanceTypes, Provider provider, String billNumber, ExpenditurePeriod expenditurePeriod, int amount, Date date, String observations, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy) {
+    public Maintenance(int id, MaintenanceTypes maintenanceTypes, Provider provider, String billNumber, ExpenditurePeriod expenditurePeriod, int amount, Date date, String observations, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy, List<MaintenanceByAttachement> maintenanceByAttachments) {
         this.id = id;
         this.maintenanceTypes = maintenanceTypes;
         this.provider = provider;
@@ -57,6 +58,7 @@ public class Maintenance implements Serializable {
         this.modifiedBy = modifiedBy;
         this.deleted = deleted;
         this.deletedBy = deletedBy;
+        this.maintenanceByAttachments = maintenanceByAttachments;
     }
 
     @Id

@@ -2,8 +2,10 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceByAttachmentRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceTypesRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceByAttachement;
+import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes;
 import com.preving.security.JwtTokenUtil;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -54,6 +56,9 @@ public class MaintenanceManager implements MaintenanceService {
 
    @Autowired
     private MaintenanceByAttachmentRepository maintenanceByAttachmentRepository;
+
+   @Autowired
+   private MaintenanceTypesRepository maintenanceTypesRepository;
 
     @Autowired
     private CommonService commonService;
@@ -126,11 +131,6 @@ public class MaintenanceManager implements MaintenanceService {
     @Override
     public List<Maintenance> getMaintenance(int workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user) {
         return maintenanceCustomRepository.getMaintenance(workCenterId, maintenanceFilter, user);
-    }
-
-    @Override
-    public ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response) {
-        return null;
     }
 
     @Override
@@ -225,16 +225,16 @@ public class MaintenanceManager implements MaintenanceService {
      *
      * @Override
      */
-//Logic to Save New Maintenance
+
+    // Logic to Save New Maintenance
     @Override
-    public ResponseEntity<?> saveNewMaintenance(int maintenanceId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
+    public ResponseEntity<?> saveNewMaintenance(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
 
         long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
 
         newMaintenance.setCreated(new Date());
         newMaintenance.getCreatedBy().setId(userId);
-        newMaintenance.getMaintenanceTypes().setId(maintenanceId);
 
         try {
 
@@ -255,7 +255,7 @@ public class MaintenanceManager implements MaintenanceService {
                     String url = null;
 
                     // Guardamos documento en el server
-                    url = commonService.saveDocumentServer(maintenanceId, saveMaintenance.getId(), mpFile, NEW_MAINTENANCE);
+                    url = commonService.saveDocumentServer(workCenterId, saveMaintenance.getId(), mpFile, NEW_MAINTENANCE);
 
                     // Actualizamos la ruta del documento guardado
                     if (url != null) {
@@ -273,6 +273,11 @@ public class MaintenanceManager implements MaintenanceService {
     }
 
     //End Logic to Save New Maintenance
+
+    @Override
+    public List<MaintenanceTypes> getAllMaintenanceTypes() {
+        return maintenanceTypesRepository.findAll();
+    }
 
 }
 

@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
+import com.google.gson.reflect.TypeToken;
 import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.Room;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
@@ -10,8 +11,10 @@ import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetail;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.services.*;
@@ -30,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -737,7 +741,8 @@ public class WorkCentersController {
     {
         return maintenanceService.getMaintenanceById(maintenanceId);
     }
-//    //creating put mapping that updates/edit the maintenance detail
+
+    ////creating put mapping that updates/edit the maintenance detail
 //    @RequestMapping(value = "{workCenterId}/maintenance/edit", method = RequestMethod.PUT)
 //    private Maintenance update(@RequestBody Maintenance maintenance,
 //                               @PathVariable("workCenterId") int workCenterId,
@@ -822,14 +827,29 @@ public class WorkCentersController {
     public ResponseEntity<?> saveMaintenance(
             @RequestParam("maintenance") String maintenance,
             @PathVariable("workCenterId") int workCenterId,
-            @RequestParam(value="attachedFile") MultipartFile[] attachedFile,
+            @RequestParam(value="attachedFile", required = false) MultipartFile[] attachedFile,
             HttpServletRequest request) {
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        Maintenance newMaintenance= gson.fromJson(maintenance, Maintenance.class);
 
-        return maintenanceService.saveNewMaintenance(workCenterId, newMaintenance, attachedFile, request);
+        ResponseEntity<?> response=null;
+        Gson gson = new GsonBuilder().create();
+        Maintenance newMaintenance = gson.fromJson(maintenance, Maintenance.class);
+
+        response = maintenanceService.saveNewMaintenance(workCenterId, newMaintenance, attachedFile, request);
+        return response;
     }
-    //end save new maintenance
+
+    @RequestMapping(value = "maintenance/maintenanceTypes", method = RequestMethod.GET)
+    public ResponseEntity<?> getMaintenanceTypes(){
+
+        try {
+            return new ResponseEntity<>(maintenanceService.getAllMaintenanceTypes(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 // delete maintenance rest api
 //    @DeleteMapping("/maintenance/{id}")
 //    public ResponseEntity<Map<String, Boolean>> deleteMaintenance(@PathVariable int id){
@@ -841,6 +861,8 @@ public class WorkCentersController {
 //        response.put("deleted", Boolean.TRUE);
 //        return ResponseEntity.ok(response);
 //    }
+
+
     // start request mapping for delete
     @RequestMapping(value = "maintenance/{maintenanceId}", method = RequestMethod.POST)
     public ResponseEntity<?> deleteMaintenanced (HttpServletRequest request,
