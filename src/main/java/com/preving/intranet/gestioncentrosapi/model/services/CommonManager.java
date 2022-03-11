@@ -79,7 +79,7 @@ public class CommonManager implements CommonService {
     private static final int DRAWINGS = 1;
     private static final int PROVIDERS = 2;
     private static final int GENERAL_DOCUMENTS = 3;
-    private static final int MAINTENANCE = 4;
+    static final int MAINTENANCE = 4;
 
 
     @Override
@@ -223,6 +223,11 @@ public class CommonManager implements CommonService {
 
         return borrado;
 
+    }
+
+    @Override
+    public boolean deleteMaintenanceServer(int workCenterId, int drawingId, int tipoDoc) throws IOException {
+        return false;
     }
 
 }

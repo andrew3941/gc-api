@@ -38,7 +38,7 @@ public interface MaintenanceService {
     ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response);
 
     ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user);
-    ResponseEntity<?> deleteMaintenance(HttpServletRequest request,int workCenterId, int maintenanceId);
+    ResponseEntity<?> deleteMaintenanced(HttpServletRequest request, int maintenanceId);
       ResponseEntity<?> downloadMaintenanceDoc(HttpServletRequest request, int generalMaintenanceId);
 
     //METHOD FROM THE WORK CENTERS CONTROLLER

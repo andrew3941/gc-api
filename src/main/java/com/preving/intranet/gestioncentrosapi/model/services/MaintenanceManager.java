@@ -63,17 +63,17 @@ public class MaintenanceManager implements MaintenanceService {
 
 
     @Override
-    public ResponseEntity<?> deleteMaintenance(HttpServletRequest request, int workCenterId, int maintenanceId) {
-        long mId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
-        Maintenance maintenance = this.maintenanceRepository.findMaintenanceById(maintenanceId);
-        if (maintenance==null) {
-            return new ResponseEntity <>(HttpStatus.NOT_FOUND);
-        }
-        try {
-            this.maintenanceRepository.maintenanceLogicDelete((int) mId,maintenance.getId());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+    public ResponseEntity<?> deleteMaintenanced(HttpServletRequest request, int maintenanceId) {
+//        long mId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+//        Maintenance maintenance = this.maintenanceRepository.findMaintenanceById(maintenanceId);
+////        if (maintenance==null) {
+////            return new ResponseEntity <>(HttpStatus.NOT_FOUND);
+////        }
+//        try {
+//            this.maintenanceRepository.maintenanceLogicDeleted(maintenanceId,  mId);
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
 
         return new ResponseEntity<>(HttpStatus.OK);
 
@@ -94,7 +94,6 @@ public class MaintenanceManager implements MaintenanceService {
         Maintenance maintenance = maintenanceRepository.findMaintenanceById(maintenanceId);
         return maintenance;
     }
-
     @Override
     public ResponseEntity<?> editMaintenance(int workCenterId, Maintenance maintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
         return null;

@@ -19,16 +19,12 @@ public interface MaintenanceRepository extends JpaRepository<Maintenance, Intege
 
     List<Maintenance> findMaintenanceByDeletedIsNullOrderByCreatedDesc();
     Maintenance findMaintenanceById(int maintenanceId);
-
-
-    //   maintenance to download
-
     Maintenance findById(int id);
 
 //    void editMaintenance(Maintenance maintenance);
-    @Modifying
-    @Transactional
-    @Query("update Maintenance m set  m.deleted=CURRENT_TIMESTAMP, m.deletedBy=:deleted_by where m.id=:maintenance_id ")
-    void maintenanceLogicDelete(@Param("deleted_by") int deleted_by, @Param("maintenance_id") int maintenance_id);
+@Modifying
+@Transactional
+@Query("update Maintenance m set  m.deleted=CURRENT_TIMESTAMP, m.deletedBy=:deleted_by where m.id=:id")
+void maintenanceLogicDeleted(@Param("deleted_by") long deleted_by, @Param("id") int id);
 
 }

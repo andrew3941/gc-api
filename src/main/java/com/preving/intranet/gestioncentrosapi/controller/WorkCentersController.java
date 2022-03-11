@@ -2,6 +2,7 @@ package com.preving.intranet.gestioncentrosapi.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.Room;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
@@ -19,6 +20,7 @@ import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path= "/workCenters")
@@ -50,7 +54,8 @@ public class WorkCentersController {
     @Autowired
     private GeneralDocumentationService generalDocumentationService;
 
-
+    @Autowired
+    private MaintenanceRepository maintenanceRepository;
     @Autowired
     private MaintenanceService maintenanceService;
 
@@ -726,23 +731,42 @@ public class WorkCentersController {
     }
 
     //creating a get mapping that retrieves the detail of a specific maintenance
-    @GetMapping(value = "maintenance/{maintenanceId}")
-    private Maintenance getMaintenance(@PathVariable(value = "maintenanceId") int maintenanceId)
+    @RequestMapping(value = "{workCenterId}/maintenance/{maintenanceId}", method = RequestMethod.GET)
+    private Maintenance getMaintenance(@PathVariable(value = "maintenanceId") int maintenanceId,
+                                       @PathVariable("workCenterId") int workCenterId)
     {
         return maintenanceService.getMaintenanceById(maintenanceId);
     }
-    //creating put mapping that updates/edit the maintenance detail
-    @PutMapping(value = "{workCenterId}/maintenance/edit")
-    private Maintenance update(@RequestBody Maintenance maintenance,
-                               @PathVariable("workCenterId") int workCenterId,
-                               @RequestParam(value="attachedFile") MultipartFile[] attachedFile,
-                               HttpServletRequest request)
-    {
-        maintenanceService.saveOrUpdate(maintenance);
-        return maintenance;
+//    //creating put mapping that updates/edit the maintenance detail
+//    @RequestMapping(value = "{workCenterId}/maintenance/edit", method = RequestMethod.PUT)
+//    private Maintenance update(@RequestBody Maintenance maintenance,
+//                               @PathVariable("workCenterId") int workCenterId,
+//                               @RequestParam(value="attachedFile") MultipartFile[] attachedFile,
+//                               HttpServletRequest request)
+//    {
+//        maintenanceService.saveOrUpdate(maintenance);
+//        return maintenance;
+//    }
+
+// update employee rest api
+
+    @PutMapping("{workCenterId}/maintenance/{id}")
+    public ResponseEntity<Maintenance> updateMaintenance(@PathVariable int id,
+                                                         @PathVariable("workCenterId") int workCenterId,
+                                                      @RequestBody Maintenance maintenanceDetails){
+        Maintenance maintenance = maintenanceRepository.findById(id);
+//                .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id :" + id));
+
+        maintenance.setId(maintenanceDetails.getId());
+        maintenance.setProvider(maintenanceDetails.getProvider());
+        maintenance.setBillNumber(maintenanceDetails.getBillNumber());
+        maintenance.setAmount(maintenanceDetails.getAmount());
+        maintenance.setMaintenanceTypes(maintenanceDetails.getMaintenanceTypes());
+        maintenance.setExpenditurePeriod(maintenanceDetails.getExpenditurePeriod());
+        maintenance.setObservations(maintenanceDetails.getObservations());
+        Maintenance updatedMaintenance = maintenanceRepository.save(maintenance);
+        return ResponseEntity.ok(updatedMaintenance);
     }
-
-
 //METHOD FOR RETRIEVING MAINTENANCE LIST
     @RequestMapping(value = "{workCenterId}/maintenance", method = RequestMethod.GET)
     public ResponseEntity<List<Maintenance>> getAllMaintenance(
@@ -762,13 +786,13 @@ public class WorkCentersController {
    }
     //end request mapping for download
 
-    // start request mapping for delete
-    @RequestMapping(value = "{workCenterId}/maintenance/{maintenanceId}/delete", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteMaintenance (HttpServletRequest request,
-                                         @PathVariable(value = "workCenterId") int workCenterId,
-                                         @PathVariable(value = "maintenanceId") int maintenanceId) {
-        return maintenanceService.deleteMaintenance(request, workCenterId, maintenanceId);
-    }
+//    // start request mapping for delete
+//    @RequestMapping(value = "{workCenterId}/maintenance/{maintenanceId}/delete", method = RequestMethod.POST)
+//    public ResponseEntity<?> deleteMaintenance (HttpServletRequest request,
+//                                         @PathVariable(value = "workCenterId") int workCenterId,
+//                                         @PathVariable(value = "maintenanceId") int maintenanceId) {
+//        return maintenanceService.deleteMaintenance(request, workCenterId, maintenanceId);
+//    }
     //end request mapping for delete
 
     //export
@@ -806,5 +830,22 @@ public class WorkCentersController {
         return maintenanceService.saveNewMaintenance(workCenterId, newMaintenance, attachedFile, request);
     }
     //end save new maintenance
-
+// delete maintenance rest api
+//    @DeleteMapping("/maintenance/{id}")
+//    public ResponseEntity<Map<String, Boolean>> deleteMaintenance(@PathVariable int id){
+//        Maintenance maintenance = maintenanceRepository.findById(id);
+////                .orElseThrow(() -> new ResourceNotFoundException("Maintenance not exist with id :" + id)
+//
+//        maintenanceRepository.delete(maintenance);
+//        Map<String, Boolean> response = new HashMap<>();
+//        response.put("deleted", Boolean.TRUE);
+//        return ResponseEntity.ok(response);
+//    }
+    // start request mapping for delete
+    @RequestMapping(value = "maintenance/{maintenanceId}", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteMaintenanced (HttpServletRequest request,
+                                                 @PathVariable(value = "maintenanceId") int maintenanceId) {
+        return maintenanceService.deleteMaintenanced(request,maintenanceId);
+    }
+//end request mapping for delete
 }
