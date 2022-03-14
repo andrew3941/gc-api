@@ -41,7 +41,7 @@ import java.util.List;
 @Service
 public class MaintenanceManager implements MaintenanceService {
     private static final int MAINTENANCE = 3;
-//    export
+    //    export
     static final String EXPORT_TITLE_1 = "maintenanceProvider";
     private static final String EXPORT_TITLE_2 = "maintenanceType";
     static final String EXPORT_TITLE_3 = "maintenanceStartDate";
@@ -50,15 +50,15 @@ public class MaintenanceManager implements MaintenanceService {
 
     // autowired the maintenance repo
     @Autowired
-   private MaintenanceRepository maintenanceRepository;
+    private MaintenanceRepository maintenanceRepository;
     private JwtTokenUtil jwtTokenUtil;
     private MaintenanceCustomRepository maintenanceCustomRepository;
 
-   @Autowired
+    @Autowired
     private MaintenanceByAttachmentRepository maintenanceByAttachmentRepository;
 
-   @Autowired
-   private MaintenanceTypesRepository maintenanceTypesRepository;
+    @Autowired
+    private MaintenanceTypesRepository maintenanceTypesRepository;
 
     @Autowired
     private CommonService commonService;
@@ -91,11 +91,11 @@ public class MaintenanceManager implements MaintenanceService {
         File file = null;
         byte[] content = null;
 
-      return new ResponseEntity<byte[]>(content, HttpStatus.OK);
+        return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
     @Override
-    public Maintenance getMaintenanceById(int maintenanceId){
+    public Maintenance getMaintenanceById(HttpServletRequest request, int maintenanceId){
         Maintenance maintenance = maintenanceRepository.findMaintenanceById(maintenanceId);
         return maintenance;
     }
@@ -164,7 +164,7 @@ public class MaintenanceManager implements MaintenanceService {
                 EXPORT_TITLE_2,
                 EXPORT_TITLE_3,
                 EXPORT_TITLE_4,
-         };
+        };
 
         // Creamos una fila en la hoja en la posicion 0 para los headers
         HSSFRow headerRow = hoja.createRow(0);

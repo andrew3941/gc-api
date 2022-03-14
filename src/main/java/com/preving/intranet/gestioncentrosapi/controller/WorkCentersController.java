@@ -417,8 +417,8 @@ public class WorkCentersController {
 
     @RequestMapping(value = "{workCenterId}/generalDocList/{generalDocId}/delete", method = RequestMethod.POST)
     public ResponseEntity<?> deleteGeneralDoc (HttpServletRequest request,
-                                            @PathVariable(value = "workCenterId") int workCenterId,
-                                            @PathVariable(value = "generalDocId") int generalDocId) {
+                                               @PathVariable(value = "workCenterId") int workCenterId,
+                                               @PathVariable(value = "generalDocId") int generalDocId) {
 
 
         return workCenterService.deleteGeneralDoc(request,workCenterId,generalDocId);
@@ -685,10 +685,10 @@ public class WorkCentersController {
 
     }
 
-  /**
+    /**
      * Obtener listado de documentación general en un centro de trabajo por DNI
      * @regreso
- */
+     */
     @RequestMapping(value = "{workCenterId}/generalDoc", method = RequestMethod.GET)
     public ResponseEntity<?> getGeneralDocumentation(@PathVariable(value = "workCenterId") int workCenterId){
 
@@ -757,31 +757,18 @@ public class WorkCentersController {
     //creating a get mapping that retrieves the detail of a specific maintenance
     @RequestMapping(value = "{workCenterId}/maintenance/{maintenanceId}", method = RequestMethod.GET)
     private Maintenance getMaintenance(@PathVariable(value = "maintenanceId") int maintenanceId,
-                                       @PathVariable("workCenterId") int workCenterId)
+                                       @PathVariable("workCenterId") int workCenterId, HttpServletRequest request)
     {
-        return maintenanceService.getMaintenanceById(maintenanceId);
+        return ( maintenanceService.getMaintenanceById(request,maintenanceId));
     }
 
-    ////creating put mapping that updates/edit the maintenance detail
-//    @RequestMapping(value = "{workCenterId}/maintenance/edit", method = RequestMethod.PUT)
-//    private Maintenance update(@RequestBody Maintenance maintenance,
-//                               @PathVariable("workCenterId") int workCenterId,
-//                               @RequestParam(value="attachedFile") MultipartFile[] attachedFile,
-//                               HttpServletRequest request)
-//    {
-//        maintenanceService.saveOrUpdate(maintenance);
-//        return maintenance;
-//    }
+    //creating put mapping that updates/edit the maintenance detail
 
-// update employee rest api
-
-    @PutMapping("{workCenterId}/maintenance/{id}")
+    @RequestMapping(value = "{workCenterId}/maintenance/{id}", method = RequestMethod.POST)
     public ResponseEntity<Maintenance> updateMaintenance(@PathVariable int id,
                                                          @PathVariable("workCenterId") int workCenterId,
-                                                      @RequestBody Maintenance maintenanceDetails){
+                                                         @RequestBody Maintenance maintenanceDetails){
         Maintenance maintenance = maintenanceRepository.findById(id);
-//                .orElseThrow(() -> new ResourceNotFoundException("Employee not exist with id :" + id));
-
         maintenance.setId(maintenanceDetails.getId());
         maintenance.setProvider(maintenanceDetails.getProvider());
         maintenance.setBillNumber(maintenanceDetails.getBillNumber());
@@ -792,7 +779,7 @@ public class WorkCentersController {
         Maintenance updatedMaintenance = maintenanceRepository.save(maintenance);
         return ResponseEntity.ok(updatedMaintenance);
     }
-//METHOD FOR RETRIEVING MAINTENANCE LIST
+    //METHOD FOR RETRIEVING MAINTENANCE LIST
     @RequestMapping(value = "{workCenterId}/maintenance", method = RequestMethod.GET)
     public ResponseEntity<List<Maintenance>> getAllMaintenance(
             @PathVariable(value = "workCenterId") int workCenterId
@@ -803,12 +790,12 @@ public class WorkCentersController {
     }
 
 
-   //start request mapping for download
-   @RequestMapping(value = "maintenance/{generalMaintenanceId}/download", method = RequestMethod.GET)
-   public ResponseEntity<?> downloadMaintenance(HttpServletRequest request, @PathVariable(value = "generalMaintenanceId") int generalMaintenanceId) {
+    //start request mapping for download
+    @RequestMapping(value = "maintenance/{generalMaintenanceId}/download", method = RequestMethod.GET)
+    public ResponseEntity<?> downloadMaintenance(HttpServletRequest request, @PathVariable(value = "generalMaintenanceId") int generalMaintenanceId) {
 
-       return ( maintenanceService.downloadMaintenanceDoc(request,generalMaintenanceId));
-   }
+        return ( maintenanceService.downloadMaintenanceDoc(request,generalMaintenanceId));
+    }
     //end request mapping for download
 
 //    // start request mapping for delete
@@ -823,9 +810,9 @@ public class WorkCentersController {
     //export
     @RequestMapping(value="exportMaintenance", method = RequestMethod.POST)
     public ResponseEntity<?> exportMaintenance(HttpServletRequest request,
-                                                HttpServletResponse response,
-                                                @RequestParam ("maintenanceFilterList")
-                                                        String MaintenanceList) {
+                                               HttpServletResponse response,
+                                               @RequestParam ("maintenanceFilterList")
+                                                       String MaintenanceList) {
 
         ResponseEntity<?> resp = null;
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();

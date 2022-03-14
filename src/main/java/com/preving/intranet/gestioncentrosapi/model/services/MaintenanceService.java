@@ -1,16 +1,12 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
-import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 
 import java.util.List;
-
-import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,16 +15,13 @@ import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenan
 import com.preving.security.domain.UsuarioWithRoles;
 
 
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 @Service
 public interface MaintenanceService {
 
     //getting a specific record by using the method getMaintenanceById() of maintenanceRepository
-    Maintenance getMaintenanceById(int maintenanceId);
+    Maintenance getMaintenanceById(HttpServletRequest request, int maintenanceId);
 
     ResponseEntity<?>  editMaintenance(int workCenterId, Maintenance maintenance, MultipartFile[] attachedFile, HttpServletRequest request);
 
