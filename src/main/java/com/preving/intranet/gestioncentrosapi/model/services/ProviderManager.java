@@ -756,5 +756,13 @@ public class ProviderManager implements ProviderService {
 
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
+
+    @Override
+    public List<Provider> getProvidersByWorkCenter(int workCenterId) {
+
+        List<Provider> providers = providerCustomRepository.getProvidersByWorkCenter(workCenterId);
+
+        return providers;
+    }
 }
 

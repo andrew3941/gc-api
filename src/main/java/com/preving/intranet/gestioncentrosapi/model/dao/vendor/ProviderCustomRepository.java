@@ -16,4 +16,6 @@ public interface ProviderCustomRepository  {
     String findDocUrlByProviderId(int providerId, int workCenterId);
 
     boolean checkProviderCIf(String providerCif);
+
+    List<Provider> getProvidersByWorkCenter(int workCenterId);
 }

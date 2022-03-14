@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -173,6 +176,39 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
         boolean providerExist = Integer.parseInt(query.getSingleResult().toString()) > 0;
 
         return providerExist;
+
+    }
+
+    @Override
+    public List<Provider> getProvidersByWorkCenter(int workCenterId) {
+
+        String sql = "" +
+                "SELECT P.ID, P.NOMBRE " +
+                "FROM GESTION_CENTROS.PROVEEDORES P, " +
+                "       GESTION_CENTROS.PROVEEDORES_X_DELEGACIONES PXD " +
+                "WHERE P.ID = PXD.PROVEEDOR_ID " +
+                "AND PXD.DELEGACION_ID = :workCenterId";
+
+        Query query = manager.createNativeQuery(sql)
+                .setParameter("workCenterId", workCenterId);
+
+        List<Object[]> providers = query.getResultList();
+
+        return mappingProviders(providers);
+
+    }
+
+    private List<Provider> mappingProviders(List<Object[]> providers) {
+
+        List<Provider> mappedProviders = new ArrayList<>();
+
+        providers.stream().forEach((record) -> {
+            Provider provider = new Provider(((BigInteger) record[0]).intValue(),
+                    (String) record[1]);
+            mappedProviders.add(provider);
+        });
+
+        return mappedProviders;
 
     }
 

@@ -60,8 +60,12 @@ public class WorkCentersController {
 
     @Autowired
     private MaintenanceRepository maintenanceRepository;
+
     @Autowired
     private MaintenanceService maintenanceService;
+
+    @Autowired
+    private ProviderService providerService;
 
     @Value("${modo-debug}")
     private boolean modoDebug;
@@ -732,6 +736,22 @@ public class WorkCentersController {
     public ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request, @PathVariable(value = "generalDocAttachId") int generalDocAttachId) {
 
         return ( generalDocumentationService.downloadGeneralDoc(request,generalDocAttachId));
+    }
+
+    /**
+     * Obtiene listado de proveedores por delegacion
+     * @return
+     */
+    @RequestMapping(value = "{workCenterId}/providers", method = RequestMethod.GET)
+    public ResponseEntity<?> getProvidersByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
+
+        try {
+            return new ResponseEntity<>(providerService.getProvidersByWorkCenter(workCenterId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     //creating a get mapping that retrieves the detail of a specific maintenance

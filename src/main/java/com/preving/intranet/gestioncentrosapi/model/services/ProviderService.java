@@ -41,4 +41,6 @@ public interface ProviderService {
 
     List<ProviderDetailConf> getSpecificProviderForm(int providerTypeId);
 
+    List<Provider> getProvidersByWorkCenter(int workCenterId);
+
 }
