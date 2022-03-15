@@ -197,7 +197,7 @@ public class WorkCentersController {
      *  filter based on maintenanceFilter Class
      */
 
-    @RequestMapping(value = "{workCenterId}/maintenance-Filter", method = RequestMethod.POST)
+    @RequestMapping(value = "{workCenterId}/maintenance/filter", method = RequestMethod.POST)
     public ResponseEntity<?> findWorkCenterByFilter(HttpServletRequest request,
                                                     @PathVariable(value = "workCenterId") int workCenterId,
                                                     @RequestBody MaintenanceFilter maintenanceFilter) {
@@ -646,6 +646,8 @@ public class WorkCentersController {
 
     }
 
+
+
     @RequestMapping(value = "generalDocumentation/certificatesTypes", method = RequestMethod.GET)
     public ResponseEntity<?> getCertificateTypes(){
 
@@ -754,7 +756,7 @@ public class WorkCentersController {
 
     }
 
-    //creating a get mapping that retrieves the detail of a specific maintenance
+        //creating a get mapping that retrieves the detail of a specific maintenance
     @RequestMapping(value = "{workCenterId}/maintenance/{maintenanceId}", method = RequestMethod.GET)
     private Maintenance getMaintenance(@PathVariable(value = "maintenanceId") int maintenanceId,
                                        @PathVariable("workCenterId") int workCenterId, HttpServletRequest request)
@@ -769,7 +771,8 @@ public class WorkCentersController {
                                                          @PathVariable("workCenterId") int workCenterId,
                                                          @RequestBody Maintenance maintenanceDetails){
         Maintenance maintenance = maintenanceRepository.findById(id);
-        maintenance.setId(maintenanceDetails.getId());
+
+maintenance.setId(maintenanceDetails.getId());
         maintenance.setProvider(maintenanceDetails.getProvider());
         maintenance.setBillNumber(maintenanceDetails.getBillNumber());
         maintenance.setAmount(maintenanceDetails.getAmount());
@@ -844,6 +847,8 @@ public class WorkCentersController {
         response = maintenanceService.saveNewMaintenance(workCenterId, newMaintenance, attachedFile, request);
         return response;
     }
+
+    // Get mapping details for MaintenanceType
 
     @RequestMapping(value = "maintenance/maintenanceTypes", method = RequestMethod.GET)
     public ResponseEntity<?> getMaintenanceTypes(){

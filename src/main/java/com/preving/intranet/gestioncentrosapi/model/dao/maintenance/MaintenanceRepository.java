@@ -3,6 +3,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.TaxesTypes;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceByAttachement;
+import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceByAttachement;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,11 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
-public interface MaintenanceRepository extends JpaRepository<Maintenance, Integer> {
-
+public interface  MaintenanceRepository extends JpaRepository<Maintenance, Integer> {
 
     List<Maintenance> findMaintenanceByDeletedIsNullOrderByCreatedDesc();
     Maintenance findMaintenanceById(int maintenanceId);
+    //   maintenance to download
+
     Maintenance findById(int id);
 
 //    void editMaintenance(Maintenance maintenance);

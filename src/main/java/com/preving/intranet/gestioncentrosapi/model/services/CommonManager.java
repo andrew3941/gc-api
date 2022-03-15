@@ -4,6 +4,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepositor
 import com.preving.intranet.gestioncentrosapi.model.dao.drawingByAttachments.DrawingByAttachmentsRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.GeneralDocByAttachmentRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderRepository;
@@ -41,6 +42,7 @@ public class CommonManager implements CommonService {
 
     @Autowired
     private ProviderCustomRepository providerCustomRepository;
+
 
     @Autowired
     private ProvidersCommonDetailsRepository providersCommonDetailsRepository;

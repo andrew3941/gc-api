@@ -23,6 +23,9 @@ public interface MaintenanceService {
     //getting a specific record by using the method getMaintenanceById() of maintenanceRepository
     Maintenance getMaintenanceById(HttpServletRequest request, int maintenanceId);
 
+
+    List<MaintenanceTypes> getMaintenanceType(int workCenterId);
+
     ResponseEntity<?>  editMaintenance(int workCenterId, Maintenance maintenance, MultipartFile[] attachedFile, HttpServletRequest request);
 
     List<Maintenance>getMaintenance(int workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user);
@@ -41,8 +44,12 @@ public interface MaintenanceService {
     // edit/update maintenance
     void saveOrUpdate(Maintenance maintenance);
 
+
     //Logic to Save New Maintenance
     ResponseEntity<?> saveNewMaintenance(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request);
 
     List<MaintenanceTypes> getAllMaintenanceTypes();
+    // method for maintenanceTypes
+    List<MaintenanceTypes> getMaintenanceTypes();
+
 }

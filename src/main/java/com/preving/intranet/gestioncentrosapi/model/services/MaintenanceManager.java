@@ -60,7 +60,7 @@ public class MaintenanceManager implements MaintenanceService {
     @Autowired
     private MaintenanceTypesRepository maintenanceTypesRepository;
 
-    @Autowired
+      @Autowired
     private CommonService commonService;
 
 
@@ -120,6 +120,12 @@ public class MaintenanceManager implements MaintenanceService {
         this.maintenanceRepository = maintenanceRepository;
     }
 
+       @Override
+    public List<MaintenanceTypes> getMaintenanceType(int workCenterId) {
+        return maintenanceTypesRepository.findAll();
+    }
+
+
     @Override
     public List<Maintenance> findAllMaintenance(){
 
@@ -132,6 +138,11 @@ public class MaintenanceManager implements MaintenanceService {
     public List<Maintenance> getMaintenance(int workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user) {
         return maintenanceCustomRepository.getMaintenance(workCenterId, maintenanceFilter, user);
     }
+
+
+
+
+
 
     @Override
     public ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user) {
@@ -225,8 +236,7 @@ public class MaintenanceManager implements MaintenanceService {
      *
      * @Override
      */
-
-    // Logic to Save New Maintenance
+    //Logic to Save New Maintenance
     @Override
     public ResponseEntity<?> saveNewMaintenance(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
 
@@ -271,6 +281,12 @@ public class MaintenanceManager implements MaintenanceService {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @Override
+    public List<MaintenanceTypes> getMaintenanceTypes() {
+        return maintenanceTypesRepository.findAll();
+    }
+
 
     //End Logic to Save New Maintenance
 
