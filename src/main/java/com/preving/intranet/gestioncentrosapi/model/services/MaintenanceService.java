@@ -41,4 +41,8 @@ public interface MaintenanceService {
     // method for maintenanceTypes
     List<MaintenanceTypes> getMaintenanceTypes();
 
+    // method for delete maintenance
+    ResponseEntity<?> deleteMaintenance(HttpServletRequest request,int workCenterId, int maintenanceId);
+
+
 }

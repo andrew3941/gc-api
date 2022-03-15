@@ -129,6 +129,7 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
 
     }
 
+
     @Override
     public boolean checkProviderCIf(String maintenanceCif) {
         String sql = "" +
@@ -147,10 +148,26 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
 
     }
 
+    @Override
+    public String findDocUrlByMaintenanceId(int maintenanceId, int workCenterId) {
+        String sql = "" +
+                "SELECT DET.DOC_URL " +
+                "FROM GESTION_CENTROS.MANTENIMIENTOS_X_ADJUNTOS DET, " +
+                "       GC2006_RELEASE.PC_DELEGACIONES DEL, " +
+                "       GESTION_CENTROS.MAINTENANCE_X_DELEGACIONES MAINS " +
+                "WHERE DET.MANTENIMIENTO_ID = MAINS.ID " +
+                "       AND MAINS.DELEGACION_ID = DEL.ID " +
+                "AND MAINS.MAINTENANCE_ID = :maintenanceId " +
+                "       AND MAINS.DELEGACION_ID = :workCenterId ";
 
+        Query query = manager.createNativeQuery(sql)
+                .setParameter("maintenanceId", maintenanceId)
+                .setParameter("workCenterId", workCenterId);
 
+        String docUrl = query.getSingleResult().toString();
 
-
+        return docUrl;
+    }
 
 
 }

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
 import com.google.gson.reflect.TypeToken;
+import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.Room;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
@@ -33,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -372,7 +374,7 @@ public class WorkCentersController {
     /**
      * Obtiene listado de salas de un centro de trabajo por Id
      * @return
-     */
+
     @RequestMapping(value = "{workCenterId}/rooms", method = RequestMethod.GET)
     public ResponseEntity<?> getRoomListByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
 
@@ -525,12 +527,6 @@ public class WorkCentersController {
 
         return ( workCenterService.downloadDrawingDoc(request,drawingId));
     }
-
-//    @RequestMapping(value = "drawing/{drawingId}/download", method = RequestMethod.GET)
-//    public ResponseEntity<?> downloadMaintenanceDoc(HttpServletRequest request, @PathVariable(value = "maintenanceDocId") int maintenanceDocId) {
-//
-//        return ( maintenanceService.downloadMaintenanceDoc(request,maintenanceDocId));
-//    }
 
 
     /**
@@ -792,6 +788,17 @@ maintenance.setId(maintenanceDetails.getId());
     public ResponseEntity<?> downloadMaintenance(HttpServletRequest request, @PathVariable(value = "generalMaintenanceId") int generalMaintenanceId) {
         return null;
     }
+
+    @RequestMapping(value = "{workCenterId}/maintenance/{maintenanceId}/delete", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteMaintenance (HttpServletRequest request,
+                                            @PathVariable(value = "workCenterId") int workCenterId,
+                                            @PathVariable(value = "maintenanceId") int maintenanceId) {
+
+
+        return maintenanceService.deleteMaintenance(request,workCenterId,maintenanceId);
+
+    }
+
 
 
     //export

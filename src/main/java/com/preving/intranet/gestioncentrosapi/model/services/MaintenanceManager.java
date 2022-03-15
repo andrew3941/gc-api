@@ -3,6 +3,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceB
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceTypesRepository;
+import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceByAttachement;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes;
@@ -32,7 +33,7 @@ import java.io.File;
 import java.io.IOException;
 
 
-
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
 
@@ -64,12 +65,39 @@ public class MaintenanceManager implements MaintenanceService {
 
 
     private static final int NEW_MAINTENANCE = 3;
+
     @Override
     public Maintenance getMaintenanceById(int maintenanceId){
         Maintenance maintenance = maintenanceRepository.findMaintenanceById(maintenanceId);
         return maintenance;
     }
-    @Override
+
+    public ResponseEntity<?> downloadMaintenanceDoc(HttpServletRequest request, int workCenterId, int maintenanceId) {
+            Maintenance maintenance = null;
+            File file = null;
+            byte[] content = null;
+        String docUrl=null;
+        try {
+               // String docUrl = this.maintenanceCustomRepository.findDocUrlByMaintenanceId(maintenanceId, workCenterId);
+
+                file = new File(docUrl);
+                if (file.exists()) {
+                    content = Files.readAllBytes(file.toPath());
+                } else {
+                    return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return new ResponseEntity<>("Unknown error", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+
+            return new ResponseEntity<byte[]>(content, HttpStatus.OK);
+        }
+
+
+        @Override
     public ResponseEntity<?> editMaintenance(int workCenterId, Maintenance maintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
         return null;
     }
@@ -99,11 +127,6 @@ public class MaintenanceManager implements MaintenanceService {
         List<Maintenance> maintenances = this.maintenanceCustomRepository.getMaintenance(workCenterId, maintenanceFilter, user);
         return maintenances;
     }
-
-
-
-
-
 
     @Override
     public ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user) {
@@ -248,6 +271,24 @@ public class MaintenanceManager implements MaintenanceService {
         return maintenanceTypesRepository.findAll();
     }
 
+    @Override
+    public ResponseEntity<?> deleteMaintenance(HttpServletRequest request, int workCenterId, int maintenanceId) {
+        long mId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        Maintenance maintenance = this.maintenanceRepository.findMaintenanceById(maintenanceId);
+
+        if (maintenance==null){
+            return new ResponseEntity <>(HttpStatus.NOT_FOUND);
+        }
+
+        try {
+            this.maintenanceRepository.maintenanceLogicDeleted(mId, maintenance.getId());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     //End Logic to Save New Maintenance
 
@@ -255,6 +296,8 @@ public class MaintenanceManager implements MaintenanceService {
     public List<MaintenanceTypes> getAllMaintenanceTypes() {
         return maintenanceTypesRepository.findAll();
     }
+
+
 
 }
 

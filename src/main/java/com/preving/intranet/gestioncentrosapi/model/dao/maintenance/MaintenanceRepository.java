@@ -1,4 +1,5 @@
 package com.preving.intranet.gestioncentrosapi.model.dao.maintenance;
+import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.TaxesTypes;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
@@ -20,13 +21,11 @@ public interface  MaintenanceRepository extends JpaRepository<Maintenance, Integ
     List<Maintenance> findMaintenancesByDeletedByIsNullOrderByCreatedDesc();
     Maintenance findMaintenanceById(int maintenanceId);
     //   maintenance to download
-
     Maintenance findById(int id);
 
-//    void editMaintenance(Maintenance maintenance);
-@Modifying
-@Transactional
-@Query("update Maintenance m set  m.deleted=CURRENT_TIMESTAMP, m.deletedBy=:deleted_by where m.id=:id")
-void maintenanceLogicDeleted(@Param("deleted_by") long deleted_by, @Param("id") int id);
+    @Modifying
+    @Transactional
+    @Query("update Maintenance ma set  ma.deleted=CURRENT_TIMESTAMP, ma.deletedBy=:deleted_by where ma.id=:maintenanceId ")
+    void maintenanceLogicDeleted(@Param("deleted_by") long deleted_by, @Param("maintenanceId") int maintenanceId);
 
 }
