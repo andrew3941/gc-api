@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
 import com.preving.security.domain.UsuarioWithRoles;
@@ -94,7 +95,9 @@ public class MaintenanceManager implements MaintenanceService {
 
     @Override
     public List<Maintenance> getMaintenance(int workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user) {
-        return maintenanceCustomRepository.getMaintenance(workCenterId, maintenanceFilter, user);
+        // TODO
+        List<Maintenance> maintenances = this.maintenanceCustomRepository.getMaintenance(workCenterId, maintenanceFilter, user);
+        return maintenances;
     }
 
 
@@ -195,11 +198,11 @@ public class MaintenanceManager implements MaintenanceService {
      * @Override
      */
     //Logic to Save New Maintenance
-    @Override
+    @Transactional
     public ResponseEntity<?> saveNewMaintenance(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
 
-        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
-
+        // TODO
+        long userId = 1;
 
         newMaintenance.setCreated(new Date());
         newMaintenance.getCreatedBy().setId(userId);

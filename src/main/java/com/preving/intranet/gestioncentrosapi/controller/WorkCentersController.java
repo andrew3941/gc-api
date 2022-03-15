@@ -808,8 +808,7 @@ maintenance.setId(maintenanceDetails.getId());
 
         try {
             UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
-            return new ResponseEntity<>(maintenanceService.exportMaintenance
-                    (maintenanceFilter, response, user), HttpStatus.OK);
+            return new ResponseEntity<>(maintenanceService.exportMaintenance(maintenanceFilter, response, user), HttpStatus.OK);
         } catch (DataAccessException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
