@@ -16,6 +16,5 @@ public interface MaintenanceCustomRepository {
     String findDocUrlByMaintenanceType(int maintenanceType, int workCenterId);
 
     boolean checkProviderCIf(String providerCif);
-
-
+   String findDocUrlByMaintenanceId(int maintenanceId, int workCenterId);
 }

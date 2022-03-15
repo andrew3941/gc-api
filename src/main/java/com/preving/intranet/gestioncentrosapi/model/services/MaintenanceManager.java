@@ -76,9 +76,9 @@ public class MaintenanceManager implements MaintenanceService {
             Maintenance maintenance = null;
             File file = null;
             byte[] content = null;
-        String docUrl=null;
+
         try {
-               // String docUrl = this.maintenanceCustomRepository.findDocUrlByMaintenanceId(maintenanceId, workCenterId);
+                String docUrl = this.maintenanceCustomRepository.findDocUrlByMaintenanceId(maintenanceId, workCenterId);
 
                 file = new File(docUrl);
                 if (file.exists()) {
