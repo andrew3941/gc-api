@@ -17,7 +17,7 @@ import java.util.List;
 
 public interface  MaintenanceRepository extends JpaRepository<Maintenance, Integer> {
 
-    List<Maintenance> findMaintenanceByDeletedIsNullOrderByCreatedDesc();
+    List<Maintenance> findMaintenancesByDeletedByIsNullOrderByCreatedDesc();
     Maintenance findMaintenanceById(int maintenanceId);
     //   maintenance to download
 

@@ -47,8 +47,6 @@ public class MaintenanceManager implements MaintenanceService {
     static final String EXPORT_TITLE_3 = "maintenanceStartDate";
     static final String EXPORT_TITLE_4 = "maintenanceEndDate";
 
-
-    // autowired the maintenance repo
     @Autowired
     private MaintenanceRepository maintenanceRepository;
     private JwtTokenUtil jwtTokenUtil;
@@ -65,37 +63,8 @@ public class MaintenanceManager implements MaintenanceService {
 
 
     private static final int NEW_MAINTENANCE = 3;
-
-
     @Override
-    public ResponseEntity<?> deleteMaintenanced(HttpServletRequest request, int maintenanceId) {
-//        long mId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
-//        Maintenance maintenance = this.maintenanceRepository.findMaintenanceById(maintenanceId);
-////        if (maintenance==null) {
-////            return new ResponseEntity <>(HttpStatus.NOT_FOUND);
-////        }
-//        try {
-//            this.maintenanceRepository.maintenanceLogicDeleted(maintenanceId,  mId);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-
-        return new ResponseEntity<>(HttpStatus.OK);
-
-    }
-
-    @Override
-    public ResponseEntity<?> downloadMaintenanceDoc(HttpServletRequest request, int generalMaintenanceId) {
-        MaintenanceByAttachement mba = null;
-
-        File file = null;
-        byte[] content = null;
-
-        return new ResponseEntity<byte[]>(content, HttpStatus.OK);
-    }
-
-    @Override
-    public Maintenance getMaintenanceById(HttpServletRequest request, int maintenanceId){
+    public Maintenance getMaintenanceById(int maintenanceId){
         Maintenance maintenance = maintenanceRepository.findMaintenanceById(maintenanceId);
         return maintenance;
     }
@@ -104,15 +73,6 @@ public class MaintenanceManager implements MaintenanceService {
         return null;
     }
 
-//    @Override
-//    public List<Maintenance> getAllMaintenance() {
-//        return null;
-//    }
-
-    @Override
-    public void saveOrUpdate(Maintenance maintenance) {
-        maintenanceRepository.save(maintenance);
-    }
 
 
     @Autowired
@@ -128,9 +88,7 @@ public class MaintenanceManager implements MaintenanceService {
 
     @Override
     public List<Maintenance> findAllMaintenance(){
-
-        return maintenanceRepository.findMaintenanceByDeletedIsNullOrderByCreatedDesc();
-//        return maintenanceRepository.findAll();
+        return maintenanceRepository.findMaintenancesByDeletedByIsNullOrderByCreatedDesc();
     }
 
 

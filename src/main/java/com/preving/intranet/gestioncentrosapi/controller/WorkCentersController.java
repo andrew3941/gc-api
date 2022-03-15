@@ -756,15 +756,13 @@ public class WorkCentersController {
 
     }
 
-        //creating a get mapping that retrieves the detail of a specific maintenance
+        //  get maintenance by id
     @RequestMapping(value = "{workCenterId}/maintenance/{maintenanceId}", method = RequestMethod.GET)
-    private Maintenance getMaintenance(@PathVariable(value = "maintenanceId") int maintenanceId,
-                                       @PathVariable("workCenterId") int workCenterId, HttpServletRequest request)
-    {
-        return ( maintenanceService.getMaintenanceById(request,maintenanceId));
+    private Maintenance getMaintenance(
+            @PathVariable(value = "maintenanceId") int maintenanceId,
+            @PathVariable("workCenterId") int workCenterId) {
+        return ( maintenanceService.getMaintenanceById(maintenanceId));
     }
-
-    //creating put mapping that updates/edit the maintenance detail
 
     @RequestMapping(value = "{workCenterId}/maintenance/{id}", method = RequestMethod.POST)
     public ResponseEntity<Maintenance> updateMaintenance(@PathVariable int id,
@@ -784,31 +782,17 @@ maintenance.setId(maintenanceDetails.getId());
     }
     //METHOD FOR RETRIEVING MAINTENANCE LIST
     @RequestMapping(value = "{workCenterId}/maintenance", method = RequestMethod.GET)
-    public ResponseEntity<List<Maintenance>> getAllMaintenance(
-            @PathVariable(value = "workCenterId") int workCenterId
-    ){
+    public ResponseEntity<List<Maintenance>> getAllMaintenance(@PathVariable(value = "workCenterId") int workCenterId){
 
-        List<Maintenance> maintenance = maintenanceService.findAllMaintenance();
-        return new ResponseEntity<>(maintenance, HttpStatus.OK);
+        List<Maintenance> allMaintenance  = maintenanceService.findAllMaintenance();
+        return new ResponseEntity<>(allMaintenance, HttpStatus.OK);
     }
 
-
-    //start request mapping for download
     @RequestMapping(value = "maintenance/{generalMaintenanceId}/download", method = RequestMethod.GET)
     public ResponseEntity<?> downloadMaintenance(HttpServletRequest request, @PathVariable(value = "generalMaintenanceId") int generalMaintenanceId) {
-
-        return ( maintenanceService.downloadMaintenanceDoc(request,generalMaintenanceId));
+        return null;
     }
-    //end request mapping for download
 
-//    // start request mapping for delete
-//    @RequestMapping(value = "{workCenterId}/maintenance/{maintenanceId}/delete", method = RequestMethod.POST)
-//    public ResponseEntity<?> deleteMaintenance (HttpServletRequest request,
-//                                         @PathVariable(value = "workCenterId") int workCenterId,
-//                                         @PathVariable(value = "maintenanceId") int maintenanceId) {
-//        return maintenanceService.deleteMaintenance(request, workCenterId, maintenanceId);
-//    }
-    //end request mapping for delete
 
     //export
     @RequestMapping(value="exportMaintenance", method = RequestMethod.POST)
@@ -861,25 +845,4 @@ maintenance.setId(maintenanceDetails.getId());
         }
 
     }
-
-// delete maintenance rest api
-//    @DeleteMapping("/maintenance/{id}")
-//    public ResponseEntity<Map<String, Boolean>> deleteMaintenance(@PathVariable int id){
-//        Maintenance maintenance = maintenanceRepository.findById(id);
-////                .orElseThrow(() -> new ResourceNotFoundException("Maintenance not exist with id :" + id)
-//
-//        maintenanceRepository.delete(maintenance);
-//        Map<String, Boolean> response = new HashMap<>();
-//        response.put("deleted", Boolean.TRUE);
-//        return ResponseEntity.ok(response);
-//    }
-
-
-    // start request mapping for delete
-    @RequestMapping(value = "maintenance/{maintenanceId}", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteMaintenanced (HttpServletRequest request,
-                                                 @PathVariable(value = "maintenanceId") int maintenanceId) {
-        return maintenanceService.deleteMaintenanced(request,maintenanceId);
-    }
-//end request mapping for delete
 }

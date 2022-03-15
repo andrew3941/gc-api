@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 @Service
 public interface MaintenanceService {
 
-    //getting a specific record by using the method getMaintenanceById() of maintenanceRepository
-    Maintenance getMaintenanceById(HttpServletRequest request, int maintenanceId);
+    // getting a specific record by Id
+    Maintenance getMaintenanceById(int maintenanceId);
 
 
     List<MaintenanceTypes> getMaintenanceType(int workCenterId);
@@ -31,21 +31,10 @@ public interface MaintenanceService {
     List<Maintenance>getMaintenance(int workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user);
 
     ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user);
-
-    ResponseEntity<?> deleteMaintenanced(HttpServletRequest request, int maintenanceId);
-
-    ResponseEntity<?> downloadMaintenanceDoc(HttpServletRequest request, int generalMaintenanceId);
-
-    //METHOD FROM THE WORK CENTERS CONTROLLER
+    //Get all Maintenance
     List<Maintenance> findAllMaintenance();
 
-//    List<Maintenance> getAllMaintenance();
-
-    // edit/update maintenance
-    void saveOrUpdate(Maintenance maintenance);
-
-
-    //Logic to Save New Maintenance
+    // Save New Maintenance
     ResponseEntity<?> saveNewMaintenance(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request);
 
     List<MaintenanceTypes> getAllMaintenanceTypes();
