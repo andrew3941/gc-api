@@ -766,7 +766,7 @@ public class WorkCentersController {
     }
 
     @RequestMapping(value = "{workCenterId}/maintenance/edit", method = RequestMethod.POST)
-    public ResponseEntity<Maintenance> updateMaintenance(
+    public ResponseEntity<?> updateMaintenance(
             @RequestParam("maintenance") String maintenance,
             @PathVariable("workCenterId") int workCenterId,
             @RequestParam(value="attachedFile") MultipartFile[] attachedFile,
@@ -776,8 +776,7 @@ public class WorkCentersController {
         Maintenance newMaintenance = gson.fromJson(maintenance, Maintenance.class);
 
         try {
-             maintenanceService.editMaintenance(workCenterId, newMaintenance, attachedFile, request);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>( maintenanceService.editMaintenance(workCenterId, newMaintenance, attachedFile, request), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

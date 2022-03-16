@@ -1,11 +1,9 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.maintenance;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ExpenditurePeriod;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
-import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 
 
 import javax.persistence.*;
@@ -39,12 +37,12 @@ public class Maintenance implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date deleted;
     private User deletedBy;
-    private List<MaintenanceByAttachement> maintenanceByAttachments = new ArrayList<>();
+    private List<MaintenanceByAttachment> maintenanceByAttachments = new ArrayList<>();
 
     public Maintenance() {
     }
 
-    public Maintenance(int id, MaintenanceTypes maintenanceTypes, Provider provider, String billNumber, ExpenditurePeriod expenditurePeriod, int amount, Date date, String observations, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy, List<MaintenanceByAttachement> maintenanceByAttachments) {
+    public Maintenance(int id, MaintenanceTypes maintenanceTypes, Provider provider, String billNumber, ExpenditurePeriod expenditurePeriod, int amount, Date date, String observations, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy, List<MaintenanceByAttachment> maintenanceByAttachments) {
         this.id = id;
         this.maintenanceTypes = maintenanceTypes;
         this.provider = provider;
@@ -183,10 +181,10 @@ public class Maintenance implements Serializable {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "maintenance", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE})
-    public List<MaintenanceByAttachement> getMaintenanceByAttachments() {
+    public List<MaintenanceByAttachment> getMaintenanceByAttachments() {
         return maintenanceByAttachments;
     }
-    public void setMaintenanceByAttachments(List<MaintenanceByAttachement> maintenanceByAttachments) {
+    public void setMaintenanceByAttachments(List<MaintenanceByAttachment> maintenanceByAttachments) {
         this.maintenanceByAttachments = maintenanceByAttachments;
     }
 

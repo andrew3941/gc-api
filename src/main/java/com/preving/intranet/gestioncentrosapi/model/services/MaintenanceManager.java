@@ -5,7 +5,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceR
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceTypesRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
-import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceByAttachement;
+import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes;
 import com.preving.security.JwtTokenUtil;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -22,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Status;
 import javax.transaction.Transactional;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
@@ -112,7 +111,7 @@ public class MaintenanceManager implements MaintenanceService {
 
                 maintenanceRepository.editMaintenance(maintenance);
 
-                for (MaintenanceByAttachement maintFile : maintenance.getMaintenanceByAttachments()){
+                for (MaintenanceByAttachment maintFile : maintenance.getMaintenanceByAttachments()){
                     // Borramos el documento anterior del servidor
                     commonService.deleteDocumentServer(workCenterId, maintFile.getId(), NEW_MAINTENANCE);
 
@@ -123,14 +122,14 @@ public class MaintenanceManager implements MaintenanceService {
 
                     for (MultipartFile mtFile : attachedFile){
 
-                        MaintenanceByAttachement maintenanceByAttachement = new MaintenanceByAttachement();
+                        MaintenanceByAttachment maintenanceByAttachment = new MaintenanceByAttachment();
 
-                        maintenanceByAttachement.setMaintenance(maintenance);
-                        maintenanceByAttachement.setDocName(mtFile.getOriginalFilename());
-                        maintenanceByAttachement.setDocumentContentType(mtFile.getContentType());
-                        maintenanceByAttachement.setDocumentUrl("default_Url");
+                        maintenanceByAttachment.setMaintenance(maintenance);
+                        maintenanceByAttachment.setDocName(mtFile.getOriginalFilename());
+                        maintenanceByAttachment.setDocumentContentType(mtFile.getContentType());
+                        maintenanceByAttachment.setDocumentUrl("default_Url");
 
-                       MaintenanceByAttachement savedMaintenanceFile = maintenanceByAttachmentRepository.save(maintenanceByAttachement);
+                       MaintenanceByAttachment savedMaintenanceFile = maintenanceByAttachmentRepository.save(maintenanceByAttachment);
 
                         String url = null;
                         // Guardamos documento en el server
@@ -279,13 +278,13 @@ public class MaintenanceManager implements MaintenanceService {
 
                 for (MultipartFile mpFile : attachedFile) {
 
-                    MaintenanceByAttachement maintenanceByAttachement = new MaintenanceByAttachement();
+                    MaintenanceByAttachment maintenanceByAttachment = new MaintenanceByAttachment();
 
-                    maintenanceByAttachement.setMaintenance(newMaintenance);
-                    maintenanceByAttachement.setDocumentUrl("DOC_URL");
-                    maintenanceByAttachement.setDocName(mpFile.getOriginalFilename());
-                    maintenanceByAttachement.setDocumentContentType(mpFile.getContentType());
-                    this.maintenanceByAttachmentRepository.save(maintenanceByAttachement);
+                    maintenanceByAttachment.setMaintenance(newMaintenance);
+                    maintenanceByAttachment.setDocumentUrl("DOC_URL");
+                    maintenanceByAttachment.setDocName(mpFile.getOriginalFilename());
+                    maintenanceByAttachment.setDocumentContentType(mpFile.getContentType());
+                    this.maintenanceByAttachmentRepository.save(maintenanceByAttachment);
 
                     String url = null;
 
@@ -294,7 +293,7 @@ public class MaintenanceManager implements MaintenanceService {
 
                     // Actualizamos la ruta del documento guardado
                     if (url != null) {
-                        this.maintenanceByAttachmentRepository.updateNewMaintenanceByAttachmentUrl(maintenanceByAttachement.getId(), url);
+                        this.maintenanceByAttachmentRepository.updateNewMaintenanceByAttachmentUrl(maintenanceByAttachment.getId(), url);
                     }
                 }
             }

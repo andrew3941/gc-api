@@ -1,28 +1,24 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.maintenance;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(schema = "GESTION_CENTROS", name = "MANTENIMIENTOS_X_ADJUNTOS")
-public class MaintenanceByAttachement implements Serializable {
+public class MaintenanceByAttachment implements Serializable {
     private int id;
     private Maintenance maintenance;
     private String documentUrl;
     private String docName;
     private String documentContentType;
 
-    public MaintenanceByAttachement() {
+    public MaintenanceByAttachment() {
     }
 
 
-    public MaintenanceByAttachement(int id, Maintenance maintenance, String documentUrl, String docName, String documentContentType) {
+    public MaintenanceByAttachment(int id, Maintenance maintenance, String documentUrl, String docName, String documentContentType) {
         this.id = id;
         this.maintenance = maintenance;
         this.documentUrl = documentUrl;
