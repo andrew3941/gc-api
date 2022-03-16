@@ -1,6 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.workCenters;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
@@ -75,10 +76,10 @@ public class WorkCenter implements Serializable {
     private Date modified;
     private User modifiedBy = new User();
     private List<WorkCentersByEntity> workCentersByEntities = new ArrayList<>();
-    private List<Drawing> drawings = new ArrayList<>();
-    private List<Room> rooms = new ArrayList<>();
-    private List<ProvidersByWorkCenters> providers = new ArrayList<>();
-    private List<GeneralDocumentation> generalDocumentations = new ArrayList<>();
+//    private List<Drawing> drawings = new ArrayList<>();
+//    private List<Room> rooms = new ArrayList<>();
+//    private List<ProvidersByWorkCenters> providers = new ArrayList<>();
+//    private List<GeneralDocumentation> generalDocumentations = new ArrayList<>();
 
 
     public WorkCenter() {
@@ -105,7 +106,7 @@ public class WorkCenter implements Serializable {
         this.getHeadPerson().setCompleteName(headPersonName);
     }
 
-    public WorkCenter(int id, String name, City city, String navisionCode, DimNavision dimNavision, String address, String postalCode, String phoneNumber, String email, User headPerson, int employee, Date startDate, Date endDate, Zona zone, int active, int visible, WorkCenterTypes workCenterTypes, Date created, User createdBy, Date modified, User modifiedBy, List<WorkCentersByEntity> workCentersByEntities, List<Drawing> drawings, List<Room> rooms, List<ProvidersByWorkCenters> providers, List<GeneralDocumentation> generalDocumentations) {
+    public WorkCenter(int id, String name, City city, String navisionCode, DimNavision dimNavision, String address, String postalCode, String phoneNumber, String email, User headPerson, int employee, Date startDate, Date endDate, Zona zone, int active, int visible, WorkCenterTypes workCenterTypes, Date created, User createdBy, Date modified, User modifiedBy, List<WorkCentersByEntity> workCentersByEntities) {
         this.id = id;
         this.name = name;
         this.city = city;
@@ -128,10 +129,6 @@ public class WorkCenter implements Serializable {
         this.modified = modified;
         this.modifiedBy = modifiedBy;
         this.workCentersByEntities = workCentersByEntities;
-        this.drawings = drawings;
-        this.rooms = rooms;
-        this.providers = providers;
-        this.generalDocumentations = generalDocumentations;
     }
 
     public WorkCenter(int id, String name) {
@@ -139,9 +136,9 @@ public class WorkCenter implements Serializable {
         this.name = name;
     }
 
-    public WorkCenter(List<Room> rooms) {
-        this.rooms = rooms;
-    }
+//    public WorkCenter(List<Room> rooms) {
+//        this.rooms = rooms;
+//    }
 
     @Id
     @Column(name = "ID", nullable = false)
@@ -333,47 +330,46 @@ public class WorkCenter implements Serializable {
     }
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "workCenter", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @Fetch(value = FetchMode.SELECT)
+    @OneToMany(mappedBy = "workCenter")
     public List<WorkCentersByEntity> getWorkCentersByEntities() { return workCentersByEntities; }
     public void setWorkCentersByEntities(List<WorkCentersByEntity> workCentersByEntities) { this.workCentersByEntities = workCentersByEntities; }
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "workCenter", fetch = FetchType.LAZY)
-    @Fetch(value = FetchMode.SELECT)
-    public List<Drawing> getDrawings() {
-        return drawings;
-    }
-    public void setDrawings(List<Drawing> drawings) {
-        this.drawings = drawings;
-    }
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "workCenter")
+//    public List<Drawing> getDrawings() {
+//        return drawings;
+//    }
+//    public void setDrawings(List<Drawing> drawings) {
+//        this.drawings = drawings;
+//    }
 
-    @OneToMany(mappedBy = "workCenter", fetch = FetchType.LAZY)
-    @Fetch(value = FetchMode.SELECT)
-    public List<Room> getRooms() {
-        return rooms;
-    }
-    public void setRooms(List<Room> rooms) { this.rooms = rooms; }
+//    @JsonIgnore
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "workCenter")
+//    public List<Room> getRooms() {
+//        return rooms;
+//    }
+//    public void setRooms(List<Room> rooms) { this.rooms = rooms; }
 
     @Transient
     public int getEmployee() { return employee;}
     public void setEmployee(int employee) { this.employee = employee; }
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Fetch(value = FetchMode.SELECT)
-    public List<ProvidersByWorkCenters> getProviders() {
-        return providers;
-    }
-    public void setProviders(List<ProvidersByWorkCenters> providers) {
-        this.providers = providers;
-    }
+//    @JsonIgnore
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "workCenter")
+//    public List<ProvidersByWorkCenters> getProviders() {
+//        return providers;
+//    }
+//    public void setProviders(List<ProvidersByWorkCenters> providers) {
+//        this.providers = providers;
+//    }
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "workCenter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Fetch(value = FetchMode.SELECT)
-    public List<GeneralDocumentation> getGeneralDocumentations() { return generalDocumentations; }
-    public void setGeneralDocumentations(List<GeneralDocumentation> generalDocumentations) { this.generalDocumentations = generalDocumentations; }
+//    @JsonIgnore
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "workCenter")
+//    public List<GeneralDocumentation> getGeneralDocumentations() { return generalDocumentations; }
+//    public void setGeneralDocumentations(List<GeneralDocumentation> generalDocumentations) { this.generalDocumentations = generalDocumentations; }
 
 }
 
