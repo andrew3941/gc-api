@@ -206,7 +206,7 @@ public class WorkCentersController {
 
         try {
             UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
-            return new ResponseEntity<>(this.maintenanceService.getMaintenance(workCenterId, maintenanceFilter, user), HttpStatus.OK);
+            return new ResponseEntity<>(this.maintenanceService.getFilteredMaintenances(workCenterId, maintenanceFilter, user), HttpStatus.OK);
         } catch (Exception e) {e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -753,29 +753,39 @@ public class WorkCentersController {
     }
 
         //  get maintenance by id
-    @RequestMapping(value = "{workCenterId}/maintenance/{maintenanceId}", method = RequestMethod.GET)
-    private Maintenance getMaintenance(
-            @PathVariable(value = "maintenanceId") int maintenanceId,
-            @PathVariable("workCenterId") int workCenterId) {
-        return ( maintenanceService.getMaintenanceById(maintenanceId));
+    @RequestMapping(value = "maintenance/{maintenanceId}", method = RequestMethod.GET)
+    private ResponseEntity<?> getMaintenanceById(@PathVariable(value = "maintenanceId") int maintenanceId ) {
+
+        try {
+            return new ResponseEntity<>(maintenanceService.getMaintenanceById(maintenanceId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
-    @RequestMapping(value = "{workCenterId}/maintenance/{id}", method = RequestMethod.POST)
-    public ResponseEntity<Maintenance> updateMaintenance(@PathVariable int id,
-                                                         @PathVariable("workCenterId") int workCenterId,
-                                                         @RequestBody Maintenance maintenanceDetails){
-        Maintenance maintenance = maintenanceRepository.findById(id);
+    @RequestMapping(value = "{workCenterId}/maintenance/edit", method = RequestMethod.POST)
+    public ResponseEntity<Maintenance> updateMaintenance(
+            @RequestParam("maintenance") String maintenance,
+            @PathVariable("workCenterId") int workCenterId,
+            @RequestParam(value="attachedFile") MultipartFile[] attachedFile,
+            HttpServletRequest request){
 
-maintenance.setId(maintenanceDetails.getId());
-        maintenance.setProvider(maintenanceDetails.getProvider());
-        maintenance.setBillNumber(maintenanceDetails.getBillNumber());
-        maintenance.setAmount(maintenanceDetails.getAmount());
-        maintenance.setMaintenanceTypes(maintenanceDetails.getMaintenanceTypes());
-        maintenance.setExpenditurePeriod(maintenanceDetails.getExpenditurePeriod());
-        maintenance.setObservations(maintenanceDetails.getObservations());
-        Maintenance updatedMaintenance = maintenanceRepository.save(maintenance);
-        return ResponseEntity.ok(updatedMaintenance);
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        Maintenance newMaintenance = gson.fromJson(maintenance, Maintenance.class);
+
+        try {
+             maintenanceService.editMaintenance(workCenterId, newMaintenance, attachedFile, request);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
+
+
     //METHOD FOR RETRIEVING MAINTENANCE LIST
     @RequestMapping(value = "{workCenterId}/maintenance", method = RequestMethod.GET)
     public ResponseEntity<List<Maintenance>> getAllMaintenance(@PathVariable(value = "workCenterId") int workCenterId){
@@ -793,10 +803,7 @@ maintenance.setId(maintenanceDetails.getId());
     public ResponseEntity<?> deleteMaintenance (HttpServletRequest request,
                                             @PathVariable(value = "workCenterId") int workCenterId,
                                             @PathVariable(value = "maintenanceId") int maintenanceId) {
-
-
         return maintenanceService.deleteMaintenance(request,workCenterId,maintenanceId);
-
     }
 
 

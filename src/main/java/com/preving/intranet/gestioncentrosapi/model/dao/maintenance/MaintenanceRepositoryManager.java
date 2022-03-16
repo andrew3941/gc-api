@@ -20,7 +20,7 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
     private final static String GC_READING_ROL_NAME = "44-25104";
 
     @Override
-    public List<Maintenance> getMaintenance(Integer workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user) {
+    public List<Maintenance> getMaintenanceFiltered(Integer workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user) {
 
         String sql = "" +
                 "SELECT DISTINCT M.ID, M.CUANTIA, M.FECHA " +

@@ -11,6 +11,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCente
 import javax.persistence.*;
 import javax.persistence.Entity;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class Maintenance implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date deleted;
     private User deletedBy;
-    private List<MaintenanceByAttachement> maintenanceByAttachments;
+    private List<MaintenanceByAttachement> maintenanceByAttachments = new ArrayList<>();
 
     public Maintenance() {
     }
@@ -185,7 +186,6 @@ public class Maintenance implements Serializable {
     public List<MaintenanceByAttachement> getMaintenanceByAttachments() {
         return maintenanceByAttachments;
     }
-
     public void setMaintenanceByAttachments(List<MaintenanceByAttachement> maintenanceByAttachments) {
         this.maintenanceByAttachments = maintenanceByAttachments;
     }

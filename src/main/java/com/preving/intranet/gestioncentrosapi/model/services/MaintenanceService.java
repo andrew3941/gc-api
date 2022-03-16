@@ -23,12 +23,9 @@ public interface MaintenanceService {
     // getting a specific record by Id
     Maintenance getMaintenanceById(int maintenanceId);
 
-
-    List<MaintenanceTypes> getMaintenanceType(int workCenterId);
-
     ResponseEntity<?>  editMaintenance(int workCenterId, Maintenance maintenance, MultipartFile[] attachedFile, HttpServletRequest request);
 
-    List<Maintenance>getMaintenance(int workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user);
+    List<Maintenance>getFilteredMaintenances(int workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user);
 
     ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user);
     //Get all Maintenance
@@ -38,8 +35,6 @@ public interface MaintenanceService {
     ResponseEntity<?> saveNewMaintenance(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request);
 
     List<MaintenanceTypes> getAllMaintenanceTypes();
-    // method for maintenanceTypes
-    List<MaintenanceTypes> getMaintenanceTypes();
 
     // method for delete maintenance
     ResponseEntity<?> deleteMaintenance(HttpServletRequest request,int workCenterId, int maintenanceId);

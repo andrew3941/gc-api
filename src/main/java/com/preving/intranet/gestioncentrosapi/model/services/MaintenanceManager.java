@@ -3,7 +3,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceB
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceTypesRepository;
-import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
+import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceByAttachement;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes;
@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Status;
 import javax.transaction.Transactional;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
@@ -51,7 +52,10 @@ public class MaintenanceManager implements MaintenanceService {
 
     @Autowired
     private MaintenanceRepository maintenanceRepository;
+    @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+
     private MaintenanceCustomRepository maintenanceCustomRepository;
 
     @Autowired
@@ -68,8 +72,7 @@ public class MaintenanceManager implements MaintenanceService {
 
     @Override
     public Maintenance getMaintenanceById(int maintenanceId){
-        Maintenance maintenance = maintenanceRepository.findMaintenanceById(maintenanceId);
-        return maintenance;
+      return maintenanceRepository.findMaintenanceById(maintenanceId);
     }
 
     public ResponseEntity<?> downloadMaintenanceDoc(HttpServletRequest request, int workCenterId, int maintenanceId) {
@@ -97,9 +100,56 @@ public class MaintenanceManager implements MaintenanceService {
         }
 
 
-        @Override
-    public ResponseEntity<?> editMaintenance(int workCenterId, Maintenance maintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
-        return null;
+     @Transactional
+     public ResponseEntity<?> editMaintenance(int workCenterId, Maintenance maintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
+
+            long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+            maintenance.setModifiedBy(new User());
+            maintenance.getModifiedBy().setId(userId);
+
+            try {
+
+                maintenanceRepository.editMaintenance(maintenance);
+
+                for (MaintenanceByAttachement maintFile : maintenance.getMaintenanceByAttachments()){
+                    // Borramos el documento anterior del servidor
+                    commonService.deleteDocumentServer(workCenterId, maintFile.getId(), NEW_MAINTENANCE);
+
+                   maintenanceByAttachmentRepository.deleteById(maintFile.getId());
+                }
+
+                if (attachedFile.length > 0) {
+
+                    for (MultipartFile mtFile : attachedFile){
+
+                        MaintenanceByAttachement maintenanceByAttachement = new MaintenanceByAttachement();
+
+                        maintenanceByAttachement.setMaintenance(maintenance);
+                        maintenanceByAttachement.setDocName(mtFile.getOriginalFilename());
+                        maintenanceByAttachement.setDocumentContentType(mtFile.getContentType());
+                        maintenanceByAttachement.setDocumentUrl("default_Url");
+
+                       MaintenanceByAttachement savedMaintenanceFile = maintenanceByAttachmentRepository.save(maintenanceByAttachement);
+
+                        String url = null;
+                        // Guardamos documento en el server
+                        url = commonService.saveDocumentServer(workCenterId, maintenance.getId(), mtFile, NEW_MAINTENANCE);
+
+                        // Actualizamos la ruta del documento guardado
+                        if (url != null) {
+                            this.maintenanceByAttachmentRepository.updateNewMaintenanceByAttachmentUrl(savedMaintenanceFile.getId(), url);
+                        }
+
+                    }
+                }
+
+            }catch (Exception e){
+                e.printStackTrace();
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
@@ -109,12 +159,6 @@ public class MaintenanceManager implements MaintenanceService {
         this.maintenanceRepository = maintenanceRepository;
     }
 
-       @Override
-    public List<MaintenanceTypes> getMaintenanceType(int workCenterId) {
-        return maintenanceTypesRepository.findAll();
-    }
-
-
     @Override
     public List<Maintenance> findAllMaintenance(){
         return maintenanceRepository.findMaintenancesByDeletedByIsNullOrderByCreatedDesc();
@@ -122,10 +166,8 @@ public class MaintenanceManager implements MaintenanceService {
 
 
     @Override
-    public List<Maintenance> getMaintenance(int workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user) {
-        // TODO
-        List<Maintenance> maintenances = this.maintenanceCustomRepository.getMaintenance(workCenterId, maintenanceFilter, user);
-        return maintenances;
+    public List<Maintenance> getFilteredMaintenances(int workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user) {
+    return this.maintenanceCustomRepository.getMaintenanceFiltered(workCenterId, maintenanceFilter, user);
     }
 
     @Override
@@ -151,7 +193,7 @@ public class MaintenanceManager implements MaintenanceService {
         cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy hh:mm:ss"));
 
         // Obtenemos los datos
-        List<Maintenance> maintenanceFilters = this.maintenanceCustomRepository.getMaintenance(0,maintenanceFilter, user);
+        List<Maintenance> maintenanceFilters = this.maintenanceCustomRepository.getMaintenanceFiltered(0,maintenanceFilter, user);
 
 
         String[] titulos = {
@@ -224,8 +266,7 @@ public class MaintenanceManager implements MaintenanceService {
     @Transactional
     public ResponseEntity<?> saveNewMaintenance(int workCenterId, Maintenance newMaintenance, MultipartFile[] attachedFile, HttpServletRequest request) {
 
-        // TODO
-        long userId = 1;
+        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();;
 
         newMaintenance.setCreated(new Date());
         newMaintenance.getCreatedBy().setId(userId);
@@ -267,11 +308,6 @@ public class MaintenanceManager implements MaintenanceService {
     }
 
     @Override
-    public List<MaintenanceTypes> getMaintenanceTypes() {
-        return maintenanceTypesRepository.findAll();
-    }
-
-    @Override
     public ResponseEntity<?> deleteMaintenance(HttpServletRequest request, int workCenterId, int maintenanceId) {
         long mId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
 
@@ -282,21 +318,19 @@ public class MaintenanceManager implements MaintenanceService {
         }
 
         try {
-            this.maintenanceRepository.maintenanceLogicDeleted(mId, maintenance.getId());
+            this.maintenanceRepository.maintenanceLogicDeleted((int) mId,maintenanceId);
+
         } catch (Exception ex) {
             ex.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-
-    //End Logic to Save New Maintenance
 
     @Override
     public List<MaintenanceTypes> getAllMaintenanceTypes() {
         return maintenanceTypesRepository.findAll();
     }
-
 
 
 }

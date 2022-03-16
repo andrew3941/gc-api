@@ -63,7 +63,6 @@ public class MaintenanceByAttachement implements Serializable {
     public Maintenance getMaintenance() {
         return maintenance;
     }
-
     public void setMaintenance(Maintenance maintenance) {
         this.maintenance = maintenance;
     }
