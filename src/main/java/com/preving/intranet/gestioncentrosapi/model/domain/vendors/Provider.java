@@ -143,6 +143,10 @@ public class Provider implements Serializable {
         this.serviceEndDate = serviceEndDate;
     }
 
+    public Provider(int id, String workCenter) {
+        this.id = id;
+        this.name = workCenter;
+    }
 
     @Id
     @Column(name = "ID", nullable = false)

@@ -27,15 +27,15 @@ public class DataBaseConf {
         return DataSourceBuilder.create().build();
     }
 
-    @Bean(name = "oracleDataSource")
-    @ConfigurationProperties(prefix="datasource.gc-oracle")
-    public DataSource oracleDataSource() {
-        return DataSourceBuilder.create().build();
-    }
-
-    @Bean(name = "oracleNamedTemplate")
-    public NamedParameterJdbcTemplate oracleNamedTemplate(@Qualifier("oracleDataSource") DataSource dsApp) {
-        return new NamedParameterJdbcTemplate(dsApp);
-    }
+//    @Bean(name = "oracleDataSource")
+//    @ConfigurationProperties(prefix="datasource.gc-oracle")
+//    public DataSource oracleDataSource() {
+//        return DataSourceBuilder.create().build();
+//    }
+//
+//    @Bean(name = "oracleNamedTemplate")
+//    public NamedParameterJdbcTemplate oracleNamedTemplate(@Qualifier("oracleDataSource") DataSource dsApp) {
+//        return new NamedParameterJdbcTemplate(dsApp);
+//    }
 
 }

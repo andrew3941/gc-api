@@ -2,21 +2,29 @@ package com.preving.intranet.gestioncentrosapi.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
+import com.google.gson.reflect.TypeToken;
+import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.Room;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
+import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
+import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
+import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
+import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetail;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
-import com.preving.intranet.gestioncentrosapi.model.services.CommonService;
-import com.preving.intranet.gestioncentrosapi.model.services.GeneralDocumentationService;
-import com.preving.intranet.gestioncentrosapi.model.services.SecurityService;
-import com.preving.intranet.gestioncentrosapi.model.services.WorkCenterService;
+import com.preving.intranet.gestioncentrosapi.model.services.*;
 import com.preving.security.JwtTokenUtil;
 import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +34,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path= "/workCenters")
@@ -46,6 +59,15 @@ public class WorkCentersController {
 
     @Autowired
     private GeneralDocumentationService generalDocumentationService;
+
+    @Autowired
+    private MaintenanceRepository maintenanceRepository;
+
+    @Autowired
+    private MaintenanceService maintenanceService;
+
+    @Autowired
+    private ProviderService providerService;
 
     @Value("${modo-debug}")
     private boolean modoDebug;
@@ -170,6 +192,28 @@ public class WorkCentersController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+
+    /**
+     *  filter based on maintenanceFilter Class
+     */
+
+    @RequestMapping(value = "{workCenterId}/maintenance/filter", method = RequestMethod.POST)
+    public ResponseEntity<?> findWorkCenterByFilter(HttpServletRequest request,
+                                                    @PathVariable(value = "workCenterId") int workCenterId,
+                                                    @RequestBody MaintenanceFilter maintenanceFilter) {
+
+        try {
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+
+            List<Maintenance> maintenanceList = this.maintenanceService.getFilteredMaintenances(workCenterId, maintenanceFilter, user);
+
+            return new ResponseEntity<>(maintenanceList, HttpStatus.OK);
+        } catch (Exception e) {e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     /**
@@ -333,7 +377,7 @@ public class WorkCentersController {
     /**
      * Obtiene listado de salas de un centro de trabajo por Id
      * @return
-     */
+
     @RequestMapping(value = "{workCenterId}/rooms", method = RequestMethod.GET)
     public ResponseEntity<?> getRoomListByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
 
@@ -378,8 +422,8 @@ public class WorkCentersController {
 
     @RequestMapping(value = "{workCenterId}/generalDocList/{generalDocId}/delete", method = RequestMethod.POST)
     public ResponseEntity<?> deleteGeneralDoc (HttpServletRequest request,
-                                            @PathVariable(value = "workCenterId") int workCenterId,
-                                            @PathVariable(value = "generalDocId") int generalDocId) {
+                                               @PathVariable(value = "workCenterId") int workCenterId,
+                                               @PathVariable(value = "generalDocId") int generalDocId) {
 
 
         return workCenterService.deleteGeneralDoc(request,workCenterId,generalDocId);
@@ -480,6 +524,7 @@ public class WorkCentersController {
 
         return ( workCenterService.downloadDrawingDoc(request,drawingId));
     }
+
 
     /**
      * Descargamos el archivo de generalDoc
@@ -594,6 +639,8 @@ public class WorkCentersController {
 
     }
 
+
+
     @RequestMapping(value = "generalDocumentation/certificatesTypes", method = RequestMethod.GET)
     public ResponseEntity<?> getCertificateTypes(){
 
@@ -633,10 +680,10 @@ public class WorkCentersController {
 
     }
 
-  /**
+    /**
      * Obtener listado de documentación general en un centro de trabajo por DNI
      * @regreso
- */
+     */
     @RequestMapping(value = "{workCenterId}/generalDoc", method = RequestMethod.GET)
     public ResponseEntity<?> getGeneralDocumentation(@PathVariable(value = "workCenterId") int workCenterId){
 
@@ -686,4 +733,125 @@ public class WorkCentersController {
         return ( generalDocumentationService.downloadGeneralDoc(request,generalDocAttachId));
     }
 
+    /**
+     * Obtiene listado de proveedores por delegacion
+     * @return
+     */
+    @RequestMapping(value = "{workCenterId}/providers", method = RequestMethod.GET)
+    public ResponseEntity<?> getProvidersByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
+
+        try {
+            return new ResponseEntity<>(providerService.getProvidersByWorkCenter(workCenterId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+        //  get maintenance by id
+    @RequestMapping(value = "maintenance/{maintenanceId}", method = RequestMethod.GET)
+    private ResponseEntity<?> getMaintenanceById(@PathVariable(value = "maintenanceId") int maintenanceId ) {
+
+        try {
+            return new ResponseEntity<>(maintenanceService.getMaintenanceById(maintenanceId), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @RequestMapping(value = "{workCenterId}/maintenance/edit", method = RequestMethod.POST)
+    public ResponseEntity<?> updateMaintenance(
+            @RequestParam("maintenance") String maintenance,
+            @PathVariable("workCenterId") int workCenterId,
+            @RequestParam(value="attachedFile") MultipartFile[] attachedFile,
+            HttpServletRequest request){
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        Maintenance newMaintenance = gson.fromJson(maintenance, Maintenance.class);
+
+        try {
+            return new ResponseEntity<>( maintenanceService.editMaintenance(workCenterId, newMaintenance, attachedFile, request), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+
+    //METHOD FOR RETRIEVING MAINTENANCE LIST
+    @RequestMapping(value = "{workCenterId}/maintenance", method = RequestMethod.GET)
+    public ResponseEntity<List<Maintenance>> getAllMaintenance(@PathVariable(value = "workCenterId") int workCenterId){
+
+        List<Maintenance> allMaintenance  = maintenanceService.findAllMaintenance();
+        return new ResponseEntity<>(allMaintenance, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "maintenance/{generalMaintenanceId}/download", method = RequestMethod.GET)
+    public ResponseEntity<?> downloadMaintenance(HttpServletRequest request, @PathVariable(value = "generalMaintenanceId") int generalMaintenanceId) {
+        return null;
+    }
+
+    @RequestMapping(value = "{workCenterId}/maintenance/{maintenanceId}/delete", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteMaintenance (HttpServletRequest request,
+                                            @PathVariable(value = "workCenterId") int workCenterId,
+                                            @PathVariable(value = "maintenanceId") int maintenanceId) {
+        return maintenanceService.deleteMaintenance(request,workCenterId,maintenanceId);
+    }
+
+
+
+    //export
+    @RequestMapping(value="exportMaintenance", method = RequestMethod.POST)
+    public ResponseEntity<?> exportMaintenance(HttpServletRequest request,
+                                               HttpServletResponse response,
+                                               @RequestParam ("maintenanceFilterList")
+                                                       String MaintenanceList) {
+
+        ResponseEntity<?> resp = null;
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        MaintenanceFilter maintenanceFilter = gson.fromJson(MaintenanceList,
+                MaintenanceFilter.class);
+
+        try {
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            return new ResponseEntity<>(maintenanceService.exportMaintenance(maintenanceFilter, response, user), HttpStatus.OK);
+        } catch (DataAccessException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    //Method to Save New Maintenance
+    @RequestMapping(value = "{workCenterId}/maintenance/add", method = RequestMethod.POST)
+    public ResponseEntity<?> saveMaintenance(
+            @RequestParam("maintenance") String maintenance,
+            @PathVariable("workCenterId") int workCenterId,
+            @RequestParam(value="attachedFile", required = false) MultipartFile[] attachedFile,
+            HttpServletRequest request) {
+
+        ResponseEntity<?> response=null;
+        Gson gson = new GsonBuilder().create();
+        Maintenance newMaintenance = gson.fromJson(maintenance, Maintenance.class);
+
+        response = maintenanceService.saveNewMaintenance(workCenterId, newMaintenance, attachedFile, request);
+        return response;
+    }
+
+    // Get mapping details for MaintenanceType
+
+    @RequestMapping(value = "maintenance/maintenanceTypes", method = RequestMethod.GET)
+    public ResponseEntity<?> getMaintenanceTypes(){
+
+        try {
+            return new ResponseEntity<>(maintenanceService.getAllMaintenanceTypes(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 }

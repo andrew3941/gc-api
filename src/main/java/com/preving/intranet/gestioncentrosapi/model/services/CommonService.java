@@ -8,8 +8,10 @@ import java.io.IOException;
 import java.util.List;
 
 
-public interface CommonService {
 
+
+public interface CommonService {
+    boolean deleteMaintenanceServer(int workCenterId, int drawingId, int tipoDoc) throws IOException;
     List<Province> findAllProvinces();
 
     List<Entity> findAllEntities();
@@ -17,4 +19,5 @@ public interface CommonService {
     String saveDocumentServer(int workCenterId, int drawingId, MultipartFile attachedFile, int tipoDoc) throws IOException;
 
     boolean deleteDocumentServer(int workCenterId, int drawingId, int tipoDoc) throws IOException;
+
 }

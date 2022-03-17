@@ -4,6 +4,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepositor
 import com.preving.intranet.gestioncentrosapi.model.dao.drawingByAttachments.DrawingByAttachmentsRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.GeneralDocByAttachmentRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderRepository;
@@ -42,6 +43,7 @@ public class CommonManager implements CommonService {
     @Autowired
     private ProviderCustomRepository providerCustomRepository;
 
+
     @Autowired
     private ProvidersCommonDetailsRepository providersCommonDetailsRepository;
     @Autowired
@@ -60,13 +62,16 @@ public class CommonManager implements CommonService {
     @Value("${url-documentos-generalDocument}")
     private String urlGeneralDocuments;
 
+    @Value("${url-documentos-mantenimiento}")
+    private String urlNewMaintenance;
+
     private static final String CONTENT_TYPE_PDF = "application/pdf";
     private static final String CONTENT_TYPE_ZIP = "application/x-zip-compressed";
     private static final String CONTENT_TYPE_DOC = "application/msword";
     private static final String CONTENT_TYPE_DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     private static final String CONTENT_TYPE_ODT = "application/vnd.oasis.opendocument.text";
     private static final String CONTENT_TYPE_XLS = "application/vnd.ms-excel";
-    private static final String CONTENT_TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+     private static final String CONTENT_TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     private static final String CONTENT_TYPE_ODS = "application/vnd.oasis.opendocument.spreadsheet";
     private static final String CONTENT_TYPE_JPG = "image/jpg";
     private static final String CONTENT_TYPE_JPEG = "image/jpeg";
@@ -76,6 +81,7 @@ public class CommonManager implements CommonService {
     private static final int DRAWINGS = 1;
     private static final int PROVIDERS = 2;
     private static final int GENERAL_DOCUMENTS = 3;
+    static final int MAINTENANCE = 4;
 
 
     @Override
@@ -148,9 +154,14 @@ public class CommonManager implements CommonService {
         } else if(tipoDoc ==PROVIDERS) {
             path = urlProviderDocuments + "/" + workCenterId + "/proveedores/" + itemId;
             url = urlProviderDocuments + "/" + workCenterId + "/proveedores/" + itemId +"/" + attachedFile.getOriginalFilename();
-        }else {
+
+        }else if(tipoDoc ==GENERAL_DOCUMENTS){
             path = urlGeneralDocuments + "/" + workCenterId + "/generalDocuments/" + itemId;
             url = urlGeneralDocuments + "/" + workCenterId + "/generalDocuments/" + itemId +"/" + attachedFile.getOriginalFilename();
+
+        }else  if (tipoDoc == MAINTENANCE){
+            path = urlNewMaintenance + "/" + workCenterId + "/maintenance/" + itemId;
+            url = urlNewMaintenance + "/" + workCenterId + "/maintenance/" + itemId +"/" + attachedFile.getOriginalFilename();
         }
 
         File file = new File(url);
@@ -211,6 +222,11 @@ public class CommonManager implements CommonService {
 
         return borrado;
 
+    }
+
+    @Override
+    public boolean deleteMaintenanceServer(int workCenterId, int drawingId, int tipoDoc) throws IOException {
+        return false;
     }
 
 }

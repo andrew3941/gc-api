@@ -14,7 +14,8 @@ import java.util.List;
 
 @Entity
 @Table(schema = "GESTION_CENTROS", name="PC_DELEGACIONES_X_DOC_GENERAL")
-public class GeneralDocumentation implements Serializable {
+public class
+GeneralDocumentation implements Serializable {
     private int id;
     private GeneralDocumentationTypes generalDocTypes = new GeneralDocumentationTypes();
     private String documentName;
