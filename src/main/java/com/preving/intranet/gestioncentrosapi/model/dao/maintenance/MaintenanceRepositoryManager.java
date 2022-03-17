@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.model.dao.maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
 import com.preving.security.domain.UsuarioWithRoles;
+import org.springframework.stereotype.Service;
 
 
 import javax.persistence.EntityManager;
@@ -10,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
 
+@Service
 public class MaintenanceRepositoryManager implements MaintenanceCustomRepository {
 
     @PersistenceContext
@@ -23,69 +25,44 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
     public List<Maintenance> getMaintenanceFiltered(Integer workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user) {
 
         String sql = "" +
-                "SELECT DISTINCT M.ID, M.CUANTIA, M.FECHA " +
-                "M.TIPO_ID, M.PROVEEDOR_ID, M.PERIODICIDAD_ID, " +
-                "MT.DENOMINACION AS MAINTENANCE_TYPE, " +
-                "FROM GESTION_CENTROS.MANTENIMIENTOS M, " +
-                "GESTION_CENTROS.TM_MANTENIMIENTOS_TIPOS MT, " +
-                "GESTION_CENTROS.PROVEEDORES P, " +
-                "GESTION_CENTROS.TM_PERIODICIDAD_GASTO, ";
-
-        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
-            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
-                sql += " , GESTION_CENTROS.TM_MANTENIMIENTOS_TIPOS PXD, " +
-                        " GC2006_RELEASE.TM_PERIODICIDAD_GASTO DEL ";
-            }
-        }
+                "SELECT DISTINCT MA.ID, MA.CUANTIA, MA.REF_FACTURA, MA.FECHA, MA.OBSERVACIONES, " +
+                "               MT.DENOMINACION AS TIPO, PO.NOMBRE, P.DENOMINACION AS PERIODICIDAD " +
+                "FROM GESTION_CENTROS.MANTENIMIENTOS MA, " +
+                "       GESTION_CENTROS.TM_MANTENIMIENTOS_TIPOS MT, " +
+                "       GESTION_CENTROS.PROVEEDORES PO, " +
+                "       GESTION_CENTROS.TM_PERIODICIDAD_GASTO P, " +
+                "       GESTION_CENTROS.MANTENIMIENTOS_X_DELEGACIONES MXD ";
 
 
-        //TODO
-        sql += "WHERE M.TIPO_ID = M.ID " +
-                "AND M.ID = M.PROVEEDOR_ID " +
-                "MT.DENOMINACION = M.ID" +
-                "AND M.FECHA = M.CUANTIA " +
-                "AND M.ID = M.PERIODICIDAD_ID" +
-                "AND M.ID= MT.DENOMINACION ";
+        sql += "WHERE MA.TIPO_ID = MT.ID " +
+                "       AND MA.PROVEEDOR_ID = PO.ID " +
+                "       AND MA.PERIODICIDAD_ID = P.ID " +
+                "       AND MA.ID = MXD.MANTENIMIENTO_ID ";
 
-
-        //TODO CHECK THE IF CONDITIONS WELL
         if (maintenanceFilter != null && maintenanceFilter.getMaintenanceTypes().size() != 0) {
-            sql += "AND MT.ID =:maintenanceType ";
-        }
-
-        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceProvider() != "") {
-            sql += "AND M.PERIODICIDAD_ID =:maintenanceProvider ";
-        }
-        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceStartDate() != "") {
-            sql += "AND M.FECHA=:maintenaceStartDate";
+            sql += "AND MT.ID = :maintenanceType ";
         }
 
 
-        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceEndDate() != "") {
-            sql += "AND M.FECHA=:maintenaceEndDate";
+        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceProvider().getId() != 0) {
+            sql += "AND PO.ID = :maintenanceProvider ";
         }
 
-        if (workCenterId != 0) {
-            sql += "AND PW.DELEGACION_ID =:workCenterId ";
-        }
+        // TODO
+//        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceStartDate() != "") {
+//            sql += "AND M.FECHA=:maintenaceStartDate";
+//        }
 
-        if(maintenanceFilter != null && maintenanceFilter.getMaintenanceTypes() != null && maintenanceFilter.getMaintenanceTypes().size() != 0){
-            sql += " AND (LOWER(TRANSLATE(M.CUANTIA, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:maintenanceType, '������������', 'aeiounAEIOUN')) " +
-                    " OR LOWER(TRANSLATE(P.CIF, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:maintenanceType, '������������', 'aeiounAEIOUN')))";
-        }
+//        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceEndDate() != "") {
+//            sql += "AND M.FECHA=:maintenaceEndDate";
+//        }
 
-        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
-
-            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
-                sql += " AND M.ID = M.PROVEEDOR_ID " +
-                        " AND PXD.DELEGACION_ID = DEL.ID " +
-                        " AND DEL.RESPONSABLE = :userId ";
-            }
-
+        if(workCenterId != 0){
+            sql += "AND MXD.DELEGACION_ID = :workCenterId ";
         }
 
 
-        sql += " ORDER BY M.FECHA DESC";
+        sql += " ORDER BY MA.FECHA DESC ";
 
         Query query = manager.createNativeQuery(sql, "MaintenanceMapping");
 
@@ -93,14 +70,13 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
             query.setParameter("maintenanceType", maintenanceFilter.getMaintenanceTypes());
         }
 
-        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceProvider() != "" && maintenanceFilter.getMaintenanceProvider() != null) {
+        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceProvider().getId() != 0) {
             query.setParameter("maintenanceProvider", maintenanceFilter.getMaintenanceProvider());
         }
 
-        if (workCenterId != 0) {
+        if(workCenterId != 0){
             query.setParameter("workCenterId", workCenterId);
         }
-
 
         List<Maintenance> maintenanceResults = query.getResultList();
 

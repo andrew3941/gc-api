@@ -206,7 +206,10 @@ public class WorkCentersController {
 
         try {
             UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
-            return new ResponseEntity<>(this.maintenanceService.getFilteredMaintenances(workCenterId, maintenanceFilter, user), HttpStatus.OK);
+
+            List<Maintenance> maintenanceList = this.maintenanceService.getFilteredMaintenances(workCenterId, maintenanceFilter, user);
+
+            return new ResponseEntity<>(maintenanceList, HttpStatus.OK);
         } catch (Exception e) {e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

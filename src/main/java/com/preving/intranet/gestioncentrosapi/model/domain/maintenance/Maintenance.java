@@ -16,6 +16,25 @@ import java.util.List;
 
 @Entity
 @Table(schema = "GESTION_CENTROS", name = "MANTENIMIENTOS")
+@SqlResultSetMapping(
+        name = "MaintenanceMapping",
+        classes = {
+                @ConstructorResult(
+                        targetClass = Maintenance.class,
+                        columns = {
+                                @ColumnResult(name = "ID", type = Integer.class),
+                                @ColumnResult(name = "CUANTIA", type = Integer.class),
+                                @ColumnResult(name = "REF_FACTURA", type = String.class),
+                                @ColumnResult(name = "FECHA", type = Date.class),
+                                @ColumnResult(name = "OBSERVACIONES", type = String.class),
+                                @ColumnResult(name = "TIPO", type = String.class),
+                                @ColumnResult(name = "NOMBRE", type = String.class),
+                                @ColumnResult(name = "PERIODICIDAD", type = String.class)
+                        }
+                )
+        }
+)
+
 public class Maintenance implements Serializable {
 
 
@@ -60,25 +79,33 @@ public class Maintenance implements Serializable {
         this.maintenanceByAttachments = maintenanceByAttachments;
     }
 
+    public Maintenance(int id, int amount, String billNumber, Date date, String observations, String maintenanceType,
+                       String nameProvider, String periodicity) {
+        this.id = id;
+        this.amount = amount;
+        this.billNumber = billNumber;this.date = date;
+        this.observations = observations;
+        this.getMaintenanceTypes().setDenomination(maintenanceType);
+        this.getProvider().setName(nameProvider);
+        this.getExpenditurePeriod().setName(periodicity);
+    }
+
     @Id
     @Column(name = "ID", nullable = false)
     @SequenceGenerator(name = "MANTENIMIENTOS_SEQ", sequenceName = "MANTENIMIENTOS_SEQ", schema = "GESTION_CENTROS", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MANTENIMIENTOS_SEQ")
-
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "TIPO_ID")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "TIPO_ID", referencedColumnName = "ID")
     public MaintenanceTypes getMaintenanceTypes() {
         return maintenanceTypes;
     }
-
     public void setMaintenanceTypes(MaintenanceTypes maintenanceTypes) {
         this.maintenanceTypes = maintenanceTypes;
     }
@@ -88,7 +115,6 @@ public class Maintenance implements Serializable {
     public Provider getProvider() {
         return provider;
     }
-
     public void setProvider(Provider provider) {
         this.provider = provider;
     }
@@ -98,17 +124,15 @@ public class Maintenance implements Serializable {
     public String getBillNumber() {
         return billNumber;
     }
-
     public void setBillNumber(String billNumber) {
         this.billNumber = billNumber;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "PERIODICIDAD_ID", referencedColumnName = "ID")
     public ExpenditurePeriod getExpenditurePeriod() {
         return expenditurePeriod;
     }
-
     public void setExpenditurePeriod(ExpenditurePeriod expenditurePeriod) {
         this.expenditurePeriod = expenditurePeriod;
     }
@@ -118,7 +142,6 @@ public class Maintenance implements Serializable {
     public int getAmount() {
         return amount;
     }
-
     public void setAmount(int amount) {
         this.amount = amount;
     }
@@ -128,7 +151,6 @@ public class Maintenance implements Serializable {
     public Date getDate() {
         return date;
     }
-
     public void setDate(Date date) {
         this.date = date;
     }
@@ -138,7 +160,6 @@ public class Maintenance implements Serializable {
     public String getObservations() {
         return observations;
     }
-
     public void setObservations(String observations) {
         this.observations = observations;
     }
@@ -148,7 +169,6 @@ public class Maintenance implements Serializable {
     public Date getCreated() {
         return created;
     }
-
     public void setCreated(Date created) {
         this.created = created;
     }
