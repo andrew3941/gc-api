@@ -3,6 +3,8 @@ package com.preving.intranet.gestioncentrosapi.model.dao.maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
 import com.preving.security.domain.UsuarioWithRoles;
+
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -2,6 +2,7 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +28,10 @@ public interface MaintenanceService {
 
     List<Maintenance> getFilteredMaintenances(int workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user);
 
+
+    //    EXPORT
     ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user);
+
     //Get all Maintenance
     List<Maintenance> findAllMaintenance();
 
