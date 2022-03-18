@@ -1,9 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.workCenters;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProvidersByWorkCenters;
@@ -76,11 +73,6 @@ public class WorkCenter implements Serializable {
     private Date modified;
     private User modifiedBy = new User();
     private List<WorkCentersByEntity> workCentersByEntities = new ArrayList<>();
-//    private List<Drawing> drawings = new ArrayList<>();
-//    private List<Room> rooms = new ArrayList<>();
-//    private List<ProvidersByWorkCenters> providers = new ArrayList<>();
-//    private List<GeneralDocumentation> generalDocumentations = new ArrayList<>();
-
 
     public WorkCenter() {
     }
@@ -135,10 +127,6 @@ public class WorkCenter implements Serializable {
         this.id = id;
         this.name = name;
     }
-
-//    public WorkCenter(List<Room> rooms) {
-//        this.rooms = rooms;
-//    }
 
     @Id
     @Column(name = "ID", nullable = false)
@@ -329,47 +317,13 @@ public class WorkCenter implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "workCenter")
     public List<WorkCentersByEntity> getWorkCentersByEntities() { return workCentersByEntities; }
     public void setWorkCentersByEntities(List<WorkCentersByEntity> workCentersByEntities) { this.workCentersByEntities = workCentersByEntities; }
 
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "workCenter")
-//    public List<Drawing> getDrawings() {
-//        return drawings;
-//    }
-//    public void setDrawings(List<Drawing> drawings) {
-//        this.drawings = drawings;
-//    }
-
-//    @JsonIgnore
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "workCenter")
-//    public List<Room> getRooms() {
-//        return rooms;
-//    }
-//    public void setRooms(List<Room> rooms) { this.rooms = rooms; }
-
     @Transient
     public int getEmployee() { return employee;}
     public void setEmployee(int employee) { this.employee = employee; }
-
-//    @JsonIgnore
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "workCenter")
-//    public List<ProvidersByWorkCenters> getProviders() {
-//        return providers;
-//    }
-//    public void setProviders(List<ProvidersByWorkCenters> providers) {
-//        this.providers = providers;
-//    }
-
-//    @JsonIgnore
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "workCenter")
-//    public List<GeneralDocumentation> getGeneralDocumentations() { return generalDocumentations; }
-//    public void setGeneralDocumentations(List<GeneralDocumentation> generalDocumentations) { this.generalDocumentations = generalDocumentations; }
 
 }
 
