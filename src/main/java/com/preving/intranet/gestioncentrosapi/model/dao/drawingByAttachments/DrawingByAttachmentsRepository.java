@@ -25,6 +25,8 @@ public interface DrawingByAttachmentsRepository extends JpaRepository<DrawingsBy
 
     void deleteAllByDrawing_Id(int drawingId);
 
+    void deleteByDrawingId(int drawingId);
+
     @Modifying
     @Transactional
     @Query("update DrawingsByAttachment da set da.attachedUrl=:url where da.id=:drawingsByAttachmentId")

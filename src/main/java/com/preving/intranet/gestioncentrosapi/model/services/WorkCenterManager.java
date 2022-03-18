@@ -580,36 +580,48 @@ public class WorkCenterManager implements WorkCenterService {
         newWorkCenterDrawing.setModifiedBy(new User());
         newWorkCenterDrawing.getModifiedBy().setId(uId);
 
-        drawingRepository.editWorkCenterDrawing(newWorkCenterDrawing);
+        String url = null;
 
-        try {
+            try {
+                drawingRepository.editWorkCenterDrawing(newWorkCenterDrawing);
 
-            String url = null;
+                List<DrawingsByAttachment> auxToDelete = new ArrayList<>();
+                List <DrawingsByAttachment> dba = this.drawingByAttachmentsRepository.findAllByDrawing_Id(drawingId);
+                List <DrawingsByAttachment> formAttachedFiles = newWorkCenterDrawing.getDrawingsByAttachments();
 
-            // Borramos el documento anterior del servidor
-//            commonService.deleteDocumentServer(workCenterId, newWorkCenterDrawing.getId(), DRAWINGS_DOCUMENTS);
+                dba.forEach(item -> {
+                    AtomicBoolean exists = new AtomicBoolean(false);
 
-            // Delete DocumentAllAttached by DrawingId
-            this.drawingByAttachmentsRepository.deleteAllByDrawing_Id(drawingId);
+                    formAttachedFiles.forEach(item2 -> {
+                        if(item.getId() == item2.getId()) exists.set(true);
+                    });
 
-            for (MultipartFile mpf : attachedFile) {
-                DrawingsByAttachment drawingsByAttach = new DrawingsByAttachment();
-                drawingsByAttach.setAttachedName(mpf.getOriginalFilename());
-                drawingsByAttach.setAttachedContentType(mpf.getContentType());
-                drawingsByAttach.setAttachedUrl("doc_url");
-                drawingsByAttach.setDrawing(newWorkCenterDrawing);
+                    if(!exists.get()){
 
-                this.drawingByAttachmentsRepository.save(drawingsByAttach);
+                        auxToDelete.add(item);
 
-                url = commonManager.saveDocumentServer(workCenterId, newWorkCenterDrawing.getId(), mpf, DRAWINGS_DOCUMENTS);
+                    } else {
+                        List<DrawingsByAttachment> ignoreAttachments = new ArrayList<>();
+                        formAttachedFiles.stream().filter(i -> i.getId() == item.getId()).forEach(ignoreAttachments::add);
+                        formAttachedFiles.removeAll(ignoreAttachments);
+                    }
+                });
 
-                if (url != null) {
-                    this.drawingByAttachmentsRepository.updateAttachedUrl(url, drawingsByAttach.getId());
-                }
+                auxToDelete.forEach(item ->{
+                    //  Borramos el documento anterior del servidor
 
-            }
+                    try {
+                        this.commonManager.deleteDocumentServer(workCenterId, item.getId(), DRAWINGS_DOCUMENTS);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    // Delete DocumentAllAttached by DrawingId
+                   this.drawingByAttachmentsRepository.deleteById(item.getId());
+                });
 
-        } catch (Exception e) {
+                drawingAttachmentsCombo(workCenterId, newWorkCenterDrawing, newWorkCenterDrawing.getDrawingsByAttachments(), attachedFile);
+
+            } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

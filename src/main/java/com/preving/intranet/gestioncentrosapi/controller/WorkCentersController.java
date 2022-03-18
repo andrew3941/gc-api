@@ -695,10 +695,11 @@ public class WorkCentersController {
         }
     }
 
-    @RequestMapping(value = "{workCenterId}/generalDocumentation/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "{workCenterId}/generalDocumentation/{generalDocId}/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editGeneralDoc(
             @RequestParam("generalDocumentation") String generalDocumentation,
             @PathVariable("workCenterId") int workCenterId,
+            @PathVariable("generalDocId") int generalDocId,
             @RequestParam(value="attachedFile") MultipartFile[] attachedFile,
             HttpServletRequest request) {
 
@@ -706,7 +707,7 @@ public class WorkCentersController {
         GeneralDocumentation newGeneralDoc= gson.fromJson(generalDocumentation, GeneralDocumentation.class);
 
         try {
-            generalDocumentationService.editGeneralDoc(workCenterId, newGeneralDoc, attachedFile, request);
+            generalDocumentationService.editGeneralDoc(workCenterId, generalDocId, newGeneralDoc, attachedFile, request);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

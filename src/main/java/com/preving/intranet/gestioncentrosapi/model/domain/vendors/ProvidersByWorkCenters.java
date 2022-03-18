@@ -1,6 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.vendors;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -41,8 +42,8 @@ public class ProvidersByWorkCenters implements Serializable {
         this.provider = provider;
     }
 
-    @JsonBackReference
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
     public WorkCenter getWorkCenter() { return workCenter; }
     public void setWorkCenter(WorkCenter workCenter) { this.workCenter = workCenter; }

@@ -1,6 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.workCenters;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.Department;
@@ -19,11 +20,11 @@ public class WorkCenterDetails implements Serializable {
     private WorkCenter workCenter;
     private Double totalArea;
     private Integer jobAvailable;
-    private boolean accesibility;
+    private Boolean accesibility;
     private boolean parking;
     private Integer parkingPlace;
     private String description;
-    private boolean allDepartment;
+    private Boolean allDepartment;
     private Integer communityAmount;
     private boolean stealingAlarm;
     private boolean fireAlarm;
@@ -38,8 +39,8 @@ public class WorkCenterDetails implements Serializable {
 
     public WorkCenterDetails() {}
 
-    public WorkCenterDetails(int id, WorkCenter workCenter, Double totalArea, Integer jobAvailable, boolean accesibility,
-                             boolean parking, int parkingPlace, String description, boolean allDepartment, int communityAmount, boolean stealingAlarm, boolean fireAlarm,
+    public WorkCenterDetails(int id, WorkCenter workCenter, Double totalArea, Integer jobAvailable, Boolean accesibility,
+                             boolean parking, int parkingPlace, String description, Boolean allDepartment, int communityAmount, boolean stealingAlarm, boolean fireAlarm,
                              List<WorkCenterDetailsByDepart> departments, String cadastralRef, String latitude, String longitude,
                              Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
@@ -91,10 +92,10 @@ public class WorkCenterDetails implements Serializable {
 
     @Basic
     @Column(name = "ACCESIBILIDAD")
-    public boolean isAccesibility() {
+    public Boolean isAccesibility() {
         return accesibility;
     }
-    public void setAccesibility(boolean accesibility) {
+    public void setAccesibility(Boolean accesibility) {
         this.accesibility = accesibility;
     }
 
@@ -120,10 +121,10 @@ public class WorkCenterDetails implements Serializable {
 
     @Basic
     @Column(name = "TODOS_DPTOS")
-    public boolean isAllDepartment() {
+    public Boolean isAllDepartment() {
         return allDepartment;
     }
-    public void setAllDepartment(boolean allDepartment) {
+    public void setAllDepartment(Boolean allDepartment) {
         this.allDepartment = allDepartment;
     }
 

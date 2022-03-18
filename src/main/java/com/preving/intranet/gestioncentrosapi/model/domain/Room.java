@@ -2,6 +2,7 @@ package com.preving.intranet.gestioncentrosapi.model.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 
@@ -18,7 +19,7 @@ public class Room implements Serializable {
     private int id;
     private WorkCenter workCenter = new WorkCenter();
     private String name;
-    private float surface;
+    private Float surface;
     private String observation;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date created = new Date();
@@ -34,7 +35,7 @@ public class Room implements Serializable {
 
     }
 
-    public Room(int id, WorkCenter workCenter, String name, float surface, String observation, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy, List<RoomByTypes> types) {
+    public Room(int id, WorkCenter workCenter, String name, Float surface, String observation, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy, List<RoomByTypes> types) {
         this.id = id;
         this.workCenter = workCenter;
         this.name = name;
@@ -56,8 +57,8 @@ public class Room implements Serializable {
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    @JsonBackReference
-    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
     public WorkCenter getWorkCenter() { return workCenter; }
     public void setWorkCenter(WorkCenter workCenter) { this.workCenter = workCenter; }
@@ -69,8 +70,8 @@ public class Room implements Serializable {
 
     @Basic
     @Column(name = "SUPERFICIE")
-    public float getSurface() { return surface; }
-    public void setSurface(float surface) { this.surface = surface; }
+    public Float getSurface() { return surface; }
+    public void setSurface(Float surface) { this.surface = surface; }
 
     @Basic
     @Column(name = "OBSERVACIONES")
