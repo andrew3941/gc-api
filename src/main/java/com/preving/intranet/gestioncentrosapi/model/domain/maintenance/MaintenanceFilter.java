@@ -14,7 +14,7 @@ public class MaintenanceFilter {
     public MaintenanceFilter() {
     }
 
-    public MaintenanceFilter(Provider maintenanceProvider, List<com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes> maintenanceTypes, String maintenanceStartDate, String maintenanceEndDate) {
+    public MaintenanceFilter(Provider maintenanceProvider, List<MaintenanceTypes> maintenanceTypes, String maintenanceStartDate, String maintenanceEndDate) {
         this.maintenanceProvider = maintenanceProvider;
         MaintenanceTypes = maintenanceTypes;
         this.maintenanceStartDate = maintenanceStartDate;
@@ -28,10 +28,10 @@ public class MaintenanceFilter {
         this.maintenanceProvider = maintenanceProvider;
     }
 
-    public List<com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes> getMaintenanceTypes() {
+    public List<MaintenanceTypes> getMaintenanceTypes() {
         return MaintenanceTypes;
     }
-    public void setMaintenanceTypes(List<com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes> maintenanceTypes) {
+    public void setMaintenanceTypes(List<MaintenanceTypes> maintenanceTypes) {
         MaintenanceTypes = maintenanceTypes;
     }
 
@@ -45,7 +45,7 @@ public class MaintenanceFilter {
     public String getMaintenanceEndDate() {
         return maintenanceEndDate;
     }
-    public void setMaintenanceEndDate(String maintenanceEndDateDate) {
-        this.maintenanceEndDate = maintenanceEndDateDate;
+    public void setMaintenanceEndDate(String maintenanceEndDate) {
+        this.maintenanceEndDate = maintenanceEndDate;
     }
 }

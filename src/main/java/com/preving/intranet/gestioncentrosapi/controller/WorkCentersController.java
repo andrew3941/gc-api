@@ -807,15 +807,13 @@ public class WorkCentersController {
 
     //export
     @RequestMapping(value="exportMaintenance", method = RequestMethod.POST)
-    public ResponseEntity<?> exportMaintenance(HttpServletRequest request,
+    public ResponseEntity<?> exportActionMaintenance(HttpServletRequest request,
                                                HttpServletResponse response,
-                                               @RequestParam ("maintenanceFilterList")
-                                                       String MaintenanceList) {
+                                               @RequestParam ("filterMaintenanceList") String maintenanceList) {
 
         ResponseEntity<?> resp = null;
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        MaintenanceFilter maintenanceFilter = gson.fromJson(MaintenanceList,
-                MaintenanceFilter.class);
+        MaintenanceFilter maintenanceFilter = gson.fromJson(maintenanceList, MaintenanceFilter.class);
 
         try {
             UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
@@ -825,6 +823,8 @@ public class WorkCentersController {
         }
 
     }
+
+
 
     //Method to Save New Maintenance
     @RequestMapping(value = "{workCenterId}/maintenance/add", method = RequestMethod.POST)

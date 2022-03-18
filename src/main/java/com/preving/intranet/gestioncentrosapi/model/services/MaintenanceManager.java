@@ -1,7 +1,12 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.*;
+import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderByAreasRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.*;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
+import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProvidersByAreas;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.security.JwtTokenUtil;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -10,6 +15,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.RichTextString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,12 +42,6 @@ import java.util.List;
 
 @Service
 public class MaintenanceManager implements MaintenanceService {
-    private static final int MAINTENANCE = 3;
-    //    export
-    static final String EXPORT_TITLE_1 = "maintenanceProvider";
-    private static final String EXPORT_TITLE_2 = "maintenanceType";
-    static final String EXPORT_TITLE_3 = "maintenanceStartDate";
-    static final String EXPORT_TITLE_4 = "maintenanceEndDate";
 
     @Autowired
     private MaintenanceRepository maintenanceRepository;
@@ -50,7 +50,18 @@ public class MaintenanceManager implements MaintenanceService {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
+
     private MaintenanceCustomRepository maintenanceCustomRepository;
+    private static final String EXPORT_TITLE_1 = "Type";
+    static final String EXPORT_TITLE_2 = "Provider";
+    private static final String EXPORT_TITLE_3 = "Periodicity";
+    private static final String EXPORT_TITLE_4 = "Amount";
+    private static final String EXPORT_TITLE_5 = "Date";
+    private static final String EXPORT_TITLE_6 = "Observations";
+
+
+    private static final int NEW_MAINTENANCE = 2;
+
 
     @Autowired
     private MaintenanceByAttachmentRepository maintenanceByAttachmentRepository;
@@ -65,7 +76,7 @@ public class MaintenanceManager implements MaintenanceService {
     private MaintenanceByWorkCentersRepository maintenanceByWorkCentersRepository;
 
 
-    private static final int NEW_MAINTENANCE = 3;
+
 
     @Override
     public Maintenance getMaintenanceById(int maintenanceId){
@@ -167,70 +178,75 @@ public class MaintenanceManager implements MaintenanceService {
         return this.maintenanceCustomRepository.getMaintenanceFiltered(workCenterId, maintenanceFilter, user);
     }
 
+
     @Override
     public ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user) {
-
-        byte[] content = null;
+        byte[] content=null;
 
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet hoja = workbook.createSheet();
         workbook.setSheetName(0, "Actuaciones");
-
-        // Creamos estilo para el encabezado
+        //We create style for the header
         CellStyle cellStyleHeaders = workbook.createCellStyle();
         CellStyle dateCell = workbook.createCellStyle();
         Font font = workbook.createFont();
-
+        // TODO color the background of the headers
         font.setBold(true);
         cellStyleHeaders.setFont(font);
-
-        // Creamos estilo para formato fecha
+        // We create style for date format
         CellStyle cellStyleData = workbook.createCellStyle();
         CreationHelper createHelper = workbook.getCreationHelper();
-        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy hh:mm:ss"));
+        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy"));
 
-        // Obtenemos los datos
-        List<Maintenance> maintenanceFilters = this.maintenanceCustomRepository.getMaintenanceFiltered(0,maintenanceFilter, user);
+        // We get the data
+        List<Maintenance> maintenances = getFilteredMaintenances(0,maintenanceFilter, user);
 
-        String[] titulos = {
-                EXPORT_TITLE_1,
-                EXPORT_TITLE_2,
-                EXPORT_TITLE_3,
-                EXPORT_TITLE_4,
-        };
+        String[] arrayTitle = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4, EXPORT_TITLE_5, EXPORT_TITLE_6};
 
-        // Creamos una fila en la hoja en la posicion 0 para los headers
+        // We create a row in the sheet at position 0 for the headers
         HSSFRow headerRow = hoja.createRow(0);
 
-        // Creamos los headers
-        for (int i = 0; i < titulos.length; i++) {
+        // We create the headers
+        for (int i = 0; i < arrayTitle.length; i++) {
             HSSFCell celda = headerRow.createCell(i);
-            celda.setCellValue(titulos[i]);
+            celda.setCellValue(arrayTitle[i]);
             celda.setCellStyle(cellStyleHeaders);
         }
-        // Creamos las filas
-        for (int i = 0; i < maintenanceFilters.size(); i++) {
+
+        // We create the rows
+        for (int i = 0; i < maintenances.size(); i++) {
             HSSFRow dataRow = hoja.createRow(1 + i);
 
-            // provider
-            HSSFCell provider = dataRow.createCell(0);
-            provider.setCellValue(maintenanceFilter.getMaintenanceProvider().getName());
+            // type
+            HSSFCell type = dataRow.createCell(0);
+            type.setCellValue(maintenances.get(i).getMaintenanceTypes().getDenomination());
 
-            // maintenancType
-            HSSFCell maintenancType = dataRow.createCell(1);
-            maintenancType.setCellValue((Date) maintenanceFilter.getMaintenanceTypes());
+            // Provider
+            HSSFCell provider = dataRow.createCell(1);
+            provider.setCellValue(maintenances.get(i).getProvider().getName());
 
-            // startDate
-            HSSFCell startDate = dataRow.createCell(2);
-            startDate.setCellValue(maintenanceFilter.getMaintenanceStartDate());
+            // Periodicity
+            HSSFCell periodicity = dataRow.createCell(2);
+            periodicity.setCellValue(maintenances.get(i).getExpenditurePeriod().getName());
 
-            // endDate
-            HSSFCell endDate = dataRow.createCell(3);
-            endDate.setCellValue(maintenanceFilter.getMaintenanceEndDate());
+            // amount
+            HSSFCell amount = dataRow.createCell(3);
+            amount.setCellValue(maintenances.get(i).getAmount());
+
+            //date
+            HSSFCell date = dataRow.createCell(4);
+            date.setCellValue(maintenances.get(i).getDate());
+            date.setCellStyle(cellStyleData);
+
+            // observations
+            HSSFCell observations = dataRow.createCell(5);
+            observations.setCellValue(maintenances.get(i).getObservations());
+
 
         }
+
         // Ajustamos columnas
-        for (int i = 0; i < titulos.length; i++) {
+        for (int i = 0; i < arrayTitle.length; i++) {
             hoja.autoSizeColumn(i);
         }
 
@@ -245,11 +261,9 @@ public class MaintenanceManager implements MaintenanceService {
             workbook.write(out);
             out.flush();
 
-
         } catch (IOException ex) {
             return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
