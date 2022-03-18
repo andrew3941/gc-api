@@ -37,7 +37,8 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
         sql += "WHERE MA.TIPO_ID = MT.ID " +
                 "       AND MA.PROVEEDOR_ID = PO.ID " +
                 "       AND MA.PERIODICIDAD_ID = P.ID " +
-                "       AND MA.ID = MXD.MANTENIMIENTO_ID ";
+                "       AND MA.ID = MXD.MANTENIMIENTO_ID " +
+                "       AND MA.BORRADO IS NULL ";
 
         if (maintenanceFilter != null && maintenanceFilter.getMaintenanceTypes().size() != 0) {
             sql += "AND MT.ID = :maintenanceType ";
