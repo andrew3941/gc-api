@@ -5,8 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.io.IOException;
 
 public interface GeneralDocumentationService {
 
@@ -24,7 +25,7 @@ public interface GeneralDocumentationService {
 
     GeneralDocumentation getGeneralDocById(int generalDocId);
 
-    ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request, int generalDocAttachId);
+    ResponseEntity<?> downloadZipAttachment(int itemId, int type, HttpServletResponse response);
 
     ResponseEntity<?> deleteAttachment(int workCenterId, int attachedId) throws IOException;
 }

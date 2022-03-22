@@ -471,24 +471,11 @@ public class WorkCentersController {
     }
 
     /**
-     * Descargamos el fichero de un plano
-     * @param drawingId
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "drawing/{drawingId}/download", method = RequestMethod.GET)
-    public ResponseEntity<?> downloadDrawingDoc(HttpServletRequest request, @PathVariable(value = "drawingId") int drawingId) {
-
-        return ( workCenterService.downloadDrawingDoc(request,drawingId));
-    }
-
-    /**
      * Descargamos el archivo de generalDoc
      * @param generalDocId
      * Solicitud @param
      * @regreso
      */
-//    workCenters/generalDocumentation
     @RequestMapping(value = "{workCenters}/generalDocumentation", method = RequestMethod.GET)
     public ResponseEntity<?> downloadDocumentationList(HttpServletRequest request, @PathVariable(value = "generalDocId") int generalDocId) {
 
@@ -682,10 +669,16 @@ public class WorkCentersController {
     }
 
 
-    @RequestMapping(value = "generalDocumentation/{generalDocAttachId}/download", method = RequestMethod.GET)
-    public ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request, @PathVariable(value = "generalDocAttachId") int generalDocAttachId) {
+    /**
+     * Zip download of drawgins/generalDoc
+     * @return
+     */
+    @RequestMapping(value = "downloadZip/{itemId}/{type}", method = RequestMethod.GET)
+    public ResponseEntity<?> downloadZipAttachment(HttpServletResponse response,
+                                                @PathVariable(value = "itemId") int itemId,
+                                                @PathVariable(value = "type") int type) {
 
-        return ( generalDocumentationService.downloadGeneralDoc(request,generalDocAttachId));
+        return ( generalDocumentationService.downloadZipAttachment(itemId, type, response));
     }
 
 
