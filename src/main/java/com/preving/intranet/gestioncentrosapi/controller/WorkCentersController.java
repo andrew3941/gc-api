@@ -787,7 +787,6 @@ public class WorkCentersController {
 
     }
 
-
     //METHOD FOR RETRIEVING MAINTENANCE LIST
     @RequestMapping(value = "{workCenterId}/maintenance", method = RequestMethod.GET)
     public ResponseEntity<List<Maintenance>> getAllMaintenance(@PathVariable(value = "workCenterId") int workCenterId){
@@ -807,29 +806,6 @@ public class WorkCentersController {
                                             @PathVariable(value = "maintenanceId") int maintenanceId) {
         return maintenanceService.deleteMaintenance(request,workCenterId,maintenanceId);
     }
-
-
-
-    //export
-    @RequestMapping(value="exportMaintenance", method = RequestMethod.POST)
-    public ResponseEntity<?> exportActionMaintenance(HttpServletRequest request,
-                                               HttpServletResponse response,
-                                               @RequestParam ("filterMaintenanceList") String maintenanceList) {
-
-        ResponseEntity<?> resp = null;
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        MaintenanceFilter maintenanceFilter = gson.fromJson(maintenanceList, MaintenanceFilter.class);
-
-        try {
-            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
-            return new ResponseEntity<>(maintenanceService.exportMaintenance(maintenanceFilter, response, user), HttpStatus.OK);
-        } catch (DataAccessException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
-
 
     //Method to Save New Maintenance
     @RequestMapping(value = "{workCenterId}/maintenance/add", method = RequestMethod.POST)
@@ -858,6 +834,26 @@ public class WorkCentersController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
+
+
+//    GET MAPPING FOR EXPORT MAINTENANCE
+    @RequestMapping(value="exportMaintenances", method = RequestMethod.POST)
+    public ResponseEntity<?> exportActionMaintenance(HttpServletRequest request,
+                                           HttpServletResponse response,
+                                           @RequestParam ("filterMaintenanceList") String maintenanceList) {
+
+        ResponseEntity<?> resp = null;
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        MaintenanceFilter maintenanceFilter = gson.fromJson(maintenanceList, MaintenanceFilter.class);
+
+        try {
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            return new ResponseEntity<>(maintenanceService.exportMaintenance(maintenanceFilter, response, user), HttpStatus.OK);
+        } catch (DataAccessException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }

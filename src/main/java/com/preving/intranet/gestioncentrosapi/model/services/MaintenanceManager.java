@@ -1,6 +1,5 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.*;
-import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderByAreasRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
@@ -179,93 +178,6 @@ public class MaintenanceManager implements MaintenanceService {
     }
 
 
-    @Override
-    public ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user) {
-        byte[] content=null;
-
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        HSSFSheet hoja = workbook.createSheet();
-        workbook.setSheetName(0, "Actuaciones");
-        //We create style for the header
-        CellStyle cellStyleHeaders = workbook.createCellStyle();
-        CellStyle dateCell = workbook.createCellStyle();
-        Font font = workbook.createFont();
-        // TODO color the background of the headers
-        font.setBold(true);
-        cellStyleHeaders.setFont(font);
-        // We create style for date format
-        CellStyle cellStyleData = workbook.createCellStyle();
-        CreationHelper createHelper = workbook.getCreationHelper();
-        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy"));
-
-        // We get the data
-        List<Maintenance> maintenances = getFilteredMaintenances(0,maintenanceFilter, user);
-
-        String[] arrayTitle = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4, EXPORT_TITLE_5, EXPORT_TITLE_6};
-
-        // We create a row in the sheet at position 0 for the headers
-        HSSFRow headerRow = hoja.createRow(0);
-
-        // We create the headers
-        for (int i = 0; i < arrayTitle.length; i++) {
-            HSSFCell celda = headerRow.createCell(i);
-            celda.setCellValue(arrayTitle[i]);
-            celda.setCellStyle(cellStyleHeaders);
-        }
-
-        // We create the rows
-        for (int i = 0; i < maintenances.size(); i++) {
-            HSSFRow dataRow = hoja.createRow(1 + i);
-
-            // type
-            HSSFCell type = dataRow.createCell(0);
-            type.setCellValue(maintenances.get(i).getMaintenanceTypes().getDenomination());
-
-            // Provider
-            HSSFCell provider = dataRow.createCell(1);
-            provider.setCellValue(maintenances.get(i).getProvider().getName());
-
-            // Periodicity
-            HSSFCell periodicity = dataRow.createCell(2);
-            periodicity.setCellValue(maintenances.get(i).getExpenditurePeriod().getName());
-
-            // amount
-            HSSFCell amount = dataRow.createCell(3);
-            amount.setCellValue(maintenances.get(i).getAmount());
-
-            //date
-            HSSFCell date = dataRow.createCell(4);
-            date.setCellValue(maintenances.get(i).getDate());
-            date.setCellStyle(cellStyleData);
-
-            // observations
-            HSSFCell observations = dataRow.createCell(5);
-            observations.setCellValue(maintenances.get(i).getObservations());
-
-
-        }
-
-        // Ajustamos columnas
-        for (int i = 0; i < arrayTitle.length; i++) {
-            hoja.autoSizeColumn(i);
-        }
-
-        try {
-            String nombreFichero = "reporte-actuaciones";
-            response.setContentType("application/vnd.ms-excel");
-            response.setHeader("Content-Disposition", "inline; filename=\"" +
-                    java.net.URLEncoder.encode(nombreFichero, "UTF-8")
-                    + "\"");
-
-            ServletOutputStream out = response.getOutputStream();
-            workbook.write(out);
-            out.flush();
-
-        } catch (IOException ex) {
-            return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<byte[]>(content, HttpStatus.OK);
-    }
 
     /**
      * Guardar mantenimiento
@@ -351,6 +263,94 @@ public class MaintenanceManager implements MaintenanceService {
         return maintenanceTypesRepository.findAll();
     }
 
+
+
+//METHOD FOR EXPORT MAINTENANCE
+    @Override
+    public ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user) {
+        byte[] content=null;
+
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet hoja = workbook.createSheet();
+        workbook.setSheetName(0, "performances");
+        // We create style for the header
+        CellStyle cellStyleHeaders = workbook.createCellStyle();
+        CellStyle dateCell = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        // TODO color the background of the headers
+        font.setBold(true);
+        cellStyleHeaders.setFont(font);
+        //style for date format
+        CellStyle cellStyleData = workbook.createCellStyle();
+        CreationHelper createHelper = workbook.getCreationHelper();
+        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("yyyy/mm/dd"));
+
+        // We get the data
+        List<Maintenance> maintenances = getFilteredMaintenances(0,maintenanceFilter, user);
+
+        String[] titleArray = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4, EXPORT_TITLE_5, EXPORT_TITLE_6};
+
+        // We create a row in the sheet at position 0 for the headers
+        HSSFRow headerRow = hoja.createRow(0);
+
+        // We create the headers
+        for (int i = 0; i < titleArray.length; i++) {
+            HSSFCell celda = headerRow.createCell(i);
+            celda.setCellValue(titleArray[i]);
+            celda.setCellStyle(cellStyleHeaders);
+        }
+
+        // We create the rows
+        for (int i = 0; i < maintenances.size(); i++) {
+            HSSFRow dataRow = hoja.createRow(1 + i);
+
+            // type
+            HSSFCell type = dataRow.createCell(0);
+            type.setCellValue(maintenances.get(i).getMaintenanceTypes().getDenomination());
+
+            // provider
+            HSSFCell provider = dataRow.createCell(1);
+            provider.setCellValue(maintenances.get(i).getProvider().getName());
+
+            // periodicity
+            HSSFCell periodicity = dataRow.createCell(2);
+            periodicity.setCellValue(maintenances.get(i).getExpenditurePeriod().getName());
+
+            // amount
+            HSSFCell amount = dataRow.createCell(3);
+            amount.setCellValue(maintenances.get(i).getAmount());
+
+            // date
+            HSSFCell date = dataRow.createCell(4);
+            date.setCellValue(maintenances.get(i).getDate());
+            date.setCellStyle(cellStyleData);
+
+            // observations
+            HSSFCell observations = dataRow.createCell(5);
+            observations.setCellValue(maintenances.get(i).getObservations());
+        }
+
+        // adjust columns
+        for (int i = 0; i < titleArray.length; i++) {
+            hoja.autoSizeColumn(i);
+        }
+
+        try {
+            String nombreFichero = "report-actions";
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-Disposition", "inline; filename=\"" +
+                    java.net.URLEncoder.encode(nombreFichero, "UTF-8")
+                    + "\"");
+
+            ServletOutputStream out = response.getOutputStream();
+            workbook.write(out);
+            out.flush();
+
+        } catch (IOException ex) {
+            return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<byte[]>(content, HttpStatus.OK);
+    }
 
 }
 

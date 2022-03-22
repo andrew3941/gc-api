@@ -28,10 +28,6 @@ public interface MaintenanceService {
 
     List<Maintenance> getFilteredMaintenances(int workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user);
 
-
-    //    EXPORT
-    ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user);
-
     //Get all Maintenance
     List<Maintenance> findAllMaintenance();
 
@@ -42,6 +38,9 @@ public interface MaintenanceService {
 
     // method for delete maintenance
     ResponseEntity<?> deleteMaintenance(HttpServletRequest request,int workCenterId, int maintenanceId);
+
+//    EXPORT MAINTENANCE
+ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user);
 
 
 }
