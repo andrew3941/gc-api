@@ -3,19 +3,12 @@ package com.preving.intranet.gestioncentrosapi.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
-import com.google.gson.reflect.TypeToken;
-import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.Room;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
-import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
-import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
-import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
-import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
-import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetail;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.services.*;
@@ -24,7 +17,6 @@ import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,11 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(path= "/workCenters")
@@ -839,9 +827,9 @@ public class WorkCentersController {
 
 //    GET MAPPING FOR EXPORT MAINTENANCE
     @RequestMapping(value="exportMaintenances", method = RequestMethod.POST)
-    public ResponseEntity<?> exportActionMaintenance(HttpServletRequest request,
-                                           HttpServletResponse response,
-                                           @RequestParam ("filterMaintenanceList") String maintenanceList) {
+    public ResponseEntity<?> exportAction(HttpServletRequest request,
+                                          HttpServletResponse response,
+                                          @RequestParam ("filterMaintenanceList") String maintenanceList) {
 
         ResponseEntity<?> resp = null;
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();

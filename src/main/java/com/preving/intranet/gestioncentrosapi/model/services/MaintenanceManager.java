@@ -59,7 +59,7 @@ public class MaintenanceManager implements MaintenanceService {
     private static final String EXPORT_TITLE_6 = "Observations";
 
 
-    private static final int NEW_MAINTENANCE = 2;
+    private static final int NEW_MAINTENANCE = 3;
 
 
     @Autowired
@@ -322,7 +322,7 @@ public class MaintenanceManager implements MaintenanceService {
 
             // date
             HSSFCell date = dataRow.createCell(4);
-            date.setCellValue(maintenances.get(i).getDate());
+//            date.setCellValue(maintenances.get(i).getDate());
             date.setCellStyle(cellStyleData);
 
             // observations
