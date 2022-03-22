@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @RestController
 @RequestMapping(path= "/workCenters")
@@ -685,6 +686,15 @@ public class WorkCentersController {
     public ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request, @PathVariable(value = "generalDocAttachId") int generalDocAttachId) {
 
         return ( generalDocumentationService.downloadGeneralDoc(request,generalDocAttachId));
+    }
+
+
+
+    @RequestMapping(value = "{workCenterId}/attachment/{attachedId}/delete", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteAttachment (@PathVariable(value = "workCenterId") int workCenterId,
+                                               @PathVariable(value = "attachedId") int attachedId) throws IOException {
+
+        return generalDocumentationService.deleteAttachment(workCenterId,attachedId);
     }
 
 }

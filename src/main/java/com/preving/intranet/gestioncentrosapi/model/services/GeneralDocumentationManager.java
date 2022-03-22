@@ -1,8 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.*;
-import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
-import com.preving.intranet.gestioncentrosapi.model.domain.DrawingsByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.*;
 import com.preving.security.JwtTokenUtil;
@@ -10,17 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class GeneralDocumentationManager implements GeneralDocumentationService {
@@ -133,18 +128,6 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 
             generalDocumentationRepository.editGeneralDoc(generalDoc);
 
-            for (GeneralDocByAttachment gda : generalDoc.getGeneralDocByAttachments()){
-
-               if (gda.getAttachedUrl() != null){
-                // Borramos el documento anterior del servidor
-                commonService.deleteDocumentServer(workCenterId, gda.getId(), GENERAL_DOCUMENTS);
-
-                generalDocByAttachmentRepository.deleteById(gda.getId());
-
-               }
-
-            }
-
             if (attachedFile.length > 0) {
 
                 for (MultipartFile mpFile : attachedFile){
@@ -168,33 +151,11 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
                 }
             }
 
-            if (attachedFile.length == 0){
-
-                for (GeneralDocByAttachment myFile : generalDoc.getGeneralDocByAttachments()){
-
-                   // GeneralDocByAttachment newGeneralDocByAttach = new GeneralDocByAttachment();
-
-                    GeneralDocByAttachment generalDocByAttach = this.generalDocByAttachmentRepository.save(myFile);
-
-//                    // Guardamos documento en el server
-                    //TODO create a file from the exiting URL and save the file.
-//                    url = commonService.saveDocumentServer(workCenterId, generalDoc.getId(), myFile, GENERAL_DOCUMENTS);
-
-//                    // Actualizamos la ruta del documento guardado
-                    if (url != null) {
-                        this.generalDocByAttachmentRepository.updateGeneralDocByAttachmentUrl(generalDocByAttach.getId(), url);
-                    }
-
-                }
-
-            }
-
+            return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private void generalDocAttachmentsCombo(int workCenterId, GeneralDocumentation newGeneralDoc, List<GeneralDocByAttachment> attachments, MultipartFile[] attachedFile) throws Exception {
@@ -255,6 +216,22 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
         }
 
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteAttachment(int workCenterId, int attachedId) throws IOException {
+
+        try {
+
+            commonService.deleteDocumentServer(workCenterId, attachedId, GENERAL_DOCUMENTS);
+            generalDocByAttachmentRepository.deleteById(attachedId);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 
