@@ -1,4 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.dao.maintenance;
+import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocByAttachment;
+import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceByAttachment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -7,8 +9,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public interface MaintenanceByAttachmentRepository extends JpaRepository<MaintenanceByAttachment, Integer> {
+
+
+    List<MaintenanceByAttachment> findAllByMaintenanceId(int maintenanceId);
+
+    void deleteAllByMaintenance(Maintenance maintenance);
+    void deleteById(int attachId);
 
     @Modifying
     @Transactional

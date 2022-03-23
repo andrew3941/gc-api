@@ -207,6 +207,5 @@ public class Maintenance implements Serializable {
     public void setMaintenanceByAttachments(List<MaintenanceByAttachment> maintenanceByAttachments) {
         this.maintenanceByAttachments = maintenanceByAttachments;
     }
-
 }
 

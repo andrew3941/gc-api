@@ -1,6 +1,8 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
+import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
+import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
@@ -61,7 +63,7 @@ public class MaintenanceManager implements MaintenanceService {
 
     private static final int NEW_MAINTENANCE = 3;
 
-
+    private static final int MAINTENANCE = 3;
     @Autowired
     private MaintenanceByAttachmentRepository maintenanceByAttachmentRepository;
 
@@ -119,12 +121,12 @@ public class MaintenanceManager implements MaintenanceService {
 
             maintenanceRepository.editMaintenance(maintenance);
 
-            for (MaintenanceByAttachment maintFile : maintenance.getMaintenanceByAttachments()){
-                // Borramos el documento anterior del servidor
-                commonService.deleteDocumentServer(workCenterId, maintFile.getId(), NEW_MAINTENANCE);
-
-                maintenanceByAttachmentRepository.deleteById(maintFile.getId());
-            }
+//            for (MaintenanceByAttachment maintFile : maintenance.getMaintenanceByAttachments()){
+//                // Borramos el documento anterior del servidor
+//                commonService.deleteDocumentServer(workCenterId, maintFile.getId(), NEW_MAINTENANCE);
+//
+//                maintenanceByAttachmentRepository.deleteById(maintFile.getId());
+//            }
 
             if (attachedFile.length > 0) {
 
@@ -238,6 +240,8 @@ public class MaintenanceManager implements MaintenanceService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+
     @Override
     public ResponseEntity<?> deleteMaintenance(HttpServletRequest request, int workCenterId, int maintenanceId) {
         long mId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
@@ -262,8 +266,6 @@ public class MaintenanceManager implements MaintenanceService {
     public List<MaintenanceTypes> getAllMaintenanceTypes() {
         return maintenanceTypesRepository.findAll();
     }
-
-
 
 //METHOD FOR EXPORT MAINTENANCE
     @Override
@@ -352,5 +354,21 @@ public class MaintenanceManager implements MaintenanceService {
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<?> deleteAttachment(int workCenterId, int attachedId) throws IOException {
+
+        try {
+
+
+            commonService.deleteDocumentServer(workCenterId, attachedId, MAINTENANCE);
+            maintenanceByAttachmentRepository.deleteById(attachedId);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 }
 

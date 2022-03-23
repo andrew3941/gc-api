@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -366,21 +367,21 @@ public class WorkCentersController {
      * Obtiene listado de salas de un centro de trabajo por Id
      * @return
 
-    @RequestMapping(value = "{workCenterId}/rooms", method = RequestMethod.GET)
-    public ResponseEntity<?> getRoomListByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
+     @RequestMapping(value = "{workCenterId}/rooms", method = RequestMethod.GET)
+     public ResponseEntity<?> getRoomListByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
 
-        try {
-            return new ResponseEntity<>(workCenterService.getRoomListByWorkCenter(workCenterId), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+     try {
+     return new ResponseEntity<>(workCenterService.getRoomListByWorkCenter(workCenterId), HttpStatus.OK);
+     } catch (Exception e) {
+     e.printStackTrace();
+     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+     }
 
-    }
+     }
 
-    /**
-     * Obtiene los detalles de una sala de reuniones de un centro de trabajo por Id
-     * @return
+     /**
+      * Obtiene los detalles de una sala de reuniones de un centro de trabajo por Id
+      * @return
      */
     @RequestMapping(value = "rooms/{roomId}", method = RequestMethod.GET)
     public ResponseEntity<?> getRoomById(@PathVariable(value = "roomId") int roomId){
@@ -743,7 +744,7 @@ public class WorkCentersController {
 
     }
 
-        //  get maintenance by id
+    //  get maintenance by id
     @RequestMapping(value = "maintenance/{maintenanceId}", method = RequestMethod.GET)
     private ResponseEntity<?> getMaintenanceById(@PathVariable(value = "maintenanceId") int maintenanceId ) {
 
@@ -790,8 +791,8 @@ public class WorkCentersController {
 
     @RequestMapping(value = "{workCenterId}/maintenance/{maintenanceId}/delete", method = RequestMethod.POST)
     public ResponseEntity<?> deleteMaintenance (HttpServletRequest request,
-                                            @PathVariable(value = "workCenterId") int workCenterId,
-                                            @PathVariable(value = "maintenanceId") int maintenanceId) {
+                                                @PathVariable(value = "workCenterId") int workCenterId,
+                                                @PathVariable(value = "maintenanceId") int maintenanceId) {
         return maintenanceService.deleteMaintenance(request,workCenterId,maintenanceId);
     }
 
@@ -825,7 +826,7 @@ public class WorkCentersController {
     }
 
 
-//    GET MAPPING FOR EXPORT MAINTENANCE
+    //    GET MAPPING FOR EXPORT MAINTENANCE
     @RequestMapping(value="exportMaintenances", method = RequestMethod.POST)
     public ResponseEntity<?> exportAction(HttpServletRequest request,
                                           HttpServletResponse response,
@@ -843,5 +844,11 @@ public class WorkCentersController {
         }
     }
 
+// Delete Old Attachment file after editing.
+    @RequestMapping(value = "{workCenterId}/attachment/{attachedId}/delete", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteAttachment (@PathVariable(value = "workCenterId") int workCenterId,
+                                               @PathVariable(value = "attachedId") int attachedId) throws IOException {
 
+        return maintenanceService.deleteAttachment(workCenterId,attachedId);
+    }
 }

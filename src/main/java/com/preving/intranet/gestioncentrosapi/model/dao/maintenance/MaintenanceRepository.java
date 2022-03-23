@@ -12,6 +12,7 @@ import java.util.List;
 
 public interface  MaintenanceRepository extends JpaRepository<Maintenance, Integer> {
 
+
     List<Maintenance> findMaintenancesByDeletedByIsNullOrderByCreatedDesc();
 
     Maintenance findMaintenanceById(int maintenanceId);
@@ -31,4 +32,16 @@ public interface  MaintenanceRepository extends JpaRepository<Maintenance, Integ
             "where ma.id=:#{#maintenance.id}")
     void editMaintenance(@Param("maintenance") Maintenance maintenance);
 
+//    @Modifying
+//    @Transactional
+//    @Query("update Maintenance mint set mint.maintenanceTypes=:#{#maintenance.maintenanceTypes}, " +
+//            "mint.observations=:#{#maintenance.observations}, "+
+//            "mint.expenditurePeriod=:#{#maintenance.periodicity},"+
+//            "mint.provider=:#{#maintenance.provider}, "+
+//            "mint.amount=:#{#maintenance.amount},"+
+//            "mint.date=:#{#maintenance.date}, "+
+//            "mint.created=:#{#maintenance.created}, "+
+//            "mint.modified=CURRENT_TIMESTAMP, mint.modifiedBy=:#{#maintenance.modifiedBy} " +
+//            "where mint.id=:#{#maintenance.id}")
+//    void  editMaintenance(@Param("maintenance") Maintenance maintenance);
 }
