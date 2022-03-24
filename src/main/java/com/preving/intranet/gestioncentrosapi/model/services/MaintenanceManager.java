@@ -61,9 +61,9 @@ public class MaintenanceManager implements MaintenanceService {
     private static final String EXPORT_TITLE_6 = "Observations";
 
 
-    private static final int NEW_MAINTENANCE = 3;
+    private static final int NEW_MAINTENANCE = 4;
 
-    private static final int MAINTENANCE = 3;
+
     @Autowired
     private MaintenanceByAttachmentRepository maintenanceByAttachmentRepository;
 
@@ -81,7 +81,14 @@ public class MaintenanceManager implements MaintenanceService {
 
     @Override
     public Maintenance getMaintenanceById(int maintenanceId){
-        return maintenanceRepository.findMaintenanceById(maintenanceId);
+
+        Maintenance   myMaintenance =  maintenanceRepository.findMaintenanceById(maintenanceId);
+
+        List<MaintenanceByAttachment> allMaintenanceFiles = maintenanceByAttachmentRepository.findAllByMaintenance(myMaintenance);
+
+        myMaintenance.setMaintenanceByAttachments(allMaintenanceFiles);
+
+        return myMaintenance;
     }
 
     public ResponseEntity<?> downloadMaintenanceDoc(HttpServletRequest request, int workCenterId, int maintenanceId) {
@@ -120,13 +127,6 @@ public class MaintenanceManager implements MaintenanceService {
         try {
 
             maintenanceRepository.editMaintenance(maintenance);
-
-//            for (MaintenanceByAttachment maintFile : maintenance.getMaintenanceByAttachments()){
-//                // Borramos el documento anterior del servidor
-//                commonService.deleteDocumentServer(workCenterId, maintFile.getId(), NEW_MAINTENANCE);
-//
-//                maintenanceByAttachmentRepository.deleteById(maintFile.getId());
-//            }
 
             if (attachedFile.length > 0) {
 
@@ -360,7 +360,7 @@ public class MaintenanceManager implements MaintenanceService {
         try {
 
 
-            commonService.deleteDocumentServer(workCenterId, attachedId, MAINTENANCE);
+            commonService.deleteDocumentServer(workCenterId, attachedId, NEW_MAINTENANCE);
             maintenanceByAttachmentRepository.deleteById(attachedId);
 
             return new ResponseEntity<>(HttpStatus.OK);

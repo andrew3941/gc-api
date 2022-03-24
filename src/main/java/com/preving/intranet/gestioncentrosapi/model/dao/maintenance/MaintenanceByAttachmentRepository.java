@@ -15,9 +15,10 @@ import java.util.List;
 public interface MaintenanceByAttachmentRepository extends JpaRepository<MaintenanceByAttachment, Integer> {
 
 
-    List<MaintenanceByAttachment> findAllByMaintenanceId(int maintenanceId);
+    List<MaintenanceByAttachment> findAllByMaintenance(Maintenance myMaintenance);
 
-    void deleteAllByMaintenance(Maintenance maintenance);
+    MaintenanceByAttachment findById(int attachedId);
+
     void deleteById(int attachId);
 
     @Modifying
