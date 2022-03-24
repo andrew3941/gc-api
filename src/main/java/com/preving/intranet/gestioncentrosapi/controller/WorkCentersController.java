@@ -845,10 +845,10 @@ public class WorkCentersController {
     }
 
 // Delete Old Attachment file after editing.
-    @RequestMapping(value = "{workCenterId}/attachment/{attachedId}/delete", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteAttachment (@PathVariable(value = "workCenterId") int workCenterId,
+    @RequestMapping(value = "{workCenterId}/maintenanceAttachment/{attachedId}/delete", method = RequestMethod.POST)
+    public ResponseEntity<?> maintenanceDeleteAttachment (@PathVariable(value = "workCenterId") int workCenterId,
                                                @PathVariable(value = "attachedId") int attachedId) throws IOException {
 
-        return maintenanceService.deleteAttachment(workCenterId,attachedId);
+        return maintenanceService.maintenanceDeleteAttachment(workCenterId,attachedId);
     }
 }

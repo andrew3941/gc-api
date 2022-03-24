@@ -355,7 +355,7 @@ public class MaintenanceManager implements MaintenanceService {
     }
 
     @Override
-    public ResponseEntity<?> deleteAttachment(int workCenterId, int attachedId) throws IOException {
+    public ResponseEntity<?> maintenanceDeleteAttachment(int workCenterId, int attachedId) throws IOException {
 
         try {
 

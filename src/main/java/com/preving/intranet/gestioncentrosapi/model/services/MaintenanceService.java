@@ -2,7 +2,6 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes;
-import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,5 +42,5 @@ public interface MaintenanceService {
 //    EXPORT MAINTENANCE
 ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user);
 
-    ResponseEntity<?> deleteAttachment(int workCenterId, int attachedId) throws IOException;
+    ResponseEntity<?> maintenanceDeleteAttachment(int workCenterId, int attachedId) throws IOException;
 }
