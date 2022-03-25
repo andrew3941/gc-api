@@ -29,6 +29,7 @@ import java.util.List;
                                 @ColumnResult(name = "OBSERVACIONES", type = String.class),
                                 @ColumnResult(name = "TIPO", type = String.class),
                                 @ColumnResult(name = "NOMBRE", type = String.class),
+//                                @ColumnResult(name = "CONCEPTO", type = String.class),
                                 @ColumnResult(name = "PERIODICIDAD", type = String.class)
                         }
                 )
@@ -42,6 +43,7 @@ public class Maintenance implements Serializable {
     private MaintenanceTypes maintenanceTypes = new MaintenanceTypes();
     private Provider provider = new Provider();
     private String billNumber;
+    private String concept;
     private ExpenditurePeriod expenditurePeriod = new ExpenditurePeriod();
     private int amount;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
@@ -61,10 +63,11 @@ public class Maintenance implements Serializable {
     public Maintenance() {
     }
 
-    public Maintenance(int id, MaintenanceTypes maintenanceTypes, Provider provider, String billNumber, ExpenditurePeriod expenditurePeriod, int amount, Date date, String observations, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy, List<MaintenanceByAttachment> maintenanceByAttachments) {
+    public Maintenance(int id, MaintenanceTypes maintenanceTypes, Provider provider,String concept, String billNumber, ExpenditurePeriod expenditurePeriod, int amount, Date date, String observations, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy, List<MaintenanceByAttachment> maintenanceByAttachments) {
         this.id = id;
         this.maintenanceTypes = maintenanceTypes;
         this.provider = provider;
+        this.concept = concept;
         this.billNumber = billNumber;
         this.expenditurePeriod = expenditurePeriod;
         this.amount = amount;
@@ -79,9 +82,10 @@ public class Maintenance implements Serializable {
         this.maintenanceByAttachments = maintenanceByAttachments;
     }
 
-    public Maintenance(int id, int amount, String billNumber, Date date, String observations, String maintenanceType,
+    public Maintenance(int id, int amount, String billNumber, Date date, String observations, String concept,String maintenanceType,
                        String nameProvider, String periodicity) {
         this.id = id;
+        this.concept = concept;
         this.amount = amount;
         this.billNumber = billNumber;this.date = date;
         this.observations = observations;
@@ -192,6 +196,16 @@ public class Maintenance implements Serializable {
     @Column(name = "BORRADO")
     public Date getDeleted() {return deleted;}
     public void setDeleted(Date deleted) {this.deleted = deleted;}
+
+    @Basic
+    @Column(name = "CONCEPTO")
+    public String getConcept() {
+        return concept;
+    }
+
+    public void setConcept(String concept) {
+        this.concept = concept;
+    }
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "BORRADO_POR", referencedColumnName = "ID")
