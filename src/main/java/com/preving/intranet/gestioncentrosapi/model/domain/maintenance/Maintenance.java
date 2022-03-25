@@ -29,7 +29,7 @@ import java.util.List;
                                 @ColumnResult(name = "OBSERVACIONES", type = String.class),
                                 @ColumnResult(name = "TIPO", type = String.class),
                                 @ColumnResult(name = "NOMBRE", type = String.class),
-//                                @ColumnResult(name = "CONCEPTO", type = String.class),
+                                @ColumnResult(name = "CONCEPTO", type = String.class),
                                 @ColumnResult(name = "PERIODICIDAD", type = String.class)
                         }
                 )
@@ -202,6 +202,7 @@ public class Maintenance implements Serializable {
     public String getConcept() {
         return concept;
     }
+
 
     public void setConcept(String concept) {
         this.concept = concept;
