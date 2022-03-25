@@ -15,4 +15,6 @@ public interface WorkCentersCustomizeRepository {
     int getTotalEmployee(int workCenterId );
 
     List<WorkCenter> findAllByActive(UsuarioWithRoles user);
+
+    List<WorkCenter> findAllByActive();
 }

@@ -187,7 +187,17 @@ public class ProviderManager implements ProviderService {
         }
 
         try {
-            for (WorkCenter workCenter : newProvider.getWorkCenters()) {
+            List<WorkCenter> workCenterList = new ArrayList<>();
+
+            // Comprobamos si la opción 'Todos centros' está marcada
+            if (newProvider.isAllWorkCenters()) {
+                // Obtenemos todos los centros activos
+                workCenterList = workCentersCustomizeRepository.findAllByActive();
+            } else {
+                workCenterList = newProvider.getWorkCenters();
+            }
+
+            for (WorkCenter workCenter : workCenterList) {
 
                 // Seteamos los valores del objeto
                 ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
@@ -199,6 +209,7 @@ public class ProviderManager implements ProviderService {
 
                 // Seteamos los valores para guardar los detalles
                 ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
+                providersCommonDetails.setExpenditurePeriod(new ExpenditurePeriod());
 
                 providersCommonDetails.setCreated(new Date());
                 providersCommonDetails.getCreatedBy().setId(userId);
@@ -418,7 +429,7 @@ public class ProviderManager implements ProviderService {
                 List<ProvidersByWorkCenters> provByWorkCenters = providersByWorkCentersRepository.findAllByProvider(provider);
 
                     // Comprobar si trae centros nuevos y replicar los detalles del centro existente
-                    if (provider.getWorkCenters() != null) {
+                    if (provider.getWorkCenters() != null && provider.getWorkCenters().size() != 0) {
                         // Recorremos los centros nuevos que vengan informados
                         for (WorkCenter workCenter : provider.getWorkCenters()) {
                             // Seteamos los valores del objeto
@@ -482,7 +493,6 @@ public class ProviderManager implements ProviderService {
                     commonDetails.getCreatedBy().setId(userId);
                     commonDetails.setProvDelegacionId(providersByWorkCenters.getId());
 
-                    // TODO comprobar esto
                     if (provider.getServiceEndDate() != null){
                         commonDetails.setServiceEndDate(provider.getServiceEndDate());
                     }

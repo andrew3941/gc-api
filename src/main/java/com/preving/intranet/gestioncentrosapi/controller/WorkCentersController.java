@@ -435,6 +435,18 @@ public class WorkCentersController {
     }
 
     /**
+     * Descargamos el fichero de un plano
+     * @param drawingId
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "drawing/{drawingId}/download", method = RequestMethod.GET)
+    public ResponseEntity<?> downloadDrawingDoc(HttpServletRequest request, @PathVariable(value = "drawingId") int drawingId) {
+
+        return ( workCenterService.downloadDrawingDoc(request,drawingId));
+    }
+
+    /**
      * Editamos una sala de un centro de trabajo
      * @param workCenterId
      * @param roomId
@@ -476,10 +488,11 @@ public class WorkCentersController {
      * Solicitud @param
      * @regreso
      */
-    @RequestMapping(value = "{workCenters}/generalDocumentation", method = RequestMethod.GET)
-    public ResponseEntity<?> downloadDocumentationList(HttpServletRequest request, @PathVariable(value = "generalDocId") int generalDocId) {
+    @RequestMapping(value = "generalDocumentation/{generalDocId}/download", method = RequestMethod.GET)
+    public ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request,
+                                                @PathVariable(value = "generalDocId") int generalDocId) {
 
-        return ( workCenterService.downloadDocumentationList(request,generalDocId));
+        return ( workCenterService.downloadGeneralDoc(request,generalDocId));
     }
 
     /**

@@ -166,21 +166,35 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
                 "SELECT WC.ID, WC.NOMBRE, WC.TIPO_ID FROM GC2006_RELEASE.PC_DELEGACIONES WC " +
                 "WHERE WC.ACTIVO = 1 ";
 
-        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
-            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
-                sql += " AND WC.RESPONSABLE = :userId ";
-            }
-        }
+        // TODO comprobar si esto es necesario
+//        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
+//            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
+//                sql += " AND WC.RESPONSABLE = :userId ";
+//            }
+//        }
 
                 sql += "ORDER BY NOMBRE ";
 
         Query query = manager.createNativeQuery(sql);
 
-        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
-            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
-                query.setParameter("userId", user.getId());
-            }
-        }
+//        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
+//            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
+//                query.setParameter("userId", user.getId());
+//            }
+//        }
+
+        return mappingWorkCenters(query.getResultList());
+    }
+
+    @Override
+    public List<WorkCenter> findAllByActive() {
+
+        String sql = "" +
+                "SELECT WC.ID, WC.NOMBRE, WC.TIPO_ID FROM GC2006_RELEASE.PC_DELEGACIONES WC " +
+                "   WHERE WC.ACTIVO = 1 " +
+                "       ORDER BY NOMBRE";
+
+        Query query = manager.createNativeQuery(sql);
 
         return mappingWorkCenters(query.getResultList());
     }
