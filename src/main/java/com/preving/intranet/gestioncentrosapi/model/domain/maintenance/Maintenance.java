@@ -29,7 +29,7 @@ import java.util.List;
                                 @ColumnResult(name = "OBSERVACIONES", type = String.class),
                                 @ColumnResult(name = "TIPO", type = String.class),
                                 @ColumnResult(name = "NOMBRE", type = String.class),
-                                @ColumnResult(name = "CONCEPTO", type = String.class),
+//                                @ColumnResult(name = "CONCEPTO", type = String.class),
                                 @ColumnResult(name = "PERIODICIDAD", type = String.class)
                         }
                 )
@@ -82,10 +82,9 @@ public class Maintenance implements Serializable {
         this.maintenanceByAttachments = maintenanceByAttachments;
     }
 
-    public Maintenance(int id, int amount, String billNumber, Date date, String observations, String concept,String maintenanceType,
+    public Maintenance(int id, int amount, String billNumber, Date date, String observations, String maintenanceType,
                        String nameProvider, String periodicity) {
         this.id = id;
-        this.concept = concept;
         this.amount = amount;
         this.billNumber = billNumber;this.date = date;
         this.observations = observations;
@@ -202,8 +201,6 @@ public class Maintenance implements Serializable {
     public String getConcept() {
         return concept;
     }
-
-
     public void setConcept(String concept) {
         this.concept = concept;
     }

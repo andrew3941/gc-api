@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface MaintenanceCustomRepository {
 
-    List<Maintenance> getMaintenanceFiltered(Integer workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user);
+    List<Maintenance>getMaintenanceFiltered(Integer workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user);
 
     String findDocUrlByMaintenanceType(int maintenanceType, int workCenterId);
 

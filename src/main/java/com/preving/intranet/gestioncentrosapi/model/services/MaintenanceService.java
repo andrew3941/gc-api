@@ -40,7 +40,7 @@ public interface MaintenanceService {
     ResponseEntity<?> deleteMaintenance(HttpServletRequest request,int workCenterId, int maintenanceId);
 
 //    EXPORT MAINTENANCE
-ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user);
+ResponseEntity<?> exportMaintenance(int workCenterId, MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user);
 
     ResponseEntity<?> maintenanceDeleteAttachment(int workCenterId, int attachedId) throws IOException;
 }

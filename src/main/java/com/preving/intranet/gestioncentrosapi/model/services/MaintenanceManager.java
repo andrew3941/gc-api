@@ -269,7 +269,7 @@ public class MaintenanceManager implements MaintenanceService {
 
 //METHOD FOR EXPORT MAINTENANCE
     @Override
-    public ResponseEntity<?> exportMaintenance(MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user) {
+    public ResponseEntity<?> exportMaintenance(int workCenterId, MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user) {
         byte[] content=null;
 
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -288,7 +288,7 @@ public class MaintenanceManager implements MaintenanceService {
         cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("yyyy/mm/dd"));
 
         // We get the data
-        List<Maintenance> maintenances = getFilteredMaintenances(0,maintenanceFilter, user);
+        List<Maintenance> maintenances = this.maintenanceCustomRepository.getMaintenanceFiltered(workCenterId,maintenanceFilter, user);
 
         String[] titleArray = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4, EXPORT_TITLE_5, EXPORT_TITLE_6};
 
@@ -354,12 +354,11 @@ public class MaintenanceManager implements MaintenanceService {
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
+
     @Override
     public ResponseEntity<?> maintenanceDeleteAttachment(int workCenterId, int attachedId) throws IOException {
 
         try {
-
-
             commonService.deleteDocumentServer(workCenterId, attachedId, NEW_MAINTENANCE);
             maintenanceByAttachmentRepository.deleteById(attachedId);
 

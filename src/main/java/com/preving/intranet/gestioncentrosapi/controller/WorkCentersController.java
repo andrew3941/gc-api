@@ -827,22 +827,19 @@ public class WorkCentersController {
 
 
     //    GET MAPPING FOR EXPORT MAINTENANCE
-    @RequestMapping(value="exportMaintenances", method = RequestMethod.POST)
+    @RequestMapping(value="{workCenterId}/exportMaintenances", method = RequestMethod.POST)
     public ResponseEntity<?> exportAction(HttpServletRequest request,
                                           HttpServletResponse response,
-                                          @RequestParam ("filterMaintenanceList") String maintenanceList) {
-
-        ResponseEntity<?> resp = null;
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        MaintenanceFilter maintenanceFilter = gson.fromJson(maintenanceList, MaintenanceFilter.class);
-
+                                          @PathVariable(value = "workCenterId") int workCenterId,
+                                          @RequestBody MaintenanceFilter maintenanceFilter) {
         try {
             UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
-            return new ResponseEntity<>(maintenanceService.exportMaintenance(maintenanceFilter, response, user), HttpStatus.OK);
+            return new ResponseEntity<>(maintenanceService.exportMaintenance(workCenterId,maintenanceFilter, response, user), HttpStatus.OK);
         } catch (DataAccessException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
 // Delete Old Attachment file after editing.
     @RequestMapping(value = "{workCenterId}/maintenanceAttachment/{attachedId}/delete", method = RequestMethod.POST)
