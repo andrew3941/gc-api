@@ -8,17 +8,17 @@ import java.io.Serializable;
 public class MaintenanceTypes implements Serializable {
     private int id;
     private String denomination;
-    private String observations;
+    private String concept;
     private boolean active;
 
 
     public MaintenanceTypes() {
     }
 
-    public MaintenanceTypes(int id, String denomination, String observations, boolean active) {
+    public MaintenanceTypes(int id, String denomination, String concept, boolean active) {
         this.id = id;
         this.denomination = denomination;
-        this.observations = observations;
+        this.concept = concept;
         this.active = active;
     }
 
@@ -50,10 +50,10 @@ public class MaintenanceTypes implements Serializable {
     @Basic
     @Column(name = "OBSERVACIONES")
     public String getObservations() {
-        return observations;
+        return concept;
     }
     public void setObservations(String observations) {
-        this.observations = observations;
+        this.concept = observations;
     }
 
     @Basic

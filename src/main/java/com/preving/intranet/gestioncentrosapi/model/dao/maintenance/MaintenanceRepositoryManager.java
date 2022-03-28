@@ -25,7 +25,7 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
     public List<Maintenance> getMaintenanceFiltered(Integer workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user) {
 
         String sql = "" +
-                "SELECT DISTINCT MA.ID, MA.CUANTIA, MA.REF_FACTURA, MA.FECHA, MA.OBSERVACIONES, " +
+                "SELECT DISTINCT MA.ID, MA.CUANTIA, MA.REF_FACTURA, MA.FECHA, MA.OBSERVACIONES, MA.CONCEPTO, " +
                 "               MT.DENOMINACION AS TIPO, PO.NOMBRE, P.DENOMINACION AS PERIODICIDAD " +
                 "FROM GESTION_CENTROS.MANTENIMIENTOS MA, " +
                 "       GESTION_CENTROS.TM_MANTENIMIENTOS_TIPOS MT, " +

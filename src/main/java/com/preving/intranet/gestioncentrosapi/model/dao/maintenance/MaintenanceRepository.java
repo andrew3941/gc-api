@@ -28,6 +28,7 @@ public interface  MaintenanceRepository extends JpaRepository<Maintenance, Integ
             "ma.billNumber=:#{#maintenance.billNumber}, ma.expenditurePeriod=:#{#maintenance.expenditurePeriod}, " +
             "ma.amount=:#{#maintenance.amount}, ma.date=:#{#maintenance.date}, ma.observations=:#{#maintenance.observations}, " +
             "ma.created=:#{#maintenance.created}, " +
+            "ma.concept=:#{#maintenance.concept}, " +
             "ma.modified=CURRENT_TIMESTAMP, ma.modifiedBy=:#{#maintenance.modifiedBy} " +
             "where ma.id=:#{#maintenance.id}")
     void editMaintenance(@Param("maintenance") Maintenance maintenance);

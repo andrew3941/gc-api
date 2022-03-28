@@ -26,17 +26,20 @@ import java.util.List;
                                 @ColumnResult(name = "CUANTIA", type = Integer.class),
                                 @ColumnResult(name = "REF_FACTURA", type = String.class),
                                 @ColumnResult(name = "FECHA", type = Date.class),
+                                @ColumnResult(name = "CONCEPTO", type = String.class),
                                 @ColumnResult(name = "OBSERVACIONES", type = String.class),
                                 @ColumnResult(name = "TIPO", type = String.class),
                                 @ColumnResult(name = "NOMBRE", type = String.class),
 //                                @ColumnResult(name = "CONCEPTO", type = String.class),
                                 @ColumnResult(name = "PERIODICIDAD", type = String.class)
+
                         }
                 )
         }
 )
 
 public class Maintenance implements Serializable {
+
 
 
     private int id;
@@ -63,11 +66,10 @@ public class Maintenance implements Serializable {
     public Maintenance() {
     }
 
-    public Maintenance(int id, MaintenanceTypes maintenanceTypes, Provider provider,String concept, String billNumber, ExpenditurePeriod expenditurePeriod, int amount, Date date, String observations, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy, List<MaintenanceByAttachment> maintenanceByAttachments) {
+    public Maintenance(int id, MaintenanceTypes maintenanceTypes, Provider provider, String billNumber, ExpenditurePeriod expenditurePeriod, int amount, Date date, String observations, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy, List<MaintenanceByAttachment> maintenanceByAttachments) {
         this.id = id;
         this.maintenanceTypes = maintenanceTypes;
         this.provider = provider;
-        this.concept = concept;
         this.billNumber = billNumber;
         this.expenditurePeriod = expenditurePeriod;
         this.amount = amount;
@@ -82,9 +84,10 @@ public class Maintenance implements Serializable {
         this.maintenanceByAttachments = maintenanceByAttachments;
     }
 
-    public Maintenance(int id, int amount, String billNumber, Date date, String observations, String maintenanceType,
+    public Maintenance(int id, int amount, String billNumber, Date date, String concept,String observations, String maintenanceType,
                        String nameProvider, String periodicity) {
         this.id = id;
+        this.concept = concept;
         this.amount = amount;
         this.billNumber = billNumber;this.date = date;
         this.observations = observations;
@@ -201,6 +204,8 @@ public class Maintenance implements Serializable {
     public String getConcept() {
         return concept;
     }
+
+
     public void setConcept(String concept) {
         this.concept = concept;
     }
