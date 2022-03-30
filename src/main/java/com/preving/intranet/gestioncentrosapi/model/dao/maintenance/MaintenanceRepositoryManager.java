@@ -49,14 +49,14 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
             sql += "AND PO.ID = :maintenanceProvider ";
         }
 
-        // TODO
-//        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceStartDate() != "") {
-//            sql += "AND M.FECHA=:maintenaceStartDate";
-//        }
+        // TODO   fecha >= '2022-03-17' and fecha <= '2022-03-24';
+        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceStartDate() != null) {
+            sql += "AND M.FECHA >= :maintenanceStartDate";
+        }
 
-//        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceEndDate() != "") {
-//            sql += "AND M.FECHA=:maintenaceEndDate";
-//        }
+        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceEndDate() != null) {
+            sql += "AND M.FECHA <= :maintenanceEndDate";
+        }
 
         if(workCenterId != 0){
             sql += "AND MXD.DELEGACION_ID = :workCenterId ";
@@ -73,6 +73,14 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
 
         if (maintenanceFilter != null && maintenanceFilter.getMaintenanceProvider().getId() != 0) {
             query.setParameter("maintenanceProvider", maintenanceFilter.getMaintenanceProvider());
+        }
+
+        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceStartDate() != null) {
+            query.setParameter("maintenanceStartDate",  maintenanceFilter.getMaintenanceStartDate());
+        }
+
+        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceEndDate() != null) {
+            query.setParameter("maintenanceEndDate", maintenanceFilter.getMaintenanceEndDate());
         }
 
         if(workCenterId != 0){

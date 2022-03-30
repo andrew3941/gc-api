@@ -285,7 +285,7 @@ public class MaintenanceManager implements MaintenanceService {
         //style for date format
         CellStyle cellStyleData = workbook.createCellStyle();
         CreationHelper createHelper = workbook.getCreationHelper();
-        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("yyyy/mm/dd"));
+        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy hh:mm:ss"));
 
         // We get the data
         List<Maintenance> maintenances = this.maintenanceCustomRepository.getMaintenanceFiltered(workCenterId,maintenanceFilter, user);

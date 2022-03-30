@@ -30,8 +30,8 @@ import java.util.List;
                                 @ColumnResult(name = "OBSERVACIONES", type = String.class),
                                 @ColumnResult(name = "TIPO", type = String.class),
                                 @ColumnResult(name = "NOMBRE", type = String.class),
-//                                @ColumnResult(name = "CONCEPTO", type = String.class),
                                 @ColumnResult(name = "PERIODICIDAD", type = String.class)
+                                //                                @ColumnResult(name = "CONCEPTO", type = String.class),
 
                         }
                 )
