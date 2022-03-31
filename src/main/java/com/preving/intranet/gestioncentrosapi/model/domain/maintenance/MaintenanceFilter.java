@@ -14,11 +14,12 @@ public class MaintenanceFilter {
     private Date maintenanceStartDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date maintenanceEndDate;
+    public int maintenanceStatus;
 
     public MaintenanceFilter() {
     }
 
-    public MaintenanceFilter(Provider maintenanceProvider, List<com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes> maintenanceTypes, Date maintenanceStartDate, Date maintenanceEndDate) {
+    public MaintenanceFilter(Provider maintenanceProvider, List<com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes> maintenanceTypes, Date maintenanceStartDate, Date maintenanceEndDate, int maintenanceStatus) {
         this.maintenanceProvider = maintenanceProvider;
       this.MaintenanceTypes = maintenanceTypes;
         this.maintenanceStartDate = maintenanceStartDate;
@@ -56,4 +57,7 @@ public class MaintenanceFilter {
     public void setMaintenanceEndDate(Date maintenanceEndDate) {
         this.maintenanceEndDate = maintenanceEndDate;
     }
+
+    public int getMaintenanceStatus() {return maintenanceStatus;}
+    public void setMaintenanceStatus(int maintenanceStatus) {this.maintenanceStatus = maintenanceStatus;}
 }
