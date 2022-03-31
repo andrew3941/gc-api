@@ -38,6 +38,7 @@ import java.util.List;
                                 @ColumnResult(name = "PROVIDEREVALUATION_TYPE", type = String.class),
                                 @ColumnResult(name = "FECHA_INICIO_SERVICIO", type = Date.class),
                                 @ColumnResult(name = "FECHA_FIN_SERVICIO", type = Date.class),
+                                @ColumnResult(name = "TODOS_CENTROS", type = boolean.class)
                         }
                 )
         }
@@ -74,11 +75,12 @@ public class Provider implements Serializable {
     private User modifiedBy;
     private boolean active = true;
     private List<ProvidersByAreas> providerAreas = new ArrayList<>();
+    private boolean allWorkCenters;
 
     public Provider() {
     }
 
-    public Provider(int id, List<WorkCenter> workCenters, String name, String cif, ProviderTypes providerTypes, ProviderEvaluationTypes evaluationTypes, List<ProvidersCommonDetails> providersCommonDetails, String email, String address, String contactPerson, String telephone, City city, String postalCode, String serviceDetails, String docUrl, String docName, String docContentType, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy, boolean active, List<ProvidersByAreas> providerAreas) {
+    public Provider(int id, List<WorkCenter> workCenters, String name, String cif, ProviderTypes providerTypes, ProviderEvaluationTypes evaluationTypes, List<ProvidersCommonDetails> providersCommonDetails, List<ProviderDetail> providerDetails, String email, String address, String contactPerson, String telephone, City city, String postalCode, String serviceDetails, String docUrl, String docName, String docContentType, Date serviceStartDate, Date serviceEndDate, Date created, User createdBy, Date modified, User modifiedBy, boolean active, List<ProvidersByAreas> providerAreas, boolean allWorkCenters) {
         this.id = id;
         this.workCenters = workCenters;
         this.name = name;
@@ -86,6 +88,7 @@ public class Provider implements Serializable {
         this.providerTypes = providerTypes;
         this.evaluationTypes = evaluationTypes;
         this.providersCommonDetails = providersCommonDetails;
+        this.providerDetails = providerDetails;
         this.email = email;
         this.address = address;
         this.contactPerson = contactPerson;
@@ -104,6 +107,7 @@ public class Provider implements Serializable {
         this.modifiedBy = modifiedBy;
         this.active = active;
         this.providerAreas = providerAreas;
+        this.allWorkCenters = allWorkCenters;
     }
 
     public Provider(
@@ -121,7 +125,8 @@ public class Provider implements Serializable {
             Integer evaluationTypeId,
             String evaluationTypeName,
             Date serviceStartDate,
-            Date serviceEndDate) {
+            Date serviceEndDate,
+            boolean allWorkCenters) {
         this.id = id;
         this.name = name;
         this.cif = cif;
@@ -141,6 +146,7 @@ public class Provider implements Serializable {
         this.getEvaluationTypes().setName(evaluationTypeName);
         this.serviceStartDate = serviceStartDate;
         this.serviceEndDate = serviceEndDate;
+        this.allWorkCenters = allWorkCenters;
     }
 
     public Provider(int id, String workCenter) {
@@ -368,5 +374,12 @@ public class Provider implements Serializable {
     public boolean getActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 
-
+    @Basic
+    @Column(name = "TODOS_CENTROS", nullable = false)
+    public boolean isAllWorkCenters() {
+        return allWorkCenters;
+    }
+    public void setAllWorkCenters(boolean allWorkCenters) {
+        this.allWorkCenters = allWorkCenters;
+    }
 }

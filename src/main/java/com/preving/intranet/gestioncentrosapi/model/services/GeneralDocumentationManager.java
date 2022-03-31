@@ -1,7 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
+import com.preving.intranet.gestioncentrosapi.model.dao.drawingByAttachments.DrawingByAttachmentsRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.*;
-import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.DrawingsByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.*;
@@ -10,17 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
+import java.io.FileInputStream;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
 
 @Service
 public class GeneralDocumentationManager implements GeneralDocumentationService {
@@ -48,6 +49,9 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 
     @Autowired
     private CommonManager commonManager;
+
+    @Autowired
+    private DrawingByAttachmentsRepository drawingByAttachmentsRepository;
 
     private static final int GENERAL_DOCUMENTS = 3;
 
@@ -133,18 +137,6 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 
             generalDocumentationRepository.editGeneralDoc(generalDoc);
 
-            for (GeneralDocByAttachment gda : generalDoc.getGeneralDocByAttachments()){
-
-               if (gda.getAttachedUrl() != null){
-                // Borramos el documento anterior del servidor
-                commonService.deleteDocumentServer(workCenterId, gda.getId(), GENERAL_DOCUMENTS);
-
-                generalDocByAttachmentRepository.deleteById(gda.getId());
-
-               }
-
-            }
-
             if (attachedFile.length > 0) {
 
                 for (MultipartFile mpFile : attachedFile){
@@ -168,33 +160,11 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
                 }
             }
 
-            if (attachedFile.length == 0){
-
-                for (GeneralDocByAttachment myFile : generalDoc.getGeneralDocByAttachments()){
-
-                   // GeneralDocByAttachment newGeneralDocByAttach = new GeneralDocByAttachment();
-
-                    GeneralDocByAttachment generalDocByAttach = this.generalDocByAttachmentRepository.save(myFile);
-
-//                    // Guardamos documento en el server
-                    //TODO create a file from the exiting URL and save the file.
-//                    url = commonService.saveDocumentServer(workCenterId, generalDoc.getId(), myFile, GENERAL_DOCUMENTS);
-
-//                    // Actualizamos la ruta del documento guardado
-                    if (url != null) {
-                        this.generalDocByAttachmentRepository.updateGeneralDocByAttachmentUrl(generalDocByAttach.getId(), url);
-                    }
-
-                }
-
-            }
-
+            return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     private void generalDocAttachmentsCombo(int workCenterId, GeneralDocumentation newGeneralDoc, List<GeneralDocByAttachment> attachments, MultipartFile[] attachedFile) throws Exception {
@@ -232,29 +202,82 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
     }
 
     @Override
-    public ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request, int generalDocAttachId) {
-
-        GeneralDocByAttachment gda = null;
+    public ResponseEntity<?> downloadZipAttachment(int itemId, int type, HttpServletResponse response) {
 
         File file = null;
-        byte[] content = null;
+        byte[] content = new byte[1024];
+        List<DrawingsByAttachment> dba = null;
+        List<GeneralDocByAttachment> gda = null;
+        FileInputStream in = null;
 
-        try {
-            
-            gda = this.generalDocByAttachmentRepository.findByGeneralDoc_Id(generalDocAttachId);
+        try ( ZipOutputStream zos = new ZipOutputStream(response.getOutputStream()) ) {
+            response.setContentType("application/zip");
+            response.setHeader("Content-Disposition", "attachment; filename=data.zip");
 
-            file = new File(gda.getAttachedUrl());
-            if (file.exists()) {
-                content = Files.readAllBytes(file.toPath());
-            }else{
-                return new ResponseEntity<>("File not found",HttpStatus.NOT_FOUND);
+            // Type 0 --> Drawigns
+            // Type 1 --> GeneralDoc
+            if (type == 0) {
+                dba = this.drawingByAttachmentsRepository.findAllByDrawing_Id(itemId);
+
+                for (DrawingsByAttachment drawing : dba) {
+                    file = new File(drawing.getAttachedUrl());
+
+                    ZipEntry ze= new ZipEntry(file.getName());
+                    zos.putNextEntry(ze);
+                    in = new FileInputStream(file);
+
+                    int len;
+                    while ((len = in.read(content)) > 0) {
+                        zos.write(content, 0, len);
+                    }
+                }
+            } else {
+                gda = this.generalDocByAttachmentRepository.findAllByGeneralDocId(itemId);
+
+                for (GeneralDocByAttachment generalDoc : gda) {
+                    file = new File(generalDoc.getAttachedUrl());
+
+                    ZipEntry ze= new ZipEntry(file.getName());
+                    zos.putNextEntry(ze);
+                    in = new FileInputStream(file);
+
+                    int len;
+                    while ((len = in.read(content)) > 0) {
+                        zos.write(content, 0, len);
+                    }
+                }
             }
+
+            in.close();
+            zos.closeEntry();
+
+            //remember close it
+            zos.close();
+
+            System.out.println("ZIP done");
+
         }catch (Exception ex) {
             ex.printStackTrace();
             return new ResponseEntity<>("Unknown error",HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteAttachment(int workCenterId, int attachedId) throws IOException {
+
+        try {
+
+            commonService.deleteDocumentServer(workCenterId, attachedId, GENERAL_DOCUMENTS);
+            generalDocByAttachmentRepository.deleteById(attachedId);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
 

@@ -56,7 +56,7 @@ public interface WorkCenterService {
 
     ResponseEntity<?> downloadDrawingDoc(HttpServletRequest request, int drawingId);
 
-    ResponseEntity<?> downloadDocumentationList(HttpServletRequest request, int generalDocId);
+    ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request, int generalDocId);
 
     ResponseEntity<?> addWorkCenterRoom(int workCenterId, Room newWorkCenterRoom, HttpServletRequest request);
 

@@ -6,6 +6,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.dimNavision.DimNavisionR
 import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.drawingByAttachments.DrawingByAttachmentsRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.GeneralDocByAttachmentRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.GeneralDocumentationRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.room.RoomByTypesRepository;
@@ -17,6 +18,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.workCenters.*;
 import com.preving.intranet.gestioncentrosapi.model.dao.zona.ZonaRepository;
 import com.preving.intranet.gestioncentrosapi.model.daoOracle.workCenters.WorkCentersOracleRepositoryManager;
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
+import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.*;
 import com.preving.security.JwtTokenUtil;
@@ -123,6 +125,9 @@ public class WorkCenterManager implements WorkCenterService {
 
     @Autowired
     private GeneralDocumentationRepository generalDocumentationRepository;
+
+    @Autowired
+    private GeneralDocByAttachmentRepository generalDocByAttachmentRepository;
 
     @Autowired
     private CommonManager commonManager;
@@ -730,17 +735,17 @@ public class WorkCenterManager implements WorkCenterService {
     }
 
     @Override
-    public ResponseEntity<?> downloadDocumentationList(HttpServletRequest request, int generalDocId) {
-        GeneralDocumentation dra = null;
+    public ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request, int generalDocId) {
+        GeneralDocByAttachment dra = null;
         File file = null;
-        byte[] content=null;
+        byte[] content = null;
 
         try {
-            dra = this.generalDocumentationRepository.findGeneralDocumentationById(generalDocId);
-            file = new File(dra.getDocumentName());
+            dra = this.generalDocByAttachmentRepository.findById(generalDocId);
+            file = new File(dra.getAttachedUrl());
             if (file.exists()) {
                 content = Files.readAllBytes(file.toPath());
-            }else{
+            } else {
                 return new ResponseEntity<>("File not found",HttpStatus.NOT_FOUND);
             }
 

@@ -39,6 +39,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.IOException;
 
 @RestController
 @RequestMapping(path= "/workCenters")
@@ -377,7 +378,7 @@ public class WorkCentersController {
     /**
      * Obtiene listado de salas de un centro de trabajo por Id
      * @return
-
+     */
     @RequestMapping(value = "{workCenterId}/rooms", method = RequestMethod.GET)
     public ResponseEntity<?> getRoomListByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
 
@@ -478,6 +479,18 @@ public class WorkCentersController {
     }
 
     /**
+     * Descargamos el fichero de un plano
+     * @param drawingId
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "drawing/{drawingId}/download", method = RequestMethod.GET)
+    public ResponseEntity<?> downloadDrawingDoc(HttpServletRequest request, @PathVariable(value = "drawingId") int drawingId) {
+
+        return ( workCenterService.downloadDrawingDoc(request,drawingId));
+    }
+
+    /**
      * Editamos una sala de un centro de trabajo
      * @param workCenterId
      * @param roomId
@@ -514,29 +527,16 @@ public class WorkCentersController {
     }
 
     /**
-     * Descargamos el fichero de un plano
-     * @param drawingId
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "drawing/{drawingId}/download", method = RequestMethod.GET)
-    public ResponseEntity<?> downloadDrawingDoc(HttpServletRequest request, @PathVariable(value = "drawingId") int drawingId) {
-
-        return ( workCenterService.downloadDrawingDoc(request,drawingId));
-    }
-
-
-    /**
      * Descargamos el archivo de generalDoc
      * @param generalDocId
      * Solicitud @param
      * @regreso
      */
-//    workCenters/generalDocumentation
-    @RequestMapping(value = "{workCenters}/generalDocumentation", method = RequestMethod.GET)
-    public ResponseEntity<?> downloadDocumentationList(HttpServletRequest request, @PathVariable(value = "generalDocId") int generalDocId) {
+    @RequestMapping(value = "generalDocumentation/{generalDocId}/download", method = RequestMethod.GET)
+    public ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request,
+                                                @PathVariable(value = "generalDocId") int generalDocId) {
 
-        return ( workCenterService.downloadDocumentationList(request,generalDocId));
+        return ( workCenterService.downloadGeneralDoc(request,generalDocId));
     }
 
     /**
@@ -639,8 +639,6 @@ public class WorkCentersController {
 
     }
 
-
-
     @RequestMapping(value = "generalDocumentation/certificatesTypes", method = RequestMethod.GET)
     public ResponseEntity<?> getCertificateTypes(){
 
@@ -728,10 +726,25 @@ public class WorkCentersController {
     }
 
 
-    @RequestMapping(value = "generalDocumentation/{generalDocAttachId}/download", method = RequestMethod.GET)
-    public ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request, @PathVariable(value = "generalDocAttachId") int generalDocAttachId) {
+    /**
+     * Zip download of drawgins/generalDoc
+     * @return
+     */
+    @RequestMapping(value = "downloadZip/{itemId}/{type}", method = RequestMethod.GET)
+    public ResponseEntity<?> downloadZipAttachment(HttpServletResponse response,
+                                                @PathVariable(value = "itemId") int itemId,
+                                                @PathVariable(value = "type") int type) {
 
-        return ( generalDocumentationService.downloadGeneralDoc(request,generalDocAttachId));
+        return ( generalDocumentationService.downloadZipAttachment(itemId, type, response));
+    }
+
+
+
+    @RequestMapping(value = "{workCenterId}/attachment/{attachedId}/delete", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteAttachment (@PathVariable(value = "workCenterId") int workCenterId,
+                                               @PathVariable(value = "attachedId") int attachedId) throws IOException {
+
+        return generalDocumentationService.deleteAttachment(workCenterId,attachedId);
     }
 
     /**

@@ -33,7 +33,7 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
                 "P.TIPO_ID, P.LOCALIDAD_ID, L.LOC_NOMBRE,V.PRV_NOMBRE, " +
                 "PT.DENOMINACION AS PROVIDER_TYPE, " +
                 "P.TIPO_EVALUACION_ID, PET.DENOMINACION AS PROVIDEREVALUATION_TYPE, " +
-                "P.FECHA_INICIO_SERVICIO, P.FECHA_FIN_SERVICIO " +
+                "P.FECHA_INICIO_SERVICIO, P.FECHA_FIN_SERVICIO, P.TODOS_CENTROS " +
                 "FROM GESTION_CENTROS.PROVEEDORES P, " +
                 "GESTION_CENTROS.TM_PROVEEDORES_TIPOS PT, " +
                 "GESTION_CENTROS.PROVEEDORES_X_AREA PA, " +
