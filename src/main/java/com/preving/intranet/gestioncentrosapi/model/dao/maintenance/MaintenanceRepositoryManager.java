@@ -51,9 +51,9 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
 
         //Bring active providers in maintenance
         if(maintenanceFilter != null && maintenanceFilter.getMaintenanceStatus() == 1) {
-            sql += " AND P.FECHA_FIN_SERVICIO IS NULL ";
+            sql += " AND PO.FECHA_FIN_SERVICIO IS NULL ";
         } else if (maintenanceFilter.getMaintenanceStatus() == 0) {
-            sql += " AND P.FECHA_FIN_SERVICIO IS NOT NULL ";
+            sql += " AND PO.FECHA_FIN_SERVICIO IS NOT NULL ";
         }
 
         // TODO   fecha >= '2022-03-17' and fecha <= '2022-03-24';
