@@ -4,6 +4,7 @@ import com.preving.intranet.gestioncentrosapi.model.dao.drawing.DrawingRepositor
 import com.preving.intranet.gestioncentrosapi.model.dao.drawingByAttachments.DrawingByAttachmentsRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.entities.EntitiesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.GeneralDocByAttachmentRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceByAttachmentRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.provinces.ProvincesRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.vendor.ProviderCustomRepository;
@@ -14,6 +15,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.DrawingsByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.Entity;
 import com.preving.intranet.gestioncentrosapi.model.domain.Province;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocByAttachment;
+import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceByAttachment;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProvidersCommonDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,8 @@ public class CommonManager implements CommonService {
 
     @Autowired
     private DrawingByAttachmentsRepository drawingByAttachmentsRepository;
+    @Autowired
+    private MaintenanceByAttachmentRepository maintenanceByAttachmentRepository;
 
 
     @Value("${url-documentos-planos}")
@@ -203,6 +207,10 @@ public class CommonManager implements CommonService {
             //Obtain General Document URL
             GeneralDocByAttachment gDocAttachment = generalDocByAttachmentRepository.findById(itemId);
             docUrl = gDocAttachment.getAttachedUrl();
+        }else if (tipoDoc == MAINTENANCE){
+            //Obtain Manitenance URL
+            MaintenanceByAttachment maintenanceByAttachment = maintenanceByAttachmentRepository.findById(itemId);
+            docUrl = maintenanceByAttachment.getDocumentUrl();
         }
 
         if (docUrl != null){

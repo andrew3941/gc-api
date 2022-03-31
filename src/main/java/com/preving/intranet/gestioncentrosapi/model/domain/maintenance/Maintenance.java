@@ -26,10 +26,13 @@ import java.util.List;
                                 @ColumnResult(name = "CUANTIA", type = Integer.class),
                                 @ColumnResult(name = "REF_FACTURA", type = String.class),
                                 @ColumnResult(name = "FECHA", type = Date.class),
+                                @ColumnResult(name = "CONCEPTO", type = String.class),
                                 @ColumnResult(name = "OBSERVACIONES", type = String.class),
                                 @ColumnResult(name = "TIPO", type = String.class),
                                 @ColumnResult(name = "NOMBRE", type = String.class),
                                 @ColumnResult(name = "PERIODICIDAD", type = String.class)
+                                //                                @ColumnResult(name = "CONCEPTO", type = String.class),
+
                         }
                 )
         }
@@ -38,10 +41,12 @@ import java.util.List;
 public class Maintenance implements Serializable {
 
 
+
     private int id;
     private MaintenanceTypes maintenanceTypes = new MaintenanceTypes();
     private Provider provider = new Provider();
     private String billNumber;
+    private String concept;
     private ExpenditurePeriod expenditurePeriod = new ExpenditurePeriod();
     private int amount;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
@@ -79,9 +84,10 @@ public class Maintenance implements Serializable {
         this.maintenanceByAttachments = maintenanceByAttachments;
     }
 
-    public Maintenance(int id, int amount, String billNumber, Date date, String observations, String maintenanceType,
+    public Maintenance(int id, int amount, String billNumber, Date date, String concept,String observations, String maintenanceType,
                        String nameProvider, String periodicity) {
         this.id = id;
+        this.concept = concept;
         this.amount = amount;
         this.billNumber = billNumber;this.date = date;
         this.observations = observations;
@@ -193,6 +199,17 @@ public class Maintenance implements Serializable {
     public Date getDeleted() {return deleted;}
     public void setDeleted(Date deleted) {this.deleted = deleted;}
 
+    @Basic
+    @Column(name = "CONCEPTO")
+    public String getConcept() {
+        return concept;
+    }
+
+
+    public void setConcept(String concept) {
+        this.concept = concept;
+    }
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "BORRADO_POR", referencedColumnName = "ID")
     public User getDeletedBy() {return deletedBy;}
@@ -207,6 +224,5 @@ public class Maintenance implements Serializable {
     public void setMaintenanceByAttachments(List<MaintenanceByAttachment> maintenanceByAttachments) {
         this.maintenanceByAttachments = maintenanceByAttachments;
     }
-
 }
 

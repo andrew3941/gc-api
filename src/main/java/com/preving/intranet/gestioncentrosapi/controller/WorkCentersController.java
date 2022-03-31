@@ -3,19 +3,12 @@ package com.preving.intranet.gestioncentrosapi.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
-import com.google.gson.reflect.TypeToken;
-import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.MaintenanceRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.Drawing;
 import com.preving.intranet.gestioncentrosapi.model.domain.Room;
 import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
-import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
-import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
-import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProviderFilter;
-import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
-import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetail;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.services.*;
@@ -24,7 +17,6 @@ import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,9 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.lang.reflect.Type;
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
@@ -763,7 +753,7 @@ public class WorkCentersController {
 
     }
 
-        //  get maintenance by id
+    //  get maintenance by id
     @RequestMapping(value = "maintenance/{maintenanceId}", method = RequestMethod.GET)
     private ResponseEntity<?> getMaintenanceById(@PathVariable(value = "maintenanceId") int maintenanceId ) {
 
@@ -795,7 +785,6 @@ public class WorkCentersController {
 
     }
 
-
     //METHOD FOR RETRIEVING MAINTENANCE LIST
     @RequestMapping(value = "{workCenterId}/maintenance", method = RequestMethod.GET)
     public ResponseEntity<List<Maintenance>> getAllMaintenance(@PathVariable(value = "workCenterId") int workCenterId){
@@ -811,33 +800,10 @@ public class WorkCentersController {
 
     @RequestMapping(value = "{workCenterId}/maintenance/{maintenanceId}/delete", method = RequestMethod.POST)
     public ResponseEntity<?> deleteMaintenance (HttpServletRequest request,
-                                            @PathVariable(value = "workCenterId") int workCenterId,
-                                            @PathVariable(value = "maintenanceId") int maintenanceId) {
+                                                @PathVariable(value = "workCenterId") int workCenterId,
+                                                @PathVariable(value = "maintenanceId") int maintenanceId) {
         return maintenanceService.deleteMaintenance(request,workCenterId,maintenanceId);
     }
-
-
-
-    //export
-    @RequestMapping(value="exportMaintenance", method = RequestMethod.POST)
-    public ResponseEntity<?> exportActionMaintenance(HttpServletRequest request,
-                                               HttpServletResponse response,
-                                               @RequestParam ("filterMaintenanceList") String maintenanceList) {
-
-        ResponseEntity<?> resp = null;
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        MaintenanceFilter maintenanceFilter = gson.fromJson(maintenanceList, MaintenanceFilter.class);
-
-        try {
-            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
-            return new ResponseEntity<>(maintenanceService.exportMaintenance(maintenanceFilter, response, user), HttpStatus.OK);
-        } catch (DataAccessException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
-
 
     //Method to Save New Maintenance
     @RequestMapping(value = "{workCenterId}/maintenance/add", method = RequestMethod.POST)
@@ -866,6 +832,29 @@ public class WorkCentersController {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
+
+    //    GET MAPPING FOR EXPORT MAINTENANCE
+    @RequestMapping(value="{workCenterId}/exportMaintenances", method = RequestMethod.POST)
+    public ResponseEntity<?> exportAction(HttpServletRequest request,
+                                          HttpServletResponse response,
+                                          @PathVariable(value = "workCenterId") int workCenterId,
+                                          @RequestBody MaintenanceFilter maintenanceFilter) {
+        try {
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            return new ResponseEntity<>(maintenanceService.exportMaintenance(workCenterId,maintenanceFilter, response, user), HttpStatus.OK);
+        } catch (DataAccessException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+// Delete Old Attachment file after editing.
+    @RequestMapping(value = "{workCenterId}/maintenanceAttachment/{attachedId}/delete", method = RequestMethod.POST)
+    public ResponseEntity<?> maintenanceDeleteAttachment (@PathVariable(value = "workCenterId") int workCenterId,
+                                               @PathVariable(value = "attachedId") int attachedId) throws IOException {
+
+        return maintenanceService.maintenanceDeleteAttachment(workCenterId,attachedId);
     }
 }

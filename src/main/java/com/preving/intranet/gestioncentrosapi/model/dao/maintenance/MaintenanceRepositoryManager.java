@@ -25,7 +25,7 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
     public List<Maintenance> getMaintenanceFiltered(Integer workCenterId, MaintenanceFilter maintenanceFilter, UsuarioWithRoles user) {
 
         String sql = "" +
-                "SELECT DISTINCT MA.ID, MA.CUANTIA, MA.REF_FACTURA, MA.FECHA, MA.OBSERVACIONES, " +
+                "SELECT DISTINCT MA.ID, MA.CUANTIA, MA.REF_FACTURA, MA.FECHA, MA.OBSERVACIONES, MA.CONCEPTO, " +
                 "               MT.DENOMINACION AS TIPO, PO.NOMBRE, P.DENOMINACION AS PERIODICIDAD " +
                 "FROM GESTION_CENTROS.MANTENIMIENTOS MA, " +
                 "       GESTION_CENTROS.TM_MANTENIMIENTOS_TIPOS MT, " +
@@ -49,14 +49,21 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
             sql += "AND PO.ID = :maintenanceProvider ";
         }
 
-        // TODO
-//        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceStartDate() != "") {
-//            sql += "AND M.FECHA=:maintenaceStartDate";
-//        }
+        //Bring active providers in maintenance
+        if(maintenanceFilter != null && maintenanceFilter.getMaintenanceStatus() == 1) {
+            sql += " AND PO.FECHA_FIN_SERVICIO IS NULL ";
+        } else if (maintenanceFilter.getMaintenanceStatus() == 0) {
+            sql += " AND PO.FECHA_FIN_SERVICIO IS NOT NULL ";
+        }
 
-//        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceEndDate() != "") {
-//            sql += "AND M.FECHA=:maintenaceEndDate";
-//        }
+        // TODO   fecha >= '2022-03-17' and fecha <= '2022-03-24';
+        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceStartDate() != null) {
+            sql += "AND M.FECHA >= :maintenanceStartDate";
+        }
+
+        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceEndDate() != null) {
+            sql += "AND M.FECHA <= :maintenanceEndDate";
+        }
 
         if(workCenterId != 0){
             sql += "AND MXD.DELEGACION_ID = :workCenterId ";
@@ -73,6 +80,14 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
 
         if (maintenanceFilter != null && maintenanceFilter.getMaintenanceProvider().getId() != 0) {
             query.setParameter("maintenanceProvider", maintenanceFilter.getMaintenanceProvider());
+        }
+
+        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceStartDate() != null) {
+            query.setParameter("maintenanceStartDate",  maintenanceFilter.getMaintenanceStartDate());
+        }
+
+        if (maintenanceFilter != null && maintenanceFilter.getMaintenanceEndDate() != null) {
+            query.setParameter("maintenanceEndDate", maintenanceFilter.getMaintenanceEndDate());
         }
 
         if(workCenterId != 0){
