@@ -7,6 +7,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCente
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterTypes;
 import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,5 +74,5 @@ public interface WorkCenterService {
 
     ResponseEntity<?> findAttachmentsByDrawing(int workCenterId);
 
-
+    void deactivateEndDateToday();
 }

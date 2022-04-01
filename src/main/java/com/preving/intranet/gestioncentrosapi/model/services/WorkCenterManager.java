@@ -32,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,12 +48,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
+@EnableScheduling
 public class WorkCenterManager implements WorkCenterService {
 
     @Autowired
@@ -840,6 +841,31 @@ public class WorkCenterManager implements WorkCenterService {
         return new ResponseEntity<List<DrawingsByAttachment>>(drawingByAttachment, HttpStatus.OK);
     }
 
+    @Override
+    @Scheduled(cron = "0 00 00 * * *") //Every day at 12am
+//    @Scheduled(fixedDelay = 30000) //Every 30 seconds for testing
+    @Transactional
+    public void deactivateEndDateToday(){
+        System.out.println("Start of deactivating WorkCenter automated process");
+
+        Date today = new Date(); //to avoid errors we assign today´s date with time
+        //formatter to ignore the time of the date
+        SimpleDateFormat formatter = new SimpleDateFormat(
+                "dd/MM/yyyy");
+
+        //assigning today´s date without time
+        try {
+            today = formatter.parse(formatter.format(new Date()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        List<WorkCenter> workCentersEndingToday =  workCentersRepository.findWorkCentersByEndDateEquals(today); //Get work centers by endDate = today
+        workCentersEndingToday.forEach(workCenter -> {
+            workCenter.setActive(0);//Setting each workcenter inactive
+            workCenter.setVisible(0);//Setting workcenter not visible
+        });
+    }
 
 }
 

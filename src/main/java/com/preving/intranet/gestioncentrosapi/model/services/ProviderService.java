@@ -5,6 +5,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetailConf;
 import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,4 +44,5 @@ public interface ProviderService {
 
     List<Provider> getProvidersByWorkCenter(int workCenterId);
 
+    void deactivateEndDateToday();
 }
