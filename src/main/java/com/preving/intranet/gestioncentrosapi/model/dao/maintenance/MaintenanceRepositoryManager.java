@@ -49,13 +49,6 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
             sql += "AND PO.ID = :maintenanceProvider ";
         }
 
-        //Bring active providers in maintenance
-        if(maintenanceFilter != null && maintenanceFilter.getMaintenanceStatus() == 1) {
-            sql += " AND PO.FECHA_FIN_SERVICIO IS NULL ";
-        } else if (maintenanceFilter.getMaintenanceStatus() == 0) {
-            sql += " AND PO.FECHA_FIN_SERVICIO IS NOT NULL ";
-        }
-
         // TODO   fecha >= '2022-03-17' and fecha <= '2022-03-24';
         if (maintenanceFilter != null && maintenanceFilter.getMaintenanceStartDate() != null) {
             sql += "AND M.FECHA >= :maintenanceStartDate";

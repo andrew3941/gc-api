@@ -101,7 +101,7 @@ public class WorkCentersOracleRepositoryManager {
                 "   NOMBRE = :nombre, ACTIVO = :activo, VISIBLE = :visible, LOCALIDAD_ID = :localidadId, " +
                 "   COD_IN_NAV = :codInNav, DIRECCION = :direccion, C_POSTAL = :cPostal, TFNO = :tfno, " +
                 "   MAIL = :mail, RESPONSABLE = :responsable, FECHA_ALTA = :fechaAlta, FECHA_BAJA = :fechaBaja, " +
-                "   TIPO = :tipo, MODIFICADO = SYSDATE, MODIFICADO_POR = :userId " +
+                "   TIPO_ID = :tipoId, MODIFICADO = CURRENT_TIMESTAMP, MODIFICADO_POR = :userId " +
                 "WHERE ID = :id";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -117,7 +117,7 @@ public class WorkCentersOracleRepositoryManager {
         params.addValue("responsable", workCenter.getHeadPerson().getId());
         params.addValue("fechaAlta", workCenter.getStartDate());
         params.addValue("fechaBaja", workCenter.getEndDate());
-        params.addValue("tipo", workCenter.getWorkCenterTypes().getId());
+        params.addValue("tipoId", workCenter.getWorkCenterTypes().getId());
         params.addValue("userId", userId);
         params.addValue("id", workCenterId);
 
