@@ -191,12 +191,17 @@ public class WorkCentersController {
     @RequestMapping(value = "{workCenterId}/maintenance/filter", method = RequestMethod.POST)
     public ResponseEntity<?> findWorkCenterByFilter(HttpServletRequest request,
                                                     @PathVariable(value = "workCenterId") int workCenterId,
-                                                    @RequestBody MaintenanceFilter maintenanceFilter) {
+                                                    @RequestParam ("maintenanceFilter") String maintenanceFilter
+    ) {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        MaintenanceFilter maintFilter= gson.fromJson(maintenanceFilter, MaintenanceFilter.class);
+
 
         try {
             UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
 
-            List<Maintenance> maintenanceList = this.maintenanceService.getFilteredMaintenances(workCenterId, maintenanceFilter, user);
+            List<Maintenance> maintenanceList = this.maintenanceService.getFilteredMaintenances(workCenterId, maintFilter, user);
 
             return new ResponseEntity<>(maintenanceList, HttpStatus.OK);
         } catch (Exception e) {e.printStackTrace();
