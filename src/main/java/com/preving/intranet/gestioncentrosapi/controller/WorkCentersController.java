@@ -836,10 +836,14 @@ public class WorkCentersController {
     public ResponseEntity<?> exportAction(HttpServletRequest request,
                                           HttpServletResponse response,
                                           @PathVariable(value = "workCenterId") int workCenterId,
-                                          @RequestBody MaintenanceFilter maintenanceFilter) {
+                                          @RequestParam ("maintenanceFilter") String maintenanceFilter
+    ) {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        MaintenanceFilter maintFilter= gson.fromJson(maintenanceFilter, MaintenanceFilter.class);
         try {
             UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
-            return new ResponseEntity<>(maintenanceService.exportMaintenance(workCenterId,maintenanceFilter, response, user), HttpStatus.OK);
+            return new ResponseEntity<>(maintenanceService.exportMaintenance(workCenterId, maintFilter, response, user), HttpStatus.OK);
         } catch (DataAccessException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
