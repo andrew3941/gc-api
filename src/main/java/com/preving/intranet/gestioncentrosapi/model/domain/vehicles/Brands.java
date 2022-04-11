@@ -50,7 +50,7 @@ public class Brands implements Serializable {
     public void setAdrUpdated(Date adrUpdated) {this.adrUpdated = adrUpdated;}
 
     @Basic
-    @Column(name = "ADR_CREATED")
+    @Column(name = "QDR_CREATED")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     public Date getQdrCreated() {return qdrCreated;}
     public void setQdrCreated(Date qdrCreated) {this.qdrCreated = qdrCreated;}

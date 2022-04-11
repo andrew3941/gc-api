@@ -9,6 +9,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
+import com.preving.intranet.gestioncentrosapi.model.domain.vehicles.Vehicles;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.services.*;
@@ -54,9 +55,11 @@ public class WorkCentersController {
 
     @Autowired
     private MaintenanceService maintenanceService;
-
     @Autowired
     private ProviderService providerService;
+
+    @Autowired
+    private VehiclesService vehiclesService;
 
     @Value("${modo-debug}")
     private boolean modoDebug;
@@ -850,11 +853,24 @@ public class WorkCentersController {
     }
 
 
-// Delete Old Attachment file after editing.
+    // Delete Old Attachment file after editing.
     @RequestMapping(value = "{workCenterId}/maintenanceAttachment/{attachedId}/delete", method = RequestMethod.POST)
     public ResponseEntity<?> maintenanceDeleteAttachment (@PathVariable(value = "workCenterId") int workCenterId,
-                                               @PathVariable(value = "attachedId") int attachedId) throws IOException {
+                                                          @PathVariable(value = "attachedId") int attachedId) throws IOException {
 
         return maintenanceService.maintenanceDeleteAttachment(workCenterId,attachedId);
     }
+    // Get mapping details for MaintenanceType
+
+    @RequestMapping(value = "brandsTypes", method = RequestMethod.GET)
+    public ResponseEntity<?> getBrandTypes(){
+
+        try {
+            return new ResponseEntity<>(vehiclesService.getAllBrandTypes(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
