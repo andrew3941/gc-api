@@ -9,7 +9,6 @@ import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
-import com.preving.intranet.gestioncentrosapi.model.domain.vehicles.Vehicles;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.services.*;
@@ -55,6 +54,7 @@ public class WorkCentersController {
 
     @Autowired
     private MaintenanceService maintenanceService;
+
     @Autowired
     private ProviderService providerService;
 
@@ -66,13 +66,14 @@ public class WorkCentersController {
 
     /**
      * Obtiene la lista de provincias
+     *
      * @return
      */
     @RequestMapping(value = "provinces", method = RequestMethod.GET)
     public ResponseEntity<?> findAllProvinces() {
-        try{
+        try {
             return new ResponseEntity<>(this.commonService.findAllProvinces(), HttpStatus.OK);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -80,8 +81,9 @@ public class WorkCentersController {
 
     /**
      * Obtiene las delegaciones mediante filtro
-     * @RequestBody WorkCenterFilter
+     *
      * @return
+     * @RequestBody WorkCenterFilter
      */
     @RequestMapping(value = "filter", method = RequestMethod.POST)
     public ResponseEntity<?> findWorkCenterByFilter(HttpServletRequest request,
@@ -99,13 +101,14 @@ public class WorkCentersController {
 
     /**
      * Obtiene la lista de entidades
+     *
      * @return
      */
     @RequestMapping(value = "entities", method = RequestMethod.GET)
     public ResponseEntity<?> findAll() {
-        try{
+        try {
             return new ResponseEntity<>(this.commonService.findAllEntities(), HttpStatus.OK);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -113,6 +116,7 @@ public class WorkCentersController {
 
     /**
      * Obtiene la lista de departamentos
+     *
      * @return
      */
     @RequestMapping(value = "departments", method = RequestMethod.GET)
@@ -129,8 +133,9 @@ public class WorkCentersController {
 
     /**
      * Agregamos un centro de trabajo
-     * @RequestBody WorkCenter
+     *
      * @return
+     * @RequestBody WorkCenter
      */
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public ResponseEntity<?> saveWorkCenter(HttpServletRequest request, @RequestBody WorkCenter newWorkCenter) {
@@ -147,22 +152,23 @@ public class WorkCentersController {
 
     /**
      * Editamos un centro de trabajo
+     *
      * @param workCenterId
-     * @RequestBody WorkCenter
      * @return
+     * @RequestBody WorkCenter
      */
     @RequestMapping(value = "{workCenterId}/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editWorkCenter(HttpServletRequest request,
-                                            @PathVariable(value="workCenterId") int workCenterId,
+                                            @PathVariable(value = "workCenterId") int workCenterId,
                                             @RequestBody WorkCenter newWorkCenter) {
 
         ResponseEntity<?> response;
 
         try {
-            response =  workCenterService.editWorkCenter(workCenterId, newWorkCenter,request);
+            response = workCenterService.editWorkCenter(workCenterId, newWorkCenter, request);
         } catch (Exception e) {
             e.printStackTrace();
-            response=  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            response = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return response;
@@ -171,6 +177,7 @@ public class WorkCentersController {
 
     /**
      * Obtiene un listado de localidades por cod_provincia
+     *
      * @param provinceCod, criterion
      * @return
      */
@@ -188,17 +195,17 @@ public class WorkCentersController {
 
 
     /**
-     *  filter based on maintenanceFilter Class
+     * filter based on maintenanceFilter Class
      */
 
     @RequestMapping(value = "{workCenterId}/maintenance/filter", method = RequestMethod.POST)
     public ResponseEntity<?> findWorkCenterByFilter(HttpServletRequest request,
                                                     @PathVariable(value = "workCenterId") int workCenterId,
-                                                    @RequestParam ("maintenanceFilter") String maintenanceFilter
+                                                    @RequestParam("maintenanceFilter") String maintenanceFilter
     ) {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        MaintenanceFilter maintFilter= gson.fromJson(maintenanceFilter, MaintenanceFilter.class);
+        MaintenanceFilter maintFilter = gson.fromJson(maintenanceFilter, MaintenanceFilter.class);
 
 
         try {
@@ -207,7 +214,8 @@ public class WorkCentersController {
             List<Maintenance> maintenanceList = this.maintenanceService.getFilteredMaintenances(workCenterId, maintFilter, user);
 
             return new ResponseEntity<>(maintenanceList, HttpStatus.OK);
-        } catch (Exception e) {e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -215,11 +223,12 @@ public class WorkCentersController {
 
     /**
      * Obtiene usuarios por criterio
-     * @param  criterion
+     *
+     * @param criterion
      * @return
      */
     @RequestMapping(value = "users", method = RequestMethod.GET)
-    public ResponseEntity<?> findUsers ( @RequestParam(value = "criterion") String criterion) {
+    public ResponseEntity<?> findUsers(@RequestParam(value = "criterion") String criterion) {
 
         try {
             return new ResponseEntity<>(this.workCenterService.findUsersByCriterion(criterion), HttpStatus.OK);
@@ -231,18 +240,19 @@ public class WorkCentersController {
 
     /**
      * Obtiene un centro de trabajo por Id
+     *
      * @param centerId
      * @return
      */
     @RequestMapping(value = "{centerId}", method = RequestMethod.GET)
     public ResponseEntity<?> findWorkCenterById(HttpServletRequest request,
-                                                @PathVariable(value = "centerId") int centerId){
+                                                @PathVariable(value = "centerId") int centerId) {
 
         try {
 
-            if(securityService.hasAccessToWorkCenter(centerId, request)) {
+            if (securityService.hasAccessToWorkCenter(centerId, request)) {
                 return new ResponseEntity<>(workCenterService.getWorkCenterById(centerId), HttpStatus.OK);
-            }else {
+            } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
 
@@ -255,11 +265,12 @@ public class WorkCentersController {
 
     /**
      * Obtiene los detalles del centro de trabajo por Id
+     *
      * @param workCenterId
      * @regreso
      */
     @RequestMapping(value = "{workCenterId}/details", method = RequestMethod.GET)
-    public ResponseEntity<?> findWorkCenterDetails(@PathVariable(value = "workCenterId") int workCenterId){
+    public ResponseEntity<?> findWorkCenterDetails(@PathVariable(value = "workCenterId") int workCenterId) {
 
         try {
             return new ResponseEntity<>(workCenterService.getWorkCenterDetails(workCenterId), HttpStatus.OK);
@@ -272,13 +283,14 @@ public class WorkCentersController {
 
     /**
      * Editamos un centro de trabajo por Id
+     *
      * @param workCenterId
      * @regreso
      */
     @RequestMapping(value = "{workCenterId}/details/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editWorkCenterDetails(HttpServletRequest request,
-                                                   @PathVariable(value="workCenterId") int workCenterId,
-                                                   @RequestBody WorkCenterDetails workCenterDetails){
+                                                   @PathVariable(value = "workCenterId") int workCenterId,
+                                                   @RequestBody WorkCenterDetails workCenterDetails) {
 
         try {
             return new ResponseEntity<>(workCenterService.editWorkCenterDetails(workCenterId, workCenterDetails, request), HttpStatus.OK);
@@ -291,13 +303,14 @@ public class WorkCentersController {
 
     /**
      * Exportación de actuaciones por filtro de fechas
+     *
      * @param
      * @return
      */
-    @RequestMapping(value="exportWorkCenters", method = RequestMethod.POST)
+    @RequestMapping(value = "exportWorkCenters", method = RequestMethod.POST)
     public ResponseEntity<?> exportActions(HttpServletRequest request,
                                            HttpServletResponse response,
-                                           @RequestParam ("workCentersList") String workCentersList) {
+                                           @RequestParam("workCentersList") String workCentersList) {
 
         ResponseEntity<?> resp = null;
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -313,12 +326,14 @@ public class WorkCentersController {
     }
 
     // TODO mover a otro controller todos los métodos desde aquí
+
     /**
      * Obtiene listado de planos de un centro de trabajo por Id
+     *
      * @return
      */
     @RequestMapping(value = "{workCenterId}/drawings", method = RequestMethod.GET)
-    public ResponseEntity<?> getDrawingByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
+    public ResponseEntity<?> getDrawingByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId) {
 
         try {
             return new ResponseEntity<>(workCenterService.getDrawingByWorkCenter(workCenterId), HttpStatus.OK);
@@ -331,20 +346,22 @@ public class WorkCentersController {
 
     /**
      * Obtenci�n listado adjuntos
+     *
      * @param workCenterId
      * @return
      */
     @RequestMapping(value = "{workCenterId}/attachments", method = RequestMethod.GET)
-    public ResponseEntity<?> findAllAttachments(@PathVariable(value="workCenterId")int workCenterId) {
+    public ResponseEntity<?> findAllAttachments(@PathVariable(value = "workCenterId") int workCenterId) {
         return this.workCenterService.findAttachmentsByDrawing(workCenterId);
     }
 
     /**
      * Obtiene los detalles de un plano de un centro de trabajo por Id
+     *
      * @return
      */
     @RequestMapping(value = "drawings/{drawingId}", method = RequestMethod.GET)
-    public ResponseEntity<?> getDrawingById(@PathVariable(value = "drawingId") int drawingId){
+    public ResponseEntity<?> getDrawingById(@PathVariable(value = "drawingId") int drawingId) {
 
         try {
             return new ResponseEntity<>(workCenterService.getDrawingById(drawingId), HttpStatus.OK);
@@ -357,10 +374,11 @@ public class WorkCentersController {
 
     /**
      * Obtiene listado de los tipos de salas
+     *
      * @return
      */
     @RequestMapping(value = "roomTypes", method = RequestMethod.GET)
-    public ResponseEntity<?> getRoomTypes(){
+    public ResponseEntity<?> getRoomTypes() {
 
         try {
             return new ResponseEntity<>(workCenterService.getRoomTypes(), HttpStatus.OK);
@@ -373,26 +391,26 @@ public class WorkCentersController {
 
     /**
      * Obtiene listado de salas de un centro de trabajo por Id
+     *
      * @return
-
-     @RequestMapping(value = "{workCenterId}/rooms", method = RequestMethod.GET)
-     public ResponseEntity<?> getRoomListByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
-
-     try {
-     return new ResponseEntity<>(workCenterService.getRoomListByWorkCenter(workCenterId), HttpStatus.OK);
-     } catch (Exception e) {
-     e.printStackTrace();
-     return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-     }
-
-     }
-
-     /**
-      * Obtiene los detalles de una sala de reuniones de un centro de trabajo por Id
-      * @return
+     * @return
+     * @RequestMapping(value = "{workCenterId}/rooms", method = RequestMethod.GET)
+     * public ResponseEntity<?> getRoomListByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
+     * <p>
+     * try {
+     * return new ResponseEntity<>(workCenterService.getRoomListByWorkCenter(workCenterId), HttpStatus.OK);
+     * } catch (Exception e) {
+     * e.printStackTrace();
+     * return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+     * }
+     * <p>
+     * }
+     * <p>
+     * /**
+     * Obtiene los detalles de una sala de reuniones de un centro de trabajo por Id
      */
     @RequestMapping(value = "rooms/{roomId}", method = RequestMethod.GET)
-    public ResponseEntity<?> getRoomById(@PathVariable(value = "roomId") int roomId){
+    public ResponseEntity<?> getRoomById(@PathVariable(value = "roomId") int roomId) {
 
         try {
             return new ResponseEntity<>(workCenterService.getRoomById(roomId), HttpStatus.OK);
@@ -405,30 +423,32 @@ public class WorkCentersController {
 
     /**
      * Borramos un plano de un centro de trabajo por Id
+     *
      * @return
      */
     @RequestMapping(value = "{workCenterId}/drawings/{drawingId}/delete", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteDrawing (HttpServletRequest request,
-                                            @PathVariable(value = "workCenterId") int workCenterId,
-                                            @PathVariable(value = "drawingId") int drawingId) {
+    public ResponseEntity<?> deleteDrawing(HttpServletRequest request,
+                                           @PathVariable(value = "workCenterId") int workCenterId,
+                                           @PathVariable(value = "drawingId") int drawingId) {
 
 
-        return workCenterService.deleteDrawing(request,workCenterId,drawingId);
+        return workCenterService.deleteDrawing(request, workCenterId, drawingId);
 
     }
 
     @RequestMapping(value = "{workCenterId}/generalDocList/{generalDocId}/delete", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteGeneralDoc (HttpServletRequest request,
-                                               @PathVariable(value = "workCenterId") int workCenterId,
-                                               @PathVariable(value = "generalDocId") int generalDocId) {
+    public ResponseEntity<?> deleteGeneralDoc(HttpServletRequest request,
+                                              @PathVariable(value = "workCenterId") int workCenterId,
+                                              @PathVariable(value = "generalDocId") int generalDocId) {
 
 
-        return workCenterService.deleteGeneralDoc(request,workCenterId,generalDocId);
+        return workCenterService.deleteGeneralDoc(request, workCenterId, generalDocId);
 
     }
 
     /**
      * Agregamos un plano al centro de trabajo
+     *
      * @param workCenterDrawing
      * @param workCenterId
      * @param request
@@ -442,7 +462,7 @@ public class WorkCentersController {
             HttpServletRequest request) {
 
         Gson gson = new GsonBuilder().create();
-        Drawing newWCDrawing= gson.fromJson(workCenterDrawing, Drawing.class);
+        Drawing newWCDrawing = gson.fromJson(workCenterDrawing, Drawing.class);
 
         try {
             workCenterService.addWorkCenterDrawing(workCenterId, newWCDrawing, attachedFile, request);
@@ -456,6 +476,7 @@ public class WorkCentersController {
 
     /**
      * Editamos un plano de un centro de trabajo
+     *
      * @param workCenterDrawing
      * @param workCenterDrawingId
      * @param request
@@ -463,12 +484,12 @@ public class WorkCentersController {
      */
     @RequestMapping(value = "{workCenterId}/drawings/{workCenterDrawingId}/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editWorkCenterDrawing(@RequestParam("workCenterDrawing") String workCenterDrawing,
-                                                   @RequestParam(value="attachedFile", required = false) MultipartFile[] attachedFile,
+                                                   @RequestParam(value = "attachedFile", required = false) MultipartFile[] attachedFile,
                                                    @PathVariable("workCenterId") int workCenterId,
                                                    @PathVariable("workCenterDrawingId") int workCenterDrawingId, HttpServletRequest request) {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        Drawing drawing= gson.fromJson(workCenterDrawing, Drawing.class);
+        Drawing drawing = gson.fromJson(workCenterDrawing, Drawing.class);
 
         try {
             workCenterService.editWorkCenterDrawing(workCenterId, workCenterDrawingId, drawing, attachedFile, request);
@@ -482,6 +503,7 @@ public class WorkCentersController {
 
     /**
      * Editamos una sala de un centro de trabajo
+     *
      * @param workCenterId
      * @param roomId
      * @param request
@@ -490,8 +512,8 @@ public class WorkCentersController {
     @RequestMapping(value = "{workCenterId}/rooms/{roomId}/edit", method = RequestMethod.POST)
     public ResponseEntity<?> editRoomList(HttpServletRequest request,
                                           @RequestBody Room room,
-                                          @PathVariable(value="workCenterId") int workCenterId,
-                                          @PathVariable(value = "roomId") int roomId){
+                                          @PathVariable(value = "workCenterId") int workCenterId,
+                                          @PathVariable(value = "roomId") int roomId) {
 
         try {
             workCenterService.editWorkCenterRoom(room, request);
@@ -504,20 +526,22 @@ public class WorkCentersController {
 
     /**
      * Borramos una sala de reuniones de un centro de trabajo por Id
+     *
      * @return
      */
     @RequestMapping(value = "{workCenterId}/rooms/{roomId}/delete", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteRoom (HttpServletRequest request,
-                                         @PathVariable(value = "workCenterId") int workCenterId,
-                                         @PathVariable(value = "roomId") int roomId) {
+    public ResponseEntity<?> deleteRoom(HttpServletRequest request,
+                                        @PathVariable(value = "workCenterId") int workCenterId,
+                                        @PathVariable(value = "roomId") int roomId) {
 
 
-        return workCenterService.deleteRoom(request,workCenterId,roomId);
+        return workCenterService.deleteRoom(request, workCenterId, roomId);
 
     }
 
     /**
      * Descargamos el fichero de un plano
+     *
      * @param drawingId
      * @param request
      * @return
@@ -525,27 +549,28 @@ public class WorkCentersController {
     @RequestMapping(value = "drawing/{drawingId}/download", method = RequestMethod.GET)
     public ResponseEntity<?> downloadDrawingDoc(HttpServletRequest request, @PathVariable(value = "drawingId") int drawingId) {
 
-        return ( workCenterService.downloadDrawingDoc(request,drawingId));
+        return (workCenterService.downloadDrawingDoc(request, drawingId));
     }
 
 
     /**
      * Descargamos el archivo de generalDoc
-     * @param generalDocId
-     * Solicitud @param
+     *
+     * @param generalDocId Solicitud @param
      * @regreso
      */
 //    workCenters/generalDocumentation
     @RequestMapping(value = "{workCenters}/generalDocumentation", method = RequestMethod.GET)
     public ResponseEntity<?> downloadDocumentationList(HttpServletRequest request, @PathVariable(value = "generalDocId") int generalDocId) {
 
-        return ( workCenterService.downloadDocumentationList(request,generalDocId));
+        return (workCenterService.downloadDocumentationList(request, generalDocId));
     }
 
     /**
      * Agregamos una sala de reunions al centro de trabajo
-     * @RequestBody Salas
+     *
      * @return
+     * @RequestBody Salas
      */
     @RequestMapping(value = "{workCenterId}/rooms/add", method = RequestMethod.POST)
     public ResponseEntity<?> saveWorkCenterRoom(
@@ -567,6 +592,7 @@ public class WorkCentersController {
 
     /**
      * Obtención listado de workCenters
+     *
      * @return
      */
     @RequestMapping(value = "list", method = RequestMethod.GET)
@@ -585,10 +611,10 @@ public class WorkCentersController {
     /**
      * Scheduled process to activate work centers when the start date matches with the current date
      */
-    @Scheduled(cron="0 0 0 * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void activateWorkCenters() {
 
-        if(!modoDebug) {
+        if (!modoDebug) {
 
             try {
                 workCenterService.activateWorkCenters();
@@ -603,10 +629,10 @@ public class WorkCentersController {
     /**
      * Scheduled process to finalize work centers when the end date matches with the current date
      */
-    @Scheduled(cron="0 10 0 * * ?")
+    @Scheduled(cron = "0 10 0 * * ?")
     public void desactivateWorkCenters() {
 
-        if(!modoDebug) {
+        if (!modoDebug) {
 
             try {
                 workCenterService.desactivateWorkCenters();
@@ -619,7 +645,7 @@ public class WorkCentersController {
     }
 
     @RequestMapping(value = "workCenterTypes", method = RequestMethod.GET)
-    public ResponseEntity<?> getWorkCenterTypes(){
+    public ResponseEntity<?> getWorkCenterTypes() {
 
         try {
             return new ResponseEntity<>(workCenterService.getWorkCenterTypes(), HttpStatus.OK);
@@ -631,7 +657,7 @@ public class WorkCentersController {
     }
 
     @RequestMapping(value = "generalDocumentation/types", method = RequestMethod.GET)
-    public ResponseEntity<?> getGeneralDocTypes(){
+    public ResponseEntity<?> getGeneralDocTypes() {
 
         try {
             return new ResponseEntity<>(generalDocumentationService.getGeneralDocTypes(), HttpStatus.OK);
@@ -643,9 +669,8 @@ public class WorkCentersController {
     }
 
 
-
     @RequestMapping(value = "generalDocumentation/certificatesTypes", method = RequestMethod.GET)
-    public ResponseEntity<?> getCertificateTypes(){
+    public ResponseEntity<?> getCertificateTypes() {
 
         try {
             return new ResponseEntity<>(generalDocumentationService.getCertificateTypes(), HttpStatus.OK);
@@ -657,7 +682,7 @@ public class WorkCentersController {
     }
 
     @RequestMapping(value = "generalDocumentation/taxesTypes", method = RequestMethod.GET)
-    public ResponseEntity<?> getTaxesTypes(){
+    public ResponseEntity<?> getTaxesTypes() {
 
         try {
             return new ResponseEntity<>(generalDocumentationService.getTaxesTypes(), HttpStatus.OK);
@@ -673,11 +698,11 @@ public class WorkCentersController {
     public ResponseEntity<?> saveGeneralDocumentation(
             @RequestParam("generalDocumentation") String generalDocumentation,
             @PathVariable("workCenterId") int workCenterId,
-            @RequestParam(value="attachedFile") MultipartFile[] attachedFile,
+            @RequestParam(value = "attachedFile") MultipartFile[] attachedFile,
             HttpServletRequest request) {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        GeneralDocumentation newGeneralDoc= gson.fromJson(generalDocumentation, GeneralDocumentation.class);
+        GeneralDocumentation newGeneralDoc = gson.fromJson(generalDocumentation, GeneralDocumentation.class);
 
         return generalDocumentationService.saveGeneralDocumentation(workCenterId, newGeneralDoc, attachedFile, request);
 
@@ -685,10 +710,11 @@ public class WorkCentersController {
 
     /**
      * Obtener listado de documentación general en un centro de trabajo por DNI
+     *
      * @regreso
      */
     @RequestMapping(value = "{workCenterId}/generalDoc", method = RequestMethod.GET)
-    public ResponseEntity<?> getGeneralDocumentation(@PathVariable(value = "workCenterId") int workCenterId){
+    public ResponseEntity<?> getGeneralDocumentation(@PathVariable(value = "workCenterId") int workCenterId) {
 
         try {
             return new ResponseEntity<>(generalDocumentationService.getGeneralDocumentationListByWorkCenter(workCenterId), HttpStatus.OK);
@@ -702,11 +728,11 @@ public class WorkCentersController {
     public ResponseEntity<?> editGeneralDoc(
             @RequestParam("generalDocumentation") String generalDocumentation,
             @PathVariable("workCenterId") int workCenterId,
-            @RequestParam(value="attachedFile") MultipartFile[] attachedFile,
+            @RequestParam(value = "attachedFile") MultipartFile[] attachedFile,
             HttpServletRequest request) {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        GeneralDocumentation newGeneralDoc= gson.fromJson(generalDocumentation, GeneralDocumentation.class);
+        GeneralDocumentation newGeneralDoc = gson.fromJson(generalDocumentation, GeneralDocumentation.class);
 
         try {
             generalDocumentationService.editGeneralDoc(workCenterId, newGeneralDoc, attachedFile, request);
@@ -719,7 +745,7 @@ public class WorkCentersController {
     }
 
     @RequestMapping(value = "generalDocumentation/{generalDocId}", method = RequestMethod.GET)
-    public ResponseEntity<?> getGeneralDocById(@PathVariable(value = "generalDocId") int generalDocId){
+    public ResponseEntity<?> getGeneralDocById(@PathVariable(value = "generalDocId") int generalDocId) {
 
         try {
             return new ResponseEntity<>(generalDocumentationService.getGeneralDocById(generalDocId), HttpStatus.OK);
@@ -733,15 +759,16 @@ public class WorkCentersController {
     @RequestMapping(value = "generalDocumentation/{generalDocAttachId}/download", method = RequestMethod.GET)
     public ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request, @PathVariable(value = "generalDocAttachId") int generalDocAttachId) {
 
-        return ( generalDocumentationService.downloadGeneralDoc(request,generalDocAttachId));
+        return (generalDocumentationService.downloadGeneralDoc(request, generalDocAttachId));
     }
 
     /**
      * Obtiene listado de proveedores por delegacion
+     *
      * @return
      */
     @RequestMapping(value = "{workCenterId}/providers", method = RequestMethod.GET)
-    public ResponseEntity<?> getProvidersByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId){
+    public ResponseEntity<?> getProvidersByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId) {
 
         try {
             return new ResponseEntity<>(providerService.getProvidersByWorkCenter(workCenterId), HttpStatus.OK);
@@ -754,7 +781,7 @@ public class WorkCentersController {
 
     //  get maintenance by id
     @RequestMapping(value = "maintenance/{maintenanceId}", method = RequestMethod.GET)
-    private ResponseEntity<?> getMaintenanceById(@PathVariable(value = "maintenanceId") int maintenanceId ) {
+    private ResponseEntity<?> getMaintenanceById(@PathVariable(value = "maintenanceId") int maintenanceId) {
 
         try {
             return new ResponseEntity<>(maintenanceService.getMaintenanceById(maintenanceId), HttpStatus.OK);
@@ -769,14 +796,14 @@ public class WorkCentersController {
     public ResponseEntity<?> updateMaintenance(
             @RequestParam("maintenance") String maintenance,
             @PathVariable("workCenterId") int workCenterId,
-            @RequestParam(value="attachedFile") MultipartFile[] attachedFile,
-            HttpServletRequest request){
+            @RequestParam(value = "attachedFile") MultipartFile[] attachedFile,
+            HttpServletRequest request) {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
         Maintenance newMaintenance = gson.fromJson(maintenance, Maintenance.class);
 
         try {
-            return new ResponseEntity<>( maintenanceService.editMaintenance(workCenterId, newMaintenance, attachedFile, request), HttpStatus.OK);
+            return new ResponseEntity<>(maintenanceService.editMaintenance(workCenterId, newMaintenance, attachedFile, request), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -786,9 +813,9 @@ public class WorkCentersController {
 
     //METHOD FOR RETRIEVING MAINTENANCE LIST
     @RequestMapping(value = "{workCenterId}/maintenance", method = RequestMethod.GET)
-    public ResponseEntity<List<Maintenance>> getAllMaintenance(@PathVariable(value = "workCenterId") int workCenterId){
+    public ResponseEntity<List<Maintenance>> getAllMaintenance(@PathVariable(value = "workCenterId") int workCenterId) {
 
-        List<Maintenance> allMaintenance  = maintenanceService.findAllMaintenance();
+        List<Maintenance> allMaintenance = maintenanceService.findAllMaintenance();
         return new ResponseEntity<>(allMaintenance, HttpStatus.OK);
     }
 
@@ -798,10 +825,10 @@ public class WorkCentersController {
     }
 
     @RequestMapping(value = "{workCenterId}/maintenance/{maintenanceId}/delete", method = RequestMethod.POST)
-    public ResponseEntity<?> deleteMaintenance (HttpServletRequest request,
-                                                @PathVariable(value = "workCenterId") int workCenterId,
-                                                @PathVariable(value = "maintenanceId") int maintenanceId) {
-        return maintenanceService.deleteMaintenance(request,workCenterId,maintenanceId);
+    public ResponseEntity<?> deleteMaintenance(HttpServletRequest request,
+                                               @PathVariable(value = "workCenterId") int workCenterId,
+                                               @PathVariable(value = "maintenanceId") int maintenanceId) {
+        return maintenanceService.deleteMaintenance(request, workCenterId, maintenanceId);
     }
 
     //Method to Save New Maintenance
@@ -809,10 +836,10 @@ public class WorkCentersController {
     public ResponseEntity<?> saveMaintenance(
             @RequestParam("maintenance") String maintenance,
             @PathVariable("workCenterId") int workCenterId,
-            @RequestParam(value="attachedFile", required = false) MultipartFile[] attachedFile,
+            @RequestParam(value = "attachedFile", required = false) MultipartFile[] attachedFile,
             HttpServletRequest request) {
 
-        ResponseEntity<?> response=null;
+        ResponseEntity<?> response = null;
         Gson gson = new GsonBuilder().create();
         Maintenance newMaintenance = gson.fromJson(maintenance, Maintenance.class);
 
@@ -823,7 +850,7 @@ public class WorkCentersController {
     // Get mapping details for MaintenanceType
 
     @RequestMapping(value = "maintenance/maintenanceTypes", method = RequestMethod.GET)
-    public ResponseEntity<?> getMaintenanceTypes(){
+    public ResponseEntity<?> getMaintenanceTypes() {
 
         try {
             return new ResponseEntity<>(maintenanceService.getAllMaintenanceTypes(), HttpStatus.OK);
@@ -835,15 +862,15 @@ public class WorkCentersController {
 
 
     //    GET MAPPING FOR EXPORT MAINTENANCE
-    @RequestMapping(value="{workCenterId}/exportMaintenances", method = RequestMethod.POST)
+    @RequestMapping(value = "{workCenterId}/exportMaintenances", method = RequestMethod.POST)
     public ResponseEntity<?> exportAction(HttpServletRequest request,
                                           HttpServletResponse response,
                                           @PathVariable(value = "workCenterId") int workCenterId,
-                                          @RequestParam ("maintenanceFilter") String maintenanceFilter
+                                          @RequestParam("maintenanceFilter") String maintenanceFilter
     ) {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        MaintenanceFilter maintFilter= gson.fromJson(maintenanceFilter, MaintenanceFilter.class);
+        MaintenanceFilter maintFilter = gson.fromJson(maintenanceFilter, MaintenanceFilter.class);
         try {
             UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
             return new ResponseEntity<>(maintenanceService.exportMaintenance(workCenterId, maintFilter, response, user), HttpStatus.OK);
@@ -855,10 +882,10 @@ public class WorkCentersController {
 
     // Delete Old Attachment file after editing.
     @RequestMapping(value = "{workCenterId}/maintenanceAttachment/{attachedId}/delete", method = RequestMethod.POST)
-    public ResponseEntity<?> maintenanceDeleteAttachment (@PathVariable(value = "workCenterId") int workCenterId,
-                                                          @PathVariable(value = "attachedId") int attachedId) throws IOException {
+    public ResponseEntity<?> maintenanceDeleteAttachment(@PathVariable(value = "workCenterId") int workCenterId,
+                                                         @PathVariable(value = "attachedId") int attachedId) throws IOException {
 
-        return maintenanceService.maintenanceDeleteAttachment(workCenterId,attachedId);
+        return maintenanceService.maintenanceDeleteAttachment(workCenterId, attachedId);
     }
     // Get mapping details for MaintenanceType
 
@@ -873,4 +900,22 @@ public class WorkCentersController {
         }
     }
 
+    //METHOD FOR RETRIEVING VEHICLES LIST
+    @RequestMapping(value = "{workCenterId}/vehicles", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllVehicles(@PathVariable(value = "workCenterId") int workCenterId) {
+
+        try {
+            return new ResponseEntity<>(vehiclesService.findAllVehicles(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 }
+
+
+
+
+
