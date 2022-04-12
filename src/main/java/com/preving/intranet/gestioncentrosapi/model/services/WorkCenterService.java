@@ -1,7 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.domain.*;
-import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterTypes;
@@ -74,5 +73,5 @@ public interface WorkCenterService {
 
     ResponseEntity<?> findAttachmentsByDrawing(int workCenterId);
 
-
+    void deactivateEndDateToday();
 }

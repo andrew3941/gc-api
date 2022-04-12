@@ -185,7 +185,8 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
                 "FROM GESTION_CENTROS.PROVEEDORES P, " +
                 "       GESTION_CENTROS.PROVEEDORES_X_DELEGACIONES PXD " +
                 "WHERE P.ID = PXD.PROVEEDOR_ID " +
-                "AND PXD.DELEGACION_ID = :workCenterId";
+                "   AND P.ACTIVO IS TRUE " +
+                "   AND PXD.DELEGACION_ID = :workCenterId";
 
         Query query = manager.createNativeQuery(sql)
                 .setParameter("workCenterId", workCenterId);

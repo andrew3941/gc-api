@@ -21,6 +21,7 @@ import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -671,6 +672,21 @@ public class ProviderManager implements ProviderService {
         List<Provider> providers = providerCustomRepository.getProvidersByWorkCenter(workCenterId);
 
         return providers;
+    }
+
+    @Override
+    @Scheduled(cron = "0 00 00 * * *") //Every day at 12am
+    @Transactional
+    public void deactivateEndDateToday(){
+        System.out.println("Start of deactivating Provider automated process");
+
+        Date today = new Date();
+
+        List<Provider> providersEndingToday = providerRepository.findProvidersByServiceEndDateEquals(today); //Get work centers by endDate = today
+
+        providersEndingToday.forEach(provider -> { //Setting each provider inactive
+            provider.setActive(false);
+        });
     }
 }
 

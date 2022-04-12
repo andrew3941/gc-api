@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.preving.intranet.gestioncentrosapi.model.domain.Department;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 
 import javax.persistence.*;

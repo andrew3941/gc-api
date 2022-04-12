@@ -49,20 +49,12 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
             sql += "AND PO.ID = :maintenanceProvider ";
         }
 
-        //Bring active providers in maintenance
-        if(maintenanceFilter != null && maintenanceFilter.getMaintenanceStatus() == 1) {
-            sql += " AND PO.FECHA_FIN_SERVICIO IS NULL ";
-        } else if (maintenanceFilter.getMaintenanceStatus() == 0) {
-            sql += " AND PO.FECHA_FIN_SERVICIO IS NOT NULL ";
-        }
-
-        // TODO   fecha >= '2022-03-17' and fecha <= '2022-03-24';
         if (maintenanceFilter != null && maintenanceFilter.getMaintenanceStartDate() != null) {
-            sql += "AND M.FECHA >= :maintenanceStartDate";
+            sql += "AND MA.FECHA >= :maintStartDate ";
         }
 
         if (maintenanceFilter != null && maintenanceFilter.getMaintenanceEndDate() != null) {
-            sql += "AND M.FECHA <= :maintenanceEndDate";
+            sql += "AND MA.FECHA <= :maintEndDate ";
         }
 
         if(workCenterId != 0){
@@ -83,11 +75,11 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
         }
 
         if (maintenanceFilter != null && maintenanceFilter.getMaintenanceStartDate() != null) {
-            query.setParameter("maintenanceStartDate",  maintenanceFilter.getMaintenanceStartDate());
+            query.setParameter("maintStartDate",  maintenanceFilter.getMaintenanceStartDate());
         }
 
         if (maintenanceFilter != null && maintenanceFilter.getMaintenanceEndDate() != null) {
-            query.setParameter("maintenanceEndDate", maintenanceFilter.getMaintenanceEndDate());
+            query.setParameter("maintEndDate", maintenanceFilter.getMaintenanceEndDate());
         }
 
         if(workCenterId != 0){
