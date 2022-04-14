@@ -231,12 +231,11 @@ public class WorkCentersController {
     @RequestMapping(value = "{workCenterId}/vehicles/filter", method = RequestMethod.POST)
     public ResponseEntity<?> findVehicleByFilter(HttpServletRequest request,
                                                     @PathVariable(value = "workCenterId") int workCenterId,
-                                                    @RequestParam ("vehiclesFilter") String vehicleFilter
+                                                    @RequestParam ("vehiclesFilter") String vehiclesFilter
     ) {
 
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        VehiclesFilter vehiclesFilter1= gson.fromJson(vehicleFilter, VehiclesFilter.class);
-
+        VehiclesFilter vehiclesFilter1= gson.fromJson(vehiclesFilter, VehiclesFilter.class);
 
         try {
             UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);

@@ -2,6 +2,7 @@ package com.preving.intranet.gestioncentrosapi.model.domain.vehicles;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
+import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -13,6 +14,28 @@ import java.util.Date;
 
 @Entity
 @Table(schema = "SAC", name ="VE_VEHICULOS")
+@SqlResultSetMapping(
+        name = "VehicleMapping",
+        classes = {
+                @ConstructorResult(
+                        targetClass = Vehicles.class,
+                        columns = {
+                                @ColumnResult(name = "ID", type = Integer.class),
+                                @ColumnResult(name = "MATRICULA", type = String.class),
+                                @ColumnResult(name = "MODELO", type = String.class),
+                                @ColumnResult(name = "MODO_COMPRA", type = String.class),
+                                @ColumnResult(name = "FECHA_COMPRA", type = Date.class),
+                                @ColumnResult(name = "FECHA_VENCIMIENTO", type = Date.class),
+                                @ColumnResult(name = "PRECIO", type = Integer.class),
+                                @ColumnResult(name = "TARJETA", type = String.class),
+                                @ColumnResult(name = "CREADO", type = Date.class)
+                        }
+                )
+        }
+)
+
+
+
 public class Vehicles implements Serializable {
 
     private int id;

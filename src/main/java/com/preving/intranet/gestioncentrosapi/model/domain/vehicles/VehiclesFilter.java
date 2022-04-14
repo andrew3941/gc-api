@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 public class VehiclesFilter {
-    private Provider vehicleProvider;
     private List<Brands> Brands = new ArrayList<>();
     public int vehicleStatus;
     private String card;
@@ -17,19 +16,10 @@ public class VehiclesFilter {
     public VehiclesFilter() {
     }
 
-    public VehiclesFilter(Provider vehicleProvider, List<com.preving.intranet.gestioncentrosapi.model.domain.vehicles.Brands> brands, int vehicleStatus, String card) {
-        this.vehicleProvider = vehicleProvider;
+    public VehiclesFilter( List<com.preving.intranet.gestioncentrosapi.model.domain.vehicles.Brands> brands, int vehicleStatus, String card) {
         Brands = brands;
         this.vehicleStatus = vehicleStatus;
         this.card = card;
-    }
-
-    public Provider getVehicleProvider() {
-        return vehicleProvider;
-    }
-
-    public void setVehicleProvider(Provider vehicleProvider) {
-        this.vehicleProvider = vehicleProvider;
     }
 
     public List<com.preving.intranet.gestioncentrosapi.model.domain.vehicles.Brands> getBrands() {

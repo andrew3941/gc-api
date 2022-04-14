@@ -17,14 +17,16 @@ import java.util.List;
 @Service
 public interface VehiclesService {
 
+    //    Filter Vehicles
     List<Vehicles> getFilteredVehicles(int workCenterId, VehiclesFilter vehicleFilter, UsuarioWithRoles user);
 
-    //    EXPORT MAINTENANCE
+    //    Export Vehicles
     ResponseEntity<?> exportVehicle(int workCenterId, VehiclesFilter vehicleFilter, HttpServletResponse response, UsuarioWithRoles user);
 
-
+    //    List all vehicles brand types
     List<Brands> getAllBrandTypes();
-//    GET ALL VEHICLES LIST
+
+    //    Get all vehicle list
     List<Vehicles> findAllVehicles();
 
 }
