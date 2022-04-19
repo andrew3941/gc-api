@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -39,5 +40,7 @@ public interface GeneralDocumentationRepository extends JpaRepository<GeneralDoc
     void  editGeneralDoc(@Param("generalDoc") GeneralDocumentation generalDoc);
 
 
+    List<GeneralDocumentation> findByDocumentAlarmDateAndGeneralDocTypesName(Date date,String name);
 
+    List<GeneralDocumentation> findByDocumentEndDateAndGeneralDocTypesName(Date date,String name);
 }

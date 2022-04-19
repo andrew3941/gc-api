@@ -25,4 +25,7 @@ public interface GeneralDocumentationService {
 
     ResponseEntity<?> downloadGeneralDoc(HttpServletRequest request, int generalDocAttachId);
 
+    void SendContractsAlarmDateNotification();
+
+    void SendInsuranceEndDayNotification();
 }
