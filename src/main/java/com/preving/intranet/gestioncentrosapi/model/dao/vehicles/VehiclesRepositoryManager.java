@@ -21,45 +21,41 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
     public List<Vehicles> getVehiclesFiltered(Integer workCenterId, VehiclesFilter vehiclesFilter, UsuarioWithRoles user) {
 
         String sql = "" +
-                "SELECT DISTINCT   V.ID, V.MATRICULA, V.MODELO, V.MODO_COMPRA, V.FECHA_COMPRA, V.FECHA_VENCIMIENTO, V.PRECIO, V.TARJETA, V.CREADO " +
-                "                 M.NOMBRE AS MARCA" +
+                "SELECT DISTINCT   VE.MARCA_ID,VE.TARJETA, VE.MATRICULA, VE.MODELO, VE.MODO_COMPRA, VE.RESPONSABLE_ID,VE.FECHA_COMPRA, VE.FECHA_VENCIMIENTO, VE.CUOTA_MENSUAL, VE.ACTIVO"+
+                "                 MAR.NOMBRE AS MARCA" +
 
-                "FROM SAC.VE_VEHICULOS V " +
-                "        SAC.VE_MARCAS M, " +
-                "       GESTION_CENTROS.MANTENIMIENTOS_X_DELEGACIONES MXD ";
+                "FROM SAC.VE_VEHICULOS VEH " +
+                "        SAC.VE_MARCAS MAR, " +
+                "       GESTION_CENTROS.MANTENIMIENTOS_X_DELEGACIONES MXD ";;
 
-        sql += "WHERE V.MARCA_ID = M.ID " +
-                "      AND  V.VE_MARCAS.ID = V.ID " +
-                "       AND V.ID = MXD.MANTENIMIENTO_ID ";
+        sql += "WHERE VE.MARCA_ID = MAR.ID " +
+                "      AND  VE.VE_MARCAS.ID = VE.ID ";
 
         if (vehiclesFilter != null && vehiclesFilter.getBrands().size() != 0) {
-            sql += "AND M.ID = :brands ";
+            sql += "AND VE.MARCA_ID = :brands ";
         }
 
         if (vehiclesFilter != null && vehiclesFilter.getCard() != null) {
-            sql += "AND V.TARJETA >= :card ";
+            sql += "AND VE.TARJETA >= :card ";
         }
 
-        if (workCenterId != 0) {
+        if(workCenterId != 0){
             sql += "AND MXD.DELEGACION_ID = :workCenterId ";
         }
 
+        sql += " ORDER BY VE.FECHA_COMPRA DESC ";
 
-        sql += " ORDER BY V.CREADO DESC ";
-
-        Query query = manager.createNativeQuery(sql, "MaintenanceMapping");
+        Query query = manager.createNativeQuery(sql, "VehiclesMapping");
 
         if (vehiclesFilter != null && vehiclesFilter.getBrands().size() != 0 && vehiclesFilter.getBrands() != null) {
             query.setParameter("brands", vehiclesFilter.getBrands());
         }
 
-
         if (vehiclesFilter != null && vehiclesFilter.getCard() != null) {
             query.setParameter("card", vehiclesFilter.getCard());
         }
 
-
-        if (workCenterId != 0) {
+        if(workCenterId != 0){
             query.setParameter("workCenterId", workCenterId);
         }
 

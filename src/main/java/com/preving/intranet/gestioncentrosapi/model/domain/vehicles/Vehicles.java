@@ -23,12 +23,16 @@ import java.util.Date;
                                 @ColumnResult(name = "ID", type = Integer.class),
                                 @ColumnResult(name = "MATRICULA", type = String.class),
                                 @ColumnResult(name = "MODELO", type = String.class),
+                                @ColumnResult(name = "MARCA_ID", type = Integer.class),
+                                @ColumnResult(name = "DELEGACION_ID", type = Integer.class),
                                 @ColumnResult(name = "MODO_COMPRA", type = String.class),
+                                @ColumnResult(name = "RESPONSABLE_ID", type = Integer.class),
                                 @ColumnResult(name = "FECHA_COMPRA", type = Date.class),
                                 @ColumnResult(name = "FECHA_VENCIMIENTO", type = Date.class),
-                                @ColumnResult(name = "PRECIO", type = Integer.class),
+                                @ColumnResult(name = "CUOTA_MENSUAL", type = Integer.class),
                                 @ColumnResult(name = "TARJETA", type = String.class),
-                                @ColumnResult(name = "CREADO", type = Date.class)
+                                @ColumnResult(name = "ACTIVO", type = Integer.class)
+
                         }
                 )
         }
