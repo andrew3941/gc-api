@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
-@Service
 public interface VehiclesService {
 
     //    Filter Vehicles
@@ -27,6 +26,6 @@ public interface VehiclesService {
     List<Brands> getAllBrandTypes();
 
     //    Get all vehicle list
-    List<Vehicles> findAllVehicles();
+    List<Vehicles> findAllVehiclesByWorkCenter(int workCenterId);
 
 }

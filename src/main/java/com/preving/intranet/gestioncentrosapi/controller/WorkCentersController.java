@@ -951,7 +951,7 @@ public class WorkCentersController {
     public ResponseEntity<?> getAllVehicles(@PathVariable(value = "workCenterId") int workCenterId) {
 
         try {
-            return new ResponseEntity<>(vehiclesService.findAllVehicles(), HttpStatus.OK);
+            return new ResponseEntity<>(vehiclesService.findAllVehiclesByWorkCenter(workCenterId), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

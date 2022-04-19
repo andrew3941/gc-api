@@ -119,8 +119,9 @@ public class VehiclesManager implements VehiclesService {
     }
 
     @Override
-    public List<Vehicles> findAllVehicles() {
-        return vehiclesRepository.findAll();
+    public List<Vehicles> findAllVehiclesByWorkCenter(int workCenterId) {
+        return vehiclesRepository.findAllByWorkCenterIdAndUserUnsubscribeNotNull(workCenterId);
     }
+
 }
 
