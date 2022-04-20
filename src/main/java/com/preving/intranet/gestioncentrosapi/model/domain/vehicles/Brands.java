@@ -45,13 +45,13 @@ public class Brands implements Serializable {
 
     @Basic
     @Column(name = "ADR_UPDATED")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
+    @JsonFormat(pattern = "dd-mm-yyyy", timezone = "Europe/Madrid")
     public Date getAdrUpdated() {return adrUpdated;}
     public void setAdrUpdated(Date adrUpdated) {this.adrUpdated = adrUpdated;}
 
     @Basic
     @Column(name = "QDR_CREATED")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
+    @JsonFormat(pattern = "dd-mm-yyyy", timezone = "Europe/Madrid")
     public Date getQdrCreated() {return qdrCreated;}
     public void setQdrCreated(Date qdrCreated) {this.qdrCreated = qdrCreated;}
 

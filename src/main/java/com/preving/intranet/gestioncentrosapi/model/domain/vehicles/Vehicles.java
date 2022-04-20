@@ -2,7 +2,6 @@ package com.preving.intranet.gestioncentrosapi.model.domain.vehicles;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
-import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -75,7 +74,8 @@ public class Vehicles implements Serializable {
     public Vehicles() {
     }
 
-    public Vehicles(int id, String enrollment, Brands brands, String model, String purchaseMode, Date purchaseDate, Date expirationDate, int price, String card, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter, int monthlyFee, User responsibleId, int kilometersMaximum, int excessPrice, int defaultPrice, int active, Date lowDate, int userUnsubscribe, String observationsLow, int profitabilityCoefficient, int inThePropiety, int bail, com.preving.intranet.gestioncentrosapi.model.domain.Entity entityId, Date adrUpdated, Date qdrCreated) {
+
+    public Vehicles(int id, String enrollment, Brands brands, String model, String purchaseMode, Date purchaseDate, Date expirationDate, int price, String card, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter delegationId, int monthlyFee, User responsibleId, int kilometersMaximum, int excessPrice, int defaultPrice, int active, Date lowDate, int userUnsubscribe, String observationsLow, int profitabilityCoefficient, int inThePropiety, int bail, com.preving.intranet.gestioncentrosapi.model.domain.Entity entityId, Date adrUpdated, Date qdrCreated) {
         this.id = id;
         this.enrollment = enrollment;
         this.brands = brands;
@@ -89,7 +89,6 @@ public class Vehicles implements Serializable {
         this.createdBy = createdBy;
         this.modified = modified;
         this.modifiedBy = modifiedBy;
-        this.workCenter = workCenter;
         this.monthlyFee = monthlyFee;
         this.responsibleId = responsibleId;
         this.kilometersMaximum = kilometersMaximum;
@@ -138,13 +137,13 @@ public class Vehicles implements Serializable {
 
     @Basic
     @Column(name = "FECHA_COMPRA")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
+    @JsonFormat(pattern = "dd-mm-yyyy", timezone = "Europe/Madrid")
     public Date getPurchaseDate() {return purchaseDate;}
     public void setPurchaseDate(Date purchaseDate) {this.purchaseDate = purchaseDate;}
 
     @Basic
     @Column(name = "FECHA_VENCIMIENTO")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
+    @JsonFormat(pattern = "dd-mm-yyyy", timezone = "Europe/Madrid")
     public Date getExpirationDate() {return expirationDate;}
     public void setExpirationDate(Date expirationDate) {this.expirationDate = expirationDate;}
 
@@ -160,7 +159,7 @@ public class Vehicles implements Serializable {
 
     @Basic
     @Column(name = "CREADO")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
+    @JsonFormat(pattern = "dd-mm-yyyy", timezone = "Europe/Madrid")
     public Date getCreated() {return created;}
     public void setCreated(Date created) {this.created = created;}
 
@@ -222,7 +221,7 @@ public class Vehicles implements Serializable {
 
     @Basic
     @Column(name = "FECHA_BAJA")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
+    @JsonFormat(pattern = "dd-mm-yyyy", timezone = "Europe/Madrid")
     public Date getLowDate() {return lowDate;}
     public void setLowDate(Date lowDate) {this.lowDate = lowDate;}
 
@@ -262,13 +261,13 @@ public class Vehicles implements Serializable {
 
     @Basic
     @Column(name = "ADR_UPDATED")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
+    @JsonFormat(pattern = "dd-mm-yyyy", timezone = "Europe/Madrid")
     public Date getAdrUpdated() {return adrUpdated;}
     public void setAdrUpdated(Date adrUpdated) {this.adrUpdated = adrUpdated;}
 
     @Basic
     @Column(name = "QDR_CREATED")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
+    @JsonFormat(pattern = "dd-mm-yyyy", timezone = "Europe/Madrid")
     public Date getQdrCreated() {return qdrCreated;}
     public void setQdrCreated(Date qdrCreated) {this.qdrCreated = qdrCreated;}
 }
