@@ -137,13 +137,13 @@ public class Vehicles implements Serializable {
 
     @Basic
     @Column(name = "FECHA_COMPRA")
-    @JsonFormat(pattern = "dd-mm-yyyy", timezone = "Europe/Madrid")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     public Date getPurchaseDate() {return purchaseDate;}
     public void setPurchaseDate(Date purchaseDate) {this.purchaseDate = purchaseDate;}
 
     @Basic
     @Column(name = "FECHA_VENCIMIENTO")
-    @JsonFormat(pattern = "dd-mm-yyyy", timezone = "Europe/Madrid")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     public Date getExpirationDate() {return expirationDate;}
     public void setExpirationDate(Date expirationDate) {this.expirationDate = expirationDate;}
 
@@ -159,7 +159,7 @@ public class Vehicles implements Serializable {
 
     @Basic
     @Column(name = "CREADO")
-    @JsonFormat(pattern = "dd-mm-yyyy", timezone = "Europe/Madrid")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     public Date getCreated() {return created;}
     public void setCreated(Date created) {this.created = created;}
 
@@ -221,7 +221,7 @@ public class Vehicles implements Serializable {
 
     @Basic
     @Column(name = "FECHA_BAJA")
-    @JsonFormat(pattern = "dd-mm-yyyy", timezone = "Europe/Madrid")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     public Date getLowDate() {return lowDate;}
     public void setLowDate(Date lowDate) {this.lowDate = lowDate;}
 
@@ -261,13 +261,13 @@ public class Vehicles implements Serializable {
 
     @Basic
     @Column(name = "ADR_UPDATED")
-    @JsonFormat(pattern = "dd-mm-yyyy", timezone = "Europe/Madrid")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     public Date getAdrUpdated() {return adrUpdated;}
     public void setAdrUpdated(Date adrUpdated) {this.adrUpdated = adrUpdated;}
 
     @Basic
     @Column(name = "QDR_CREATED")
-    @JsonFormat(pattern = "dd-mm-yyyy", timezone = "Europe/Madrid")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     public Date getQdrCreated() {return qdrCreated;}
     public void setQdrCreated(Date qdrCreated) {this.qdrCreated = qdrCreated;}
 }
