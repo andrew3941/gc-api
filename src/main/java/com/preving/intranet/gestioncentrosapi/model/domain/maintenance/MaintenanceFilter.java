@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MaintenanceFilter {
     private Provider maintenanceProvider;
-    private List<MaintenanceTypes> MaintenanceTypes = new ArrayList<>();
+    private List<MaintenanceTypes> maintenanceTypes = new ArrayList<>();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date maintenanceStartDate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
@@ -21,7 +21,7 @@ public class MaintenanceFilter {
 
     public MaintenanceFilter(Provider maintenanceProvider, List<com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes> maintenanceTypes, Date maintenanceStartDate, Date maintenanceEndDate, int maintenanceStatus) {
         this.maintenanceProvider = maintenanceProvider;
-      this.MaintenanceTypes = maintenanceTypes;
+      this.maintenanceTypes = maintenanceTypes;
         this.maintenanceStartDate = maintenanceStartDate;
         this.maintenanceEndDate = maintenanceEndDate;
     }
@@ -35,11 +35,11 @@ public class MaintenanceFilter {
     }
 
     public List<com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes> getMaintenanceTypes() {
-        return MaintenanceTypes;
+        return maintenanceTypes;
     }
 
     public void setMaintenanceTypes(List<com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceTypes> maintenanceTypes) {
-        MaintenanceTypes = maintenanceTypes;
+        maintenanceTypes = maintenanceTypes;
     }
 
     public Date getMaintenanceStartDate() {
