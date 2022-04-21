@@ -49,6 +49,7 @@ public class Maintenance implements Serializable {
     private String concept;
     private ExpenditurePeriod expenditurePeriod = new ExpenditurePeriod();
     private int amount;
+    private Integer annualAmount;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date date;
     private String observations;
@@ -66,13 +67,14 @@ public class Maintenance implements Serializable {
     public Maintenance() {
     }
 
-    public Maintenance(int id, MaintenanceTypes maintenanceTypes, Provider provider, String billNumber, ExpenditurePeriod expenditurePeriod, int amount, Date date, String observations, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy, List<MaintenanceByAttachment> maintenanceByAttachments) {
+    public Maintenance(int id, MaintenanceTypes maintenanceTypes, Provider provider, String billNumber, ExpenditurePeriod expenditurePeriod, int amount,int annualAmount, Date date, String observations, Date created, User createdBy, Date modified, User modifiedBy, Date deleted, User deletedBy, List<MaintenanceByAttachment> maintenanceByAttachments) {
         this.id = id;
         this.maintenanceTypes = maintenanceTypes;
         this.provider = provider;
         this.billNumber = billNumber;
         this.expenditurePeriod = expenditurePeriod;
         this.amount = amount;
+        this.annualAmount = annualAmount;
         this.date = date;
         this.observations = observations;
         this.created = created;
@@ -153,6 +155,11 @@ public class Maintenance implements Serializable {
     }
 
     @Basic
+    @Column(name = "importe_anual")
+    public Integer getAnnualAmount() {return annualAmount;}
+    public void setAnnualAmount(Integer annualAmount) {this.annualAmount = annualAmount;}
+
+    @Basic
     @Column(name = "FECHA")
     public Date getDate() {
         return date;
@@ -224,5 +231,7 @@ public class Maintenance implements Serializable {
     public void setMaintenanceByAttachments(List<MaintenanceByAttachment> maintenanceByAttachments) {
         this.maintenanceByAttachments = maintenanceByAttachments;
     }
+
+
 }
 

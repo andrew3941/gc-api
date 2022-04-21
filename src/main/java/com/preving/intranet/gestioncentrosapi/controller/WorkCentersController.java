@@ -9,6 +9,8 @@ import com.preving.intranet.gestioncentrosapi.model.domain.WorkCenterFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.GeneralDocumentation;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
+import com.preving.intranet.gestioncentrosapi.model.domain.vehicles.Vehicles;
+import com.preving.intranet.gestioncentrosapi.model.domain.vehicles.VehiclesFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.services.*;
@@ -223,10 +225,10 @@ public class WorkCentersController {
 
     }
 
+
     /**
      * Obtiene usuarios por criterio
-     *
-     * @param criterion
+     * @param  criterion
      * @return
      */
     @RequestMapping(value = "users", method = RequestMethod.GET)
@@ -904,7 +906,7 @@ public class WorkCentersController {
 
         return maintenanceService.maintenanceDeleteAttachment(workCenterId, attachedId);
     }
-    // Get mapping details for MaintenanceType
+    // Get mapping details for BrandType
 
     @RequestMapping(value = "brandsTypes", method = RequestMethod.GET)
     public ResponseEntity<?> getBrandTypes(){
@@ -917,17 +919,60 @@ public class WorkCentersController {
         }
     }
 
+    //    Get mapping for export vehicle
+    @RequestMapping(value="{workCenterId}/exportVehicles", method = RequestMethod.POST)
+    public ResponseEntity<?> exportVehicleAction(HttpServletRequest request,
+                                                 HttpServletResponse response,
+                                                 @PathVariable(value = "workCenterId") int workCenterId,
+                                                 @RequestParam ("vehiclesFilter") String vehiclesFilter
+    ) {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        VehiclesFilter vehiclesFilter1= gson.fromJson(vehiclesFilter, VehiclesFilter.class);
+        try {
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            return new ResponseEntity<>(vehiclesService.exportVehicle(workCenterId, vehiclesFilter1, response, user), HttpStatus.OK);
+        } catch (DataAccessException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
     //METHOD FOR RETRIEVING VEHICLES LIST
     @RequestMapping(value = "{workCenterId}/vehicles", method = RequestMethod.GET)
     public ResponseEntity<?> getAllVehicles(@PathVariable(value = "workCenterId") int workCenterId) {
 
         try {
-            return new ResponseEntity<>(vehiclesService.findAllVehicles(), HttpStatus.OK);
+            return new ResponseEntity<>(vehiclesService.findAllVehiclesByWorkCenter(workCenterId), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+//    VehicleFilter Class
+
+    @RequestMapping(value = "{workCenterId}/vehicles/filter", method = RequestMethod.POST)
+    public ResponseEntity<?> findVehicleByFilter(HttpServletRequest request,
+                                                 @PathVariable(value = "workCenterId") int workCenterId,
+                                                 @RequestParam ("vehiclesFilter") String vehiclesFilter
+    ) {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        VehiclesFilter vehiclesFilter1= gson.fromJson(vehiclesFilter, VehiclesFilter.class);
+
+        try {
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            List<Vehicles> vehiclesList = this.vehiclesService.getFilteredVehicles(workCenterId, vehiclesFilter1, user);
+
+            return new ResponseEntity<>(vehiclesList, HttpStatus.OK);
+        } catch (Exception e) {e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 
 
 }

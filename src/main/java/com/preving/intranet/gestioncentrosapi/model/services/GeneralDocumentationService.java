@@ -28,4 +28,8 @@ public interface GeneralDocumentationService {
     ResponseEntity<?> downloadZipAttachment(int itemId, int type, HttpServletResponse response);
 
     ResponseEntity<?> deleteAttachment(int workCenterId, int attachedId) throws IOException;
+
+//    void SendContractsAlarmDateNotification();
+
+//    void SendInsuranceEndDayNotification();
 }

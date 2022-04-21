@@ -13,6 +13,32 @@ import java.util.Date;
 
 @Entity
 @Table(schema = "SAC", name ="VE_VEHICULOS")
+@SqlResultSetMapping(
+        name = "VehicleMapping",
+        classes = {
+                @ConstructorResult(
+                        targetClass = Vehicles.class,
+                        columns = {
+                                @ColumnResult(name = "ID", type = Integer.class),
+                                @ColumnResult(name = "MATRICULA", type = String.class),
+                                @ColumnResult(name = "MODELO", type = String.class),
+                                @ColumnResult(name = "MARCA_ID", type = Integer.class),
+                                @ColumnResult(name = "DELEGACION_ID", type = Integer.class),
+                                @ColumnResult(name = "MODO_COMPRA", type = String.class),
+                                @ColumnResult(name = "RESPONSABLE_ID", type = Integer.class),
+                                @ColumnResult(name = "FECHA_COMPRA", type = Date.class),
+                                @ColumnResult(name = "FECHA_VENCIMIENTO", type = Date.class),
+                                @ColumnResult(name = "CUOTA_MENSUAL", type = Integer.class),
+                                @ColumnResult(name = "TARJETA", type = String.class),
+                                @ColumnResult(name = "ACTIVO", type = Integer.class)
+
+                        }
+                )
+        }
+)
+
+
+
 public class Vehicles implements Serializable {
 
     private int id;
@@ -28,7 +54,7 @@ public class Vehicles implements Serializable {
     private User createdBy = new User();
     private Date modified;
     private User modifiedBy = new User();
-    private WorkCenter delegationId = new WorkCenter();
+    private WorkCenter workCenter = new WorkCenter();
     private int monthlyFee;
     private User responsibleId = new User();
     private int kilometersMaximum;
@@ -45,10 +71,40 @@ public class Vehicles implements Serializable {
     private Date adrUpdated;
     private Date qdrCreated;
 
-
     public Vehicles() {
     }
 
+
+    public Vehicles(int id, String enrollment, Brands brands, String model, String purchaseMode, Date purchaseDate, Date expirationDate, int price, String card, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter delegationId, int monthlyFee, User responsibleId, int kilometersMaximum, int excessPrice, int defaultPrice, int active, Date lowDate, int userUnsubscribe, String observationsLow, int profitabilityCoefficient, int inThePropiety, int bail, com.preving.intranet.gestioncentrosapi.model.domain.Entity entityId, Date adrUpdated, Date qdrCreated) {
+        this.id = id;
+        this.enrollment = enrollment;
+        this.brands = brands;
+        this.model = model;
+        this.purchaseMode = purchaseMode;
+        this.purchaseDate = purchaseDate;
+        this.expirationDate = expirationDate;
+        this.price = price;
+        this.card = card;
+        this.created = created;
+        this.createdBy = createdBy;
+        this.modified = modified;
+        this.modifiedBy = modifiedBy;
+        this.monthlyFee = monthlyFee;
+        this.responsibleId = responsibleId;
+        this.kilometersMaximum = kilometersMaximum;
+        this.excessPrice = excessPrice;
+        this.defaultPrice = defaultPrice;
+        this.active = active;
+        this.lowDate = lowDate;
+        this.userUnsubscribe = userUnsubscribe;
+        this.observationsLow = observationsLow;
+        this.profitabilityCoefficient = profitabilityCoefficient;
+        this.inThePropiety = inThePropiety;
+        this.bail = bail;
+        this.entityId = entityId;
+        this.adrUpdated = adrUpdated;
+        this.qdrCreated = qdrCreated;
+    }
 
     @Id
     @Column(name = "ID", nullable = false)
@@ -127,8 +183,8 @@ public class Vehicles implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
     @NotFound(action = NotFoundAction.IGNORE)
-    public WorkCenter getDelegationId() {return delegationId;}
-    public void setDelegationId(WorkCenter delegationId) {this.delegationId = delegationId;}
+    public WorkCenter getworkCenter() {return workCenter;}
+    public void setworkCenter(WorkCenter workCenter) {this.workCenter = workCenter;}
 
 
     @Basic

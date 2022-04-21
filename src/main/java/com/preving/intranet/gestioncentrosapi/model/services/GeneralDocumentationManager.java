@@ -1,14 +1,24 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.dao.drawingByAttachments.DrawingByAttachmentsRepository;
+import com.google.gson.Gson;
 import com.preving.intranet.gestioncentrosapi.model.dao.generalDocument.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.DrawingsByAttachment;
+import com.preving.intranet.gestioncentrosapi.model.domain.EmailRaw;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation.*;
 import com.preving.security.JwtTokenUtil;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +32,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public class GeneralDocumentationManager implements GeneralDocumentationService {
@@ -45,6 +60,9 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
     private CommonService commonService;
 
     @Autowired
+    private MailService mailService;
+
+    @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
@@ -54,6 +72,8 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
     private DrawingByAttachmentsRepository drawingByAttachmentsRepository;
 
     private static final int GENERAL_DOCUMENTS = 3;
+
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     @Override
     public List<GeneralDocumentation> getGeneralDocumentationListByWorkCenter(int workCenterId) {
@@ -280,5 +300,49 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 
     }
 
+    //    @Override
+    //@Scheduled
+//    @Scheduled(fixedDelay = 30000) //Every 30 seconds for testing
+//    public void SendContractsAlarmDateNotification(){
+//        Date today = new Date();
+//        System.out.println("Start of automated notification process for Contracts");
+//        String contractsName = "CONTRATO ALQUILER";
+//
+//        Date twoWeeksPrior = new Date((today.getYear()),(today.getMonth()),(today.getDate() - 14));
+//        List<GeneralDocumentation> warningContracts = generalDocumentationRepository.findByDocumentAlarmDateAndGeneralDocTypesName(twoWeeksPrior,contractsName);
+//
+//        warningContracts.forEach(contract -> {
+//            Map<String, Object> emailData = new HashMap<>();
+//
+//            //Formatting the date cause i cant be asked to do it in velocity
+//            String formatedDate = simpleDateFormat.format(contract.getDocumentEndDate());
+//            emailData.put("fecha",formatedDate);
+//            emailData.put("documento",contract.getDocumentName());
+//            emailData.put("centro",contract.getWorkCenter().getName());
+//
+//            mailService.sendMail(contract.getEmail(), emailData);
+//        });
+//    }
+
+//    @Override
+    //todo cambiar horario
+//    @Scheduled(fixedDelay = 30000) //Every 30 seconds for testing
+//    public void SendInsuranceEndDayNotification(){
+//        Date today = new Date();
+//        System.out.println("Start of automated notification process for insurances");
+//        String insurancesName = "SEGURO LOCAL";
+//        Date twoMonthsPrior = new Date((today.getYear()),(today.getMonth() - 2),(today.getDate()));
+//        List<GeneralDocumentation> endedInsurances = generalDocumentationRepository.findByDocumentEndDateAndGeneralDocTypesName(twoMonthsPrior,insurancesName);
+//
+//        endedInsurances.forEach(insurance ->{
+//            Map<String, Object> emailData = new HashMap<>();
+//            String formatedDate = simpleDateFormat.format(insurance.getDocumentEndDate());
+//            emailData.put("fecha",formatedDate);
+//            emailData.put("documento",insurance.getDocumentName());
+//            emailData.put("centro",insurance.getWorkCenter().getName());
+//
+//            mailService.sendMail(insurance.getEmail(), emailData);
+//        });
+//    }
 
 }
