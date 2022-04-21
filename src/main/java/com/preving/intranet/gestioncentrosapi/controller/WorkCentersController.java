@@ -934,20 +934,15 @@ public class WorkCentersController {
     }
 
 
-//    VehicleFilter Class
 
     @RequestMapping(value = "{workCenterId}/vehicles/filter", method = RequestMethod.POST)
     public ResponseEntity<?> findVehicleByFilter(HttpServletRequest request,
                                                  @PathVariable(value = "workCenterId") int workCenterId,
-                                                 @RequestParam ("vehiclesFilter") String vehiclesFilter
-    ) {
-
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        VehiclesFilter vehiclesFilter1= gson.fromJson(vehiclesFilter, VehiclesFilter.class);
+                                                 @RequestBody VehiclesFilter vehiclesFilter) {
 
         try {
             UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
-            List<Vehicles> vehiclesList = this.vehiclesService.getFilteredVehicles(workCenterId, vehiclesFilter1, user);
+            List<Vehicles> vehiclesList = this.vehiclesService.getFilteredVehicles(workCenterId, vehiclesFilter, user);
 
             return new ResponseEntity<>(vehiclesList, HttpStatus.OK);
         } catch (Exception e) {e.printStackTrace();
