@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.model.dao.maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceFilter;
 import com.preving.security.domain.UsuarioWithRoles;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -16,6 +17,9 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
 
     @PersistenceContext
     private EntityManager manager;
+
+    @Autowired
+    MaintenanceByAttachmentRepository maintenanceByAttachmentRepository;
 
     private final static String GC_ADMINISTRATOR_ROL_NAME = "44-25102";
     private final static String GC_MANAGER_ROL_NAME = "44-25103";
@@ -87,6 +91,10 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
         }
 
         List<Maintenance> maintenanceResults = query.getResultList();
+
+        for ( Maintenance maintenance : maintenanceResults) {
+            maintenance.setMaintenanceByAttachments(maintenanceByAttachmentRepository.findAllByMaintenance(maintenance));
+        }
 
         return maintenanceResults;
     }
