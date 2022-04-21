@@ -218,48 +218,48 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
-    @Override
+//    @Override
     //@Scheduled
-    @Scheduled(fixedDelay = 30000) //Every 30 seconds for testing
-    public void SendContractsAlarmDateNotification(){
-        Date today = new Date();
-        System.out.println("Start of automated notification process for Contracts");
-        String contractsName = "CONTRATO ALQUILER";
+//    @Scheduled(fixedDelay = 30000) //Every 30 seconds for testing
+//    public void SendContractsAlarmDateNotification(){
+//        Date today = new Date();
+//        System.out.println("Start of automated notification process for Contracts");
+//        String contractsName = "CONTRATO ALQUILER";
+//
+//        Date twoWeeksPrior = new Date((today.getYear()),(today.getMonth()),(today.getDate() - 14));
+//        List<GeneralDocumentation> warningContracts = generalDocumentationRepository.findByDocumentAlarmDateAndGeneralDocTypesName(twoWeeksPrior,contractsName);
+//
+//        warningContracts.forEach(contract -> {
+//            Map<String, Object> emailData = new HashMap<>();
+//
+//            //Formatting the date cause i cant be asked to do it in velocity
+//            String formatedDate = simpleDateFormat.format(contract.getDocumentEndDate());
+//            emailData.put("fecha",formatedDate);
+//            emailData.put("documento",contract.getDocumentName());
+//            emailData.put("centro",contract.getWorkCenter().getName());
+//
+//            mailService.sendMail(contract.getEmail(), emailData);
+//        });
+//    }
 
-        Date twoWeeksPrior = new Date((today.getYear()),(today.getMonth()),(today.getDate() - 14));
-        List<GeneralDocumentation> warningContracts = generalDocumentationRepository.findByDocumentAlarmDateAndGeneralDocTypesName(twoWeeksPrior,contractsName);
-
-        warningContracts.forEach(contract -> {
-            Map<String, Object> emailData = new HashMap<>();
-
-            //Formatting the date cause i cant be asked to do it in velocity
-            String formatedDate = simpleDateFormat.format(contract.getDocumentEndDate());
-            emailData.put("fecha",formatedDate);
-            emailData.put("documento",contract.getDocumentName());
-            emailData.put("centro",contract.getWorkCenter().getName());
-
-            mailService.sendMail(contract.getEmail(), emailData);
-        });
-    }
-
-    @Override
+//    @Override
     //todo cambiar horario
-    @Scheduled(fixedDelay = 30000) //Every 30 seconds for testing
-    public void SendInsuranceEndDayNotification(){
-        Date today = new Date();
-        System.out.println("Start of automated notification process for insurances");
-        String insurancesName = "SEGURO LOCAL";
-        Date twoMonthsPrior = new Date((today.getYear()),(today.getMonth() - 2),(today.getDate()));
-        List<GeneralDocumentation> endedInsurances = generalDocumentationRepository.findByDocumentEndDateAndGeneralDocTypesName(twoMonthsPrior,insurancesName);
-
-        endedInsurances.forEach(insurance ->{
-            Map<String, Object> emailData = new HashMap<>();
-            String formatedDate = simpleDateFormat.format(insurance.getDocumentEndDate());
-            emailData.put("fecha",formatedDate);
-            emailData.put("documento",insurance.getDocumentName());
-            emailData.put("centro",insurance.getWorkCenter().getName());
-
-            mailService.sendMail(insurance.getEmail(), emailData);
-        });
-    }
+//    @Scheduled(fixedDelay = 30000) //Every 30 seconds for testing
+//    public void SendInsuranceEndDayNotification(){
+//        Date today = new Date();
+//        System.out.println("Start of automated notification process for insurances");
+//        String insurancesName = "SEGURO LOCAL";
+//        Date twoMonthsPrior = new Date((today.getYear()),(today.getMonth() - 2),(today.getDate()));
+//        List<GeneralDocumentation> endedInsurances = generalDocumentationRepository.findByDocumentEndDateAndGeneralDocTypesName(twoMonthsPrior,insurancesName);
+//
+//        endedInsurances.forEach(insurance ->{
+//            Map<String, Object> emailData = new HashMap<>();
+//            String formatedDate = simpleDateFormat.format(insurance.getDocumentEndDate());
+//            emailData.put("fecha",formatedDate);
+//            emailData.put("documento",insurance.getDocumentName());
+//            emailData.put("centro",insurance.getWorkCenter().getName());
+//
+//            mailService.sendMail(insurance.getEmail(), emailData);
+//        });
+//    }
 }
