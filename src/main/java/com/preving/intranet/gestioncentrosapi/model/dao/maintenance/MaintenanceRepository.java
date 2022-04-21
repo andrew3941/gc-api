@@ -26,7 +26,7 @@ public interface  MaintenanceRepository extends JpaRepository<Maintenance, Integ
     @Transactional
     @Query("update Maintenance ma set ma.maintenanceTypes=:#{#maintenance.maintenanceTypes}, ma.provider=:#{#maintenance.provider}, " +
             "ma.billNumber=:#{#maintenance.billNumber}, ma.expenditurePeriod=:#{#maintenance.expenditurePeriod}, " +
-            "ma.amount=:#{#maintenance.amount}, ma.date=:#{#maintenance.date}, ma.observations=:#{#maintenance.observations}, " +
+            "ma.amount=:#{#maintenance.amount}, ma.annualAmount=:#{#maintenance.annualAmount}, ma.date=:#{#maintenance.date}, ma.observations=:#{#maintenance.observations}, " +
             "ma.created=:#{#maintenance.created}, " +
             "ma.concept=:#{#maintenance.concept}, " +
             "ma.modified=CURRENT_TIMESTAMP, ma.modifiedBy=:#{#maintenance.modifiedBy} " +
