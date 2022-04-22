@@ -902,25 +902,6 @@ public class WorkCentersController {
         }
     }
 
-    //    Get mapping for export vehicle
-    @RequestMapping(value="{workCenterId}/exportVehicles", method = RequestMethod.POST)
-    public ResponseEntity<?> exportVehicleAction(HttpServletRequest request,
-                                                 HttpServletResponse response,
-                                                 @PathVariable(value = "workCenterId") int workCenterId,
-                                                 @RequestParam ("vehiclesFilter") String vehiclesFilter
-    ) {
-
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        VehiclesFilter vehiclesFilter1= gson.fromJson(vehiclesFilter, VehiclesFilter.class);
-        try {
-            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
-            return new ResponseEntity<>(vehiclesService.exportVehicle(workCenterId, vehiclesFilter1, response, user), HttpStatus.OK);
-        } catch (DataAccessException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
     //METHOD FOR RETRIEVING VEHICLES LIST
     @RequestMapping(value = "{workCenterId}/vehicles", method = RequestMethod.GET)
     public ResponseEntity<?> getAllVehicles(@PathVariable(value = "workCenterId") int workCenterId) {
@@ -951,7 +932,23 @@ public class WorkCentersController {
 
     }
 
+    //    Get mapping for export vehicle
+    @RequestMapping(value="{workCenterId}/exportVehicles", method = RequestMethod.POST)
+    public ResponseEntity<?> exportVehicleAction(HttpServletRequest request,
+                                                 HttpServletResponse response,
+                                                 @PathVariable(value = "workCenterId") int workCenterId,
+                                                 @RequestParam ("vehiclesFilter") String vehiclesFilter
+    ) {
 
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        VehiclesFilter vehFilter= gson.fromJson(vehiclesFilter, VehiclesFilter.class);
+        try {
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            return new ResponseEntity<>(vehiclesService.exportVehicle(workCenterId, vehFilter, response, user), HttpStatus.OK);
+        } catch (DataAccessException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
 

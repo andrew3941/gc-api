@@ -25,20 +25,28 @@ import org.springframework.stereotype.Service;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
+
+import static com.preving.intranet.gestioncentrosapi.model.services.WorkCenterManager.*;
 
 @Service
 public class VehiclesManager implements VehiclesService {
+    private static final String EXPORT_TITLE_1 = "Enrollment";
+    static final String EXPORT_TITLE_2 = "Brand";
+    static final String EXPORT_TITLE_3 = "Model";
+    static final String EXPORT_TITLE_4 = "Purchase Mode";
+    static final String EXPORT_TITLE_5 = "Responsible";
+    static final String EXPORT_TITLE_6 = "Responsible";
+    static final String EXPORT_TITLE_7 = "Purchase Date";
+    static final String EXPORT_TITLE_8 = "Expiration Date";
+    static final String EXPORT_TITLE_9 = "Price";
+    static final String EXPORT_TITLE_10 = "Active";
 
     @Autowired
     private VehiclesRepository vehiclesRepository;
-
     @Autowired
     private VehiclesCustomRepository vehiclesCustomRepository;
-
-    private static final String EXPORT_TITLE_1 = "BrandType";
-    static final String EXPORT_TITLE_2 = "License Plate";
-
     @Autowired
     private BrandsRepository brandsRepository;
 
@@ -47,7 +55,17 @@ public class VehiclesManager implements VehiclesService {
         return this.vehiclesCustomRepository.getVehiclesFiltered(workCenterId, vehiclesFilter, user);
     }
 
+    @Override
+    public List<Brands> getAllBrandTypes() {
+        return brandsRepository.findAll();
+    }
 
+    @Override
+    public List<Vehicles> findAllVehiclesByWorkCenter(int workCenterId) {
+        return vehiclesRepository.findAllByWorkCenterIdAndUserUnsubscribeNotNull(workCenterId);
+    }
+
+    // exportVehicles
     @Override
     public ResponseEntity<?> exportVehicle(int workCenterId, VehiclesFilter vehiclesFilter, HttpServletResponse response, UsuarioWithRoles user) {
         byte[] content = null;
@@ -65,16 +83,13 @@ public class VehiclesManager implements VehiclesService {
         //style for date format
         CellStyle cellStyleData = workbook.createCellStyle();
         CreationHelper createHelper = workbook.getCreationHelper();
-        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy hh:mm:ss"));
+        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy"));
 
         // We get the data
         List<Vehicles> vehicles = this.vehiclesCustomRepository.getVehiclesFiltered(workCenterId, vehiclesFilter, user);
-
-        String[] titleArray = {EXPORT_TITLE_1, EXPORT_TITLE_2};
-
+        String[] titleArray = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4, EXPORT_TITLE_5, EXPORT_TITLE_6, EXPORT_TITLE_7, EXPORT_TITLE_8, EXPORT_TITLE_9, EXPORT_TITLE_10};
         // We create a row in the sheet at position 0 for the headers
         HSSFRow headerRow = hoja.createRow(0);
-
         // We create the headers
         for (int i = 0; i < titleArray.length; i++) {
             HSSFCell celda = headerRow.createCell(i);
@@ -83,45 +98,79 @@ public class VehiclesManager implements VehiclesService {
         }
 
         // We create the rows
+        HSSFRow dataRow = null;
         for (int i = 0; i < vehicles.size(); i++) {
-            HSSFRow dataRow = hoja.createRow(1 + i);
+            dataRow = hoja.createRow(1 + i);
 
+            // enrollment
+            HSSFCell enrollment = dataRow.createCell(0);
+            enrollment.setCellValue(vehicles.get(i).getEnrollment());
+            // Brand
+            HSSFCell brands = dataRow.createCell(1);
+            brands.setCellValue(vehicles.get(i).getBrands().getName());
+            // model
+            HSSFCell model = dataRow.createCell(2);
+            model.setCellValue(vehicles.get(i).getModel());
+            // purchaseMode
+            HSSFCell purchaseMode = dataRow.createCell(3);
+            purchaseMode.setCellValue(vehicles.get(i).getPurchaseMode());
+            // responsible
+            HSSFCell responsibleId = dataRow.createCell(4);
+            responsibleId.setCellValue(vehicles.get(i).getResponsibleId().getFirstname());
+            // responsible
+            HSSFCell responsibleId1 = dataRow.createCell(5);
+            responsibleId1.setCellValue(vehicles.get(i).getResponsibleId().getLastname());
+            // PurchaseDate
+            HSSFCell purchaseDate = dataRow.createCell(6);
+            purchaseDate.setCellValue(vehicles.get(i).getPurchaseDate());
+            purchaseDate.setCellStyle(cellStyleData);
+            // expirationDate
+            HSSFCell expirationDate = dataRow.createCell(7);
+            expirationDate.setCellValue(vehicles.get(i).getExpirationDate());
+            expirationDate.setCellStyle(cellStyleData);
 
-            // date
-            HSSFCell date = dataRow.createCell(4);
-//   date.setCellValue(maintenances.get(i).getDate());
-            date.setCellStyle(cellStyleData);
-
-            // adjust columns
-
-            try {
-                String nombreFichero = "report-actions";
-                response.setContentType("application/vnd.ms-excel");
-                response.setHeader("Content-Disposition", "inline; filename=\"" +
-                        java.net.URLEncoder.encode(nombreFichero, "UTF-8")
-                        + "\"");
-
-                ServletOutputStream out = response.getOutputStream();
-                workbook.write(out);
-                out.flush();
-
-            } catch (IOException ex) {
-                return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-
+            // price
+            HSSFCell monthlyFee = dataRow.createCell(8);
+            monthlyFee.setCellValue(vehicles.get(i).getMonthlyFee());
+            // active
+            HSSFCell active = dataRow.createCell(9);
+            active.setCellValue(vehicles.get(i).getActive());
         }
+        // active
+//        HSSFCell active = dataRow.createCell(9);
+//        if (vehicles.get(i).getActive()) {
+//            active.setCellValue("Activo");
+//        } else {
+//            active.setCellValue("Inactivo");
+//        }
+
+        // adjust columns
+        for (int i = 0; i < titleArray.length; i++) {
+            hoja.autoSizeColumn(i);
+        }
+
+        try {
+            String nombreFichero = "report-actions";
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-Disposition", "inline; filename=\"" +
+                    java.net.URLEncoder.encode(nombreFichero, "UTF-8")
+                    + "\"");
+
+            ServletOutputStream out = response.getOutputStream();
+            workbook.write(out);
+            out.flush();
+
+        } catch (IOException ex) {
+            return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
-
-    @Override
-    public List<Brands> getAllBrandTypes() {
-        return brandsRepository.findAll();
-    }
-
-    @Override
-    public List<Vehicles> findAllVehiclesByWorkCenter(int workCenterId) {
-        return vehiclesRepository.findAllByWorkCenterIdAndUserUnsubscribeNotNull(workCenterId);
-    }
-
 }
+
+
+
+
+
+
 
