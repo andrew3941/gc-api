@@ -1,6 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.dao.vehicles;
 
-import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
+
 import com.preving.intranet.gestioncentrosapi.model.domain.vehicles.Vehicles;
 import com.preving.intranet.gestioncentrosapi.model.domain.vehicles.VehiclesFilter;
 import com.preving.security.domain.UsuarioWithRoles;
@@ -17,42 +17,43 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
     @PersistenceContext
     private EntityManager manager;
 
+
+
     @Override
     public List<Vehicles> getVehiclesFiltered(Integer workCenterId, VehiclesFilter vehiclesFilter, UsuarioWithRoles user) {
 
         String sql = "" +
-                "SELECT DISTINCT   VE.MARCA_ID,VE.TARJETA, VE.MATRICULA, VE.MODELO, VE.MODO_COMPRA, VE.RESPONSABLE_ID,VE.FECHA_COMPRA, VE.FECHA_VENCIMIENTO, VE.CUOTA_MENSUAL, VE.ACTIVO"+
-                "                 MAR.NOMBRE AS MARCA" +
+                "SELECT VE.ID, VE.MATRICULA, VE.MARCA_ID, VE.MODELO, VE.MODO_COMPRA, VE.RESPONSABLE_ID, VE.FECHA_COMPRA, VE.FECHA_VENCIMIENTO, VE.CUOTA_MENSUAL, VE.ACTIVO, MAR.NOMBRE AS MARCA, U.NOMBRE AS RESPONSABLE_FIRST_NAME, U.APELLIDOS AS RESPONSABLE_LAST_NAME " +
 
-                "FROM SAC.VE_VEHICULOS VEH " +
-                "        SAC.VE_MARCAS MAR, " +
-                "       GESTION_CENTROS.MANTENIMIENTOS_X_DELEGACIONES MXD ";;
+                "FROM SAC.VE_VEHICULOS VE, " +
+                " SAC.VE_MARCAS MAR, " +
+                " GC2006_RELEASE.PC_USUARIOS U ";
 
         sql += "WHERE VE.MARCA_ID = MAR.ID " +
-                "      AND  VE.VE_MARCAS.ID = VE.ID ";
+                " AND VE.RESPONSABLE_ID = U.ID ";
 
-        if (vehiclesFilter != null && vehiclesFilter.getBrands().size() != 0) {
+        if (vehiclesFilter != null && vehiclesFilter.getVehicleBrandTypes().size() != 0) {
             sql += "AND VE.MARCA_ID = :brands ";
         }
 
-        if (vehiclesFilter != null && vehiclesFilter.getCard() != null) {
-            sql += "AND VE.TARJETA >= :card ";
+        if (vehiclesFilter != null && !vehiclesFilter.getCard().equals("")) {
+            sql += "AND LOWER(TRANSLATE(VE.MATRICULA, '·ÈÌÛ˙Ò¡…Õ”⁄—', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:card, '·ÈÌÛ˙Ò¡…Õ”⁄—', 'aeiounAEIOUN')) ";
         }
 
         if(workCenterId != 0){
-            sql += "AND MXD.DELEGACION_ID = :workCenterId ";
+            sql += "AND VE.DELEGACION_ID = :workCenterId ";
         }
 
-        sql += " ORDER BY VE.FECHA_COMPRA DESC ";
+        sql += "ORDER BY VE.FECHA_COMPRA DESC ";
 
         Query query = manager.createNativeQuery(sql, "VehiclesMapping");
 
-        if (vehiclesFilter != null && vehiclesFilter.getBrands().size() != 0 && vehiclesFilter.getBrands() != null) {
-            query.setParameter("brands", vehiclesFilter.getBrands());
+        if (vehiclesFilter != null && vehiclesFilter.getVehicleBrandTypes().size() != 0 && vehiclesFilter.getVehicleBrandTypes() != null) {
+            query.setParameter("brands", vehiclesFilter.getVehicleBrandTypes());
         }
 
-        if (vehiclesFilter != null && vehiclesFilter.getCard() != null) {
-            query.setParameter("card", vehiclesFilter.getCard());
+        if (vehiclesFilter != null && !vehiclesFilter.getCard().equals("")) {
+            query.setParameter("card", "%" + vehiclesFilter.getCard() + "%");
         }
 
         if(workCenterId != 0){

@@ -14,23 +14,24 @@ import java.util.Date;
 @Entity
 @Table(schema = "SAC", name ="VE_VEHICULOS")
 @SqlResultSetMapping(
-        name = "VehicleMapping",
+        name = "VehiclesMapping",
         classes = {
                 @ConstructorResult(
                         targetClass = Vehicles.class,
                         columns = {
                                 @ColumnResult(name = "ID", type = Integer.class),
                                 @ColumnResult(name = "MATRICULA", type = String.class),
-                                @ColumnResult(name = "MODELO", type = String.class),
                                 @ColumnResult(name = "MARCA_ID", type = Integer.class),
-                                @ColumnResult(name = "DELEGACION_ID", type = Integer.class),
+                                @ColumnResult(name = "MODELO", type = String.class),
                                 @ColumnResult(name = "MODO_COMPRA", type = String.class),
                                 @ColumnResult(name = "RESPONSABLE_ID", type = Integer.class),
                                 @ColumnResult(name = "FECHA_COMPRA", type = Date.class),
                                 @ColumnResult(name = "FECHA_VENCIMIENTO", type = Date.class),
                                 @ColumnResult(name = "CUOTA_MENSUAL", type = Integer.class),
-                                @ColumnResult(name = "TARJETA", type = String.class),
-                                @ColumnResult(name = "ACTIVO", type = Integer.class)
+                                @ColumnResult(name = "ACTIVO", type = Integer.class),
+                                @ColumnResult(name = "MARCA", type = String.class),
+                                @ColumnResult(name = "RESPONSABLE_FIRST_NAME", type = String.class),
+                                @ColumnResult(name = "RESPONSABLE_LAST_NAME", type = String.class)
 
                         }
                 )
@@ -104,6 +105,35 @@ public class Vehicles implements Serializable {
         this.entityId = entityId;
         this.adrUpdated = adrUpdated;
         this.qdrCreated = qdrCreated;
+    }
+
+    public Vehicles(
+            int id,
+            String enrollment,
+            Integer brand_Id,
+            String model,
+            String purchaseMode,
+            Integer responsibleId,
+            Date purchaseDate,
+            Date expirationDate,
+            int monthlyFee,
+            int active,
+            String brandName,
+            String responsibleFirstName,
+            String responsibleLastName) {
+        this.id = id;
+        this.enrollment = enrollment;
+        this.brands.setId(brand_Id);
+        this.model = model;
+        this.purchaseMode = purchaseMode;
+        this.getResponsibleId().setId(Long.valueOf(responsibleId));
+        this.purchaseDate = purchaseDate;
+        this.expirationDate = expirationDate;
+        this.monthlyFee = monthlyFee;
+        this.active = active;
+        this.brands.setName(brandName);
+        this.getResponsibleId().setFirstname(responsibleFirstName);
+        this.getResponsibleId().setLastname(responsibleLastName);
     }
 
     @Id

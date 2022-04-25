@@ -10,5 +10,6 @@ import java.util.List;
 
 @Repository
 public interface VehiclesRepository extends JpaRepository<Vehicles,Integer> {
+    //TODO EMANUEL
     List<Vehicles> findAllByWorkCenterIdAndUserUnsubscribeNotNull(int workCenterId);
 }
