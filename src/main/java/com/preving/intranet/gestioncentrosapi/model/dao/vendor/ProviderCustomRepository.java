@@ -17,5 +17,5 @@ public interface ProviderCustomRepository  {
 
     boolean checkProviderCIf(String providerCif);
 
-    List<Provider> getProvidersByWorkCenter(int workCenterId);
+    List<Provider> getProvidersByWorkCenter(int workCenterId, boolean allProviders);
 }

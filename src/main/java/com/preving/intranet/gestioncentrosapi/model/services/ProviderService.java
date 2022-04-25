@@ -42,7 +42,7 @@ public interface ProviderService {
 
     List<ProviderDetailConf> getSpecificProviderForm(int providerTypeId);
 
-    List<Provider> getProvidersByWorkCenter(int workCenterId);
+    List<Provider> getProvidersByWorkCenter(int workCenterId, boolean allProviders);
 
     void deactivateEndDateToday();
 }

@@ -178,15 +178,19 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
     }
 
     @Override
-    public List<Provider> getProvidersByWorkCenter(int workCenterId) {
+    public List<Provider> getProvidersByWorkCenter(int workCenterId, boolean allProviders) {
 
         String sql = "" +
                 "SELECT P.ID, P.NOMBRE " +
                 "FROM GESTION_CENTROS.PROVEEDORES P, " +
                 "       GESTION_CENTROS.PROVEEDORES_X_DELEGACIONES PXD " +
-                "WHERE P.ID = PXD.PROVEEDOR_ID " +
-                "   AND P.ACTIVO IS TRUE " +
-                "   AND PXD.DELEGACION_ID = :workCenterId";
+                "WHERE P.ID = PXD.PROVEEDOR_ID ";
+
+        if (!allProviders) {
+            sql += "  AND P.ACTIVO IS TRUE";
+        }
+
+        sql += "   AND PXD.DELEGACION_ID = :workCenterId";
 
         Query query = manager.createNativeQuery(sql)
                 .setParameter("workCenterId", workCenterId);

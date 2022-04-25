@@ -878,7 +878,6 @@ public class WorkCenterManager implements WorkCenterService {
 
     @Override
     @Scheduled(cron = "0 00 00 * * *") //Every day at 12am
-//    @Scheduled(fixedDelay = 30000) //Every 30 seconds for testing
     @Transactional
     public void deactivateEndDateToday(){
         System.out.println("Start of deactivating WorkCenter automated process");

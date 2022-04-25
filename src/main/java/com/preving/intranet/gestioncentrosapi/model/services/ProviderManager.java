@@ -667,9 +667,9 @@ public class ProviderManager implements ProviderService {
     }
 
     @Override
-    public List<Provider> getProvidersByWorkCenter(int workCenterId) {
+    public List<Provider> getProvidersByWorkCenter(int workCenterId, boolean allProviders) {
 
-        List<Provider> providers = providerCustomRepository.getProvidersByWorkCenter(workCenterId);
+        List<Provider> providers = providerCustomRepository.getProvidersByWorkCenter(workCenterId, allProviders);
 
         return providers;
     }

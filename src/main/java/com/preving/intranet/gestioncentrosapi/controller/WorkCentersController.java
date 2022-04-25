@@ -786,11 +786,12 @@ public class WorkCentersController {
      *
      * @return
      */
-    @RequestMapping(value = "{workCenterId}/providers", method = RequestMethod.GET)
-    public ResponseEntity<?> getProvidersByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId) {
+    @RequestMapping(value = "{workCenterId}/providers/{allProviders}", method = RequestMethod.GET)
+    public ResponseEntity<?> getProvidersByWorkCenter(@PathVariable(value = "workCenterId") int workCenterId,
+                                                      @PathVariable(value = "allProviders") boolean allProviders) {
 
         try {
-            return new ResponseEntity<>(providerService.getProvidersByWorkCenter(workCenterId), HttpStatus.OK);
+            return new ResponseEntity<>(providerService.getProvidersByWorkCenter(workCenterId, allProviders), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

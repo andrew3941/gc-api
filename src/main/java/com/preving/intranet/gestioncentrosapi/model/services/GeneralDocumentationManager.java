@@ -300,9 +300,8 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 
     }
 
-    //    @Override
-    //@Scheduled
-//    @Scheduled(fixedDelay = 30000) //Every 30 seconds for testing
+//    @Override
+//    @Scheduled(cron = "0 00 00 * * *") //Every day at 12am
 //    public void SendContractsAlarmDateNotification(){
 //        Date today = new Date();
 //        System.out.println("Start of automated notification process for Contracts");
@@ -325,8 +324,7 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 //    }
 
 //    @Override
-    //todo cambiar horario
-//    @Scheduled(fixedDelay = 30000) //Every 30 seconds for testing
+//    @Scheduled(cron = "0 00 00 * * *") //Every day at 12am
 //    public void SendInsuranceEndDayNotification(){
 //        Date today = new Date();
 //        System.out.println("Start of automated notification process for insurances");

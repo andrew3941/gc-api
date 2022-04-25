@@ -98,18 +98,6 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
             conditions += 1;
         }
 
-        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
-
-            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
-                if (conditions != 0) {
-                    sql += " AND WC.RESPONSABLE = :userId ";
-                } else {
-                    sql += " WHERE WC.RESPONSABLE = :userId ";
-                }
-                conditions += 1;
-            }
-        }
-
         sql += "ORDER BY WC.NOMBRE";
 
         Query query = manager.createNativeQuery(sql, "WorkCenterMapping");
@@ -132,12 +120,6 @@ public class WorkCentersRepositoryManager implements WorkCentersCustomizeReposit
 
         if(workCenterFilter != null && workCenterFilter.getWorkCenterTypes().size() > 0){
             query.setParameter("workCenterTypes", workCenterFilter.getWorkCenterTypes());
-        }
-
-        if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
-            if(user.hasRole(GC_MANAGER_ROL_NAME)) {
-                query.setParameter("userId", user.getId());
-            }
         }
 
         List<WorkCenter>  allWorkCenters = query.getResultList();
