@@ -57,7 +57,7 @@ public class VehiclesManager implements VehiclesService {
 
     @Override
     public List<Brands> getAllBrandTypes() {
-        return brandsRepository.findAll();
+        return brandsRepository.findAllByOrderByName();
     }
 
     @Override

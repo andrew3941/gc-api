@@ -36,8 +36,8 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
             sql += "AND VE.MARCA_ID = :brands ";
         }
 
-        if (vehiclesFilter != null && vehiclesFilter.getCard() != null) {
-            sql += "AND LOWER(TRANSLATE(VE.MATRICULA, '????????????', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:card, '????????????', 'aeiounAEIOUN')) ";
+        if (vehiclesFilter != null && !vehiclesFilter.getCard().equals("")) {
+            sql += "AND LOWER(TRANSLATE(VE.MATRICULA, '·ÈÌÛ˙Ò¡…Õ”⁄—', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:card, '·ÈÌÛ˙Ò¡…Õ”⁄—', 'aeiounAEIOUN')) ";
         }
 
         if(workCenterId != 0){
@@ -52,8 +52,8 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
             query.setParameter("brands", vehiclesFilter.getVehicleBrandTypes());
         }
 
-        if (vehiclesFilter != null && vehiclesFilter.getCard() != null) {
-            query.setParameter("card", vehiclesFilter.getCard());
+        if (vehiclesFilter != null && !vehiclesFilter.getCard().equals("")) {
+            query.setParameter("card", "%" + vehiclesFilter.getCard() + "%");
         }
 
         if(workCenterId != 0){

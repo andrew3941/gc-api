@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface BrandsRepository extends JpaRepository<Brands, Integer> {
-    List<Brands> findAll();
+
+    List<Brands> findAllByOrderByName();
 }
