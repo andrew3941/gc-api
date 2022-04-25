@@ -7,8 +7,7 @@ import com.preving.intranet.gestioncentrosapi.model.domain.vehicles.VehiclesFilt
 import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.http.ResponseEntity;
 
-import com.preving.intranet.gestioncentrosapi.model.domain.vehicles.Vehicles;
-import org.springframework.stereotype.Service;
+
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;

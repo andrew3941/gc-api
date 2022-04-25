@@ -136,13 +136,6 @@ public class VehiclesManager implements VehiclesService {
             HSSFCell active = dataRow.createCell(9);
             active.setCellValue(vehicles.get(i).getActive());
         }
-        // active
-//        HSSFCell active = dataRow.createCell(9);
-//        if (vehicles.get(i).getActive()) {
-//            active.setCellValue("Activo");
-//        } else {
-//            active.setCellValue("Inactivo");
-//        }
 
         // adjust columns
         for (int i = 0; i < titleArray.length; i++) {
