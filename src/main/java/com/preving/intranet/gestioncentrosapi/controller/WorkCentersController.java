@@ -950,6 +950,7 @@ public class WorkCentersController {
 
     }
 
+
     //    Get mapping for export vehicle
     @RequestMapping(value="{workCenterId}/exportVehicles", method = RequestMethod.POST)
     public ResponseEntity<?> exportVehicleAction(HttpServletRequest request,
