@@ -31,23 +31,16 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
         String sql = "" +
                 "SELECT DISTINCT MA.ID, MA.CUANTIA, MA.REF_FACTURA, MA.FECHA, MA.OBSERVACIONES, MA.CONCEPTO, " +
                 "               MT.DENOMINACION AS TIPO, PO.NOMBRE, P.DENOMINACION AS PERIODICIDAD " +
-                "FROM GESTION_CENTROS.MANTENIMIENTOS MA, " +
-                "       GESTION_CENTROS.TM_MANTENIMIENTOS_TIPOS MT, " +
-                "       GESTION_CENTROS.PROVEEDORES PO, " +
-                "       GESTION_CENTROS.TM_PERIODICIDAD_GASTO P, " +
-                "       GESTION_CENTROS.MANTENIMIENTOS_X_DELEGACIONES MXD ";
-
-
-        sql += "WHERE MA.TIPO_ID = MT.ID " +
-                "       AND MA.PROVEEDOR_ID = PO.ID " +
-                "       AND MA.PERIODICIDAD_ID = P.ID " +
-                "       AND MA.ID = MXD.MANTENIMIENTO_ID " +
-                "       AND MA.BORRADO IS NULL ";
+                "FROM GESTION_CENTROS.MANTENIMIENTOS MA " +
+                "       INNER JOIN GESTION_CENTROS.PROVEEDORES PO ON MA.PROVEEDOR_ID = PO.ID " +
+                "       INNER JOIN GESTION_CENTROS.MANTENIMIENTOS_X_DELEGACIONES MXD ON MA.ID = MXD.MANTENIMIENTO_ID " +
+                "       INNER JOIN GESTION_CENTROS.TM_MANTENIMIENTOS_TIPOS MT ON MA.TIPO_ID = MT.ID " +
+                "       LEFT JOIN GESTION_CENTROS.TM_PERIODICIDAD_GASTO P ON MA.PERIODICIDAD_ID = P.ID " +
+                "       WHERE MA.BORRADO IS NULL ";
 
         if (maintenanceFilter != null && maintenanceFilter.getMaintenanceTypes().size() != 0) {
             sql += "AND MT.ID = :maintenanceType ";
         }
-
 
         if (maintenanceFilter != null && maintenanceFilter.getMaintenanceProvider().getId() != 0) {
             sql += "AND PO.ID = :maintenanceProvider ";
