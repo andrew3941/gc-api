@@ -231,7 +231,7 @@ public class WorkCenter implements Serializable {
         this.endDate = endDate;
     }
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_IN_MP2", referencedColumnName = "COD_ZONA")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     public Zona getZone() { return zone; }
@@ -317,7 +317,8 @@ public class WorkCenter implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
-    @OneToMany(mappedBy = "workCenter")
+    @JsonManagedReference
+    @OneToMany(mappedBy = "workCenter", fetch = FetchType.LAZY)
     public List<WorkCentersByEntity> getWorkCentersByEntities() { return workCentersByEntities; }
     public void setWorkCentersByEntities(List<WorkCentersByEntity> workCentersByEntities) { this.workCentersByEntities = workCentersByEntities; }
 
