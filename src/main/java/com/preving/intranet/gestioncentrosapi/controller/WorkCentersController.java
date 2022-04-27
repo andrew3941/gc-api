@@ -146,6 +146,7 @@ public class WorkCentersController {
 
         try {
             workCenterService.addWorkCenter(newWorkCenter, request);
+            providerService.addNewWorkCentersToProviders(newWorkCenter,request);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

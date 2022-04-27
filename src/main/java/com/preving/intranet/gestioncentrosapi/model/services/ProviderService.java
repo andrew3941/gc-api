@@ -3,6 +3,7 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetail;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.specificData.ProviderDetailConf;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,6 +30,8 @@ public interface ProviderService {
 
     ResponseEntity<?> editProvider(int workCenterId, int providerId, Provider provider, List<ProviderDetail> details,
                                    MultipartFile attachedFile, HttpServletRequest request);
+
+    void addNewWorkCentersToProviders(WorkCenter workCenter, HttpServletRequest request);
 
     ResponseEntity<?> exportProvider(ProviderFilter providerFilter, HttpServletResponse response, UsuarioWithRoles user);
 

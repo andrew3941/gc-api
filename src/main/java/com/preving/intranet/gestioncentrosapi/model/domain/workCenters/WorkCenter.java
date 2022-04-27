@@ -231,6 +231,7 @@ public class WorkCenter implements Serializable {
         this.endDate = endDate;
     }
 
+    //Add Cascade.TypeAll in case this gives a transient error
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_IN_MP2", referencedColumnName = "COD_ZONA")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

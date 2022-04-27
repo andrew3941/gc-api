@@ -538,7 +538,35 @@ public class ProviderManager implements ProviderService {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    //Method to add new workCenters to Providers with AllWorkcenter = true
+    public void addNewWorkCentersToProviders(WorkCenter workCenter, HttpServletRequest request){
+        List<Provider> providers = providerRepository.findByAllWorkCentersTrue();
 
+        long userId = this.jwtTokenUtil.getUserWithRolesFromToken(request).getId();
+
+        for (Provider provider : providers) {
+            ProvidersByWorkCenters providersByWorkCenters = new ProvidersByWorkCenters();
+            providersByWorkCenters.setWorkCenter(workCenter);
+            providersByWorkCenters.setProvider(provider);
+            providersByWorkCentersRepository.save(providersByWorkCenters);
+
+            ProvidersCommonDetails providersCommonDetails = new ProvidersCommonDetails();
+
+            providersCommonDetails.setCreated(new Date());
+            providersCommonDetails.getCreatedBy().setId(userId);
+            providersCommonDetails.setProvDelegacionId(providersByWorkCenters.getId());
+
+            List<ProvidersByWorkCenters> workCentersOfProvider = providersByWorkCentersRepository.findAllByProvider(provider);
+            // Si solo tiene un centro cogemos esos detalles comunes para guardar en los nuevos centros
+            if (workCentersOfProvider.size() <= 1) {
+                providersCommonDetails.setExpenditurePeriod(new ExpenditurePeriod());
+                providersCommonDetails.getExpenditurePeriod().setId(provider.getProvidersCommonDetails().get(0).getExpenditurePeriod().getId());
+                providersCommonDetails.setAnualSpending(provider.getProvidersCommonDetails().get(0).getAnualSpending());
+                providersCommonDetails.setSpending(provider.getProvidersCommonDetails().get(0).getSpending());
+            }
+            providersCommonDetailsRepository.save(providersCommonDetails);
+        }
+    }
     @Override
     public ResponseEntity<?> exportProvider(ProviderFilter providerFilter, HttpServletResponse response, UsuarioWithRoles user) {
         byte[] content=null;
