@@ -46,12 +46,12 @@ public class MaintenanceManager implements MaintenanceService {
     @Autowired
 
     private MaintenanceCustomRepository maintenanceCustomRepository;
-    private static final String EXPORT_TITLE_1 = "Type";
-    static final String EXPORT_TITLE_2 = "Provider";
-    private static final String EXPORT_TITLE_3 = "Periodicity";
-    private static final String EXPORT_TITLE_4 = "Amount";
-    private static final String EXPORT_TITLE_5 = "Date";
-    private static final String EXPORT_TITLE_6 = "Observations";
+    private static final String EXPORT_TITLE_1 = "Date";
+    private static final String EXPORT_TITLE_2 = "Type";
+    private static final String EXPORT_TITLE_3 = "Concept";
+    private static final String EXPORT_TITLE_4 = "Provider";
+    private static final String EXPORT_TITLE_5 = "Periodicity";
+    private static final String EXPORT_TITLE_6 = "Amount";
 
 
     private static final int NEW_MAINTENANCE = 4;
@@ -278,7 +278,7 @@ public class MaintenanceManager implements MaintenanceService {
         //style for date format
         CellStyle cellStyleData = workbook.createCellStyle();
         CreationHelper createHelper = workbook.getCreationHelper();
-        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy hh:mm:ss"));
+        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy"));
 
         // We get the data
         List<Maintenance> maintenances = this.maintenanceCustomRepository.getMaintenanceFiltered(workCenterId,maintenanceFilter, user);
@@ -299,30 +299,32 @@ public class MaintenanceManager implements MaintenanceService {
         for (int i = 0; i < maintenances.size(); i++) {
             HSSFRow dataRow = hoja.createRow(1 + i);
 
+
+            // date
+            HSSFCell date = dataRow.createCell(0);
+            date.setCellValue(maintenances.get(i).getDate());
+            date.setCellStyle(cellStyleData);
+
             // type
-            HSSFCell type = dataRow.createCell(0);
+            HSSFCell type = dataRow.createCell(1);
             type.setCellValue(maintenances.get(i).getMaintenanceTypes().getDenomination());
 
+            // concept
+            HSSFCell concept = dataRow.createCell(2);
+            concept.setCellValue(maintenances.get(i).getConcept());
+
+
             // provider
-            HSSFCell provider = dataRow.createCell(1);
+            HSSFCell provider = dataRow.createCell(3);
             provider.setCellValue(maintenances.get(i).getProvider().getName());
 
             // periodicity
-            HSSFCell periodicity = dataRow.createCell(2);
+            HSSFCell periodicity = dataRow.createCell(4);
             periodicity.setCellValue(maintenances.get(i).getExpenditurePeriod().getName());
 
             // amount
-            HSSFCell amount = dataRow.createCell(3);
+            HSSFCell amount = dataRow.createCell(5);
             amount.setCellValue(maintenances.get(i).getAmount());
-
-            // date
-            HSSFCell date = dataRow.createCell(4);
-//            date.setCellValue(maintenances.get(i).getDate());
-            date.setCellStyle(cellStyleData);
-
-            // observations
-            HSSFCell observations = dataRow.createCell(5);
-            observations.setCellValue(maintenances.get(i).getObservations());
         }
 
         // adjust columns
