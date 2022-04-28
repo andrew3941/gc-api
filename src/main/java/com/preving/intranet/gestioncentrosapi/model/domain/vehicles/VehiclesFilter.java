@@ -8,13 +8,16 @@ import java.util.List;
 public class VehiclesFilter {
     private List<Brands> vehicleBrandTypes = new ArrayList<>();;
     private String card;
+    private int vehiclesStatus;
 
     public VehiclesFilter() {
     }
 
-    public VehiclesFilter(List<Brands> vehicleBrandTypes, String card) {
+
+    public VehiclesFilter(List<Brands> vehicleBrandTypes, String card, int vehiclesStatus) {
         this.vehicleBrandTypes = vehicleBrandTypes;
         this.card = card;
+        this.vehiclesStatus = vehiclesStatus;
     }
 
     public List<Brands> getVehicleBrandTypes() {
@@ -30,5 +33,8 @@ public class VehiclesFilter {
     public void setCard(String card) {
         this.card = card;
     }
+
+    public int getVehiclesStatus() {return vehiclesStatus;}
+    public void setVehiclesStatus(int vehiclesStatus) {this.vehiclesStatus = vehiclesStatus;}
 }
 

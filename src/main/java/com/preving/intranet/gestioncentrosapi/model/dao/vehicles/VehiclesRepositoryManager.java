@@ -23,7 +23,19 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
     public List<Vehicles> getVehiclesFiltered(Integer workCenterId, VehiclesFilter vehiclesFilter, UsuarioWithRoles user) {
 
         String sql = "" +
-                "SELECT VE.ID, VE.MATRICULA, VE.MARCA_ID, VE.MODELO, VE.MODO_COMPRA, VE.RESPONSABLE_ID, VE.FECHA_COMPRA, VE.FECHA_VENCIMIENTO, VE.CUOTA_MENSUAL, VE.ACTIVO, MAR.NOMBRE AS MARCA, U.NOMBRE AS RESPONSABLE_FIRST_NAME, U.APELLIDOS AS RESPONSABLE_LAST_NAME " +
+                "SELECT VE.ID, " +
+                "VE.MATRICULA, " +
+                "VE.MARCA_ID, " +
+                "VE.MODELO, " +
+                "VE.MODO_COMPRA, " +
+                "VE.RESPONSABLE_ID, " +
+                "VE.FECHA_COMPRA," +
+                " VE.FECHA_VENCIMIENTO, " +
+                "VE.CUOTA_MENSUAL, " +
+                "VE.ACTIVO, " +
+                "MAR.NOMBRE AS MARCA, " +
+                "U.NOMBRE AS RESPONSABLE_FIRST_NAME, " +
+                "U.APELLIDOS AS RESPONSABLE_LAST_NAME " +
 
                 "FROM SAC.VE_VEHICULOS VE, " +
                 " SAC.VE_MARCAS MAR, " +
@@ -37,8 +49,19 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
         }
 
         if (vehiclesFilter != null && !vehiclesFilter.getCard().equals("")) {
-            sql += "AND LOWER(TRANSLATE(VE.MATRICULA, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:card, 'áéíóúñÁÉÍÓÚÑ', 'aeiounAEIOUN')) ";
+            sql += "AND LOWER(TRANSLATE(VE.MATRICULA, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:card, 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½', 'aeiounAEIOUN')) ";
         }
+
+
+
+
+        if(vehiclesFilter != null && vehiclesFilter.getVehiclesStatus() == 1) {
+            sql += " AND VE.FECHA_VENCIMIENTO IS NULL ";
+        } else if (vehiclesFilter.getVehiclesStatus() == 0) {
+            sql += " AND VE.FECHA_VENCIMIENTO IS NOT NULL ";
+        }
+
+
 
         if(workCenterId != 0){
             sql += "AND VE.DELEGACION_ID = :workCenterId ";
