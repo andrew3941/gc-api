@@ -1,6 +1,5 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.generalDocumentation;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -36,6 +35,7 @@ GeneralDocumentation implements Serializable {
     private int annualImport;
     private ExpenditurePeriod periodicity;
     private int deposit;
+    private int communityAmount;
     private CertificateTypes certificateTypes = null;
     private TaxesTypes taxesTypes = null;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
@@ -53,7 +53,7 @@ GeneralDocumentation implements Serializable {
     }
 
 
-    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate, Date documentAlarmDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, ExpenditurePeriod periodicity, int deposit, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter, Date deleted, User deletedBy, List<GeneralDocByAttachment> generalDocByAttachments) {
+    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate, Date documentAlarmDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email, int annualImport, ExpenditurePeriod periodicity, int deposit, int communityAmount, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter, Date deleted, User deletedBy, List<GeneralDocByAttachment> generalDocByAttachments) {
         this.id = id;
         this.generalDocTypes = generalDocTypes;
         this.documentName = documentName;
@@ -70,6 +70,7 @@ GeneralDocumentation implements Serializable {
         this.annualImport = annualImport;
         this.periodicity = periodicity;
         this.deposit = deposit;
+        this.communityAmount = communityAmount;
         this.certificateTypes = certificateTypes;
         this.taxesTypes = taxesTypes;
         this.created = created;
@@ -179,6 +180,16 @@ GeneralDocumentation implements Serializable {
     @Column(name = "DEPOSITO")
     public int getDeposit() { return deposit; }
     public void setDeposit(int deposit) { this.deposit = deposit; }
+
+    @Basic
+    @Column(name = "GASTO_COMUNIDAD")
+    public int  getCommunityAmount() {
+        return communityAmount;
+    }
+
+    public void setCommunityAmount(int  communityAmount) {
+        this.communityAmount = communityAmount;
+    }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CERTIFICADO_ID", referencedColumnName = "ID")
