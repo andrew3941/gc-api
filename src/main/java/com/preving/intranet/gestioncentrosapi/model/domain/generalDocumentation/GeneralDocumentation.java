@@ -247,6 +247,7 @@ GeneralDocumentation implements Serializable {
     public void setGeneralDocByAttachments(List<GeneralDocByAttachment> generalDocByAttachments) {
         this.generalDocByAttachments = generalDocByAttachments;
     }
+
 }
 
 

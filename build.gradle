@@ -27,7 +27,7 @@ jar {
 
 war {
 	enabled = true
-    baseName = "${this.warName}"
+	baseName = "${this.warName}"
 }
 
 // Para evitar errores de codificacion UTF-8 en la compilacion
@@ -97,5 +97,5 @@ dependencies {
 	compile 'com.artofsolving:jodconverter:2.2.1'
 
 	compile('org.hibernate:hibernate-core:5.4.2.Final')
-	
+
 }
