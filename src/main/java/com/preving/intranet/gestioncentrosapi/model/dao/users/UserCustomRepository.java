@@ -8,4 +8,6 @@ public interface UserCustomRepository {
 
     List<User> findUserByCriterion(String criterion);
 
+    List<User> findAdminsAndManagers();
+
 }

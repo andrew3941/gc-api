@@ -1,7 +1,9 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 import com.preving.intranet.gestioncentrosapi.model.dao.maintenance.*;
+import com.preving.intranet.gestioncentrosapi.model.dao.users.UserCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.*;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.security.JwtTokenUtil;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import com.preving.security.domain.UsuarioWithRoles;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,10 +31,8 @@ import java.io.IOException;
 
 
 import java.nio.file.Files;
-import java.util.Date;
-import java.util.List;
-
-
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 @Service
@@ -44,8 +45,9 @@ public class MaintenanceManager implements MaintenanceService {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-
     private MaintenanceCustomRepository maintenanceCustomRepository;
+
+
     private static final String EXPORT_TITLE_1 = "Date";
     private static final String EXPORT_TITLE_2 = "Type";
     private static final String EXPORT_TITLE_3 = "Concept";
@@ -56,6 +58,7 @@ public class MaintenanceManager implements MaintenanceService {
 
     private static final int NEW_MAINTENANCE = 4;
 
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     @Autowired
     private MaintenanceByAttachmentRepository maintenanceByAttachmentRepository;
@@ -69,7 +72,11 @@ public class MaintenanceManager implements MaintenanceService {
     @Autowired
     private MaintenanceByWorkCentersRepository maintenanceByWorkCentersRepository;
 
+    @Autowired
+    private MailService mailService;
 
+    @Autowired
+    private UserCustomRepository userCustomRepository;
 
 
     @Override
@@ -364,5 +371,38 @@ public class MaintenanceManager implements MaintenanceService {
         }
 
     }
+//
+//    @Override
+//    @Scheduled(cron = "0 00 00 * * *") //Every day at 12am
+//    public void SendMaintenanceEndDayNotification(){
+//        System.out.println("Start of automated maintenance notification process");
+//        Date twoWeeksPrior = new Date((new Date().getYear()),(new Date().getMonth()),(new Date().getDate() + 14));
+//
+//        List<Maintenance> maintenances = maintenanceRepository.findAllByDate(twoWeeksPrior);
+//
+//        for (Maintenance maintenance: maintenances) {
+//            //TODO maintenances should have workCenter in them
+//            Map <String,Object> emailData = new HashMap<>();
+//
+//            WorkCenter workCenter = maintenanceByWorkCentersRepository.findByMaintenance(maintenance).getWorkCenter();
+//            String formatedDate = simpleDateFormat.format(maintenance.getDate());
+//            emailData.put("fecha",formatedDate);
+//            emailData.put("documento",maintenance.getConcept());
+//            emailData.put("centro",workCenter.getName());
+//
+//            List<String> sendToList = new ArrayList<>();
+//
+//            sendToList.add(workCenter.getHeadPerson().getEmail());
+//
+//            //Get admins and managers
+//            List<User> adminsAndMAnagers = userCustomRepository.findAdminsAndManagers();
+//
+//            adminsAndMAnagers.forEach(admin -> {
+//                sendToList.add(admin.getEmail());
+//            });
+//
+//            mailService.sendMail(sendToList.toArray(new String[0]), emailData);
+//        }
+//    }
 }
 

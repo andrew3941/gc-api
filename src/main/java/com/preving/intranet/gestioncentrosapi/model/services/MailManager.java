@@ -33,17 +33,18 @@ public class MailManager implements MailService {
     HttpClient httpClient = HttpClients.createDefault();
 
     @Override
-    public boolean sendMail(String sendTo, Map<String,Object> emailData) {
-        System.out.println(communicationsAPIURL);
-        String url = communicationsAPIURL + "/email";
-        String token = getToken();
+    public boolean sendMail(String[] sendTo, Map<String,Object> emailData) {
+        //Get the url
+        String url = communicationsAPIURL + "email";
         HttpPost post = new HttpPost(url);
-        String[] to ={sendTo};
+
+        //Get the token
+        String token = getToken();
         String[] cc = {};
         String[] bcc = {};
 
         //todo cambiar email
-        EmailRaw datos = new EmailRaw(to,"jorge.perez@preving.com",cc,bcc,emailData);
+        EmailRaw datos = new EmailRaw(sendTo,"jorge.perez@preving.com",cc,bcc,emailData);
 
         try {
             StringEntity datosJson = new StringEntity((gson.toJson(datos))); //Converts data to JSON
@@ -66,17 +67,21 @@ public class MailManager implements MailService {
     @Override
     public String getToken() {
         try {
-            String url = communicationsAPIURL + "/auth/login";
-            String input = "{\"username\": \"" + username + "\",\"password\":\"" + password + "\"}";
+            //Get the url
+            String url = communicationsAPIURL + "auth/login";
             HttpPost post = new HttpPost(url);
 
+            //Set the username
+            String input = "{\"username\": \"" + username + "\",\"password\":\"" + password + "\"}";
             StringEntity auth = new StringEntity(input);
             post.setEntity(auth);
             post.setHeader("Content-type","application/json");
 
+            //Send the request
             HttpResponse response = httpClient.execute(post);
             JSONObject datos = new JSONObject(EntityUtils.toString(response.getEntity()));
 
+            //Get the token from the response
             return datos.get("token").toString();
         } catch (Exception e) {
             e.printStackTrace();

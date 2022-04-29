@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -45,4 +46,6 @@ public interface  MaintenanceRepository extends JpaRepository<Maintenance, Integ
 //            "mint.modified=CURRENT_TIMESTAMP, mint.modifiedBy=:#{#maintenance.modifiedBy} " +
 //            "where mint.id=:#{#maintenance.id}")
 //    void  editMaintenance(@Param("maintenance") Maintenance maintenance);
+
+    List<Maintenance> findAllByDate(Date date);
 }

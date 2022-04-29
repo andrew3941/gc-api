@@ -33,6 +33,14 @@ public class User {
         this.completeName = completeName;
     }
 
+    public User(Long id,String firstname,String lastname,String completeName,   String email){
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.completeName = completeName;
+        this.email = email;
+    }
+
     public User(Long id, String username, String firstname, String lastname, String email, String password,
                 Boolean enabled, Date lastPasswordResetDate) {
         this.id = id;

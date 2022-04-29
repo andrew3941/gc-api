@@ -1,5 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.dao.maintenance;
 
+import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.Maintenance;
 import com.preving.intranet.gestioncentrosapi.model.domain.maintenance.MaintenanceByWorkCenters;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ProvidersByWorkCenters;
@@ -11,5 +12,5 @@ import java.util.List;
 
 @Repository
 public interface MaintenanceByWorkCentersRepository extends JpaRepository<MaintenanceByWorkCenters, Integer> {
-
+    MaintenanceByWorkCenters findByMaintenance(Maintenance maintenance);
 }

@@ -39,8 +39,11 @@ public interface MaintenanceService {
     // method for delete maintenance
     ResponseEntity<?> deleteMaintenance(HttpServletRequest request,int workCenterId, int maintenanceId);
 
-//    EXPORT MAINTENANCE
-ResponseEntity<?> exportMaintenance(int workCenterId, MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user);
+    //    EXPORT MAINTENANCE
+    ResponseEntity<?> exportMaintenance(int workCenterId, MaintenanceFilter maintenanceFilter, HttpServletResponse response, UsuarioWithRoles user);
 
     ResponseEntity<?> maintenanceDeleteAttachment(int workCenterId, int attachedId) throws IOException;
+
+    // Communication by email
+//     void SendMaintenanceEndDayNotification();
 }

@@ -307,7 +307,7 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 //        System.out.println("Start of automated notification process for Contracts");
 //        String contractsName = "CONTRATO ALQUILER";
 //
-//        Date twoWeeksPrior = new Date((today.getYear()),(today.getMonth()),(today.getDate() - 14));
+//        Date twoWeeksPrior = new Date((today.getYear()),(today.getMonth()),(today.getDate() + 14));
 //        List<GeneralDocumentation> warningContracts = generalDocumentationRepository.findByDocumentAlarmDateAndGeneralDocTypesName(twoWeeksPrior,contractsName);
 //
 //        warningContracts.forEach(contract -> {
@@ -319,17 +319,20 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 //            emailData.put("documento",contract.getDocumentName());
 //            emailData.put("centro",contract.getWorkCenter().getName());
 //
-//            mailService.sendMail(contract.getEmail(), emailData);
+//            List<String> sendToList = new ArrayList<>();
+//            sendToList.add(contract.getEmail());
+//
+//            mailService.sendMail(sendToList.toArray(new String[0]), emailData);
 //        });
 //    }
-
+//
 //    @Override
 //    @Scheduled(cron = "0 00 00 * * *") //Every day at 12am
 //    public void SendInsuranceEndDayNotification(){
 //        Date today = new Date();
 //        System.out.println("Start of automated notification process for insurances");
 //        String insurancesName = "SEGURO LOCAL";
-//        Date twoMonthsPrior = new Date((today.getYear()),(today.getMonth() - 2),(today.getDate()));
+//        Date twoMonthsPrior = new Date((today.getYear()),(today.getMonth() + 2),(today.getDate()));
 //        List<GeneralDocumentation> endedInsurances = generalDocumentationRepository.findByDocumentEndDateAndGeneralDocTypesName(twoMonthsPrior,insurancesName);
 //
 //        endedInsurances.forEach(insurance ->{
@@ -339,7 +342,9 @@ public class GeneralDocumentationManager implements GeneralDocumentationService 
 //            emailData.put("documento",insurance.getDocumentName());
 //            emailData.put("centro",insurance.getWorkCenter().getName());
 //
-//            mailService.sendMail(insurance.getEmail(), emailData);
+//                List<String> sendToList = new ArrayList<>();
+//                sendToList.add(insurance.getEmail());
+//            mailService.sendMail(sendToList.toArray(new String[0]), emailData);
 //        });
 //    }
 
