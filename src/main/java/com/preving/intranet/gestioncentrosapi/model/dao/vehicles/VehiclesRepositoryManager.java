@@ -45,7 +45,7 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
                 " AND VE.RESPONSABLE_ID = U.ID ";
 
         if (vehiclesFilter != null && vehiclesFilter.getVehicleBrandTypes().size() != 0) {
-            sql += "AND VE.MARCA_ID = :brands ";
+            sql += "AND VE.MARCA_ID IN :brands ";
         }
 
         if (vehiclesFilter != null && !vehiclesFilter.getCard().equals("")) {
