@@ -1,6 +1,5 @@
 package com.preving.intranet.gestioncentrosapi.model.dao.vehicles;
 
-
 import com.preving.intranet.gestioncentrosapi.model.domain.vehicles.Vehicles;
 import com.preving.intranet.gestioncentrosapi.model.domain.vehicles.VehiclesFilter;
 import com.preving.security.domain.UsuarioWithRoles;
@@ -17,7 +16,6 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
 
     @PersistenceContext
     private EntityManager manager;
-
 
 
     @Override
@@ -37,7 +35,6 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
                 "MAR.NOMBRE AS MARCA, " +
                 "U.NOMBRE AS RESPONSABLE_FIRST_NAME, " +
                 "U.APELLIDOS AS RESPONSABLE_LAST_NAME " +
-
                 "FROM SAC.VE_VEHICULOS VE, " +
                 " SAC.VE_MARCAS MAR, " +
                 " GC2006_RELEASE.PC_USUARIOS U ";
@@ -46,8 +43,8 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
                 " AND VE.RESPONSABLE_ID = U.ID ";
 
         if (vehiclesFilter != null && vehiclesFilter.getVehicleBrandTypes().size() != 0) {
-            String brands = vehiclesFilter.getVehicleBrandTypes().stream().map(bc -> String.valueOf(bc.getId())).collect(Collectors.joining(","));
-            sql += "AND VE.MARCA_ID IN (" + brands + ")";
+                String brands = vehiclesFilter.getVehicleBrandTypes().stream().map(bc -> String.valueOf(bc.getId())).collect(Collectors.joining(","));
+                sql += "AND VE.MARCA_ID IN (" + brands + ")";
         }
 
         if (vehiclesFilter != null && !vehiclesFilter.getCard().equals("")) {
