@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VehiclesRepositoryManager implements VehiclesCustomRepository {
@@ -45,14 +46,13 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
                 " AND VE.RESPONSABLE_ID = U.ID ";
 
         if (vehiclesFilter != null && vehiclesFilter.getVehicleBrandTypes().size() != 0) {
-            sql += "AND VE.MARCA_ID IN :brands ";
+            String brands = vehiclesFilter.getVehicleBrandTypes().stream().map(bc -> String.valueOf(bc.getId())).collect(Collectors.joining(","));
+            sql += "AND VE.MARCA_ID IN (" + brands + ")";
         }
 
         if (vehiclesFilter != null && !vehiclesFilter.getCard().equals("")) {
             sql += "AND LOWER(TRANSLATE(VE.MATRICULA, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:card, '������������', 'aeiounAEIOUN')) ";
         }
-
-
 
 
         if(vehiclesFilter != null && vehiclesFilter.getVehiclesStatus() == 1) {
@@ -61,8 +61,6 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
             sql += " AND VE.FECHA_VENCIMIENTO IS NOT NULL ";
         }
 
-
-
         if(workCenterId != 0){
             sql += "AND VE.DELEGACION_ID = :workCenterId ";
         }
@@ -70,10 +68,6 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
         sql += "ORDER BY VE.FECHA_COMPRA DESC ";
 
         Query query = manager.createNativeQuery(sql, "VehiclesMapping");
-
-        if (vehiclesFilter != null && vehiclesFilter.getVehicleBrandTypes().size() != 0 && vehiclesFilter.getVehicleBrandTypes() != null) {
-            query.setParameter("brands", vehiclesFilter.getVehicleBrandTypes());
-        }
 
         if (vehiclesFilter != null && !vehiclesFilter.getCard().equals("")) {
             query.setParameter("card", "%" + vehiclesFilter.getCard() + "%");

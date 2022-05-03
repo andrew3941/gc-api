@@ -37,11 +37,9 @@ public class VehiclesManager implements VehiclesService {
     static final String EXPORT_TITLE_3 = "Model";
     static final String EXPORT_TITLE_4 = "Purchase Mode";
     static final String EXPORT_TITLE_5 = "Responsible";
-    static final String EXPORT_TITLE_6 = "Responsible";
-    static final String EXPORT_TITLE_7 = "Purchase Date";
-    static final String EXPORT_TITLE_8 = "Expiration Date";
-    static final String EXPORT_TITLE_9 = "Price";
-    static final String EXPORT_TITLE_10 = "Active";
+    static final String EXPORT_TITLE_6 = "Purchase Date";
+    static final String EXPORT_TITLE_7 = "Expiration Date";
+    static final String EXPORT_TITLE_8 = "Active";
 
     @Autowired
     private VehiclesRepository vehiclesRepository;
@@ -87,7 +85,7 @@ public class VehiclesManager implements VehiclesService {
 
         // We get the data
         List<Vehicles> vehicles = this.vehiclesCustomRepository.getVehiclesFiltered(workCenterId, vehiclesFilter, user);
-        String[] titleArray = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4, EXPORT_TITLE_5, EXPORT_TITLE_6, EXPORT_TITLE_7, EXPORT_TITLE_8, EXPORT_TITLE_9, EXPORT_TITLE_10};
+        String[] titleArray = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4, EXPORT_TITLE_5, EXPORT_TITLE_6, EXPORT_TITLE_7, EXPORT_TITLE_8};
         // We create a row in the sheet at position 0 for the headers
         HSSFRow headerRow = hoja.createRow(0);
         // We create the headers
@@ -116,24 +114,18 @@ public class VehiclesManager implements VehiclesService {
             purchaseMode.setCellValue(vehicles.get(i).getPurchaseMode());
             // responsible
             HSSFCell responsibleId = dataRow.createCell(4);
-            responsibleId.setCellValue(vehicles.get(i).getResponsibleId().getFirstname());
-            // responsible
-            HSSFCell responsibleId1 = dataRow.createCell(5);
-            responsibleId1.setCellValue(vehicles.get(i).getResponsibleId().getLastname());
+            responsibleId.setCellValue(vehicles.get(i).getResponsibleId().getFirstname().concat(vehicles.get(i).getResponsibleId().getLastname()));
             // PurchaseDate
-            HSSFCell purchaseDate = dataRow.createCell(6);
+            HSSFCell purchaseDate = dataRow.createCell(5);
             purchaseDate.setCellValue(vehicles.get(i).getPurchaseDate());
             purchaseDate.setCellStyle(cellStyleData);
             // expirationDate
-            HSSFCell expirationDate = dataRow.createCell(7);
+            HSSFCell expirationDate = dataRow.createCell(6);
             expirationDate.setCellValue(vehicles.get(i).getExpirationDate());
             expirationDate.setCellStyle(cellStyleData);
 
-            // price
-            HSSFCell monthlyFee = dataRow.createCell(8);
-            monthlyFee.setCellValue(vehicles.get(i).getMonthlyFee());
             // active
-            HSSFCell active = dataRow.createCell(9);
+            HSSFCell active = dataRow.createCell(7);
             active.setCellValue(vehicles.get(i).getActive());
         }
 
