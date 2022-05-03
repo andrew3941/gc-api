@@ -28,8 +28,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import static com.preving.intranet.gestioncentrosapi.model.services.WorkCenterManager.*;
-
 @Service
 public class VehiclesManager implements VehiclesService {
     private static final String EXPORT_TITLE_1 = "Enrollment";
@@ -37,9 +35,11 @@ public class VehiclesManager implements VehiclesService {
     static final String EXPORT_TITLE_3 = "Model";
     static final String EXPORT_TITLE_4 = "Purchase Mode";
     static final String EXPORT_TITLE_5 = "Responsible";
-    static final String EXPORT_TITLE_6 = "Purchase Date";
-    static final String EXPORT_TITLE_7 = "Expiration Date";
-    static final String EXPORT_TITLE_8 = "Active";
+    static final String EXPORT_TITLE_6 = "Responsible";
+    static final String EXPORT_TITLE_7 = "Purchase Date";
+    static final String EXPORT_TITLE_8 = "Expiration Date";
+    static final String EXPORT_TITLE_9 = "Price";
+    static final String EXPORT_TITLE_10 = "Active";
 
     @Autowired
     private VehiclesRepository vehiclesRepository;
@@ -63,6 +63,12 @@ public class VehiclesManager implements VehiclesService {
         return vehiclesRepository.findAllByWorkCenterIdAndUserUnsubscribeNotNull(workCenterId);
     }
 
+
+    @Override
+    public List<Vehicles> getVehiclesFilter(int workCenterId, VehiclesFilter vehiclesFilter, UsuarioWithRoles user) {
+        return this.vehiclesCustomRepository.getVehiclesFiltered(workCenterId, vehiclesFilter, user);
+    }
+
     // exportVehicles
     @Override
     public ResponseEntity<?> exportVehicle(int workCenterId, VehiclesFilter vehiclesFilter, HttpServletResponse response, UsuarioWithRoles user) {
@@ -71,13 +77,16 @@ public class VehiclesManager implements VehiclesService {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet hoja = workbook.createSheet();
         workbook.setSheetName(0, "performances");
+
         // We create style for the header
         CellStyle cellStyleHeaders = workbook.createCellStyle();
         CellStyle dateCell = workbook.createCellStyle();
         Font font = workbook.createFont();
+
         // TODO color the background of the headers
         font.setBold(true);
         cellStyleHeaders.setFont(font);
+
         //style for date format
         CellStyle cellStyleData = workbook.createCellStyle();
         CreationHelper createHelper = workbook.getCreationHelper();
@@ -88,6 +97,7 @@ public class VehiclesManager implements VehiclesService {
         String[] titleArray = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4, EXPORT_TITLE_5, EXPORT_TITLE_6, EXPORT_TITLE_7, EXPORT_TITLE_8};
         // We create a row in the sheet at position 0 for the headers
         HSSFRow headerRow = hoja.createRow(0);
+
         // We create the headers
         for (int i = 0; i < titleArray.length; i++) {
             HSSFCell celda = headerRow.createCell(i);
@@ -103,15 +113,19 @@ public class VehiclesManager implements VehiclesService {
             // enrollment
             HSSFCell enrollment = dataRow.createCell(0);
             enrollment.setCellValue(vehicles.get(i).getEnrollment());
+
             // Brand
             HSSFCell brands = dataRow.createCell(1);
             brands.setCellValue(vehicles.get(i).getBrands().getName());
+
             // model
             HSSFCell model = dataRow.createCell(2);
             model.setCellValue(vehicles.get(i).getModel());
+
             // purchaseMode
             HSSFCell purchaseMode = dataRow.createCell(3);
             purchaseMode.setCellValue(vehicles.get(i).getPurchaseMode());
+
             // responsible
             HSSFCell responsibleId = dataRow.createCell(4);
             responsibleId.setCellValue(vehicles.get(i).getResponsibleId().getFirstname().concat(vehicles.get(i).getResponsibleId().getLastname()));
@@ -119,6 +133,7 @@ public class VehiclesManager implements VehiclesService {
             HSSFCell purchaseDate = dataRow.createCell(5);
             purchaseDate.setCellValue(vehicles.get(i).getPurchaseDate());
             purchaseDate.setCellStyle(cellStyleData);
+
             // expirationDate
             HSSFCell expirationDate = dataRow.createCell(6);
             expirationDate.setCellValue(vehicles.get(i).getExpirationDate());
