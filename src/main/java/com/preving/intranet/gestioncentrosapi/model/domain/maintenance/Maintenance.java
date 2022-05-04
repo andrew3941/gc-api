@@ -86,13 +86,13 @@ public class Maintenance implements Serializable {
         this.maintenanceByAttachments = maintenanceByAttachments;
     }
 
-    public Maintenance(int id, int amount, String billNumber, Date date, String concept,Date resolutionDate,  String observations, String maintenanceType,
+    public Maintenance(int id, int amount, String billNumber, Date date, String concept, String observations, String maintenanceType,
                        String nameProvider, String periodicity) {
         this.id = id;
         this.concept = concept;
-        this.resolutionDate =resolutionDate;
         this.amount = amount;
-        this.billNumber = billNumber;this.date = date;
+        this.billNumber = billNumber;
+        this.date = date;
         this.observations = observations;
         this.getMaintenanceTypes().setDenomination(maintenanceType);
         this.getProvider().setName(nameProvider);
