@@ -15,8 +15,6 @@ import java.util.List;
 
 public interface VehiclesService {
 
-    //    Filter Vehicles
-    List<Vehicles> getVehiclesFilter(int workCenterId, VehiclesFilter vehiclesFilter, UsuarioWithRoles user);
 
     //    Export Vehicles
     ResponseEntity<?> exportVehicle(int workCenterId, VehiclesFilter vehiclesFilter, HttpServletResponse response, UsuarioWithRoles user);

@@ -63,12 +63,6 @@ public class VehiclesManager implements VehiclesService {
         return vehiclesRepository.findAllByWorkCenterIdAndUserUnsubscribeNotNull(workCenterId);
     }
 
-
-    @Override
-    public List<Vehicles> getVehiclesFilter(int workCenterId, VehiclesFilter vehiclesFilter, UsuarioWithRoles user) {
-        return this.vehiclesCustomRepository.getVehiclesFiltered(workCenterId, vehiclesFilter, user);
-    }
-
     // exportVehicles
     @Override
     public ResponseEntity<?> exportVehicle(int workCenterId, VehiclesFilter vehiclesFilter, HttpServletResponse response, UsuarioWithRoles user) {
