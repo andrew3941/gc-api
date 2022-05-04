@@ -16,10 +16,10 @@ import java.util.List;
 public interface VehiclesService {
 
     //    Filter Vehicles
-    List<Vehicles> getFilteredVehicles(int workCenterId, VehiclesFilter vehicleFilter, UsuarioWithRoles user);
+    List<Vehicles> getVehiclesFilter(int workCenterId, VehiclesFilter vehiclesFilter, UsuarioWithRoles user);
 
     //    Export Vehicles
-    ResponseEntity<?> exportVehicle(int workCenterId, VehiclesFilter vehicleFilter, HttpServletResponse response, UsuarioWithRoles user);
+    ResponseEntity<?> exportVehicle(int workCenterId, VehiclesFilter vehiclesFilter, HttpServletResponse response, UsuarioWithRoles user);
 
     //    List all vehicles brand types
     List<Brands> getAllBrandTypes();
@@ -27,4 +27,5 @@ public interface VehiclesService {
     //    Get all vehicle list
     List<Vehicles> findAllVehiclesByWorkCenter(int workCenterId);
 
+    List<Vehicles> getFilteredVehicles(int workCenterId, VehiclesFilter vehiclesFilter, UsuarioWithRoles user);
 }

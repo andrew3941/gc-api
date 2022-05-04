@@ -934,7 +934,7 @@ public class WorkCentersController {
     }
 
 
-
+//method for vehicles filter
     @RequestMapping(value = "{workCenterId}/vehicles/filter", method = RequestMethod.POST)
     public ResponseEntity<?> findVehicleByFilter(HttpServletRequest request,
                                                  @PathVariable(value = "workCenterId") int workCenterId,

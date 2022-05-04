@@ -19,7 +19,7 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
 
 
     @Override
-    public List<Vehicles> getVehiclesFiltered(Integer workCenterId, VehiclesFilter vehiclesFilter, UsuarioWithRoles user) {
+    public List<Vehicles>getVehiclesFiltered(Integer workCenterId, VehiclesFilter vehiclesFilter, UsuarioWithRoles user) {
 
         String sql = "" +
                 "SELECT VE.ID, " +
