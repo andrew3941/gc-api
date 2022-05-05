@@ -8,6 +8,7 @@ import com.preving.security.domain.UsuarioWithRoles;
 
 import java.util.List;
 
+
 public interface WorkersCustomRepository {
     List<Employees> getEmployeesFiltered(int workCenterId, WorkersFilter workersFilter, UsuarioWithRoles user);
 }

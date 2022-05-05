@@ -60,7 +60,6 @@ public class WorkCentersController {
 
     @Autowired
     private MaintenanceService maintenanceService;
-    private WorkersService workersService;
 
     @Autowired
     private ProviderService providerService;
@@ -975,18 +974,6 @@ public class WorkCentersController {
         }
     }
 
-    @RequestMapping(value = "employees", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllEmployees(){
-
-        try {
-            return new ResponseEntity<>(workersService.getAllEmployees(), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
     //    Get mapping for export workers
     @RequestMapping(value="{workCenterId}/exportWorkers", method = RequestMethod.POST)
     public ResponseEntity<?> exportWorkersAction(HttpServletRequest request,
@@ -1010,6 +997,28 @@ public class WorkCentersController {
     public ResponseEntity<?> findWorkersByFilter(HttpServletRequest request,
                                                  @PathVariable(value = "workCenterId") int workCenterId,
                                                  @RequestBody WorkersFilter workersFilter) {
+
+        try {
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            List<Employees> workersList = this.workersService.getFilteredEmployees(workCenterId, workersFilter, user);
+
+            return new ResponseEntity<>(workersList, HttpStatus.OK);
+        } catch (Exception e) {e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @RequestMapping(value = "employees", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllEmployees(){
+
+        try {
+            return new ResponseEntity<>(workersService.getAllEmployees(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 }

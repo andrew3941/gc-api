@@ -15,6 +15,10 @@ import org.apache.poi.ss.usermodel.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import com.preving.intranet.gestioncentrosapi.model.dao.workers.WorkersRepository;
+import com.preving.intranet.gestioncentrosapi.model.domain.workers.Employees;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -22,8 +26,9 @@ import java.io.IOException;
 import java.util.List;
 
 
-@Service
+
 public class WorkersManager implements WorkersService{
+
     private static final String EXPORT_TITLE_1 = "";
     static final String EXPORT_TITLE_2 = "";
     static final String EXPORT_TITLE_3 = "";
@@ -35,13 +40,17 @@ public class WorkersManager implements WorkersService{
     static final String EXPORT_TITLE_9 = "";
     static final String EXPORT_TITLE_10 = "";
 
+
+    @Autowired
+    private WorkersCustomRepository workersCustomRepository;
+
     @Autowired
     private WorkersRepository workersRepository;
 
 
     @Override
-    public List<Employees> getAllEmployees() {
-        return workersRepository.findAllByName("NOEMI");
+    public ResponseEntity<?> exportWorkers(int workCenterId, WorkersFilter wFilter, HttpServletResponse response, UsuarioWithRoles user) {
+        return null;
     }
 
     //filterWorkers
@@ -124,6 +133,12 @@ public class WorkersManager implements WorkersService{
 //
 //        return new ResponseEntity<byte[]>(content, HttpStatus.OK);
 //    }
+
+
+    @Override
+    public List<Employees> getAllEmployees() {
+        return workersRepository.findAllByName("NOEMI");
+    }
 
 
 }
