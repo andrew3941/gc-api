@@ -1,7 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
 
-import com.preving.intranet.gestioncentrosapi.model.dao.workers.WorkersCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.workers.Employees;
 import com.preving.intranet.gestioncentrosapi.model.domain.workers.WorkersFilter;
 import com.preving.security.domain.UsuarioWithRoles;
@@ -33,9 +32,6 @@ public class WorkersManager implements WorkersService{
     static final String EXPORT_TITLE_8 = "";
     static final String EXPORT_TITLE_9 = "";
     static final String EXPORT_TITLE_10 = "";
-    @Autowired
-    private WorkersCustomRepository workersCustomRepository;
-
 
     @Override
     public ResponseEntity<?> exportWorkers(int workCenterId, WorkersFilter wFilter, HttpServletResponse response, UsuarioWithRoles user) {
