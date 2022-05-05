@@ -13,6 +13,8 @@ import com.preving.intranet.gestioncentrosapi.model.domain.vehicles.Vehicles;
 import com.preving.intranet.gestioncentrosapi.model.domain.vehicles.VehiclesFilter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
+import com.preving.intranet.gestioncentrosapi.model.domain.workers.Employees;
+import com.preving.intranet.gestioncentrosapi.model.domain.workers.WorkersFilter;
 import com.preving.intranet.gestioncentrosapi.model.services.*;
 import com.preving.security.JwtTokenUtil;
 import com.preving.security.domain.UsuarioWithRoles;
@@ -58,6 +60,7 @@ public class WorkCentersController {
 
     @Autowired
     private MaintenanceService maintenanceService;
+    private WorkersService workersService;
 
     @Autowired
     private ProviderService providerService;
@@ -948,7 +951,6 @@ public class WorkCentersController {
         } catch (Exception e) {e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
 
@@ -970,6 +972,40 @@ public class WorkCentersController {
         }
     }
 
+    //    Get mapping for export workers
+    @RequestMapping(value="{workCenterId}/exportWorkers", method = RequestMethod.POST)
+    public ResponseEntity<?> exportWorkersAction(HttpServletRequest request,
+                                                 HttpServletResponse response,
+                                                 @PathVariable(value = "workCenterId") int workCenterId,
+                                                 @RequestParam ("workersFilter") String workersFilter
+    ) {
+
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+        WorkersFilter WFilter= gson.fromJson(workersFilter, WorkersFilter.class);
+        try {
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            return new ResponseEntity<>(workersService.exportWorkers(workCenterId, WFilter, response, user), HttpStatus.OK);
+        } catch (DataAccessException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+//workersFilter
+    @RequestMapping(value = "{workCenterId}/workers/filter", method = RequestMethod.POST)
+    public ResponseEntity<?> findWorkersByFilter(HttpServletRequest request,
+                                                 @PathVariable(value = "workCenterId") int workCenterId,
+                                                 @RequestBody WorkersFilter workersFilter) {
+
+        try {
+            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            List<Employees> workersList = this.workersService.getFilteredEmployees(workCenterId, workersFilter, user);
+
+            return new ResponseEntity<>(workersList, HttpStatus.OK);
+        } catch (Exception e) {e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 }
 
 
