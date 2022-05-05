@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.List;
 
 
+@Service
 public class WorkersManager implements WorkersService{
     private static final String EXPORT_TITLE_1 = "";
     static final String EXPORT_TITLE_2 = "";
@@ -33,13 +34,14 @@ public class WorkersManager implements WorkersService{
     static final String EXPORT_TITLE_8 = "";
     static final String EXPORT_TITLE_9 = "";
     static final String EXPORT_TITLE_10 = "";
+
     @Autowired
-    private WorkersCustomRepository workersCustomRepository;
+    private WorkersRepository workersRepository;
 
 
     @Override
-    public ResponseEntity<?> exportWorkers(int workCenterId, WorkersFilter wFilter, HttpServletResponse response, UsuarioWithRoles user) {
-        return null;
+    public List<Employees> getAllEmployees() {
+        return workersRepository.findAllByName("NOEMI");
     }
 
     //filterWorkers

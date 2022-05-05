@@ -66,6 +66,9 @@ public class WorkCentersController {
     private ProviderService providerService;
 
     @Autowired
+    private WorkersService workersService;
+
+    @Autowired
     private VehiclesService vehiclesService;
 
     @Value("${modo-debug}")
@@ -972,6 +975,18 @@ public class WorkCentersController {
         }
     }
 
+    @RequestMapping(value = "employees", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllEmployees(){
+
+        try {
+            return new ResponseEntity<>(workersService.getAllEmployees(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
     //    Get mapping for export workers
     @RequestMapping(value="{workCenterId}/exportWorkers", method = RequestMethod.POST)
     public ResponseEntity<?> exportWorkersAction(HttpServletRequest request,
@@ -996,16 +1011,7 @@ public class WorkCentersController {
                                                  @PathVariable(value = "workCenterId") int workCenterId,
                                                  @RequestBody WorkersFilter workersFilter) {
 
-        try {
-            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
-            List<Employees> workersList = this.workersService.getFilteredEmployees(workCenterId, workersFilter, user);
 
-            return new ResponseEntity<>(workersList, HttpStatus.OK);
-        } catch (Exception e) {e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
 }
 
 

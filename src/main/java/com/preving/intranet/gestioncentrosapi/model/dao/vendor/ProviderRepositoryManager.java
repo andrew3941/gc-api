@@ -66,6 +66,8 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
             sql += "AND V.PRV_COD =:provinceCod ";
         }
 
+
+
         if(providerFilter != null && providerFilter.getAreaTypes().size() != 0){
             String areas = providerFilter.getAreaTypes().stream().map(wce -> String.valueOf(wce.getId())).collect(Collectors.joining(","));
             sql += "AND PA.AREA_ID IN (" + areas + ")";
@@ -121,9 +123,6 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
             query.setParameter("workCenterId", workCenterId);
         }
 
-//        if(providerFilter != null && providerFilter.getProviderStatus() != 2) {
-//            query.setParameter("providerStatus", providerFilter.getProviderStatus() == 1);
-//        }
 
         if(!user.hasRole(GC_ADMINISTRATOR_ROL_NAME)) {
             if(user.hasRole(GC_MANAGER_ROL_NAME)) {
@@ -183,7 +182,7 @@ public class ProviderRepositoryManager implements ProviderCustomRepository {
         String sql = "" +
                 "SELECT P.ID, P.NOMBRE " +
                 "FROM GESTION_CENTROS.PROVEEDORES P, " +
-                "       GESTION_CENTROS.PROVEEDORES_X_DELEGACIONES PXD " +
+                "     GESTION_CENTROS.PROVEEDORES_X_DELEGACIONES PXD " +
                 "WHERE P.ID = PXD.PROVEEDOR_ID ";
 
         if (!allProviders) {
