@@ -992,6 +992,21 @@ public class WorkCentersController {
         }
     }
 
+    @RequestMapping(value = "{workCenterId}/employees/filter", method = RequestMethod.POST)
+    public ResponseEntity<?> findWorkersByFilter(HttpServletRequest request,
+                                                 @PathVariable(value = "workCenterId") int workCenterId,
+                                                 @RequestBody WorkersFilter workersFilter) {
+
+        try {
+//            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+            List<Employees> workersList = this.workersService.getFilteredEmployees(workCenterId, workersFilter);
+            return new ResponseEntity<>(workersList, HttpStatus.OK);
+        } catch (Exception e) {e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
 //workersFilter
 //    @RequestMapping(value = "{workCenterId}/workers/filter", method = RequestMethod.POST)
 //    public ResponseEntity<?> findWorkersByFilter(HttpServletRequest request,
