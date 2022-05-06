@@ -48,12 +48,12 @@ public class MaintenanceManager implements MaintenanceService {
     private MaintenanceCustomRepository maintenanceCustomRepository;
 
 
-    private static final String EXPORT_TITLE_1 = "Date";
-    private static final String EXPORT_TITLE_2 = "Type";
-    private static final String EXPORT_TITLE_3 = "Concept";
-    private static final String EXPORT_TITLE_4 = "Provider";
-    private static final String EXPORT_TITLE_5 = "Periodicity";
-    private static final String EXPORT_TITLE_6 = "Amount";
+    private static final String EXPORT_TITLE_1 = "Fecha";
+    private static final String EXPORT_TITLE_2 = "Tipo";
+    private static final String EXPORT_TITLE_3 = "Concepto";
+    private static final String EXPORT_TITLE_4 = "Proveedor";
+    private static final String EXPORT_TITLE_5 = "Periodicidad";
+    private static final String EXPORT_TITLE_6 = "Importe";
 
 
     private static final int NEW_MAINTENANCE = 4;

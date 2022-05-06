@@ -43,6 +43,11 @@ spring:
     username: appGestionCentros
     password: gestionCentros
 
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
   jmx:
     enabled: false # necesario para no obtener el siguiente error: Unable to register MBean [org.apache.tomcat.dbcp.dbcp2.BasicDataSource
 

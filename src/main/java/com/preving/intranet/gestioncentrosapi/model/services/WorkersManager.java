@@ -1,6 +1,5 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
-
 import com.preving.intranet.gestioncentrosapi.model.dao.workers.WorkersCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workers.WorkersRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.workers.Employees;
@@ -17,12 +16,16 @@ import org.apache.poi.ss.usermodel.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import com.preving.intranet.gestioncentrosapi.model.dao.workers.WorkersRepository;
+import com.preving.intranet.gestioncentrosapi.model.domain.workers.Employees;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+
 
 @Service
 public class WorkersManager implements WorkersService{
