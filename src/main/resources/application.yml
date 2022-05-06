@@ -104,7 +104,7 @@ datasource:
     maximum-pool-size: 1
 
 api-comunicacion:
-  url: https://localhost:8445/communication-api/
+  url: http://localhost:8445/communication-api/
   usuario: usuarioPreving
   password: pwdPreving
   keystore: classpath:ssl/tomcat.keystore

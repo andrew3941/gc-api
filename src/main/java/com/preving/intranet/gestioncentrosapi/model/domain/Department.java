@@ -2,6 +2,7 @@ package com.preving.intranet.gestioncentrosapi.model.domain;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+import java.time.Instant;
 
 
 @Entity
@@ -11,6 +12,28 @@ public class Department {
     private String name;
     private int order;
     private int active;
+
+    @Column(name = "adr_updated")
+    private Instant adrUpdated;
+
+    @Column(name = "qdr_created")
+    private Instant qdrCreated;
+
+    public Instant getQdrCreated() {
+        return qdrCreated;
+    }
+
+    public void setQdrCreated(Instant qdrCreated) {
+        this.qdrCreated = qdrCreated;
+    }
+
+    public Instant getAdrUpdated() {
+        return adrUpdated;
+    }
+
+    public void setAdrUpdated(Instant adrUpdated) {
+        this.adrUpdated = adrUpdated;
+    }
 
     public Department() {
     }

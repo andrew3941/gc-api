@@ -11,7 +11,12 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-@Service
+
+import com.preving.intranet.gestioncentrosapi.model.domain.workers.Employees;
+import com.preving.intranet.gestioncentrosapi.model.dto.workers.EmployeeProjection;
+
+import java.util.List;
+
 public interface WorkersService {
 
     //    List all Employees
@@ -20,8 +25,12 @@ public interface WorkersService {
 
     //    Export Workers
     ResponseEntity<?>  exportWorkers(int workCenterId, WorkersFilter wFilter, HttpServletResponse response, UsuarioWithRoles user);
-
    //WorkersFilter
-    List<Employees> getFilteredEmployees(int workCenterId, WorkersFilter workersFilter, UsuarioWithRoles user);
+    List<Employees> getFilteredEmployees(int workCenterId, WorkersFilter workersFilter);
 
+    List<Employees> findAll();
+
+    Employees findById(Long id);
+
+//    List<Employees> findAllByEmpLabHistoryFchSalidaIsNull();
 }

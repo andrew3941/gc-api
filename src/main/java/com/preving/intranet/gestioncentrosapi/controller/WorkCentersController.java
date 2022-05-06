@@ -62,10 +62,10 @@ public class WorkCentersController {
     private MaintenanceService maintenanceService;
 
     @Autowired
-    private ProviderService providerService;
+    private WorkersService workersService;
 
     @Autowired
-    private WorkersService workersService;
+    private ProviderService providerService;
 
     @Autowired
     private VehiclesService vehiclesService;
@@ -993,32 +993,32 @@ public class WorkCentersController {
     }
 
 //workersFilter
-    @RequestMapping(value = "{workCenterId}/workers/filter", method = RequestMethod.POST)
-    public ResponseEntity<?> findWorkersByFilter(HttpServletRequest request,
-                                                 @PathVariable(value = "workCenterId") int workCenterId,
-                                                 @RequestBody WorkersFilter workersFilter) {
-
-        try {
-            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
-            List<Employees> workersList = this.workersService.getFilteredEmployees(workCenterId, workersFilter, user);
-
-            return new ResponseEntity<>(workersList, HttpStatus.OK);
-        } catch (Exception e) {e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
-    @RequestMapping(value = "employees", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllEmployees(){
-
-        try {
-            return new ResponseEntity<>(workersService.getAllEmployees(), HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @RequestMapping(value = "{workCenterId}/workers/filter", method = RequestMethod.POST)
+//    public ResponseEntity<?> findWorkersByFilter(HttpServletRequest request,
+//                                                 @PathVariable(value = "workCenterId") int workCenterId,
+//                                                 @RequestBody WorkersFilter workersFilter) {
+//
+//        try {
+//            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
+//            List<Employees> workersList = this.workersService.getFilteredEmployees(workCenterId, workersFilter);
+//
+//            return new ResponseEntity<>(workersList, HttpStatus.OK);
+//        } catch (Exception e) {e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//
+//    }
+//
+//    @RequestMapping(value = "employees", method = RequestMethod.GET)
+//    public ResponseEntity<?> getAllEmployees(){
+//
+//        try {
+//            return new ResponseEntity<>(workersService.getAllEmployees(), HttpStatus.OK);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
 
 }

@@ -4,13 +4,13 @@ import com.preving.intranet.gestioncentrosapi.model.domain.*;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterDetails;
 import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenterTypes;
+import com.preving.intranet.gestioncentrosapi.model.domain.Department;
 import com.preving.security.domain.UsuarioWithRoles;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
 import java.util.List;
 
 public interface WorkCenterService {

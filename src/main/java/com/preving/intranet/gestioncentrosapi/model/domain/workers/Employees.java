@@ -1,6 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.workers;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -8,20 +9,21 @@ import org.hibernate.annotations.NotFoundAction;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(schema = "RRHH", name ="EMPLEADOS")
 public class Employees implements Serializable {
 
-    private  int id;
+    private Long id;
     private String nif;
     private String nss;
-    private  String name;
+    private String name;
     private String surnames;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date dateBirth;
     private String ccc;
-    private String image;
+    private Byte[] image;
     private int haveImage;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date oldDate;
@@ -31,7 +33,7 @@ public class Employees implements Serializable {
     private User updateBy= new  User();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date updateFch;
-    private String cv;
+    private Byte[] cv;
     private String cvContentType;
     private int cvHas;
     private int variable;
@@ -42,18 +44,20 @@ public class Employees implements Serializable {
     private Integer lastYearCongratulations;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date updateIbanFch;
-    private int mileageValue;
+    private Integer mileageValue;
     private int disability;
     private int socialExclusion;
     private Integer disabilityPct;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date adrUpdated;
     private Date qdrCreated;
+    private EmpContacto empContacto;
+    private List<EmpLabHistory> empLabHistory;
 
     public Employees() {
     }
 
-    public Employees(int id, String nif, String nss, String name, String surnames, Date dateBirth, String ccc, String image, int haveImage, Date oldDate, User insertBy, Date insertFch, User updateBy, Date updateFch, String cv, String cvContentType, int cvHas, int variable, RolesEmployees rolesEmployees, String qualificationSerpa, String sex, String theyWerePre, Integer lastYearCongratulations, Date updateIbanFch, int mileageValue, int disability, int socialExclusion, Integer disabilityPct, Date adrUpdated, Date qdrCreated) {
+    public Employees(Long id, String nif, String nss, String name, String surnames, Date dateBirth, String ccc, Byte[] image, int haveImage, Date oldDate, User insertBy, Date insertFch, User updateBy, Date updateFch, Byte[] cv, String cvContentType, int cvHas, int variable, RolesEmployees rolesEmployees, String qualificationSerpa, String sex, String theyWerePre, Integer lastYearCongratulations, Date updateIbanFch, Integer mileageValue, int disability, int socialExclusion, Integer disabilityPct, Date adrUpdated, Date qdrCreated, EmpContacto empContacto, List<EmpLabHistory> empLabHistory) {
         this.id = id;
         this.nif = nif;
         this.nss = nss;
@@ -84,16 +88,16 @@ public class Employees implements Serializable {
         this.disabilityPct = disabilityPct;
         this.adrUpdated = adrUpdated;
         this.qdrCreated = qdrCreated;
+        this.empContacto = empContacto;
+        this.empLabHistory = empLabHistory;
     }
-
 
     @Id
     @Column(name = "ID", nullable = false)
-    @NotFound(action = NotFoundAction.IGNORE)
-    @SequenceGenerator(name = "EMPLEADOS_SEQ", sequenceName = "EMPLEADOS_SEQ", schema = "RRHH", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EMPLEADOS_SEQ")
-    public int getId() {return id;}
-    public void setId(int id) {this.id = id;}
+    @SequenceGenerator(name = "EMPLEADOS", sequenceName = "EMPLEADOS", schema = "RRHH", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EMPLEADOS")
+    public Long getId() {return id;}
+    public void setId(Long id) {this.id = id;}
 
     @Basic
     @Column( name= "NIF")
@@ -123,13 +127,19 @@ public class Employees implements Serializable {
 
     @Basic
     @Column(name = "CCC")
+    @JsonIgnore
     public String getCcc() {return ccc;}
     public void setCcc(String ccc) {this.ccc = ccc;}
 
     @Basic
     @Column(name = "IMAGEN")
-    public String getImage() {return image;}
-    public void setImage(String image) {this.image = image;}
+    @JsonIgnore
+    public Byte[] getImage() {
+        return image;
+    }
+    public void setImage(Byte[] image) {
+        this.image = image;
+    }
 
     @Basic
     @Column(name = "TIENE_IMAGEN")
@@ -168,8 +178,13 @@ public class Employees implements Serializable {
 
     @Basic
     @Column(name = "CV")
-    public String getCv() {return cv;}
-    public void setCv(String cv) {this.cv = cv;}
+    @JsonIgnore
+    public Byte[] getCv() {
+        return cv;
+    }
+    public void setCv(Byte[] cv) {
+        this.cv = cv;
+    }
 
     @Basic
     @Column(name = "CV_CONTENT_TYPE")
@@ -186,7 +201,7 @@ public class Employees implements Serializable {
     public int getVariable() {return variable;}
     public void setVariable(int variable) {this.variable = variable;}
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "RC_ID", referencedColumnName = "ID")
     @NotFound(action = NotFoundAction.IGNORE)
     public RolesEmployees getRolesEmployees() {return rolesEmployees;}
@@ -222,8 +237,12 @@ public class Employees implements Serializable {
 
     @Basic
     @Column(name = "VALOR_KILOMETRAJE")
-    public int getMileageValue() {return mileageValue;}
-    public void setMileageValue(int mileageValue) {this.mileageValue = mileageValue;}
+    public Integer getMileageValue() {
+        return mileageValue;
+    }
+    public void setMileageValue(Integer mileageValue) {
+        this.mileageValue = mileageValue;
+    }
 
     @Basic
     @Column(name = "DISCAPACIDAD")
@@ -255,4 +274,24 @@ public class Employees implements Serializable {
     public void setQdrCreated(Date qdrCreated) {
         this.qdrCreated = qdrCreated;
     }
+
+    @OneToOne(mappedBy = "employee")
+    public EmpContacto getEmpContacto() {
+        return empContacto;
+    }
+
+    public void setEmpContacto(EmpContacto empContacto) {
+        this.empContacto = empContacto;
+    }
+
+    @OneToMany(mappedBy = "employee")
+    public List<EmpLabHistory> getEmpLabHistory() {
+        return empLabHistory;
+    }
+
+    public void setEmpLabHistory(List<EmpLabHistory> empLabHistory) {
+        this.empLabHistory = empLabHistory;
+    }
+
+
 }

@@ -2,8 +2,10 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 
 
 import com.preving.intranet.gestioncentrosapi.model.dao.workers.WorkersCustomRepository;
+import com.preving.intranet.gestioncentrosapi.model.dao.workers.WorkersRepository;
 import com.preving.intranet.gestioncentrosapi.model.domain.workers.Employees;
 import com.preving.intranet.gestioncentrosapi.model.domain.workers.WorkersFilter;
+import com.preving.intranet.gestioncentrosapi.model.dto.workers.EmployeeProjection;
 import com.preving.security.domain.UsuarioWithRoles;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -15,9 +17,6 @@ import org.apache.poi.ss.usermodel.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.preving.intranet.gestioncentrosapi.model.dao.workers.WorkersRepository;
-import com.preving.intranet.gestioncentrosapi.model.domain.workers.Employees;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletOutputStream;
@@ -25,9 +24,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-
-
+@Service
 public class WorkersManager implements WorkersService{
+
+    @Autowired
+    WorkersRepository workersRepository;
+
+//    @Autowired
+//    private WorkersCustomRepository workersCustomRepository;
 
     private static final String EXPORT_TITLE_1 = "";
     static final String EXPORT_TITLE_2 = "";
@@ -40,13 +44,20 @@ public class WorkersManager implements WorkersService{
     static final String EXPORT_TITLE_9 = "";
     static final String EXPORT_TITLE_10 = "";
 
+    @Override
+    public List<Employees> findAll() {
+        return workersRepository.findAll();
+    }
 
-    @Autowired
-    private WorkersCustomRepository workersCustomRepository;
+    @Override
+    public Employees findById(Long id) {
+        return workersRepository.findById(id).orElse(null);
+    }
 
-    @Autowired
-    private WorkersRepository workersRepository;
-
+//    @Override
+//    public List<Employees> findAllByEmpLabHistoryFchSalidaIsNull() {
+//        return workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionId(2001);
+//    }
 
     @Override
     public ResponseEntity<?> exportWorkers(int workCenterId, WorkersFilter wFilter, HttpServletResponse response, UsuarioWithRoles user) {
@@ -55,8 +66,16 @@ public class WorkersManager implements WorkersService{
 
     //filterWorkers
     @Override
-    public List<Employees> getFilteredEmployees(int workCenterId, WorkersFilter workersFilter, UsuarioWithRoles user) {
-        return this.workersCustomRepository.getEmployeesFiltered(workCenterId, workersFilter, user);
+    public List<Employees> getFilteredEmployees(int workCenterId, WorkersFilter workersFilter) {
+        if(workersFilter.getEmployeeId() != null && workersFilter.getDepartmentId() != null){
+           return workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndIdAndEmpLabHistoryAreaDepartmentId(workCenterId,workersFilter.getEmployeeId(),workersFilter.getDepartmentId());
+        } else if (workersFilter.getDepartmentId() != null) {
+            return workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndEmpLabHistoryAreaDepartmentId(workCenterId,workersFilter.getDepartmentId());
+        }else if (workersFilter.getEmployeeId() != null) {
+            return  workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndId(workCenterId,workersFilter.getEmployeeId());
+        } else {
+            return workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionId(workCenterId);
+        }
     }
 
     // exportWorkers

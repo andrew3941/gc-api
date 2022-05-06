@@ -1,6 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.workers;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.preving.intranet.gestioncentrosapi.model.domain.Department;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
@@ -16,7 +17,7 @@ public class RolesEmployees implements Serializable {
     private String name;
     private int order;
     private int active;
-    private DepartmentEmployees departmentEmployees = new DepartmentEmployees();
+    private Department department = new Department();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date adrUpdated;
     private Date qdrCreated;
@@ -24,12 +25,12 @@ public class RolesEmployees implements Serializable {
     public RolesEmployees() {
     }
 
-    public RolesEmployees(int id, String name, int order, int active, DepartmentEmployees departmentEmployees, Date adrUpdated, Date qdrCreated) {
+    public RolesEmployees(int id, String name, int order, int active, Department department, Date adrUpdated, Date qdrCreated) {
         this.id = id;
         this.name = name;
         this.order = order;
         this.active = active;
-        this.departmentEmployees = departmentEmployees;
+        this.department = department;
         this.adrUpdated = adrUpdated;
         this.qdrCreated = qdrCreated;
     }
@@ -60,9 +61,9 @@ public class RolesEmployees implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "DEPARTAMENTO_ID", referencedColumnName = "ID")
     @NotFound(action = NotFoundAction.IGNORE)
-    public DepartmentEmployees getDepartmentEmployees() {return departmentEmployees;}
-    public void setDepartmentEmployees(DepartmentEmployees departmentEmployees) {
-        this.departmentEmployees = departmentEmployees;}
+    public Department getDepartment() {return department;}
+    public void setDepartment(Department department) {
+        this.department = department;}
 
     @Basic
     @Column( name= "ADR_UPDATED")

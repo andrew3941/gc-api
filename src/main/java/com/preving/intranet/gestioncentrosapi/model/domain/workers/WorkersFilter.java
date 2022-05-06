@@ -1,34 +1,40 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.workers;
 
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class WorkersFilter {
-    private List<Employees> employees = new ArrayList<>();
-    private String card;
+//    private Integer workCenterId;
+    private Long employeeId;
+    private Integer departmentId;
 
     public WorkersFilter() {
     }
 
-    public WorkersFilter(List<Employees> employees, String card) {
-        this.employees = employees;
-        this.card = card;
+    public WorkersFilter(Integer workCenterId, Long employeeId, Integer departmentId) {
+//        this.workCenterId = workCenterId;
+        this.employeeId = employeeId;
+        this.departmentId = departmentId;
     }
 
-    public List<Employees> getEmployees() {
-        return employees;
+//    public Integer getWorkCenterId() {
+//        return workCenterId;
+//    }
+//
+//    public void setWorkCenterId(Integer workCenterId) {
+//        this.workCenterId = workCenterId;
+//    }
+
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployees(List<Employees> employees) {
-        this.employees = employees;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
-    public String getCard() {
-        return card;
+    public Integer getDepartmentId() {
+        return departmentId;
     }
 
-    public void setCard(String card) {
-        this.card = card;
+    public void setDepartmentId(Integer departmentId) {
+        this.departmentId = departmentId;
     }
 }
