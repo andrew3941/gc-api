@@ -975,7 +975,7 @@ public class WorkCentersController {
     }
 
     //    Get mapping for export workers
-    @RequestMapping(value="{workCenterId}/exportWorkers", method = RequestMethod.POST)
+    @RequestMapping(value="{workCenterId}/employees/export", method = RequestMethod.POST)
     public ResponseEntity<?> exportWorkersAction(HttpServletRequest request,
                                                  HttpServletResponse response,
                                                  @PathVariable(value = "workCenterId") int workCenterId,
@@ -1007,22 +1007,7 @@ public class WorkCentersController {
 
     }
 
-//workersFilter
-//    @RequestMapping(value = "{workCenterId}/workers/filter", method = RequestMethod.POST)
-//    public ResponseEntity<?> findWorkersByFilter(HttpServletRequest request,
-//                                                 @PathVariable(value = "workCenterId") int workCenterId,
-//                                                 @RequestBody WorkersFilter workersFilter) {
-//
-//        try {
-//            UsuarioWithRoles user = this.jwtTokenUtil.getUserWithRolesFromToken(request);
-//            List<Employees> workersList = this.workersService.getFilteredEmployees(workCenterId, workersFilter);
-//
-//            return new ResponseEntity<>(workersList, HttpStatus.OK);
-//        } catch (Exception e) {e.printStackTrace();
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//
-//    }
+
 //
 
     @RequestMapping(value = "{workCenterId}/employees", method = RequestMethod.GET)
@@ -1037,9 +1022,18 @@ public class WorkCentersController {
     }
 
 
-}
 
+    @RequestMapping(value = "employees/employeesTypes", method = RequestMethod.GET)
+    public ResponseEntity<?> getEmployeeTypes(){
 
+        try {
+        return new ResponseEntity<>(workersService.getEmployees(), HttpStatus.OK);
+        } catch (Exception e) {
+        e.printStackTrace();
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        }
+        }
 
 
 

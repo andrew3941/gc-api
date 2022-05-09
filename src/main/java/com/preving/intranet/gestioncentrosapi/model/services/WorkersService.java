@@ -30,5 +30,8 @@ public interface WorkersService {
 
     Employees findById(Long id);
 
+
+    //    List all Employees
+    List<Employees> getEmployees();
 //    List<Employees> findAllByEmpLabHistoryFchSalidaIsNull();
 }

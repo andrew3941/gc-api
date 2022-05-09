@@ -33,19 +33,14 @@ public class WorkersManager implements WorkersService{
     @Autowired
     WorkersRepository workersRepository;
 
-//    @Autowired
-//    private WorkersCustomRepository workersCustomRepository;
 
-    private static final String EXPORT_TITLE_1 = "";
-    static final String EXPORT_TITLE_2 = "";
-    static final String EXPORT_TITLE_3 = "";
-    static final String EXPORT_TITLE_4 = "";
-    static final String EXPORT_TITLE_5 = "";
-    static final String EXPORT_TITLE_6 = "";
-    static final String EXPORT_TITLE_7 = "";
-    static final String EXPORT_TITLE_8 = "";
-    static final String EXPORT_TITLE_9 = "";
-    static final String EXPORT_TITLE_10 = "";
+    private static final String EXPORT_TITLE_1 = "Employee";
+    static final String EXPORT_TITLE_2 = "Department";
+    static final String EXPORT_TITLE_3 = "Role in Organization";
+    static final String EXPORT_TITLE_4 = "Email";
+    static final String EXPORT_TITLE_5 = "Telephone";
+    static final String EXPORT_TITLE_6 = "Mobile";
+
 
     @Override
     public List<Employees> findAll() {
@@ -57,11 +52,16 @@ public class WorkersManager implements WorkersService{
         return workersRepository.findById(id).orElse(null);
     }
 
-
     @Override
-    public ResponseEntity<?> exportWorkers(int workCenterId, WorkersFilter wFilter, HttpServletResponse response, UsuarioWithRoles user) {
-        return null;
+    public List<Employees> getEmployees() {
+        return workersRepository.findTop30ByOrderByIdAsc();
     }
+
+//    @Override
+//    public List<Employees> findAllByEmpLabHistoryFchSalidaIsNull() {
+//        return workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionId(2001);
+//    }
+
 
     //filterWorkers
     @Override
@@ -78,79 +78,96 @@ public class WorkersManager implements WorkersService{
     }
 
     // exportWorkers
-//    @Override
-//    public ResponseEntity<?> exportWorkers(int workCenterId, WorkersFilter wFilter, HttpServletResponse response, UsuarioWithRoles user) {
-//
-//        byte[] content = null;
-//
-//        HSSFWorkbook workbook = new HSSFWorkbook();
-//        HSSFSheet hoja = workbook.createSheet();
-//        workbook.setSheetName(0, "performances");
-//
-//        // We create style for the header
-//        CellStyle cellStyleHeaders = workbook.createCellStyle();
-//        CellStyle dateCell = workbook.createCellStyle();
-//        Font font = workbook.createFont();
-//
-//        // TODO color the background of the headers
-//        font.setBold(true);
-//        cellStyleHeaders.setFont(font);
-//
-//        //style for date format
-//        CellStyle cellStyleData = workbook.createCellStyle();
-//        CreationHelper createHelper = workbook.getCreationHelper();
-//        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy"));
-//
-//        // We get the data
-//        List<Employees> employees = this.workersCustomRepository.getEmployeesFiltered(workCenterId, wFilter, user);
-//        String[] titleArray = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4, EXPORT_TITLE_5, EXPORT_TITLE_6, EXPORT_TITLE_7, EXPORT_TITLE_8};
-//        // We create a row in the sheet at position 0 for the headers
-//        HSSFRow headerRow = hoja.createRow(0);
-//
-//        // We create the headers
-//        for (int i = 0; i < titleArray.length; i++) {
-//            HSSFCell celda = headerRow.createCell(i);
-//            celda.setCellValue(titleArray[i]);
-//            celda.setCellStyle(cellStyleHeaders);
-//        }
-//
-//        // We create the rows
-//        HSSFRow dataRow = null;
-//        for (int i = 0; i < employees.size(); i++) {
-//            dataRow = hoja.createRow(1 + i);
-//
-//            //
-//            HSSFCell  = dataRow.createCell(0);
-//            lukman.setCellValue(employees.get(i).());
-//
-//            //
-//            HSSFCell  = dataRow.createCell(1);
-//            gibo.setCellValue(employees.get(i).().());
-//
-//        }
-//
-//        // adjust columns
-//        for (int i = 0; i < titleArray.length; i++) {
-//            hoja.autoSizeColumn(i);
-//        }
-//
-//        try {
-//            String nombreFichero = "report-actions";
-//            response.setContentType("application/vnd.ms-excel");
-//            response.setHeader("Content-Disposition", "inline; filename=\"" +
-//                    java.net.URLEncoder.encode(nombreFichero, "UTF-8")
-//                    + "\"");
-//
-//            ServletOutputStream out = response.getOutputStream();
-//            workbook.write(out);
-//            out.flush();
-//
-//        } catch (IOException ex) {
-//            return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//
-//        return new ResponseEntity<byte[]>(content, HttpStatus.OK);
-//    }
+    @Override
+    public ResponseEntity<?> exportWorkers(int workCenterId,WorkersFilter workersFilter, HttpServletResponse response, UsuarioWithRoles user) {
+
+        byte[] content = null;
+
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet hoja = workbook.createSheet();
+        workbook.setSheetName(0, "performances");
+
+        // We create style for the header
+        CellStyle cellStyleHeaders = workbook.createCellStyle();
+        CellStyle dateCell = workbook.createCellStyle();
+        Font font = workbook.createFont();
+
+        // TODO color the background of the headers
+        font.setBold(true);
+        cellStyleHeaders.setFont(font);
+
+        //style for date format
+        CellStyle cellStyleData = workbook.createCellStyle();
+        CreationHelper createHelper = workbook.getCreationHelper();
+        cellStyleData.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yyyy"));
+
+        // We get the data
+//        List<Employees> employees = this.workersRepository.getFilteredEmployees(workCenterId, workersFilter, user);
+        List<Employees> employees = getFilteredEmployees(workCenterId, workersFilter);
+        String[] titleArray = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4, EXPORT_TITLE_5, EXPORT_TITLE_6};
+        // We create a row in the sheet at position 0 for the headers
+        HSSFRow headerRow = hoja.createRow(0);
+
+        // We create the headers
+        for (int i = 0; i < titleArray.length; i++) {
+            HSSFCell celda = headerRow.createCell(i);
+            celda.setCellValue(titleArray[i]);
+            celda.setCellStyle(cellStyleHeaders);
+        }
+
+        // We create the rows
+        HSSFRow dataRow = null;
+        for (int i = 0; i < employees.size(); i++) {
+            dataRow = hoja.createRow(1 + i);
+
+            //Employee
+            HSSFCell employee  = dataRow.createCell(0);
+            employee .setCellValue(employees.get(i).getName().concat(employees.get(i).getSurnames()));
+
+            // department
+            HSSFCell department = dataRow.createCell(1);
+            department.setCellValue(employees.get(i).getRolesEmployees().getDepartment().getName());
+
+            //Role in Organization
+            HSSFCell Role_in_Organization = dataRow.createCell(2);
+            Role_in_Organization.setCellValue(employees.get(i).getRolesEmployees().getName());
+
+            //Email
+            HSSFCell email = dataRow.createCell(3);
+            email.setCellValue(employees.get(i).getEmpContacto().getEmailPersonal());
+
+            //Telephone
+            HSSFCell telephone = dataRow.createCell(4);
+            telephone.setCellValue(employees.get(i).getEmpContacto().getTfnoPersonal1());
+
+            //Mobile
+            HSSFCell mobile = dataRow.createCell(5);
+            mobile.setCellValue(employees.get(i).getEmpContacto().getTfnoPersonal2());
+
+        }
+
+        // adjust columns
+        for (int i = 0; i < titleArray.length; i++) {
+            hoja.autoSizeColumn(i);
+        }
+
+        try {
+            String nombreFichero = "report-actions";
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-Disposition", "inline; filename=\"" +
+                    java.net.URLEncoder.encode(nombreFichero, "UTF-8")
+                    + "\"");
+
+            ServletOutputStream out = response.getOutputStream();
+            workbook.write(out);
+            out.flush();
+
+        } catch (IOException ex) {
+            return new ResponseEntity<byte[]>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<byte[]>(content, HttpStatus.OK);
+    }
 
 
     @Override
@@ -158,7 +175,9 @@ public class WorkersManager implements WorkersService{
 //        return workersRepository.findAllByName("NOEMI");
         return workersRepository.findTop10ByOrderByIdAsc();
 
+
     }
+
 
 
 }
