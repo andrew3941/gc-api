@@ -1,8 +1,6 @@
 package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.preving.intranet.gestioncentrosapi.model.domain.EmailRaw;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

@@ -35,7 +35,7 @@ public class VehiclesManager implements VehiclesService {
     static final String EXPORT_TITLE_3 = "Model";
     static final String EXPORT_TITLE_4 = "Purchase Mode";
     static final String EXPORT_TITLE_5 = "Responsible";
-    static final String EXPORT_TITLE_6 = "Responsible";
+    static final String EXPORT_TITLE_6 = "Responsible"; //Why is this twice?
     static final String EXPORT_TITLE_7 = "Purchase Date";
     static final String EXPORT_TITLE_8 = "Expiration Date";
     static final String EXPORT_TITLE_9 = "Price";
@@ -88,7 +88,7 @@ public class VehiclesManager implements VehiclesService {
 
         // We get the data
         List<Vehicles> vehicles = this.vehiclesCustomRepository.getVehiclesFiltered(workCenterId, vehiclesFilter, user);
-        String[] titleArray = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4, EXPORT_TITLE_5, EXPORT_TITLE_6, EXPORT_TITLE_7, EXPORT_TITLE_8};
+        String[] titleArray = {EXPORT_TITLE_1, EXPORT_TITLE_2, EXPORT_TITLE_3, EXPORT_TITLE_4, EXPORT_TITLE_5, EXPORT_TITLE_7, EXPORT_TITLE_8,EXPORT_TITLE_10};
         // We create a row in the sheet at position 0 for the headers
         HSSFRow headerRow = hoja.createRow(0);
 
@@ -125,12 +125,16 @@ public class VehiclesManager implements VehiclesService {
             responsibleId.setCellValue(vehicles.get(i).getResponsibleId().getFirstname().concat(vehicles.get(i).getResponsibleId().getLastname()));
             // PurchaseDate
             HSSFCell purchaseDate = dataRow.createCell(5);
-            purchaseDate.setCellValue(vehicles.get(i).getPurchaseDate());
+            if (vehicles.get(i).getPurchaseDate() != null){
+                purchaseDate.setCellValue(vehicles.get(i).getPurchaseDate());
+            }
             purchaseDate.setCellStyle(cellStyleData);
 
             // expirationDate
             HSSFCell expirationDate = dataRow.createCell(6);
-            expirationDate.setCellValue(vehicles.get(i).getExpirationDate());
+            if (vehicles.get(i).getExpirationDate() != null){
+                expirationDate.setCellValue(vehicles.get(i).getExpirationDate());
+            }
             expirationDate.setCellStyle(cellStyleData);
 
             // active
