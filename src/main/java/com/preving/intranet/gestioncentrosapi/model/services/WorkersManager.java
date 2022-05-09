@@ -57,10 +57,6 @@ public class WorkersManager implements WorkersService{
         return workersRepository.findById(id).orElse(null);
     }
 
-//    @Override
-//    public List<Employees> findAllByEmpLabHistoryFchSalidaIsNull() {
-//        return workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionId(2001);
-//    }
 
     @Override
     public ResponseEntity<?> exportWorkers(int workCenterId, WorkersFilter wFilter, HttpServletResponse response, UsuarioWithRoles user) {
@@ -158,9 +154,9 @@ public class WorkersManager implements WorkersService{
 
 
     @Override
-    public List<Employees> getAllEmployees() {
-//        return workersRepository.findAllByNameIsNotNull();
-        return workersRepository.findAllByName("NOEMI");
+    public List<Employees> getAllEmployees(int workCenterId) {
+//        return workersRepository.findAllByName("NOEMI");
+        return workersRepository.findTop10ByOrderByIdAsc();
 
     }
 
