@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.DataInput;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Table(name = "emp_contacto", schema = "rrhh")
@@ -14,7 +16,7 @@ public class EmpContacto  implements Serializable {
     @Id
     @OneToOne
     @JoinColumn(name = "empleado_id",nullable = false)
-    private Employees employee;
+    private Employees employee = new Employees();
 
     @Column(name = "tfno_personal1", length = 9)
     private String tfnoPersonal1;
@@ -41,15 +43,17 @@ public class EmpContacto  implements Serializable {
     private String emailEmpresa;
 
     @Column(name = "adr_updated")
-    private Instant adrUpdated;
+    private Date adrUpdated;
 
     @Column(name = "qdr_created")
-    private Instant qdrCreated;
+    private Date qdrCreated;
+
+
 
     public EmpContacto() {
     }
 
-    public EmpContacto(Employees employee, String tfnoPersonal1, String tfnoPersonal2, String tfnoEmpresa1, String tfnoEmpresa2, BigDecimal saldo, Integer tarifaPlana, String emailPersonal, String emailEmpresa, Instant adrUpdated, Instant qdrCreated) {
+    public EmpContacto(Employees employee, String tfnoPersonal1, String tfnoPersonal2, String tfnoEmpresa1, String tfnoEmpresa2, BigDecimal saldo, Integer tarifaPlana, String emailPersonal, String emailEmpresa, Date adrUpdated, Date qdrCreated) {
         this.employee = employee;
         this.tfnoPersonal1 = tfnoPersonal1;
         this.tfnoPersonal2 = tfnoPersonal2;
@@ -63,19 +67,19 @@ public class EmpContacto  implements Serializable {
         this.qdrCreated = qdrCreated;
     }
 
-    public Instant getQdrCreated() {
+    public Date getQdrCreated() {
         return qdrCreated;
     }
 
-    public void setQdrCreated(Instant qdrCreated) {
+    public void setQdrCreated(Date qdrCreated) {
         this.qdrCreated = qdrCreated;
     }
 
-    public Instant getAdrUpdated() {
+    public Date getAdrUpdated() {
         return adrUpdated;
     }
 
-    public void setAdrUpdated(Instant adrUpdated) {
+    public void setAdrUpdated(Date adrUpdated) {
         this.adrUpdated = adrUpdated;
     }
 

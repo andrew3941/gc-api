@@ -3,46 +3,52 @@ package com.preving.intranet.gestioncentrosapi.model.domain;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import java.time.Instant;
+import java.util.Date;
 
 
 @Entity
 @Table(schema = "RRHH", name = "TM_DEPARTAMENTOS")
 public class Department {
+
     private int id;
     private String name;
     private int order;
     private int active;
+    private Date adrUpdated;
+    private Date qdrCreated;
 
-    @Column(name = "adr_updated")
-    private Instant adrUpdated;
+
 
     @Column(name = "qdr_created")
-    private Instant qdrCreated;
-
-    public Instant getQdrCreated() {
+    public Date getQdrCreated() {
         return qdrCreated;
     }
+    public void setQdrCreated(Date qdrCreated) {this.qdrCreated = qdrCreated;}
 
-    public void setQdrCreated(Instant qdrCreated) {
-        this.qdrCreated = qdrCreated;
-    }
-
-    public Instant getAdrUpdated() {
-        return adrUpdated;
-    }
-
-    public void setAdrUpdated(Instant adrUpdated) {
+    @Column(name = "adr_updated")
+    public Date getAdrUpdated() {return adrUpdated;}
+    public void setAdrUpdated(Date adrUpdated) {
         this.adrUpdated = adrUpdated;
     }
 
     public Department() {
     }
 
-    public Department(int id, String name, int order, int active) {
+//    public Department(int id, String name, int order, int active) {
+//        this.id = id;
+//        this.name = name;
+//        this.order = order;
+//        this.active = active;
+//    }
+
+
+    public Department(int id, String name, int order, int active, Date adrUpdated, Date qdrCreated) {
         this.id = id;
         this.name = name;
         this.order = order;
         this.active = active;
+        this.adrUpdated = adrUpdated;
+        this.qdrCreated = qdrCreated;
     }
 
     @Id

@@ -1024,16 +1024,17 @@ public class WorkCentersController {
 //
 //    }
 //
-//    @RequestMapping(value = "employees", method = RequestMethod.GET)
-//    public ResponseEntity<?> getAllEmployees(){
-//
-//        try {
-//            return new ResponseEntity<>(workersService.getAllEmployees(), HttpStatus.OK);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+
+    @RequestMapping(value = "employees", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllEmployees(){
+
+        try {
+            return new ResponseEntity<>(workersService.getAllEmployees(), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 
 }

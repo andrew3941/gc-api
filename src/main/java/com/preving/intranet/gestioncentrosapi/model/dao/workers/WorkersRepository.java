@@ -1,6 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.dao.workers;
 
 
+import com.preving.intranet.gestioncentrosapi.model.domain.vehicles.Vehicles;
 import com.preving.intranet.gestioncentrosapi.model.domain.workers.Employees;
 import com.preving.intranet.gestioncentrosapi.model.dto.workers.EmployeeProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,7 +19,11 @@ public interface WorkersRepository extends JpaRepository<Employees, Long> {
    List<Employees> findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndIdAndEmpLabHistoryAreaDepartmentId(int delegacionId,Long idEmployee,int idDepartment);
    List<Employees> findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndId(int delegacionId,Long idEmployee);
    List<Employees> findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndEmpLabHistoryAreaDepartmentId(int delegacionId,int idDepartment);
-    List<Employees> findAllByName(String name);
+
+
+   List<Employees> findAllByName(String name);
+//   List<Employees> findAllByNameIsNotNull();
+
 
 
 }
