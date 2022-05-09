@@ -18,7 +18,7 @@ import java.util.List;
 public interface WorkersService {
 
     //    List all Employees
-    List<Employees> getAllEmployees();
+    List<Employees> getAllEmployees(int workCenterId);
 
 
     //    Export Workers

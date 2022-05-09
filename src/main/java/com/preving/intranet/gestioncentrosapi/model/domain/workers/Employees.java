@@ -15,7 +15,7 @@ import java.util.List;
 @Table(schema = "RRHH", name ="EMPLEADOS")
 public class Employees implements Serializable {
 
-    private int id;
+    private Long id;
     private String nif;
     private String nss;
     private String name;
@@ -23,19 +23,17 @@ public class Employees implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date dateBirth;
     private String ccc;
-    private String image;
+    private Byte[] image;
     private int haveImage;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date oldDate;
-//    private int insertBy;
     private User insertBy = new User();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
-    private Date insertDate;
-//    private int updateBy;
+    private Date insertFch;
     private User updateBy= new  User();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
-    private Date updateDate;
-    private String cv;
+    private Date updateFch;
+    private Byte[] cv;
     private String cvContentType;
     private int cvHas;
     private int variable;
@@ -46,7 +44,7 @@ public class Employees implements Serializable {
     private Integer lastYearCongratulations;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date updateIbanFch;
-    private int mileageValue;
+    private Integer mileageValue;
     private int disability;
     private int socialExclusion;
     private Integer disabilityPct;
@@ -59,7 +57,7 @@ public class Employees implements Serializable {
     public Employees() {
     }
 
-    public Employees(int id, String nif, String nss, String name, String surnames, Date dateBirth, String ccc, String image, int haveImage, Date oldDate, User insertBy, Date insertDate, User updateBy, Date updateDate, String cv, String cvContentType, int cvHas, int variable, RolesEmployees rolesEmployees, String qualificationSerpa, String sex, String theyWerePre, int lastYearCongratulations, Date updateIbanFch, int mileageValue, Integer disability, int socialExclusion, int disabilityPct, Date adrUpdated, Date qdrCreated, EmpContacto empContacto, List<EmpLabHistory> empLabHistory) {
+    public Employees(Long id, String nif, String nss, String name, String surnames, Date dateBirth, String ccc, Byte[] image, int haveImage, Date oldDate, User insertBy, Date insertFch, User updateBy, Date updateFch, Byte[] cv, String cvContentType, int cvHas, int variable, RolesEmployees rolesEmployees, String qualificationSerpa, String sex, String theyWerePre, Integer lastYearCongratulations, Date updateIbanFch, Integer mileageValue, int disability, int socialExclusion, Integer disabilityPct, Date adrUpdated, Date qdrCreated, EmpContacto empContacto, List<EmpLabHistory> empLabHistory) {
         this.id = id;
         this.nif = nif;
         this.nss = nss;
@@ -71,9 +69,9 @@ public class Employees implements Serializable {
         this.haveImage = haveImage;
         this.oldDate = oldDate;
         this.insertBy = insertBy;
-        this.insertDate = insertDate;
+        this.insertFch = insertFch;
         this.updateBy = updateBy;
-        this.updateDate = updateDate;
+        this.updateFch = updateFch;
         this.cv = cv;
         this.cvContentType = cvContentType;
         this.cvHas = cvHas;
@@ -98,8 +96,8 @@ public class Employees implements Serializable {
     @Column(name = "ID", nullable = false)
     @SequenceGenerator(name = "EMPLEADOS", sequenceName = "EMPLEADOS", schema = "RRHH", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EMPLEADOS")
-    public int getId() {return id;}
-    public void setId(int id) {this.id = id;}
+    public Long getId() {return id;}
+    public void setId(Long id) {this.id = id;}
 
     @Basic
     @Column( name= "NIF")
@@ -136,10 +134,10 @@ public class Employees implements Serializable {
     @Basic
     @Column(name = "IMAGEN")
     @JsonIgnore
-    public String getImage() {
+    public Byte[] getImage() {
         return image;
     }
-    public void setImage(String image) {
+    public void setImage(Byte[] image) {
         this.image = image;
     }
 
@@ -163,8 +161,8 @@ public class Employees implements Serializable {
     @Basic
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     @Column(name= "INSERT_FCH")
-    public Date getInsertFch() {return insertDate;}
-    public void setInsertFch(Date insertFch) {this.insertDate = insertFch;}
+    public Date getInsertFch() {return insertFch;}
+    public void setInsertFch(Date insertFch) {this.insertFch = insertFch;}
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "UPDATE_BY", referencedColumnName = "ID")
@@ -175,16 +173,16 @@ public class Employees implements Serializable {
     @Basic
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     @Column(name = " UPDATE_FCH")
-    public Date getUpdateFch() {return updateDate;}
-    public void setUpdateFch(Date updateFch) {this.updateDate = updateFch;}
+    public Date getUpdateFch() {return updateFch;}
+    public void setUpdateFch(Date updateFch) {this.updateFch = updateFch;}
 
     @Basic
     @Column(name = "CV")
     @JsonIgnore
-    public String getCv() {
+    public Byte[] getCv() {
         return cv;
     }
-    public void setCv(String cv) {
+    public void setCv(Byte[] cv) {
         this.cv = cv;
     }
 
@@ -294,5 +292,6 @@ public class Employees implements Serializable {
     public void setEmpLabHistory(List<EmpLabHistory> empLabHistory) {
         this.empLabHistory = empLabHistory;
     }
+
 
 }

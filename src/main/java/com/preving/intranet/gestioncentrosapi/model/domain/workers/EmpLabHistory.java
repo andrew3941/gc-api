@@ -6,49 +6,48 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Date;
 
 @Entity
 @Table(name = "emp_historialab", schema = "rrhh")
 public class EmpLabHistory {
     @Id
     @Column(name = "id", nullable = false)
-    private int id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "empleado_id")
-    private Employees employee = new Employees();
+    private Employees employee;
 
     @Column(name = "delegacion_id", nullable = false)
     private int delegacionId;
 
     @ManyToOne
     @JoinColumn(name = "area_id",nullable = false)
-    private Area area ;
+    private Area area;
 
     @Column(name = "puesto_id", nullable = false)
     private BigDecimal puestoId;
 
     @Column(name = "fch_entrada", nullable = false)
-    private Date fchEntrada;
+    private Instant fchEntrada;
 
     @Column(name = "fch_salida")
-    private Date fchSalida;
+    private Instant fchSalida;
 
     @Column(name = "rl_id", nullable = false)
-    private int rlId;
+    private BigDecimal rlId;
 
     @Column(name = "insert_by", nullable = false)
-    private int insertBy;
+    private BigDecimal insertBy;
 
     @Column(name = "insert_fch", nullable = false)
-    private Date insertFch;
+    private Instant insertFch;
 
     @Column(name = "update_by")
-    private int updateBy;
+    private BigDecimal updateBy;
 
     @Column(name = "update_fch")
-    private Date updateFch;
+    private Instant updateFch;
 
     @Column(name = "nivel_id")
     private BigDecimal nivelId;
@@ -56,34 +55,28 @@ public class EmpLabHistory {
     @Column(name = "rol_organigrama_id")
     private BigDecimal rolOrganigramaId;
 
-
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "rol_organigrama_id", referencedColumnName = "ID")
-//    private RolesEmployees rolesEmployees;
-
     @Column(name = "convenio_id")
-    private int convenioId;
+    private Integer convenioId;
 
     @Column(name = "adr_updated")
-    private Date adrUpdated;
+    private Instant adrUpdated;
 
     @Column(name = "qdr_created")
-    private Date qdrCreated;
+    private Instant qdrCreated;
 
-
-    public Date getQdrCreated() {
+    public Instant getQdrCreated() {
         return qdrCreated;
     }
 
-    public void setQdrCreated(Date qdrCreated) {
+    public void setQdrCreated(Instant qdrCreated) {
         this.qdrCreated = qdrCreated;
     }
 
-    public Date getAdrUpdated() {
+    public Instant getAdrUpdated() {
         return adrUpdated;
     }
 
-    public void setAdrUpdated(Date adrUpdated) {
+    public void setAdrUpdated(Instant adrUpdated) {
         this.adrUpdated = adrUpdated;
     }
 
@@ -103,52 +96,67 @@ public class EmpLabHistory {
         this.rolOrganigramaId = rolOrganigramaId;
     }
 
+    public BigDecimal getNivelId() {
+        return nivelId;
+    }
 
-//    public RolesEmployees getRolesEmployees() {return rolesEmployees;}
-//    public void setRolesEmployees(RolesEmployees rolesEmployees) {this.rolesEmployees = rolesEmployees;
-//    }
+    public void setNivelId(BigDecimal nivelId) {
+        this.nivelId = nivelId;
+    }
 
-    public BigDecimal getNivelId() {return nivelId;}
-    public void setNivelId(BigDecimal nivelId) {this.nivelId = nivelId;}
+    public Instant getUpdateFch() {
+        return updateFch;
+    }
 
-    public Date getUpdateFch() {return updateFch;}
-    public void setUpdateFch(Date updateFch) {this.updateFch = updateFch;}
+    public void setUpdateFch(Instant updateFch) {
+        this.updateFch = updateFch;
+    }
 
-    public int getUpdateBy() {return updateBy;}
-    public void setUpdateBy(int updateBy) {this.updateBy = updateBy;}
+    public BigDecimal getUpdateBy() {
+        return updateBy;
+    }
 
-    public Date getInsertFch() {return insertFch;}
-    public void setInsertFch(Date insertFch) {this.insertFch = insertFch;}
+    public void setUpdateBy(BigDecimal updateBy) {
+        this.updateBy = updateBy;
+    }
 
-    public int getInsertBy() {
+    public Instant getInsertFch() {
+        return insertFch;
+    }
+
+    public void setInsertFch(Instant insertFch) {
+        this.insertFch = insertFch;
+    }
+
+    public BigDecimal getInsertBy() {
         return insertBy;
     }
 
-    public void setInsertBy(int insertBy) {
+    public void setInsertBy(BigDecimal insertBy) {
         this.insertBy = insertBy;
     }
 
-    public int getRlId() {
+    public BigDecimal getRlId() {
         return rlId;
     }
 
-    public void setRlId(int rlId) {
+    public void setRlId(BigDecimal rlId) {
         this.rlId = rlId;
     }
 
-    public Date getFchSalida() {
+    public Instant getFchSalida() {
         return fchSalida;
     }
 
-    public void setFchSalida(Date fchSalida) {
+    public void setFchSalida(Instant fchSalida) {
         this.fchSalida = fchSalida;
     }
 
-    public Date getFchEntrada() {
+    public Instant getFchEntrada() {
         return fchEntrada;
     }
 
-    public void setFchEntrada(Date fchEntrada) {
+    public void setFchEntrada(Instant fchEntrada) {
         this.fchEntrada = fchEntrada;
     }
 
@@ -185,11 +193,11 @@ public class EmpLabHistory {
         this.employee = employee;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

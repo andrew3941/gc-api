@@ -1025,11 +1025,11 @@ public class WorkCentersController {
 //    }
 //
 
-    @RequestMapping(value = "employees", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllEmployees(){
+    @RequestMapping(value = "{workCenterId}/employees", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllEmployees(@PathVariable(value = "workCenterId") int workCenterId){
 
         try {
-            return new ResponseEntity<>(workersService.getAllEmployees(), HttpStatus.OK);
+            return new ResponseEntity<>(workersService.getAllEmployees(workCenterId), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

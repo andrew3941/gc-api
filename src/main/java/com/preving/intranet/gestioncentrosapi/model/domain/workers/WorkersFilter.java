@@ -1,7 +1,7 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.workers;
 
 public class WorkersFilter {
-//    private Integer workCenterId;
+    //    private Integer workCenterId;
     private Long employeeId;
     private Integer departmentId;
 

@@ -5,73 +5,97 @@ import com.preving.intranet.gestioncentrosapi.model.domain.Department;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Date;
 
 @Entity
-@Table(name = "TM_AREAS", schema = "RRHH")
+@Table(name = "tm_areas", schema = "rrhh")
 public class Area {
     @Id
-    @Column(name = "ID", nullable = false)
-    private int id;
+    @Column(name = "id", nullable = false)
+    private Long id;
 
-    @Column(name = "NOMBRE", nullable = false, length = 100)
-    private String name;
+    @Column(name = "nombre", nullable = false, length = 100)
+    private String nombre;
 
-    @Column(name = "ORDEN", nullable = false)
-    private int order;
+    @Column(name = "orden", nullable = false)
+    private BigDecimal orden;
 
-    @Column(name = "ACTIVO", nullable = false)
-    private int active;
+    @Column(name = "activo", nullable = false)
+    private Integer activo;
 
     @ManyToOne
-    @JoinColumn(name = "DEPARTAMENTO_ID",nullable = false)
-    private Department department = new Department();
+    @JoinColumn(name = "departamento_id",nullable = false)
+    private Department department;
 
-    @Column(name = "REDMINE_PROJECT", length = 200)
+    @Column(name = "redmine_project", length = 200)
     private String redmineProject;
 
-    @Column(name = "ADR_UPDATED")
-    private Date adrUpdated;
+    @Column(name = "adr_updated")
+    private Instant adrUpdated;
 
-    @Column(name = "QDR_CREATED")
-    private Date qdrCreated;
+    @Column(name = "qdr_created")
+    private Instant qdrCreated;
 
-    public Area() {
+    public Instant getQdrCreated() {
+        return qdrCreated;
     }
 
-
-    public Area(int id, String name, int order, int active, Department department, String redmineProject, Date adrUpdated, Date qdrCreated) {
-        this.id = id;
-        this.name = name;
-        this.order = order;
-        this.active = active;
-        this.department = department;
-        this.redmineProject = redmineProject;
-        this.adrUpdated = adrUpdated;
+    public void setQdrCreated(Instant qdrCreated) {
         this.qdrCreated = qdrCreated;
     }
 
-    public Date getQdrCreated() {return qdrCreated;}
-    public void setQdrCreated(Date qdrCreated) {this.qdrCreated = qdrCreated;}
+    public Instant getAdrUpdated() {
+        return adrUpdated;
+    }
 
-    public Date getAdrUpdated() {return adrUpdated;}
-    public void setAdrUpdated(Date adrUpdated) {this.adrUpdated = adrUpdated;}
+    public void setAdrUpdated(Instant adrUpdated) {
+        this.adrUpdated = adrUpdated;
+    }
 
-    public String getRedmineProject() {return redmineProject;}
-    public void setRedmineProject(String redmineProject) {this.redmineProject = redmineProject;}
+    public String getRedmineProject() {
+        return redmineProject;
+    }
 
-    public Department getDepartment() {return department;}
-    public void setDepartment(Department department) {this.department = department;}
+    public void setRedmineProject(String redmineProject) {
+        this.redmineProject = redmineProject;
+    }
 
-    public int getActive() {return active;}
-    public void setActive(int active) {this.active = active;}
+    public Department getDepartament() {
+        return department;
+    }
 
-    public int getOrder() {return order;}
-    public void setOrder(int order) {this.order = order;}
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 
-    public String getName() {return name;}
-    public void setName(String name) {this.name = name;}
+    public Integer getActivo() {
+        return activo;
+    }
 
-    public int getId() {return id;}
-    public void setId(int id) {this.id = id;}
+    public void setActivo(Integer activo) {
+        this.activo = activo;
+    }
+
+    public BigDecimal getOrden() {
+        return orden;
+    }
+
+    public void setOrden(BigDecimal orden) {
+        this.orden = orden;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
