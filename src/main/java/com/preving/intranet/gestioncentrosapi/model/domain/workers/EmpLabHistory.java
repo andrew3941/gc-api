@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Table(name = "emp_historialab", schema = "rrhh")
@@ -25,8 +26,9 @@ public class EmpLabHistory {
     @JoinColumn(name = "area_id",nullable = false)
     private Area area;
 
-    @Column(name = "puesto_id", nullable = false)
-    private BigDecimal puestoId;
+    @ManyToOne
+    @JoinColumn(name = "puesto_id")
+    private Puesto puesto;
 
     @Column(name = "fch_entrada", nullable = false)
     private Instant fchEntrada;
@@ -35,48 +37,48 @@ public class EmpLabHistory {
     private Instant fchSalida;
 
     @Column(name = "rl_id", nullable = false)
-    private BigDecimal rlId;
+    private Integer rlId;
 
     @Column(name = "insert_by", nullable = false)
-    private BigDecimal insertBy;
+    private Integer insertBy;
 
     @Column(name = "insert_fch", nullable = false)
     private Instant insertFch;
 
     @Column(name = "update_by")
-    private BigDecimal updateBy;
+    private Integer updateBy;
 
     @Column(name = "update_fch")
     private Instant updateFch;
 
     @Column(name = "nivel_id")
-    private BigDecimal nivelId;
+    private Integer nivelId;
 
     @Column(name = "rol_organigrama_id")
-    private BigDecimal rolOrganigramaId;
+    private Integer rolOrganigramaId;
 
     @Column(name = "convenio_id")
     private Integer convenioId;
 
     @Column(name = "adr_updated")
-    private Instant adrUpdated;
+    private Date adrUpdated;
 
     @Column(name = "qdr_created")
-    private Instant qdrCreated;
+    private Date qdrCreated;
 
-    public Instant getQdrCreated() {
+    public Date getQdrCreated() {
         return qdrCreated;
     }
 
-    public void setQdrCreated(Instant qdrCreated) {
+    public void setQdrCreated(Date qdrCreated) {
         this.qdrCreated = qdrCreated;
     }
 
-    public Instant getAdrUpdated() {
+    public Date getAdrUpdated() {
         return adrUpdated;
     }
 
-    public void setAdrUpdated(Instant adrUpdated) {
+    public void setAdrUpdated(Date adrUpdated) {
         this.adrUpdated = adrUpdated;
     }
 
@@ -88,19 +90,19 @@ public class EmpLabHistory {
         this.convenioId = convenioId;
     }
 
-    public BigDecimal getRolOrganigramaId() {
+    public Integer getRolOrganigramaId() {
         return rolOrganigramaId;
     }
 
-    public void setRolOrganigramaId(BigDecimal rolOrganigramaId) {
+    public void setRolOrganigramaId(Integer rolOrganigramaId) {
         this.rolOrganigramaId = rolOrganigramaId;
     }
 
-    public BigDecimal getNivelId() {
+    public Integer getNivelId() {
         return nivelId;
     }
 
-    public void setNivelId(BigDecimal nivelId) {
+    public void setNivelId(Integer nivelId) {
         this.nivelId = nivelId;
     }
 
@@ -112,11 +114,11 @@ public class EmpLabHistory {
         this.updateFch = updateFch;
     }
 
-    public BigDecimal getUpdateBy() {
+    public Integer getUpdateBy() {
         return updateBy;
     }
 
-    public void setUpdateBy(BigDecimal updateBy) {
+    public void setUpdateBy(Integer updateBy) {
         this.updateBy = updateBy;
     }
 
@@ -128,19 +130,19 @@ public class EmpLabHistory {
         this.insertFch = insertFch;
     }
 
-    public BigDecimal getInsertBy() {
+    public Integer getInsertBy() {
         return insertBy;
     }
 
-    public void setInsertBy(BigDecimal insertBy) {
+    public void setInsertBy(Integer insertBy) {
         this.insertBy = insertBy;
     }
 
-    public BigDecimal getRlId() {
+    public Integer getRlId() {
         return rlId;
     }
 
-    public void setRlId(BigDecimal rlId) {
+    public void setRlId(Integer rlId) {
         this.rlId = rlId;
     }
 
@@ -160,12 +162,21 @@ public class EmpLabHistory {
         this.fchEntrada = fchEntrada;
     }
 
-    public BigDecimal getPuestoId() {
-        return puestoId;
+    @JsonIgnore
+    public Employees getEmployee() {
+        return employee;
     }
 
-    public void setPuestoId(BigDecimal puestoId) {
-        this.puestoId = puestoId;
+    public void setEmployee(Employees employee) {
+        this.employee = employee;
+    }
+
+    public Puesto getPuesto() {
+        return puesto;
+    }
+
+    public void setPuesto(Puesto puesto) {
+        this.puesto = puesto;
     }
 
     public Area getArea() {
