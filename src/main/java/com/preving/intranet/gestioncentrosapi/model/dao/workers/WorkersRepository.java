@@ -17,9 +17,9 @@ import java.util.Optional;
 public interface WorkersRepository extends JpaRepository<Employees, Long> {
     Optional<Employees> findById(Long id);
    List<Employees> findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionId(int delegacionId);
-   List<Employees> findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndIdAndEmpLabHistoryAreaDepartmentId(int delegacionId,Long idEmployee,int idDepartment);
-   List<Employees> findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndId(int delegacionId,Long idEmployee);
-   List<Employees> findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndEmpLabHistoryAreaDepartmentId(int delegacionId,int idDepartment);
+   List<Employees> findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndIdInAndEmpLabHistoryAreaDepartmentIdIn(int delegacionId,List<Integer> workersId,List<Integer> idDepartment);
+   List<Employees> findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndIdIn(int delegacionId,List<Integer> workersId);
+   List<Employees> findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndEmpLabHistoryAreaDepartmentIdIn(int delegacionId,List<Integer> idDepartment);
 
 
    List<Employees> findAllByName(String name);

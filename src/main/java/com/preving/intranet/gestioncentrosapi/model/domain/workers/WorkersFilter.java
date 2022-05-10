@@ -1,14 +1,16 @@
 package com.preving.intranet.gestioncentrosapi.model.domain.workers;
 
+import java.util.List;
+
 public class WorkersFilter {
     //    private Integer workCenterId;
-    private Long employeeId;
-    private Integer departmentId;
+    private List<Integer> employeeId;
+    private List<Integer> departmentId;
 
     public WorkersFilter() {
     }
 
-    public WorkersFilter(Integer workCenterId, Long employeeId, Integer departmentId) {
+    public WorkersFilter(List<Integer> employeeId, List<Integer> departmentId) {
 //        this.workCenterId = workCenterId;
         this.employeeId = employeeId;
         this.departmentId = departmentId;
@@ -22,19 +24,19 @@ public class WorkersFilter {
 //        this.workCenterId = workCenterId;
 //    }
 
-    public Long getEmployeeId() {
+    public List<Integer> getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(Long employeeId) {
+    public void setEmployeeId(List<Integer> employeeId) {
         this.employeeId = employeeId;
     }
 
-    public Integer getDepartmentId() {
+    public List<Integer> getDepartmentId() {
         return departmentId;
     }
 
-    public void setDepartmentId(Integer departmentId) {
+    public void setDepartmentId(List<Integer> departmentId) {
         this.departmentId = departmentId;
     }
 }

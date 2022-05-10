@@ -39,8 +39,8 @@ public class WorkersManager implements WorkersService{
     private static final String EXPORT_TITLE_2 = "Departamento";
     private static final String EXPORT_TITLE_3 = "Puesto";
     private static final String EXPORT_TITLE_4 = "Email";
-    private static final String EXPORT_TITLE_5 = "Teléfono";
-    private static final String EXPORT_TITLE_6 = "Móvil";
+    private static final String EXPORT_TITLE_5 = "Telï¿½fono";
+    private static final String EXPORT_TITLE_6 = "Mï¿½vil";
 
 
     @Override
@@ -67,12 +67,12 @@ public class WorkersManager implements WorkersService{
     //filterWorkers
     @Override
     public List<Employees> getFilteredEmployees(int workCenterId, WorkersFilter workersFilter) {
-        if(workersFilter.getEmployeeId() != null && workersFilter.getDepartmentId() != null){
-           return workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndIdAndEmpLabHistoryAreaDepartmentId(workCenterId,workersFilter.getEmployeeId(),workersFilter.getDepartmentId());
-        } else if (workersFilter.getDepartmentId() != null) {
-            return workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndEmpLabHistoryAreaDepartmentId(workCenterId,workersFilter.getDepartmentId());
-        }else if (workersFilter.getEmployeeId() != null) {
-            return  workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndId(workCenterId,workersFilter.getEmployeeId());
+        if(workersFilter.getEmployeeId().size() > 0 && workersFilter.getDepartmentId().size() > 0){
+           return workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndIdInAndEmpLabHistoryAreaDepartmentIdIn(workCenterId,workersFilter.getEmployeeId(),workersFilter.getDepartmentId());
+        } else if (workersFilter.getDepartmentId().size() > 0) {
+            return workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndEmpLabHistoryAreaDepartmentIdIn(workCenterId,workersFilter.getDepartmentId());
+        }else if (workersFilter.getEmployeeId().size() > 0) {
+            return  workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndIdIn(workCenterId,workersFilter.getEmployeeId());
         } else {
             return workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionId(workCenterId);
         }
