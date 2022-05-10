@@ -77,6 +77,11 @@ public class WorkersManager implements WorkersService{
         }
     }
 
+    @Override
+    public List<Employees> getWorkcenterEmployees(int workCenterId){
+        return workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionId(workCenterId);
+    }
+
     // exportWorkers
     @Override
     public ResponseEntity<?> exportWorkers(int workCenterId,WorkersFilter workersFilter, HttpServletResponse response, UsuarioWithRoles user) {

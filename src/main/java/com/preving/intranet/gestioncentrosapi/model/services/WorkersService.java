@@ -26,6 +26,8 @@ public interface WorkersService {
    //WorkersFilter
     List<Employees> getFilteredEmployees(int workCenterId, WorkersFilter workersFilter);
 
+    List<Employees> getWorkcenterEmployees(int workCenterId);
+
     List<Employees> findAll();
 
     Employees findById(Long id);
