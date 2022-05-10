@@ -20,14 +20,9 @@ public interface WorkersRepository extends JpaRepository<Employees, Long> {
    List<Employees> findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndIdAndEmpLabHistoryAreaDepartmentId(int delegacionId,Long idEmployee,int idDepartment);
    List<Employees> findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndId(int delegacionId,Long idEmployee);
    List<Employees> findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionIdAndEmpLabHistoryAreaDepartmentId(int delegacionId,int idDepartment);
-//    List<Employees> findAllByName(String name);
 
 
+   List<Employees> findAllByName(String name);
+//   List<Employees> findAllByNameIsNotNull();
 
-//   List<Employees> findAllByName(String name);
-
-   List<Employees> findTop10ByOrderByIdAsc();
-
-
-   List<Employees> findTop30ByOrderByIdAsc();
 }

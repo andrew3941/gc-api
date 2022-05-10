@@ -59,7 +59,7 @@ public class Area {
         this.redmineProject = redmineProject;
     }
 
-    public Department getDepartament() {
+    public Department getDepartment() {
         return department;
     }
 

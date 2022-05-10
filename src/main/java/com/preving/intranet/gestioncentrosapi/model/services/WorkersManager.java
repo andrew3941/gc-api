@@ -2,6 +2,7 @@ package com.preving.intranet.gestioncentrosapi.model.services;
 
 import com.preving.intranet.gestioncentrosapi.model.dao.workers.WorkersCustomRepository;
 import com.preving.intranet.gestioncentrosapi.model.dao.workers.WorkersRepository;
+import com.preving.intranet.gestioncentrosapi.model.domain.workers.EmpLabHistory;
 import com.preving.intranet.gestioncentrosapi.model.domain.workers.Employees;
 import com.preving.intranet.gestioncentrosapi.model.domain.workers.WorkersFilter;
 import com.preving.intranet.gestioncentrosapi.model.dto.workers.EmployeeProjection;
@@ -34,12 +35,12 @@ public class WorkersManager implements WorkersService{
     WorkersRepository workersRepository;
 
 
-    private static final String EXPORT_TITLE_1 = "Employee";
-    static final String EXPORT_TITLE_2 = "Department";
-    static final String EXPORT_TITLE_3 = "Role in Organization";
-    static final String EXPORT_TITLE_4 = "Email";
-    static final String EXPORT_TITLE_5 = "Telephone";
-    static final String EXPORT_TITLE_6 = "Mobile";
+    private static final String EXPORT_TITLE_1 = "Trabajador";
+    private static final String EXPORT_TITLE_2 = "Departamento";
+    private static final String EXPORT_TITLE_3 = "Puesto";
+    private static final String EXPORT_TITLE_4 = "Email";
+    private static final String EXPORT_TITLE_5 = "Teléfono";
+    private static final String EXPORT_TITLE_6 = "Móvil";
 
 
     @Override
@@ -52,10 +53,10 @@ public class WorkersManager implements WorkersService{
         return workersRepository.findById(id).orElse(null);
     }
 
-    @Override
-    public List<Employees> getEmployees() {
-        return workersRepository.findTop30ByOrderByIdAsc();
-    }
+//    @Override
+//    public List<Employees> getEmployees() {
+//        return workersRepository.findTop30ByOrderByIdAsc();
+//    }
 
 //    @Override
 //    public List<Employees> findAllByEmpLabHistoryFchSalidaIsNull() {
@@ -127,15 +128,19 @@ public class WorkersManager implements WorkersService{
 
             //Employee
             HSSFCell employee  = dataRow.createCell(0);
-            employee .setCellValue(employees.get(i).getName().concat(employees.get(i).getSurnames()));
+            employee.setCellValue(employees.get(i).getName().concat(employees.get(i).getSurnames()));
 
             // department
             HSSFCell department = dataRow.createCell(1);
-            department.setCellValue(employees.get(i).getRolesEmployees().getDepartment().getName());
+            for (EmpLabHistory history : employees.get(i).getEmpLabHistory()) {
+                if (history.getFchSalida() == null) {
+                    department.setCellValue(history.getArea().getDepartment().getName());
+                }
+            }
 
             //Role in Organization
-            HSSFCell Role_in_Organization = dataRow.createCell(2);
-            Role_in_Organization.setCellValue(employees.get(i).getRolesEmployees().getName());
+//            HSSFCell Role_in_Organization = dataRow.createCell(2);
+//            Role_in_Organization.setCellValue(employees.get(i).getRolesEmployees().getName());
 
             //Email
             HSSFCell email = dataRow.createCell(3);
@@ -174,15 +179,9 @@ public class WorkersManager implements WorkersService{
         return new ResponseEntity<byte[]>(content, HttpStatus.OK);
     }
 
-
     @Override
-    public List<Employees> getAllEmployees(int workCenterId) {
-//        return workersRepository.findAllByName("NOEMI");
-        return workersRepository.findTop10ByOrderByIdAsc();
-
-
+    public List<Employees> getEmployeesByWorkCenterId(int workCenterId) {
+        return workersRepository.findAllByEmpLabHistoryFchSalidaIsNullAndEmpLabHistoryDelegacionId(workCenterId);
     }
-
-
 
 }

@@ -18,7 +18,7 @@ import java.util.List;
 public interface WorkersService {
 
     //    List all Employees
-    List<Employees> getAllEmployees(int workCenterId);
+    List<Employees> getEmployeesByWorkCenterId(int workCenterId);
 
 
     //    Export Workers
@@ -32,8 +32,5 @@ public interface WorkersService {
 
     Employees findById(Long id);
 
-
-    //    List all Employees
-    List<Employees> getEmployees();
 //    List<Employees> findAllByEmpLabHistoryFchSalidaIsNull();
 }

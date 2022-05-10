@@ -30,16 +30,16 @@ import java.util.List;
 
 @Service
 public class VehiclesManager implements VehiclesService {
-    private static final String EXPORT_TITLE_1 = "Enrollment";
-    static final String EXPORT_TITLE_2 = "Brand";
-    static final String EXPORT_TITLE_3 = "Model";
-    static final String EXPORT_TITLE_4 = "Purchase Mode";
-    static final String EXPORT_TITLE_5 = "Responsible";
+    private static final String EXPORT_TITLE_1 = "Matrícula";
+    static final String EXPORT_TITLE_2 = "Marca";
+    static final String EXPORT_TITLE_3 = "Modelo";
+    static final String EXPORT_TITLE_4 = "Modo compra";
+    static final String EXPORT_TITLE_5 = "Responsable";
     static final String EXPORT_TITLE_6 = "Responsible"; //Why is this twice?
-    static final String EXPORT_TITLE_7 = "Purchase Date";
-    static final String EXPORT_TITLE_8 = "Expiration Date";
-    static final String EXPORT_TITLE_9 = "Price";
-    static final String EXPORT_TITLE_10 = "Active";
+    static final String EXPORT_TITLE_7 = "Fecha compra";
+    static final String EXPORT_TITLE_8 = "Fecha expiración";
+    static final String EXPORT_TITLE_9 = "Precio";
+    static final String EXPORT_TITLE_10 = "Activo";
 
     @Autowired
     private VehiclesRepository vehiclesRepository;
