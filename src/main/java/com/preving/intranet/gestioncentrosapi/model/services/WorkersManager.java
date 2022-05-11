@@ -39,8 +39,8 @@ public class WorkersManager implements WorkersService{
     private static final String EXPORT_TITLE_2 = "Departamento";
     private static final String EXPORT_TITLE_3 = "Puesto";
     private static final String EXPORT_TITLE_4 = "Email";
-    private static final String EXPORT_TITLE_5 = "Tel�fono";
-    private static final String EXPORT_TITLE_6 = "M�vil";
+    private static final String EXPORT_TITLE_5 = "Telefono";
+    private static final String EXPORT_TITLE_6 = "Movil";
 
 
     @Override

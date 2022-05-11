@@ -28,7 +28,7 @@ public class EmpLabHistory {
 
     @ManyToOne
     @JoinColumn(name = "puesto_id")
-    private Puesto puesto;
+    private Puesto position;
 
     @Column(name = "fch_entrada", nullable = false)
     private Instant fchEntrada;
@@ -171,12 +171,12 @@ public class EmpLabHistory {
         this.employee = employee;
     }
 
-    public Puesto getPuesto() {
-        return puesto;
+    public Puesto getPosition() {
+        return position;
     }
 
-    public void setPuesto(Puesto puesto) {
-        this.puesto = puesto;
+    public void setPosition(Puesto position) {
+        this.position = position;
     }
 
     public Area getArea() {
