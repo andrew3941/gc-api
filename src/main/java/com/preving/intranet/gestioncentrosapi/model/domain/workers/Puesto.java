@@ -15,7 +15,7 @@ public class Puesto {
     private Long id;
 
     @Column(name = "nombre", nullable = false)
-    private String nombre;
+    private String name;
 
     @Column(name = "orden", nullable = false)
     private Integer orden;
@@ -74,12 +74,12 @@ public class Puesto {
         this.orden = orden;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getId() {
