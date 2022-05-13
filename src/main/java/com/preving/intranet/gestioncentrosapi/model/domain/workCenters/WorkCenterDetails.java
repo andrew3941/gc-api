@@ -108,7 +108,7 @@ public class WorkCenterDetails implements Serializable {
     }
 
     @Basic
-    @Column(name = "NUM_PLAZAS_GARAJE")
+    @Column(name = "NUM_PLAZAS_GARAJE_VEHICULOS")
     public Integer getParkingPlace() { return parkingPlace; }
     public void setParkingPlace(Integer parkingPlace) { this.parkingPlace = parkingPlace;
     }
