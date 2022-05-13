@@ -32,7 +32,8 @@ public interface GeneralDocumentationRepository extends JpaRepository<GeneralDoc
             "gDoc.documentName=:#{#generalDoc.documentName}, gDoc.documentImport=:#{#generalDoc.documentImport}, " +
             "gDoc.documentStartDate=:#{#generalDoc.documentStartDate}, gDoc.documentEndDate=:#{#generalDoc.documentEndDate}, " +
             "gDoc.observations=:#{#generalDoc.observations}, gDoc.insurerName=:#{#generalDoc.insurerName}, gDoc.policeNumber=:#{#generalDoc.policeNumber}, "+
-            "gDoc.mediator=:#{#generalDoc.mediator}, gDoc.telephone=:#{#generalDoc.telephone}, gDoc.email=:#{#generalDoc.email}, "+
+            "gDoc.mediator=:#{#generalDoc.mediator}, gDoc.telephone=:#{#generalDoc.telephone}, gDoc.email=:#{#generalDoc.email}," +
+            "gDoc.hire=:#{#generalDoc.hire}, gDoc.contactPerson=:#{#generalDoc.contactPerson},"+
             "gDoc.annualImport=:#{#generalDoc.annualImport}, gDoc.periodicity=:#{#generalDoc.periodicity}, gDoc.deposit=:#{#generalDoc.deposit}, "+
             "gDoc.certificateTypes=:#{#generalDoc.certificateTypes}, gDoc.taxesTypes=:#{#generalDoc.taxesTypes}, gDoc.created=:#{#generalDoc.created}, "+
             "gDoc.modified=CURRENT_TIMESTAMP, gDoc.modifiedBy=:#{#generalDoc.modifiedBy}, gDoc.workCenter=:#{#generalDoc.workCenter} " +
