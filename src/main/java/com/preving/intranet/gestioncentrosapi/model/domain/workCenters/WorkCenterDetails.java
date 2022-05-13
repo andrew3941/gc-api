@@ -27,6 +27,10 @@ public class WorkCenterDetails implements Serializable {
     private Integer communityAmount;
     private boolean stealingAlarm;
     private boolean fireAlarm;
+    private Integer umParkingPlaces;
+    private String administrator;
+    private String email;
+    private Integer phone;
     private List<WorkCenterDetailsByDepart> departments;
     private String cadastralRef;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
@@ -39,7 +43,8 @@ public class WorkCenterDetails implements Serializable {
     public WorkCenterDetails() {}
 
     public WorkCenterDetails(int id, WorkCenter workCenter, Double totalArea, Integer jobAvailable, Boolean accesibility,
-                             boolean parking, int parkingPlace, String description, Boolean allDepartment, int communityAmount, boolean stealingAlarm, boolean fireAlarm,
+                             boolean parking, int parkingPlace, String description, Boolean allDepartment, int communityAmount, boolean stealingAlarm, boolean fireAlarm, int umParkingPlaces,
+                             String administrator, String email, int phone,
                              List<WorkCenterDetailsByDepart> departments, String cadastralRef, String latitude, String longitude,
                              Date created, User createdBy, Date modified, User modifiedBy) {
         this.id = id;
@@ -55,6 +60,10 @@ public class WorkCenterDetails implements Serializable {
         this.communityAmount = communityAmount;
         this.stealingAlarm = stealingAlarm;
         this.fireAlarm = fireAlarm;
+        this.umParkingPlaces = umParkingPlaces;
+        this.administrator = administrator;
+        this.email = email;
+        this.phone = phone;
         this.cadastralRef = cadastralRef;
         this.created = created;
         this.createdBy = createdBy;
@@ -149,6 +158,26 @@ public class WorkCenterDetails implements Serializable {
     public void setFireAlarm(boolean fireAlarm) {
         this.fireAlarm = fireAlarm;
     }
+
+    @Basic
+    @Column(name = "NUM_PLAZAS_GARAJE_UM")
+    public Integer getUmParkingPlaces() {return umParkingPlaces;}
+    public void setUmParkingPlaces(Integer umParkingPlaces) {this.umParkingPlaces = umParkingPlaces;}
+
+    @Basic
+    @Column(name = "ADMINISTRADOR_COMUNIDAD")
+    public String getAdministrator() {return administrator;}
+    public void setAdministrator(String administrator) {this.administrator = administrator;}
+
+    @Basic
+    @Column(name = "EMAIL")
+    public String getEmail() {return email;}
+    public void setEmail(String email) {this.email = email;}
+
+    @Basic
+    @Column(name = "TELEFONO")
+    public Integer getPhone() {return phone;}
+    public void setPhone(Integer phone) {this.phone = phone;}
 
     @JsonManagedReference
     @OneToMany(mappedBy = "workCenterDetails")
