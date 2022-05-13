@@ -51,6 +51,9 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
             sql += "AND LOWER(TRANSLATE(VE.MATRICULA, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:card, '������������', 'aeiounAEIOUN')) ";
         }
 
+        if (vehiclesFilter != null && !vehiclesFilter.getModel().equals("")){
+            sql += "AND LOWER (TRANSLATE(VE.MODELO, '������������', 'aeiounAEIOUN')) LIKE LOWER(TRANSLATE(:model, '������������', 'aeiounAEIOUN')) ";
+        }
 
         if(vehiclesFilter != null && vehiclesFilter.getVehiclesStatus() == 1) {
             sql += " AND VE.FECHA_VENCIMIENTO IS NULL ";
@@ -68,6 +71,10 @@ public class VehiclesRepositoryManager implements VehiclesCustomRepository {
 
         if (vehiclesFilter != null && !vehiclesFilter.getCard().equals("")) {
             query.setParameter("card", "%" + vehiclesFilter.getCard() + "%");
+        }
+
+        if (vehiclesFilter != null && !vehiclesFilter.getModel().equals("")){
+            query.setParameter("model","%"+vehiclesFilter.getModel()+"%");
         }
 
         if(workCenterId != 0){
