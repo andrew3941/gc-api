@@ -20,6 +20,7 @@ GeneralDocumentation implements Serializable {
     private GeneralDocumentationTypes generalDocTypes = new GeneralDocumentationTypes();
     private String documentName;
     private int documentImport;
+    private String concept;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
     private Date documentStartDate = new Date();
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/Madrid")
@@ -55,7 +56,7 @@ GeneralDocumentation implements Serializable {
     }
 
 
-    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate, Date documentAlarmDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email,String hire, String contactPerson, int annualImport, ExpenditurePeriod periodicity, int deposit, int communityAmount, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter, Date deleted, User deletedBy, List<GeneralDocByAttachment> generalDocByAttachments) {
+    public GeneralDocumentation(int id, GeneralDocumentationTypes generalDocTypes, String documentName, int documentImport, Date documentStartDate, Date documentEndDate , String concept, Date documentAlarmDate, String observations, String insurerName, String policeNumber, String mediator, String telephone, String email,String hire, String contactPerson, int annualImport, ExpenditurePeriod periodicity, int deposit, int communityAmount, CertificateTypes certificateTypes, TaxesTypes taxesTypes, Date created, User createdBy, Date modified, User modifiedBy, WorkCenter workCenter, Date deleted, User deletedBy, List<GeneralDocByAttachment> generalDocByAttachments) {
         this.id = id;
         this.generalDocTypes = generalDocTypes;
         this.documentName = documentName;
@@ -74,6 +75,7 @@ GeneralDocumentation implements Serializable {
         this.annualImport = annualImport;
         this.periodicity = periodicity;
         this.deposit = deposit;
+        this.concept = concept;
         this.communityAmount = communityAmount;
         this.certificateTypes = certificateTypes;
         this.taxesTypes = taxesTypes;
@@ -217,6 +219,15 @@ GeneralDocumentation implements Serializable {
     public TaxesTypes getTaxesTypes() { return taxesTypes; }
     public void setTaxesTypes(TaxesTypes taxesTypes) { this.taxesTypes = taxesTypes; }
 
+    @Basic
+    @Column(name = "CONCEPTO")
+    public String getConcept() {
+        return concept;
+    }
+
+    public void setConcept(String concept) {
+        this.concept = concept;
+    }
 
     @Basic
     @Column(name = "CREADO")
