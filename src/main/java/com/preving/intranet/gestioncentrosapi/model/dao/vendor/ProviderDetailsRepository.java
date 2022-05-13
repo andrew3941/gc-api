@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface ProviderDetailsRepository extends JpaRepository<ProviderDetail, Integer> {
 
-    List<ProviderDetail> findByProvidersByWorkCentersId(int providerByWorkcentersId);
+    List<ProviderDetail> findByProvidersByWorkCentersIdAndActiveIsTrue(int providerByWorkcentersId);
 
     void deleteAllByProvidersByWorkCentersId(int provByWorkCentersId);
 

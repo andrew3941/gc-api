@@ -300,7 +300,7 @@ public class ProviderManager implements ProviderService {
                 ProvidersCommonDetails details = providersCommonDetailsRepository.findAllByProvDelegacionId(provByWorkCenters.getId());
 
                 // Obtenemos los detalles especificos
-                List<ProviderDetail> specificDetails = providerDetailsRepository.findByProvidersByWorkCentersId(provByWorkCenters.getId());
+                List<ProviderDetail> specificDetails = providerDetailsRepository.findByProvidersByWorkCentersIdAndActiveIsTrue(provByWorkCenters.getId());
 
                 WorkCenter workCenter = new WorkCenter();
 

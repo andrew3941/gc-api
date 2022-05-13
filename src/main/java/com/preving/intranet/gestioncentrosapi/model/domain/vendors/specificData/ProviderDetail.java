@@ -11,6 +11,7 @@ public class ProviderDetail implements Serializable {
     private int providersByWorkCentersId;
     private ProviderDetailConf providerDetailConf = new ProviderDetailConf();
     private String providerDetailValue;
+    private boolean active;
 
     public ProviderDetail() { }
 
@@ -43,6 +44,15 @@ public class ProviderDetail implements Serializable {
     @Column(name = "CONF_PROV_DETALLE_VALOR")
     public String getProviderDetailValue() { return providerDetailValue; }
     public void setProviderDetailValue(String providerDetailValue) { this.providerDetailValue = providerDetailValue; }
+
+    @Column(name = "activo")
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
     @Override
     public String toString() {
