@@ -37,7 +37,7 @@ public class VehiclesManager implements VehiclesService {
     static final String EXPORT_TITLE_5 = "Responsable";
     static final String EXPORT_TITLE_6 = "Responsible"; //Why is this twice?
     static final String EXPORT_TITLE_7 = "Fecha compra";
-    static final String EXPORT_TITLE_8 = "Fecha expiración";
+    static final String EXPORT_TITLE_8 = "Fecha vencimiento";
     static final String EXPORT_TITLE_9 = "Precio";
     static final String EXPORT_TITLE_10 = "Activo";
 

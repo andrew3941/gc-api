@@ -22,9 +22,6 @@ public class Employees implements Serializable {
     private String surnames;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date dateBirth;
-    private String ccc;
-    private String image;
-    private int haveImage;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date oldDate;
     private User insertBy = new User();
@@ -33,21 +30,7 @@ public class Employees implements Serializable {
     private User updateBy= new  User();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date updateDate;
-    private String cv;
-    private String cvContentType;
-    private int cvHas;
-    private int variable;
     private RolesEmployees rolesEmployees = new RolesEmployees();
-    private String qualificationSerpa;
-    private String sex;
-    private String theyWerePre;
-    private Integer lastYearCongratulations;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
-    private Date updateIbanFch;
-    private int mileageValue;
-    private int disability;
-    private int socialExclusion;
-    private Integer disabilityPct;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date adrUpdated;
     private Date qdrCreated;
@@ -57,35 +40,19 @@ public class Employees implements Serializable {
     public Employees() {
     }
 
-    public Employees(int id, String nif, String nss, String name, String surnames, Date dateBirth, String ccc, String image, int haveImage, Date oldDate, User insertBy, Date insertDate, User updateBy, Date updateDate, String cv, String cvContentType, int cvHas, int variable, RolesEmployees rolesEmployees, String qualificationSerpa, String sex, String theyWerePre, int lastYearCongratulations, Date updateIbanFch, int mileageValue, Integer disability, int socialExclusion, int disabilityPct, Date adrUpdated, Date qdrCreated, EmpContacto empContacto, List<EmpLabHistory> empLabHistory) {
+    public Employees(int id, String nif, String nss, String name, String surnames, Date dateBirth, Date oldDate, User insertBy, Date insertDate, User updateBy, Date updateDate, RolesEmployees rolesEmployees, Date adrUpdated, Date qdrCreated, EmpContacto empContacto, List<EmpLabHistory> empLabHistory) {
         this.id = id;
         this.nif = nif;
         this.nss = nss;
         this.name = name;
         this.surnames = surnames;
         this.dateBirth = dateBirth;
-        this.ccc = ccc;
-        this.image = image;
-        this.haveImage = haveImage;
         this.oldDate = oldDate;
         this.insertBy = insertBy;
         this.insertDate = insertDate;
         this.updateBy = updateBy;
         this.updateDate = updateDate;
-        this.cv = cv;
-        this.cvContentType = cvContentType;
-        this.cvHas = cvHas;
-        this.variable = variable;
         this.rolesEmployees = rolesEmployees;
-        this.qualificationSerpa = qualificationSerpa;
-        this.sex = sex;
-        this.theyWerePre = theyWerePre;
-        this.lastYearCongratulations = lastYearCongratulations;
-        this.updateIbanFch = updateIbanFch;
-        this.mileageValue = mileageValue;
-        this.disability = disability;
-        this.socialExclusion = socialExclusion;
-        this.disabilityPct = disabilityPct;
         this.adrUpdated = adrUpdated;
         this.qdrCreated = qdrCreated;
         this.empContacto = empContacto;
@@ -126,27 +93,6 @@ public class Employees implements Serializable {
     public void setDateBirth(Date dateBirth) {this.dateBirth = dateBirth;}
 
     @Basic
-    @Column(name = "CCC")
-    @JsonIgnore
-    public String getCcc() {return ccc;}
-    public void setCcc(String ccc) {this.ccc = ccc;}
-
-    @Basic
-    @Column(name = "IMAGEN")
-    @JsonIgnore
-    public String getImage() {
-        return image;
-    }
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    @Basic
-    @Column(name = "TIENE_IMAGEN")
-    public int getHaveImage() {return haveImage;}
-    public void setHaveImage(int haveImage) {this.haveImage = haveImage;}
-
-    @Basic
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     @Column(name = "FCH_ANTIGUEDAD")
     public Date getOldDate() {return oldDate;}
@@ -176,88 +122,12 @@ public class Employees implements Serializable {
     public Date getUpdateFch() {return updateDate;}
     public void setUpdateFch(Date updateFch) {this.updateDate = updateFch;}
 
-    @Basic
-    @Column(name = "CV")
-    @JsonIgnore
-    public String getCv() {
-        return cv;
-    }
-    public void setCv(String cv) {
-        this.cv = cv;
-    }
-
-    @Basic
-    @Column(name = "CV_CONTENT_TYPE")
-    public String getCvContentType() {return cvContentType;}
-    public void setCvContentType(String cvContentType) {this.cvContentType = cvContentType;}
-
-    @Basic
-    @Column(name = "CV_TIENE")
-    public int getCvHas() {return cvHas;}
-    public void setCvHas(int cvHas) {this.cvHas = cvHas;}
-
-    @Basic
-    @Column(name = "VARIABLE")
-    public int getVariable() {return variable;}
-    public void setVariable(int variable) {this.variable = variable;}
-
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "RC_ID", referencedColumnName = "ID")
     @NotFound(action = NotFoundAction.IGNORE)
     public RolesEmployees getRolesEmployees() {return rolesEmployees;}
     public void setRolesEmployees(RolesEmployees rolesEmployees) {this.rolesEmployees = rolesEmployees;
     }
-
-    @Basic
-    @Column(name = "CUALIFICACION_SERPA")
-    public String getQualificationSerpa() {return qualificationSerpa;}
-    public void setQualificationSerpa(String qualificationSerpa) {this.qualificationSerpa = qualificationSerpa;}
-
-    @Basic
-    @Column(name = "SEXO")
-    public String getSex() {return sex;}
-    public void setSex(String sex) {this.sex = sex;}
-
-
-    @Basic
-    @Column(name = "IBAN_PRE")
-    public String getTheyWerePre() {return theyWerePre;}
-    public void setTheyWerePre(String theyWerePre) {this.theyWerePre = theyWerePre;}
-
-    @Basic
-    @Column(name = "ULTIMO_ANIO_FELICITACION")
-    public Integer getLastYearCongratulations() {return lastYearCongratulations;}
-    public void setLastYearCongratulations(Integer lastYearCongratulations) {this.lastYearCongratulations = lastYearCongratulations;}
-
-    @Basic
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
-    @Column(name = "UPDATE_IBAN_FCH")
-    public Date getUpdateIbanFch() {return updateIbanFch;}
-    public void setUpdateIbanFch(Date updateIbanFch) {this.updateIbanFch = updateIbanFch;}
-
-    @Basic
-    @Column(name = "VALOR_KILOMETRAJE")
-    public Integer getMileageValue() {
-        return mileageValue;
-    }
-    public void setMileageValue(Integer mileageValue) {
-        this.mileageValue = mileageValue;
-    }
-
-    @Basic
-    @Column(name = "DISCAPACIDAD")
-    public int getDisability() {return disability;}
-    public void setDisability(int disability) {this.disability = disability;}
-
-    @Basic
-    @Column(name = "EXCLUSION_SOCIAL")
-    public int getSocialExclusion() {return socialExclusion;}
-    public void setSocialExclusion(int socialExclusion) {this.socialExclusion = socialExclusion;}
-
-    @Basic
-    @Column(name ="DISCAPACIDAD_PCT")
-    public Integer getDisabilityPct() {return disabilityPct;}
-    public void setDisabilityPct(Integer disabilityPct) {this.disabilityPct = disabilityPct;}
 
     @Basic
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")

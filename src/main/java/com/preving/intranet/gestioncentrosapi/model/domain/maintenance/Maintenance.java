@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.preving.intranet.gestioncentrosapi.model.domain.User;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.ExpenditurePeriod;
 import com.preving.intranet.gestioncentrosapi.model.domain.vendors.Provider;
+import com.preving.intranet.gestioncentrosapi.model.domain.workCenters.WorkCenter;
 
 
 import javax.persistence.*;
@@ -45,6 +46,7 @@ public class Maintenance implements Serializable {
     private Provider provider = new Provider();
     private String billNumber;
     private String concept;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Europe/Madrid")
     private Date resolutionDate;
     private ExpenditurePeriod expenditurePeriod = new ExpenditurePeriod();
     private int amount;
@@ -62,6 +64,7 @@ public class Maintenance implements Serializable {
     private Date deleted;
     private User deletedBy;
     private List<MaintenanceByAttachment> maintenanceByAttachments = new ArrayList<>();
+    private WorkCenter workCenter;
 
     public Maintenance() {
     }
@@ -237,5 +240,14 @@ public class Maintenance implements Serializable {
     @Column(name = "FECHA_RESOLUCION")
     public Date getResolutionDate() {return resolutionDate;}
     public void setResolutionDate(Date resolutionDate) {this.resolutionDate = resolutionDate;}
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "DELEGACION_ID", referencedColumnName = "ID")
+    public WorkCenter getWorkCenter() {
+        return workCenter;
+    }
+    public void setWorkCenter(WorkCenter workCenter) {
+        this.workCenter = workCenter;
+    }
 }
 

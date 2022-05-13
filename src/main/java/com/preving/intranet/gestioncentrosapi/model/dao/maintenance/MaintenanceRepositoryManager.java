@@ -33,7 +33,6 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
                 "               MT.DENOMINACION AS TIPO, PO.NOMBRE, P.DENOMINACION AS PERIODICIDAD " +
                 "FROM GESTION_CENTROS.MANTENIMIENTOS MA " +
                 "       INNER JOIN GESTION_CENTROS.PROVEEDORES PO ON MA.PROVEEDOR_ID = PO.ID " +
-                "       INNER JOIN GESTION_CENTROS.MANTENIMIENTOS_X_DELEGACIONES MXD ON MA.ID = MXD.MANTENIMIENTO_ID " +
                 "       INNER JOIN GESTION_CENTROS.TM_MANTENIMIENTOS_TIPOS MT ON MA.TIPO_ID = MT.ID " +
                 "       LEFT JOIN GESTION_CENTROS.TM_PERIODICIDAD_GASTO P ON MA.PERIODICIDAD_ID = P.ID " +
                 "       WHERE MA.BORRADO IS NULL ";
@@ -55,7 +54,7 @@ public class MaintenanceRepositoryManager implements MaintenanceCustomRepository
         }
 
         if(workCenterId != 0){
-            sql += "AND MXD.DELEGACION_ID = :workCenterId ";
+            sql += "AND MA.DELEGACION_ID = :workCenterId ";
         }
 
 

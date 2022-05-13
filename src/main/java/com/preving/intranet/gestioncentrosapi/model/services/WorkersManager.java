@@ -132,15 +132,13 @@ public class WorkersManager implements WorkersService{
 
             // department
             HSSFCell department = dataRow.createCell(1);
+            HSSFCell job = dataRow.createCell(2);
             for (EmpLabHistory history : employees.get(i).getEmpLabHistory()) {
                 if (history.getFchSalida() == null) {
                     department.setCellValue(history.getArea().getDepartment().getName());
+                    job.setCellValue(history.getPosition().getName());
                 }
             }
-
-            //Role in Organization
-//            HSSFCell Role_in_Organization = dataRow.createCell(2);
-//            Role_in_Organization.setCellValue(employees.get(i).getRolesEmployees().getName());
 
             //Email
             HSSFCell email = dataRow.createCell(3);

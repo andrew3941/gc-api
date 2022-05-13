@@ -81,14 +81,7 @@ public class MaintenanceManager implements MaintenanceService {
 
     @Override
     public Maintenance getMaintenanceById(int maintenanceId){
-
-        Maintenance   myMaintenance =  maintenanceRepository.findMaintenanceById(maintenanceId);
-
-        List<MaintenanceByAttachment> allMaintenanceFiles = maintenanceByAttachmentRepository.findAllByMaintenance(myMaintenance);
-
-        myMaintenance.setMaintenanceByAttachments(allMaintenanceFiles);
-
-        return myMaintenance;
+        return maintenanceRepository.findMaintenanceById(maintenanceId);
     }
 
     public ResponseEntity<?> downloadMaintenanceDoc(HttpServletRequest request, int workCenterId, int maintenanceId) {
@@ -196,17 +189,10 @@ public class MaintenanceManager implements MaintenanceService {
 
             newMaintenance.setCreated(new Date());
             newMaintenance.getCreatedBy().setId(userId);
+            newMaintenance.getWorkCenter().setId(workCenterId);
 
             // Save maintenance
             Maintenance saveMaintenance = this.maintenanceRepository.save(newMaintenance);
-
-            MaintenanceByWorkCenters maintenanceByWorkCenters = new MaintenanceByWorkCenters();
-
-            maintenanceByWorkCenters.getMaintenance().setId(saveMaintenance.getId());
-            maintenanceByWorkCenters.getWorkCenter().setId(workCenterId);
-
-            // Save maintenanceByWorkCenter
-            this.maintenanceByWorkCentersRepository.save(maintenanceByWorkCenters);
 
             if (attachedFile.length > 0) {
 
@@ -264,7 +250,7 @@ public class MaintenanceManager implements MaintenanceService {
 
     @Override
     public List<MaintenanceTypes> getAllMaintenanceTypes() {
-        return maintenanceTypesRepository.findAll();
+        return maintenanceTypesRepository.findAllByActiveIsTrue();
     }
 
 //METHOD FOR EXPORT MAINTENANCE
